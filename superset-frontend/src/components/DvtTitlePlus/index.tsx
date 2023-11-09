@@ -1,19 +1,19 @@
+import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { StyledDvtTitlePlus, DvtTitlePlusTitle } from './dvt-title-plus.module';
-import react from 'react';
 
 export interface DvtTitlePlusProps {
   title: string;
-  plusIcon: boolean;
+  plus: boolean;
 }
 
 const DvtTitlePlus: React.FC<DvtTitlePlusProps> = ({
   title = '',
-  plusIcon = false,
+  plus = false,
 }) => (
   <StyledDvtTitlePlus>
     <DvtTitlePlusTitle>{title}</DvtTitlePlusTitle>
-    {plusIcon && <PlusOutlined />}
+    {plus && <PlusOutlined />}
   </StyledDvtTitlePlus>
 );
 
