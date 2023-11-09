@@ -5,7 +5,7 @@ const StyledDvtTitlePlus = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
-  color: #94a3b8;
+  color: rgb(148, 163, 184);
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -13,7 +13,7 @@ const StyledDvtTitlePlus = styled.div`
 `;
 
 const DvtTitlePlusTitle = styled.p`
-  color: #94a3b8;
+  color: rgb(148, 163, 184);
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
