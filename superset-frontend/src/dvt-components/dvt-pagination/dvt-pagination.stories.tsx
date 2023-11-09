@@ -10,9 +10,9 @@ const itemSize = 50;
 const pageItemSize = 10;
 
 export const Default = (args: DvtPaginationProps) => {
- const [currentPage, setCurrentPage] = useState(args.page || 1);
+  const [currentPage, setCurrentPage] = useState(args.page || 1);
 
- return (
+  return (
     <DvtPagination
       {...args}
       page={currentPage}
@@ -20,7 +20,7 @@ export const Default = (args: DvtPaginationProps) => {
       itemSize={itemSize}
       pageItemSize={pageItemSize}
     />
- );
+  );
 };
 
 Default.argTypes = {
@@ -36,4 +36,4 @@ Default.argTypes = {
     control: { type: 'number' },
     defaultValue: 10,
   },
-}
+};

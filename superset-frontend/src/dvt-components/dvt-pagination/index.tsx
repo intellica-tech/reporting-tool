@@ -4,7 +4,7 @@ import {
   StyledDvtPaginationText,
   StyledDvtPaginationButton,
   StyledDvtPaginationIcon,
-  StyledDvtPaginationPageNumber
+  StyledDvtPaginationPageNumber,
 } from './dvt-pagination.module';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
@@ -36,11 +36,11 @@ const DvtPagination: React.FC<DvtPaginationProps> = ({
         <StyledDvtPaginationPageNumber>{page}</StyledDvtPaginationPageNumber>
         <StyledDvtPaginationIcon>
           <UpOutlined
-            style={{ fontSize: '15.75px', color: '#fff'}}
+            style={{ fontSize: '15.75px', color: '#fff' }}
             onClick={() => handlePageChange(page + 1)}
           />
           <DownOutlined
-            style={{ fontSize: '15.75px', color: '#fff'}}
+            style={{ fontSize: '15.75px', color: '#fff' }}
             onClick={() => handlePageChange(page - 1)}
           />
         </StyledDvtPaginationIcon>
