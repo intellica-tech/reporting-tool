@@ -8,14 +8,14 @@ const StyledDvtTitleTotal = styled.div`
 `;
 
 const DvtTitle = styled.h6`
-  color: #0f172a;
+  color: ${({theme}) => theme.colors.dvt.text.bold};
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   letter-spacing: 0.2px;
 `;
-const DvtTotal = styled.div<{total: number}>`
-  color: grey;
+const DvtTotal = styled.div`
+  color:${({theme}) => theme.colors.dvt.text.label};
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
