@@ -1,4 +1,5 @@
 import React from 'react';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import {
   StyledDvtPagination,
   StyledDvtPaginationText,
@@ -6,7 +7,6 @@ import {
   StyledDvtPaginationIcon,
   StyledDvtPaginationPageNumber,
 } from './dvt-pagination.module';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtPaginationProps {
@@ -32,7 +32,7 @@ const DvtPagination: React.FC<DvtPaginationProps> = ({
 
   return (
     <StyledDvtPagination>
-      <StyledDvtPaginationText>{'Page'}</StyledDvtPaginationText>
+      <StyledDvtPaginationText>Page</StyledDvtPaginationText>
       <StyledDvtPaginationButton>
         <StyledDvtPaginationPageNumber>{page}</StyledDvtPaginationPageNumber>
         <StyledDvtPaginationIcon>
