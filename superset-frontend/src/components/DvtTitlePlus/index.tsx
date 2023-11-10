@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { StyledDvtTitlePlus, DvtTitlePlusTitle } from './dvt-title-plus.module';
 import { SupersetTheme } from '@superset-ui/core';
+import { StyledDvtTitlePlus, DvtTitlePlusTitle } from './dvt-title-plus.module';
 
 export interface DvtTitlePlusProps {
   title: string;
