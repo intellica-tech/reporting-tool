@@ -1,5 +1,5 @@
 import React from 'react';
-import DvtTitleTotal, { DvtTitleTotalProps } from './index';
+import DvtTitleTotal, { DvtTitleTotalProps } from '.';
 
 export default {
   title: 'Dvt-Components/DvtTitleTotal',

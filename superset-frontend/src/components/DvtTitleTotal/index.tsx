@@ -12,7 +12,7 @@ export interface DvtTitleTotalProps {
 
 const DvtTitleTotal: React.FC<DvtTitleTotalProps> = ({ total = 0, title }) => (
   <StyledDvtTitleTotal>
-    <DvtTitle title={title}>{title}</DvtTitle>
+    <DvtTitle>{title}</DvtTitle>
     <DvtTotal>{`(${total})`}</DvtTotal>
   </StyledDvtTitleTotal>
 );
