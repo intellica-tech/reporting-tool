@@ -1,0 +1,18 @@
+import React from 'react';
+import { DvtTitle, DvtTotal, StyledDvtTitleTotal } from './dvt-title-total.module';
+
+export interface DvtTitleTotalProps {
+  total: number;
+  title:string;
+}
+
+const DvtTitleTotal: React.FC<DvtTitleTotalProps> = ({total=15,title}) => {
+  return( 
+  <StyledDvtTitleTotal>
+    <DvtTitle title={title}>{title}</DvtTitle>
+    <DvtTotal total={total}>{`(${total})`}</DvtTotal>
+  </StyledDvtTitleTotal>
+  );
+};
+
+export default DvtTitleTotal;
