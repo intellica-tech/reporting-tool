@@ -6,9 +6,6 @@ export default {
   component: DvtPagination,
 };
 
-const itemSize = 50;
-const pageItemSize = 10;
-
 export const Default = (args: DvtPaginationProps) => {
   const [currentPage, setCurrentPage] = useState(args.page || 1);
 
@@ -17,8 +14,8 @@ export const Default = (args: DvtPaginationProps) => {
       {...args}
       page={currentPage}
       setPage={setCurrentPage}
-      itemSize={itemSize}
-      pageItemSize={pageItemSize}
+      itemSize={args.itemSize}
+      pageItemSize={args.pageItemSize}
     />
   );
 };
