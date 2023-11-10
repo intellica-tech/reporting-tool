@@ -34,7 +34,6 @@ const StyledDvtPaginationPageNumber = styled.div`
   align-items: center;
   margin: auto;
   color: ${({ theme }) => theme.colors.grayscale.light5};
-  font-family: Montserrat;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
