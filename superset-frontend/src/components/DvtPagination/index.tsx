@@ -1,5 +1,6 @@
 import React from 'react';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { SupersetTheme } from '@superset-ui/core';
 import {
   StyledDvtPagination,
   StyledDvtPaginationText,
@@ -7,7 +8,6 @@ import {
   StyledDvtPaginationIcon,
   StyledDvtPaginationPageNumber,
 } from './dvt-pagination.module';
-import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtPaginationProps {
   page: number;
