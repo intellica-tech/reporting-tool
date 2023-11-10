@@ -12,6 +12,7 @@ export const Default = (args: DvtTitleTotalProps) => (
 
 Default.args = {
   title: "What's New",
+  total: 15,
 };
 
 Default.argsTypes = {

@@ -10,13 +10,11 @@ export interface DvtTitleTotalProps {
   title: string;
 }
 
-const DvtTitleTotal: React.FC<DvtTitleTotalProps> = ({ total = 15, title }) => {
-  return (
-    <StyledDvtTitleTotal>
-      <DvtTitle title={title}>{title}</DvtTitle>
-      <DvtTotal>{`(${total})`}</DvtTotal>
-    </StyledDvtTitleTotal>
-  );
-};
+const DvtTitleTotal: React.FC<DvtTitleTotalProps> = ({ total = 0, title }) => (
+  <StyledDvtTitleTotal>
+    <DvtTitle title={title}>{title}</DvtTitle>
+    <DvtTotal>{`(${total})`}</DvtTotal>
+  </StyledDvtTitleTotal>
+);
 
 export default DvtTitleTotal;
