@@ -16,6 +16,7 @@ const DvtTitlePlusTitle = styled.p`
   font-style: normal;
   font-weight: 700;
   margin: 0;
+  color: red;
 `;
 
 export { StyledDvtTitlePlus, DvtTitlePlusTitle };
