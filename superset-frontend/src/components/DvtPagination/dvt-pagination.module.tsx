@@ -12,13 +12,12 @@ const StyledDvtPaginationText = styled.div`
 
 const StyledDvtPaginationButton = styled.div`
   position: relative;
-
   display: flex;
   width: 95px;
   height: 44px;
   flex-shrink: 0;
   border-radius: 12px;
-  background-color: #2563eb;
+  background-color: ${({ theme }) => theme.colors.dvt.primary.base};
 `;
 
 const StyledDvtPaginationIcon = styled.div`
@@ -34,7 +33,7 @@ const StyledDvtPaginationPageNumber = styled.div`
   display: flex;
   align-items: center;
   margin: auto;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.grayscale.light5};
   font-family: Montserrat;
   font-size: 24px;
   font-style: normal;
