@@ -1,12 +1,18 @@
 import React from 'react';
-import { StyledDvtLogo } from './dvt-logo.module';
+import { StyledDvtLogo, DvtTitle, DvtLogoImg } from './dvt-logo.module';
+import DvtAppLogo from '../../assets/dvt-img/dvtAppLogo.png';
 
-export interface DvtCardProps {
+export interface DvtLogoProps {
   title: string;
 }
 
-const DvtLogo: React.FC<DvtCardProps> = ({ title }) => (
-  <StyledDvtLogo>{title}</StyledDvtLogo>
+const DvtLogo: React.FC<DvtLogoProps> = ({ title }) => (
+  <StyledDvtLogo>
+    <DvtLogoImg>
+      <img src={DvtAppLogo} />
+    </DvtLogoImg>
+    <DvtTitle>{title}</DvtTitle>
+  </StyledDvtLogo>
 );
 
 export default DvtLogo;
