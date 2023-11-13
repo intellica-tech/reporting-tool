@@ -80,17 +80,6 @@ const defaultTheme = {
       light4: '#ECEEF2',
       light5: '#F5F5F8',
     },
-    secondary2: {
-      base: '#444E7C',
-      dark1: '#363E63',
-      dark2: '#282E4A',
-      dark3: '#1B1F31',
-      light1: '#8E94B0',
-      light2: '#B4B8CA',
-      light3: '#D9DBE4',
-      light4: '#ECEEF2',
-      light5: '#F5F5F8',
-    },
     grayscale: {
       base: '#666666',
       dark1: '#323232',
@@ -136,30 +125,6 @@ const defaultTheme = {
       light1: '#B3DEFE',
       light2: '#EFF8FE',
     },
-    dvt: {
-      text: {
-        label: '#64748B',
-        help: '#94A3B8',
-        bold: '#0F172A',
-      },
-      primary: {
-        base: '#2563EB',
-        light1: '#B8C1CC',
-        light2: '#E2E8F0',
-        light3: '#EFF6FF',
-      },
-      success: {
-        base: '#24D164',
-        dark1: '#02993E',
-        dark2: '#599D57',
-        light1: '#34D399',
-      },
-      grayscale: {
-        base: '#979797',
-        light1: '#D3D5DA',
-        light2: '#F8FAFC',
-      },
-    },
   },
   opacity: {
     light: '10%',
@@ -190,11 +155,6 @@ const defaultTheme = {
     },
   },
   zIndex: {
-    aboveDashboardCharts: 10,
-    dropdown: 11,
-    max: 3000,
-  },
-  zIndex2: {
     aboveDashboardCharts: 10,
     dropdown: 11,
     max: 3000,
