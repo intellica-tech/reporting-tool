@@ -1,6 +1,6 @@
 import React from 'react';
-import DvtLogo, { DvtLogoProps } from '.';
 import { MemoryRouter } from 'react-router-dom';
+import DvtLogo, { DvtLogoProps } from '.';
 
 export default {
   title: 'Dvt-Components/DvtLogo',
