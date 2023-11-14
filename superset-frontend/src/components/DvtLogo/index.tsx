@@ -8,8 +8,8 @@ export interface DvtLogoProps {
 
 const DvtLogo: React.FC<DvtLogoProps> = ({ title }) => (
   <StyledDvtLogo>
-    <DvtLogoImg to="/Dashboard">
-      <img src={DvtAppLogo} alt='' />
+    <DvtLogoImg to='/Dashboard'>
+      <img src={DvtAppLogo} alt='Logo' />
     </DvtLogoImg>
     <DvtTitle>{title}</DvtTitle>
   </StyledDvtLogo>
