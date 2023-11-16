@@ -46,11 +46,13 @@ const StyledTableTh = styled.th<StyledTableThProps>`
     padding-left: 33px;
   }
 `;
+
 const StyledTableTbody = styled.tbody``;
 
 interface StyledTableTdProps {
   $onLink: boolean;
 }
+
 const StyledTableTd = styled.td<StyledTableTdProps>`
   color: ${({ $onLink, theme }) =>
     $onLink ? theme.colors.dvt.primary.base : theme.colors.grayscale.dark2};
