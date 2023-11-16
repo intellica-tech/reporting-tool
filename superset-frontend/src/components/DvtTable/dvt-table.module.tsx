@@ -14,6 +14,10 @@ const StyledTableTable = styled.table`
 
 const StyledTabletHead = styled.thead``;
 
+const StyledTableIcon = styled.div`
+  display: flex;
+`;
+
 const StyledTableTr = styled.tr`
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.grayscale.light5};
@@ -26,20 +30,18 @@ const StyledTableTr = styled.tr`
 `;
 
 const StyledTableTitle = styled.tr``;
+
 interface StyledTableThProps {
   flex: number;
 }
+
 const StyledTableTh = styled.th<StyledTableThProps>`
-  color: #281827;
-  font-family: Montserrat;
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
   font-size: 16px;
-  font-style: normal;
   font-weight: 600;
-  line-height: normal;
   padding-bottom: 28px;
   padding-left: 3px;
   width: ${({ flex }) => (flex ? `${flex}%` : 'auto')};
-
   &:first-of-type {
     padding-left: 33px;
   }
@@ -52,11 +54,8 @@ interface StyledTableTdProps {
 const StyledTableTd = styled.td<StyledTableTdProps>`
   color: ${({ $onLink, theme }) =>
     $onLink ? theme.colors.dvt.primary.base : theme.colors.grayscale.dark2};
-  font-family: Montserrat;
   font-size: 14px;
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
   &:first-of-type {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
@@ -73,10 +72,6 @@ const StyledTablePagination = styled.div`
   justify-content: flex-end;
   padding-right: 13px;
   padding-top: 55px;
-`;
-
-const StyledTableIcon = styled.div`
-  display: flex;
 `;
 
 export {

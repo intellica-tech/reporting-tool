@@ -1,15 +1,7 @@
-// DvtTable.tsx
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { SupersetTheme, supersetTheme } from '@superset-ui/core';
+import { FolderOutlined, HeartOutlined } from '@ant-design/icons';
 import DvtPagination from '../DvtPagination';
-import { SupersetTheme } from '@superset-ui/core';
-import {
-  BookFilled,
-  DeleteOutlined,
-  EditFilled,
-  FolderOutlined,
-  HeartOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
 import {
   StyledTable,
   StyledTableTable,
@@ -22,47 +14,41 @@ import {
   StyledTableTitle,
   StyledTableIcon,
 } from './dvt-table.module';
+import Icon from '../Icons/Icon';
 
 export interface DvtTableProps {
   data: any[];
-  columns: {
-    Header: string;
-    accessor: string;
+  header: {
+    title: string;
+    field: string;
     folderIcon?: boolean;
     heartIcon?: boolean;
-    onLink: boolean;
-    date: boolean;
-    flex: number;
+    onLink?: boolean;
+    flex?: number;
+    clicks?: [];
+    showHover: boolean;
   }[];
   onRowClick?: (row: any) => void;
-  actions: boolean;
-  bookmarkIcon: boolean;
   itemsPerPage?: number;
   currentPage: number;
   setcurrentPage: (newPage: number) => void;
-  currentItems: any[];
-  setCurrentItems: (newCurrentItems: any[]) => void;
+  pagination?: boolean;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
   data,
-  columns,
+  header,
   onRowClick,
-  actions,
-  bookmarkIcon,
   itemsPerPage = 10,
   currentPage,
   setcurrentPage,
-  currentItems,
-  setCurrentItems,
+  pagination = false,
 }) => {
   const itemsPerPageValue = itemsPerPage;
-  useEffect(() => {
-    const indexOfLastItem = currentPage * itemsPerPageValue;
-    const indexOfFirstItem = (currentPage - 1) * itemsPerPageValue;
-    const newCurrentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-    setCurrentItems(newCurrentItems);
-  }, [data, currentPage, itemsPerPageValue]);
+  const indexOfLastItem = currentPage * itemsPerPageValue;
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPageValue;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const [openRow, setOpenRow] = useState<number | null>(null);
 
   const paginate = (pageNumber: number) => {
     setcurrentPage(pageNumber);
@@ -81,8 +67,8 @@ const DvtTable: React.FC<DvtTableProps> = ({
       time: formattedTime,
     };
   };
-  const totalFlex = columns.reduce(
-    (total, column) => total + (column.flex || 1),
+  const totalFlex = header.reduce(
+    (total, header) => total + (header.flex || 1),
     0,
   );
 
@@ -93,19 +79,14 @@ const DvtTable: React.FC<DvtTableProps> = ({
       <StyledTableTable>
         <StyledTabletHead>
           <StyledTableTitle>
-            {columns.map(column => (
+            {header.map(column => (
               <StyledTableTh
-                key={column.accessor}
-                flex={column.flex * columnsWithDefaults}
+                key={column.field}
+                flex={(column.flex || 1) * columnsWithDefaults}
               >
-                {column.Header}
+                {column.title}
               </StyledTableTh>
             ))}
-            {actions || bookmarkIcon ? (
-              <StyledTableTh flex={columnsWithDefaults}>Action</StyledTableTh>
-            ) : (
-              ''
-            )}
           </StyledTableTitle>
         </StyledTabletHead>
         <StyledTableTbody>
@@ -113,9 +94,14 @@ const DvtTable: React.FC<DvtTableProps> = ({
             <StyledTableTr
               key={rowIndex}
               onClick={() => onRowClick && onRowClick(row)}
+              onMouseOver={() => setOpenRow(rowIndex)}
+              onMouseOut={() => setOpenRow(null)}
             >
-              {columns.map(column => (
-                <StyledTableTd key={column.accessor} $onLink={column.onLink}>
+              {header.map(column => (
+                <StyledTableTd
+                  key={column.field}
+                  $onLink={column.onLink || false}
+                >
                   <StyledTableIcon>
                     {column.folderIcon && (
                       <FolderOutlined
@@ -124,7 +110,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                           marginRight: '14px',
                           fontSize: '20px',
                         })}
-                      ></FolderOutlined>
+                      />
                     )}
                     {column.heartIcon && (
                       <HeartOutlined
@@ -133,64 +119,63 @@ const DvtTable: React.FC<DvtTableProps> = ({
                           marginRight: '14px',
                           fontSize: '20px',
                         })}
-                      ></HeartOutlined>
+                      />
                     )}
-                    {column.date ? (
+                    {column.field === 'date' ? (
                       <>
-                        {formatDateTime(row[column.accessor]).date}
+                        {formatDateTime(row[column.field]).date}
                         <br />
-                        {formatDateTime(row[column.accessor]).time}
+                        {formatDateTime(row[column.field]).time}
                       </>
                     ) : (
-                      <div>{row[column.accessor]}</div>
+                      <>
+                        {column.clicks &&
+                          column.clicks.map(
+                            (clicks: {
+                              icon: string;
+                              click: () => void;
+                              colour: string;
+                            }) => (
+                              <Icon
+                                key={rowIndex}
+                                onClick={clicks.click}
+                                fileName={clicks.icon}
+                                iconColor={
+                                  clicks.colour ||
+                                  supersetTheme.colors.grayscale.dark2
+                                }
+                                iconSize="xl"
+                                style={{
+                                  marginRight: 3.6,
+                                  visibility: column.showHover
+                                    ? openRow === rowIndex
+                                      ? 'visible'
+                                      : 'hidden'
+                                    : 'visible',
+                                }}
+                              ></Icon>
+                            ),
+                          )}
+                        {column.field !== 'action' && <>{row[column.field]}</>}
+                      </>
                     )}
                   </StyledTableIcon>
                 </StyledTableTd>
               ))}
-              {actions && !bookmarkIcon && (
-                <StyledTableTd $onLink={false} css={{}}>
-                  <EditFilled
-                    css={{
-                      marginRight: '10px',
-                      fontSize: '16px',
-                    }}
-                  />
-                  <UploadOutlined
-                    css={{
-                      marginRight: '10px',
-                      fontSize: '16px',
-                    }}
-                  />
-                  <DeleteOutlined
-                    css={{
-                      fontSize: '16px',
-                    }}
-                  />
-                </StyledTableTd>
-              )}
-
-              {!actions && bookmarkIcon && (
-                <StyledTableTd $onLink={false}>
-                  <BookFilled
-                    css={{
-                      marginLeft: '10px',
-                      fontSize: '16px',
-                    }}
-                  />
-                </StyledTableTd>
-              )}
             </StyledTableTr>
           ))}
         </StyledTableTbody>
       </StyledTableTable>
-      <StyledTablePagination>
-        <DvtPagination
-          page={currentPage || 1}
-          setPage={paginate}
-          itemSize={data.length}
-          pageItemSize={itemsPerPageValue}
-        />
-      </StyledTablePagination>
+      {pagination && (
+        <StyledTablePagination>
+          <DvtPagination
+            page={currentPage || 1}
+            setPage={paginate}
+            itemSize={data.length}
+            pageItemSize={itemsPerPageValue}
+          />
+        </StyledTablePagination>
+      )}
     </StyledTable>
   );
 };
