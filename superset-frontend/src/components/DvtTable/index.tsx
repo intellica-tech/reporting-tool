@@ -79,9 +79,9 @@ const DvtTable: React.FC<DvtTableProps> = ({
       <StyledTableTable>
         <StyledTabletHead>
           <StyledTableTitle>
-            {header.map(column => (
+            {header.map((column, columnIndex) => (
               <StyledTableTh
-                key={column.field}
+                key={columnIndex}
                 flex={(column.flex || 1) * columnsWithDefaults}
               >
                 {column.title}
@@ -93,13 +93,13 @@ const DvtTable: React.FC<DvtTableProps> = ({
           {currentItems.map((row, rowIndex) => (
             <StyledTableTr
               key={rowIndex}
-              onClick={() => onRowClick && onRowClick(row)}
+              onClick={() => onRowClick?.(row)}
               onMouseOver={() => setOpenRow(rowIndex)}
               onMouseOut={() => setOpenRow(null)}
             >
-              {header.map(column => (
+              {header.map((column, columnIndex) => (
                 <StyledTableTd
-                  key={column.field}
+                  key={columnIndex}
                   $onLink={column.onLink || false}
                 >
                   <StyledTableIcon>
@@ -129,33 +129,35 @@ const DvtTable: React.FC<DvtTableProps> = ({
                       </>
                     ) : (
                       <>
-                        {column.clicks &&
-                          column.clicks.map(
-                            (clicks: {
+                        {column.clicks?.map(
+                          (
+                            clicks: {
                               icon: string;
                               click: () => void;
                               colour: string;
-                            }) => (
-                              <Icon
-                                key={rowIndex}
-                                onClick={clicks.click}
-                                fileName={clicks.icon}
-                                iconColor={
-                                  clicks.colour ||
-                                  supersetTheme.colors.grayscale.dark2
-                                }
-                                iconSize="xl"
-                                style={{
-                                  marginRight: 3.6,
-                                  visibility: column.showHover
-                                    ? openRow === rowIndex
-                                      ? 'visible'
-                                      : 'hidden'
-                                    : 'visible',
-                                }}
-                              ></Icon>
-                            ),
-                          )}
+                            },
+                            index,
+                          ) => (
+                            <Icon
+                              key={index}
+                              onClick={clicks.click}
+                              fileName={clicks.icon}
+                              iconColor={
+                                clicks.colour ||
+                                supersetTheme.colors.grayscale.dark2
+                              }
+                              iconSize="xl"
+                              style={{
+                                marginRight: 3.6,
+                                visibility: column.showHover
+                                  ? openRow === rowIndex
+                                    ? 'visible'
+                                    : 'hidden'
+                                  : 'visible',
+                              }}
+                            />
+                          ),
+                        )}
                         {column.field !== 'action' && <>{row[column.field]}</>}
                       </>
                     )}
