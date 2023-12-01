@@ -25,10 +25,7 @@ export default {
 };
 
 export const Default = (args: DvtNavigationBarProps) => {
-  const defaultActiveItem = args.data.find(item => item.active);
-  const [active, setActive] = useState<string>(
-    defaultActiveItem && defaultActiveItem.url ? defaultActiveItem.url : '',
-  );
+  const [active, setActive] = useState<string>('test');
 
   return (
     <div
@@ -59,25 +56,24 @@ export const Default = (args: DvtNavigationBarProps) => {
 Default.args = {
   data: [
     {
-      icon: 'calendar',
+      icon: 'dvt-briefcase',
       label: 'Created Content',
       url: 'test',
-      active: true,
     },
-    { icon: 'calendar', label: 'Schedule', url: 'test1' },
+    { icon: 'calendar', label: 'dvt-calendar', url: 'test1' },
     {
-      icon: 'calendar',
+      icon: 'dvt-history',
       label: 'Recent Activity',
       url: 'test2',
     },
-    { icon: 'calendar', label: 'Favorites', url: 'test3' },
+    { icon: 'favorite-unselected', label: 'Favorites', url: 'test3' },
     {
       icon: 'calendar',
       label: 'Groups and Roles',
       url: 'test4',
     },
     {
-      icon: 'calendar',
+      icon: 'dvt-arrow_forwardup',
       label: 'Query History',
       url: 'test5',
     },
