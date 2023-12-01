@@ -24,41 +24,34 @@ import {
 } from './dvt-navigation-bar.module';
 
 export interface DvtNavigationBarProps {
-  navigationBarData: [
+  data: [
     {
       icon: string;
       label: string;
-      onClick: () => void;
-      flexEnd?: boolean;
+      url: string;
       active?: boolean;
     },
   ];
-  activeIndex: number | null;
-  setActiveIndex: (newIndex: number) => void;
+  active?: string;
+  setActive?: (newUrl: string) => void;
 }
 
 const DvtNavigationBar: React.FC<DvtNavigationBarProps> = ({
-  navigationBarData,
-  activeIndex,
-  setActiveIndex,
+  data,
+  active,
+  setActive,
 }) => {
-  const handleItemClick = (index: number) => {
-    setActiveIndex(index);
-  };
   return (
     <StyledNavigationBar>
-      {navigationBarData.map((item, index) => (
-        <StyledNavigationBarItem key={index} flexEnd={item.flexEnd || false}>
+      {data.map(item => (
+        <StyledNavigationBarItem>
           <DvtNavigationBarItem
             icon={item.icon}
             label={item.label}
             onClick={() => {
-              {
-                !item.flexEnd && handleItemClick(index);
-              }
-              item.onClick();
+              setActive?.(item.url);
             }}
-            active={index === activeIndex}
+            active={item.url === active}
           />
         </StyledNavigationBarItem>
       ))}

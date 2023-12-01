@@ -18,28 +18,15 @@
  */
 import { styled } from '@superset-ui/core';
 
-interface StyledNavigationBarItemProps {
-  flexEnd: boolean;
-}
-
 const StyledNavigationBar = styled.div`
   display: flex;
   flex-direction: column;
   width: 250px;
-  height: 100%;
   margin-bottom: 52px;
 `;
 
-const StyledNavigationBarItem = styled.div<StyledNavigationBarItemProps>`
-  ${({ flexEnd }) =>
-    flexEnd
-      ? `
-    margin-bottom: 22px;
-    margin-top: auto;
-  `
-      : `
-    margin-bottom: 32px;
-  `};
+const StyledNavigationBarItem = styled.div`
+  margin-bottom: 32px;
 `;
 
 export { StyledNavigationBar, StyledNavigationBarItem };

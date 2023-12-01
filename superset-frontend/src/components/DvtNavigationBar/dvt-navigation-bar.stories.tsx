@@ -25,39 +25,62 @@ export default {
 };
 
 export const Default = (args: DvtNavigationBarProps) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(
-    args.navigationBarData.findIndex(item => item.active),
+  const defaultActiveItem = args.data.find(item => item.active);
+  const [active, setActive] = useState<string>(
+    defaultActiveItem ? defaultActiveItem.url : '',
   );
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+    >
       <DvtNavigationBar
-        {...args}
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
+        data={args.data}
+        active={active}
+        setActive={setActive}
+      />
+      <DvtNavigationBar
+        data={[
+          {
+            icon: 'dvt-logout',
+            label: 'Log Out',
+            url: '',
+          },
+        ]}
       />
     </div>
   );
 };
 
 Default.args = {
-  navigationBarData: [
+  data: [
     {
       icon: 'calendar',
       label: 'Created Content',
-      onClick: () => {},
+      url: 'test',
       active: true,
     },
-    { icon: 'calendar', label: 'Schedule', onClick: () => {} },
-    { icon: 'calendar', label: 'Recent Activity', onClick: () => {} },
-    { icon: 'calendar', label: 'Favorites', onClick: () => {} },
-    { icon: 'calendar', label: 'Groups and Roles', onClick: () => {} },
-    { icon: 'calendar', label: 'Query History', onClick: () => {} },
+    { icon: 'calendar', label: 'Schedule', url: 'test1' },
     {
       icon: 'calendar',
-      label: 'Log Out',
-      onClick: () => {},
-      flexEnd: true,
+      label: 'Recent Activity',
+      url: 'test2',
+    },
+    { icon: 'calendar', label: 'Favorites', url: 'test3' },
+    {
+      icon: 'calendar',
+      label: 'Groups and Roles',
+      url: 'test4',
+    },
+    {
+      icon: 'calendar',
+      label: 'Query History',
+      url: 'test5',
     },
   ],
 };
