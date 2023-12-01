@@ -28,7 +28,7 @@ export interface DvtNavigationBarProps {
     {
       icon: string;
       label: string;
-      url: string;
+      url?: string;
       active?: boolean;
     },
   ];
@@ -49,9 +49,9 @@ const DvtNavigationBar: React.FC<DvtNavigationBarProps> = ({
             icon={item.icon}
             label={item.label}
             onClick={() => {
-              setActive?.(item.url);
+              item.url && setActive && setActive(item.url);
             }}
-            active={item.url === active}
+            active={item.url ? item.url === active : false}
           />
         </StyledNavigationBarItem>
       ))}

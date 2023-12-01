@@ -27,7 +27,7 @@ export default {
 export const Default = (args: DvtNavigationBarProps) => {
   const defaultActiveItem = args.data.find(item => item.active);
   const [active, setActive] = useState<string>(
-    defaultActiveItem ? defaultActiveItem.url : '',
+    defaultActiveItem && defaultActiveItem.url ? defaultActiveItem.url : '',
   );
 
   return (
@@ -49,7 +49,6 @@ export const Default = (args: DvtNavigationBarProps) => {
           {
             icon: 'dvt-logout',
             label: 'Log Out',
-            url: '',
           },
         ]}
       />
