@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 
@@ -30,25 +30,25 @@ function AlertList() {
         const response = await fetch('/api/v1/report/');
         const data = await response.json();
 
-        const editedData = data.result.map((item: any) => ({
-          date: new Date(item.last_eval_dttm).toLocaleString('tr-TR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          name: item.name,
-          crontab_humanized: item.crontab_humanized,
-          recipients: item.type,
-          created_by:
-            item.created_by.first_name + ' ' + item.created_by.last_name,
-          owners: item.owners[0].first_name + ' ' + item.owners[0].last_name,
-          modifiedBy:
-            item.changed_by.first_name + ' ' + item.changed_by.last_name,
-          active: item.active.toString(),
-        }));
+        const editedData = data.result
+          .filter((item: any) => item.type === 'Alert')
+          .map((item: any) => ({
+            date: new Date(item.last_eval_dttm).toLocaleString('tr-TR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            }),
+            name: item.name,
+            crontab_humanized: item.crontab_humanized,
+            recipients: item.type,
+            created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
+            owners: `${item.owners[0].first_name} ${item.owners[0].last_name}`,
+            modifiedBy: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
+            active: item.active.toString(),
+          }));
 
         setApiData(editedData);
         console.log('Fetched and edited data:', data.result);
@@ -90,7 +90,7 @@ function AlertList() {
     ],
   };
 
-  return <DvtTable data={apiData} header={modifiedData.header}></DvtTable>;
+  return <DvtTable data={apiData} header={modifiedData.header} />;
 }
 
 export default withToasts(AlertList);
