@@ -7,5 +7,4 @@ class DVTAuthDBView(AuthDBView):
 
     @expose("/login/", methods=["GET", "POST"])
     def login(self):
-        # Your custom login logic here
         return super().login()
