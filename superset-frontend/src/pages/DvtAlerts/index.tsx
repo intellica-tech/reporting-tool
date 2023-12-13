@@ -51,10 +51,7 @@ function AlertList() {
           }));
 
         setApiData(editedData);
-        console.log('Fetched and edited data:', data.result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+      } catch (error) {}
     };
 
     fetchData();
