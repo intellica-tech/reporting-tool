@@ -22,14 +22,12 @@ const StyledAlerts = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const StyledAlertsTable = styled.div`
-  align-self: flex-start;
+  height: 100%;
 `;
 
 const StyledAlertsButton = styled.div`
-  align-self: flex-end;
+  flex: end;
+  padding: 8px 11px;
 `;
 
-export { StyledAlerts, StyledAlertsTable, StyledAlertsButton };
+export { StyledAlerts, StyledAlertsButton };

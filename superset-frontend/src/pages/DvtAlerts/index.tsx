@@ -22,11 +22,7 @@ import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
-import {
-  StyledAlerts,
-  StyledAlertsTable,
-  StyledAlertsButton,
-} from './dvt-alerts.module';
+import { StyledAlerts, StyledAlertsButton } from './dvt-alerts.module';
 
 function AlertList() {
   const [apiData, setApiData] = useState([]);
@@ -98,9 +94,7 @@ function AlertList() {
 
   return apiData.length > 0 ? (
     <StyledAlerts>
-      <StyledAlertsTable>
-        <DvtTable data={apiData} header={modifiedData.header} />
-      </StyledAlertsTable>
+      <DvtTable data={apiData} header={modifiedData.header} />
       <StyledAlertsButton>
         <DvtButton
           label="Create New Alert"
