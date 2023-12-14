@@ -36,6 +36,7 @@ import {
   getChartPadding,
   getLegendProps,
   getOverMaxHiddenFormatter,
+  getMinAndMaxFromBounds,
   sanitizeHtml,
   sortAndFilterSeries,
   sortRows,
@@ -874,8 +875,38 @@ test('calculateLowerLogTick', () => {
 });
 
 test('getAxisType', () => {
-  expect(getAxisType(GenericDataType.TEMPORAL)).toEqual(AxisType.time);
-  expect(getAxisType(GenericDataType.NUMERIC)).toEqual(AxisType.value);
-  expect(getAxisType(GenericDataType.BOOLEAN)).toEqual(AxisType.category);
-  expect(getAxisType(GenericDataType.STRING)).toEqual(AxisType.category);
+  expect(getAxisType(false, GenericDataType.TEMPORAL)).toEqual(AxisType.time);
+  expect(getAxisType(false, GenericDataType.NUMERIC)).toEqual(AxisType.value);
+  expect(getAxisType(true, GenericDataType.NUMERIC)).toEqual(AxisType.category);
+  expect(getAxisType(false, GenericDataType.BOOLEAN)).toEqual(
+    AxisType.category,
+  );
+  expect(getAxisType(false, GenericDataType.STRING)).toEqual(AxisType.category);
+});
+
+test('getMinAndMaxFromBounds returns empty object when not truncating', () => {
+  expect(getMinAndMaxFromBounds(AxisType.value, false, 10, 100)).toEqual({});
+});
+
+test('getMinAndMaxFromBounds returns automatic bounds when truncating', () => {
+  expect(
+    getMinAndMaxFromBounds(AxisType.value, true, undefined, undefined),
+  ).toEqual({
+    min: 'dataMin',
+    max: 'dataMax',
+  });
+});
+
+test('getMinAndMaxFromBounds returns automatic upper bound when truncating', () => {
+  expect(getMinAndMaxFromBounds(AxisType.value, true, 10, undefined)).toEqual({
+    min: 10,
+    max: 'dataMax',
+  });
+});
+
+test('getMinAndMaxFromBounds returns automatic lower bound when truncating', () => {
+  expect(getMinAndMaxFromBounds(AxisType.value, true, undefined, 100)).toEqual({
+    min: 'dataMin',
+    max: 100,
+  });
 });
