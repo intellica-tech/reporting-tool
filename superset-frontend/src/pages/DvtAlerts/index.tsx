@@ -18,8 +18,15 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import DvtButton from 'src/components/DvtButton';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
+import {
+  StyledAlerts,
+  StyledAlertsTable,
+  StyledAlertsButton,
+} from './dvt-alerts.module';
 
 function AlertList() {
   const [apiData, setApiData] = useState([]);
@@ -51,7 +58,9 @@ function AlertList() {
           }));
 
         setApiData(editedData);
-      } catch (error) {}
+      } catch (error) {
+        console.error('Hata:', error);
+      }
     };
 
     fetchData();
@@ -87,7 +96,30 @@ function AlertList() {
     ],
   };
 
-  return <DvtTable data={apiData} header={modifiedData.header} />;
+  return apiData.length > 0 ? (
+    <StyledAlerts>
+      <StyledAlertsTable>
+        <DvtTable data={apiData} header={modifiedData.header} />
+      </StyledAlertsTable>
+      <StyledAlertsButton>
+        <DvtButton
+          label="Create New Alert"
+          onClick={() => {}}
+          colour="grayscale"
+        />
+      </StyledAlertsButton>
+    </StyledAlerts>
+  ) : (
+    <StyledAlerts>
+      <DvtIconDataLabel label="No Alerts Yet" buttonLabel="Alert" />
+      <StyledAlertsButton>
+        <DvtButton
+          label="Create New Alert"
+          onClick={() => {}}
+          colour="grayscale"
+        />
+      </StyledAlertsButton>
+    </StyledAlerts>
+  );
 }
-
 export default withToasts(AlertList);
