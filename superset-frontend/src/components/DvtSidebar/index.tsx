@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  dvtSidebarAlertsSetProperty,
+  dvtSidebarConnectionSetProperty,
+  dvtSidebarReportsSetProperty,
+} from 'src/dvt-redux/dvt-sidebarReducer';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import DvtLogo from '../DvtLogo';
 import DvtDarkMode from '../DvtDarkMode';
 import DvtTitlePlus from '../DvtTitlePlus';
@@ -24,6 +31,12 @@ interface DvtSidebarProps {
 }
 
 const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
+  const dispatch = useDispatch();
+  const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
+  const alertsSelector = useAppSelector(state => state.dvtSidebar.alerts);
+  const connectionSelector = useAppSelector(
+    state => state.dvtSidebar.connection,
+  );
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
 
@@ -37,7 +50,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Alerts';
       case '/report/list/':
         return 'Reports';
-      case '/dataset/add/':
+      case '/databaseview/list/':
         return 'Connection';
       case '/superset/sqllab/':
         return 'SQL Lab';
@@ -55,6 +68,39 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const sidebarDataFindPathname = DvtSidebarData.find(
     (item: { pathname: string }) => item.pathname === pathName,
   );
+
+  const updateReportsProperty = (value: string, propertyName: string) => {
+    dispatch(
+      dvtSidebarReportsSetProperty({
+        reports: {
+          ...reportsSelector,
+          [propertyName]: value,
+        },
+      }),
+    );
+  };
+
+  const updateAlertsProperty = (value: string, propertyName: string) => {
+    dispatch(
+      dvtSidebarAlertsSetProperty({
+        alerts: {
+          ...alertsSelector,
+          [propertyName]: value,
+        },
+      }),
+    );
+  };
+
+  const updateConnectionProperty = (value: string, propertyName: string) => {
+    dispatch(
+      dvtSidebarConnectionSetProperty({
+        connection: {
+          ...connectionSelector,
+          [propertyName]: value,
+        },
+      }),
+    );
+  };
 
   return (
     <StyledDvtSidebar pathName={pathName}>
@@ -99,25 +145,41 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                 label: string;
                 values: { label: string; value: string }[];
                 placeholder: string;
-                valuesList: { id: number; title: string; subtitle: string }[];
+                valuesList?: { id: number; title: string; subtitle: string }[];
                 title: string;
                 datePicker?: boolean;
+                name: string;
               },
               index: number,
             ) => (
               <StyledDvtSidebarBodySelect key={index}>
-                {!data.datePicker &&
-                  data.placeholder !== 'See Table Schema' && (
-                    <DvtSelect
-                      data={data.values}
-                      label={data.label}
-                      placeholder={data.placeholder}
-                      selectedValue=""
-                      setSelectedValue={() => {}}
-                      maxWidth
-                    />
-                  )}
-                {data.placeholder === 'See Table Schema' && (
+                {!data.datePicker && !data.valuesList && (
+                  <DvtSelect
+                    data={data.values}
+                    label={data.label}
+                    placeholder={data.placeholder}
+                    selectedValue={
+                      pathTitles(pathName) === 'Reports'
+                        ? reportsSelector[data.name]
+                        : pathTitles(pathName) === 'Alerts'
+                        ? alertsSelector[data.name]
+                        : pathTitles(pathName) === 'Connection'
+                        ? connectionSelector[data.name]
+                        : undefined
+                    }
+                    setSelectedValue={value => {
+                      if (pathTitles(pathName) === 'Reports') {
+                        updateReportsProperty(value, data.name);
+                      } else if (pathTitles(pathName) === 'Alerts') {
+                        updateAlertsProperty(value, data.name);
+                      } else if (pathTitles(pathName) === 'Connection') {
+                        updateConnectionProperty(value, data.name);
+                      }
+                    }}
+                    maxWidth
+                  />
+                )}
+                {data.valuesList && (
                   <>
                     <DvtSelect
                       data={data.values}

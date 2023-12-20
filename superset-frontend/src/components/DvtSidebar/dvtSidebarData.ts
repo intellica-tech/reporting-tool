@@ -88,31 +88,34 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/dataset/add/',
+    pathname: '/databaseview/list/',
     data: [
       {
-        label: 'Database',
+        label: 'EXPOSE IN SQL LAB',
         values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
+          { label: 'No', value: 'false' },
+          { label: 'Yes', value: 'true' },
         ],
         placeholder: 'Select or type a value',
+        name: 'expose_in_sqllab',
       },
       {
-        label: 'Database',
+        label: 'AQE',
         values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
+          { label: 'No', value: 'false' },
+          { label: 'Yes', value: 'true' },
         ],
         placeholder: 'Select or type a value',
+        name: 'allow_run_async',
       },
       {
-        label: 'Database',
+        label: 'SEARCH',
         values: [
           { label: 'Failed', value: 'failed' },
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Type a value',
+        name: 'search',
       },
     ],
   },
@@ -436,20 +439,23 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Owner',
+        name: 'owner',
       },
       {
         values: [
-          { label: 'Failed', value: 'failed' },
+          { label: 'Superset Admin', value: 'Superset Admin' },
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Created by',
+        name: 'createdBy',
       },
       {
         values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
+          { label: 'Error', value: 'Error' },
+          { label: 'Success', value: 'Success' },
         ],
         placeholder: 'Chart Type',
+        name: 'chartType',
       },
       {
         values: [
@@ -457,6 +463,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Dataset',
+        name: 'dataset',
       },
       {
         values: [
@@ -464,6 +471,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Dashboards',
+        name: 'dashboards',
       },
       {
         values: [
@@ -471,6 +479,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Favorite',
+        name: 'favorite',
       },
       {
         values: [
@@ -478,6 +487,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Certified',
+        name: 'certified',
       },
     ],
   },
@@ -486,27 +496,24 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         label: 'Owner',
-        values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
-        ],
+        values: [{ label: 'Superset Admin', value: 'Superset Admin' }],
         placeholder: 'Select or type a value',
+        name: 'owner',
       },
       {
         label: 'Created by',
-        values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
-        ],
+        values: [{ label: 'Superset Admin', value: 'Superset Admin' }],
         placeholder: 'Select or type a value',
+        name: 'createdBy',
       },
       {
         label: 'Status',
         values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
+          { label: 'Error', value: 'Error' },
+          { label: 'Success', value: 'Success' },
         ],
         placeholder: 'Select or type a value',
+        name: 'status',
       },
       {
         label: 'Search',
@@ -515,6 +522,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Type a value',
+        name: 'search',
       },
     ],
   },
