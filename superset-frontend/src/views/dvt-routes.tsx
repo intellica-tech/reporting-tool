@@ -24,7 +24,7 @@ import DvtHome from 'src/pages/DvtHome';
 
 const ChartCreation = lazy(
   () =>
-    import(/* webpackChunkName: "ChartCreation" */ 'src/pages/ChartCreation'),
+    import(/* webpackChunkName: "ChartCreation" */ 'src/pages/DvtChartAdd'),
 );
 
 const AnnotationLayerList = lazy(
