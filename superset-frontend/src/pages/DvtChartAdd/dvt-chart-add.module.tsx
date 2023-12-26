@@ -10,7 +10,8 @@ const StyledChartAdd = styled.div`
 const StyledChart = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 30px;
   height: 100%;
 `;
 
