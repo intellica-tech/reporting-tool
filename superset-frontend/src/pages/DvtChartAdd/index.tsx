@@ -38,22 +38,26 @@
 
 import React from 'react';
 import withToasts from 'src/components/MessageToasts/withToasts';
-import { StyledChart, StyledChartAdd, StyledImgRender } from './dvt-chart-add.module';
+import {
+  StyledChart,
+  StyledChartAdd,
+  StyledImgRender,
+} from './dvt-chart-add.module';
 
 const photoFileNames = [
-  {label:'Lorem Ipsum Dolor Sit', fileName:'area.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'bar.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'big_number_total.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'big_number.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'box_plot.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'bubble.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'bullet.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'cal_heatmap.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'chord.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'compare.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'country_map.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'deck_arc.png'},
-  {label:'Lorem Ipsum Dolor Sit', fileName:'deck_grid.png'},
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'area.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'bar.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'big_number_total.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'big_number.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'box_plot.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'bubble.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'bullet.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'cal_heatmap.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'chord.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'compare.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'country_map.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'deck_arc.png' },
+  { label: 'Lorem Ipsum Dolor Sit', fileName: 'deck_grid.png' },
 ];
 
 class ChartAdd extends React.Component {
@@ -61,7 +65,12 @@ class ChartAdd extends React.Component {
     return photoFileNames.map((item, index) => {
       const imgSrc = require(`../../../src/assets/images/viz_thumbnails/${item.fileName}`);
       const imgAlt = `Photo ${index + 1}`;
-      return <StyledImgRender>{item.label}<img key={index} src={imgSrc} alt={imgAlt} /></StyledImgRender>;
+      return (
+        <StyledImgRender>
+          {item.label}
+          <img key={index} src={imgSrc} alt={imgAlt} />
+        </StyledImgRender>
+      );
     });
   };
 
