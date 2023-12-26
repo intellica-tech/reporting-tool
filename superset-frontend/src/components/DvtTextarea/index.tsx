@@ -17,18 +17,42 @@
  * under the License.
  */
 import React from 'react';
-import { StyledDvtLogo, DvtTitle } from './dvt-logo.module';
-import DvtAppLogo from '../../assets/dvt-img/dvtAppLogo.png';
+import {
+  StyleTextarea,
+  StyleTextareaLabel,
+  StyleTextareaText,
+} from './dvt-textarea.module';
 
-export interface DvtLogoProps {
-  title: string;
+export interface DvtTextareaProps {
+  label?: string;
+  typeDesign?: 'text' | 'form' | 'border' | 'resize';
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-const DvtLogo: React.FC<DvtLogoProps> = ({ title }) => (
-  <StyledDvtLogo to="/superset/welcome/">
-    <img src={DvtAppLogo} alt="Logo" />
-    <DvtTitle>{title}</DvtTitle>
-  </StyledDvtLogo>
-);
+const DvtTextarea: React.FC<DvtTextareaProps> = ({
+  label,
+  typeDesign = 'text',
+  placeholder = '',
+  value,
+  onChange,
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e.target.value);
+  };
 
-export default DvtLogo;
+  return (
+    <StyleTextarea>
+      {label && <StyleTextareaLabel>{label}</StyleTextareaLabel>}
+      <StyleTextareaText
+        typeDesign={typeDesign}
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+      />
+    </StyleTextarea>
+  );
+};
+
+export default DvtTextarea;

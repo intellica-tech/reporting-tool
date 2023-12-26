@@ -18,51 +18,35 @@
  */
 import { styled } from '@superset-ui/core';
 
-interface StyledInputProps {
-  $size: string;
+interface StyledTextAreaProps {
   typeDesign: string;
 }
 
-const sizes = {
-  small: 40,
-  medium: 48,
-  large: 56,
-};
-
-const StyledInput = styled.div<StyledInputProps>`
+const StyleTextarea = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid ${({ theme }) => theme.colors.dvt.primary.light2};
-  padding: 8px 16px;
+  flex-direction: column;
+  gap: 9px;
+`;
+
+const StyleTextareaLabel = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.dvt.text.help};
+`;
+
+const StyleTextareaText = styled.textarea<StyledTextAreaProps>`
+  height: 169px;
+  width: 100%;
+  outline: none;
+  border: none;
+  resize: ${({ typeDesign }) => (typeDesign === 'resize' ? '' : 'none')};
+  padding: 12px 8px;
   border-radius: ${({ typeDesign }) =>
     typeDesign === 'form' ? '4px' : '12px'};
-  width: 100%;
-  height: ${({ $size }) => sizes[$size]}px;
+  border: ${({ typeDesign, theme }) =>
+    typeDesign === 'border'
+      ? `1px solid ${theme.colors.dvt.primary.light2}`
+      : ''};
 `;
 
-const StyledInputField = styled.input`
-  width: 100%;
-  height: 100%;
-  border: none;
-  color: ${({ theme }) => theme.colors.dvt.text.bold};
-
-  &:focus {
-    outline: none;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.dvt.text.help};
-  }
-
-  ::-ms-reveal,
-  ::-ms-clear {
-    display: none;
-  }
-`;
-
-const StyledInputIcon = styled.div`
-  cursor: pointer;
-`;
-
-export { StyledInput, StyledInputField, StyledInputIcon };
+export { StyleTextarea, StyleTextareaText, StyleTextareaLabel };
