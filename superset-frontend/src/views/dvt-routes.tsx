@@ -23,8 +23,7 @@ import React, { lazy } from 'react';
 import DvtHome from 'src/pages/DvtHome';
 
 const ChartCreation = lazy(
-  () =>
-    import(/* webpackChunkName: "ChartCreation" */ 'src/pages/ChartCreation'),
+  () => import(/* webpackChunkName: "ChartCreation" */ 'src/pages/DvtChartAdd'),
 );
 
 const AnnotationLayerList = lazy(
@@ -61,7 +60,9 @@ const CssTemplateList = lazy(
 
 const DashboardList = lazy(
   () =>
-    import(/* webpackChunkName: "DashboardList" */ 'src/pages/DashboardList'),
+    import(
+      /* webpackChunkName: "DashboardList" */ 'src/pages/DvtDashboardList'
+    ),
 );
 
 const Dashboard = lazy(
