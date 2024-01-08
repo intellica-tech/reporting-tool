@@ -17,15 +17,27 @@
  * under the License.
  */
 import { styled } from '@superset-ui/core';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   pathName: string;
 }
+
+interface SidebarIcon {
+  isOpen: boolean;
+  active: boolean;
+}
+
+interface SidebarRotateIcon {
+  isOpen: boolean;
+}
+
 const StyledDvtSidebar = styled.div<SidebarProps>`
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: 250px;
+  min-width: ${({ pathName }) =>
+    `${pathName === '/superset/welcome/' ? 250 : 300}`}px;
   padding: 32px 16px 39px 16px;
   position: fixed;
   top: 0;
@@ -51,6 +63,46 @@ const StyledDvtSidebarBody = styled.div<SidebarProps>`
   display: flex;
   flex-direction: column;
   gap: ${({ pathName }) => (pathName === '/superset/welcome/' ? 40 : 12)}px;
+`;
+
+const StyledDvtSidebarIconGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
+`;
+
+const StyledDvtSidebarGroup = styled.div`
+  display: flex;
+`;
+
+const StyledDvtSidebarIcon = styled(Link)<SidebarIcon>`
+  display: flex;
+  justify-content: ${({ isOpen }) => (isOpen ? '' : 'center')};
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  border-radius: 50px;
+  width: ${({ isOpen }) => (isOpen ? '200px' : '40px')};
+  height: 40px;
+  padding-left: ${({ isOpen }) => (isOpen ? '15px' : '')};
+  gap: 15px;
+  text-decoration: ${({ active }) => (active ? 'underline' : '')};
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const StyledDvtSidebarRotateIcon = styled.div<SidebarRotateIcon>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  border-radius: 50px;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'none')};
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
 `;
 
 const StyledDvtSidebarBodyItem = styled.div`
@@ -82,4 +134,8 @@ export {
   StyledDvtSidebarBodySelect,
   StyledDvtSidebarFooter,
   StyledDvtSidebarNavbarLogout,
+  StyledDvtSidebarIconGroup,
+  StyledDvtSidebarGroup,
+  StyledDvtSidebarIcon,
+  StyledDvtSidebarRotateIcon,
 };
