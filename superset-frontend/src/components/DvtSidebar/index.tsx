@@ -15,9 +15,11 @@ import DvtDarkMode from '../DvtDarkMode';
 import DvtTitlePlus from '../DvtTitlePlus';
 import DvtNavigation from '../DvtNavigation';
 import DvtFolderNavigation from '../DvtFolderNavigation';
+import { DoubleRightOutlined } from '@ant-design/icons';
 import DvtSelect from '../DvtSelect';
 import DvtNavigationBar from '../DvtNavigationBar';
 import DvtSidebarData from './dvtSidebarData';
+import Icon from '../Icons/Icon';
 import {
   StyledDvtSidebar,
   StyledDvtSidebarHeader,
@@ -26,6 +28,10 @@ import {
   StyledDvtSidebarBodySelect,
   StyledDvtSidebarFooter,
   StyledDvtSidebarNavbarLogout,
+  StyledDvtSidebarIconGroup,
+  StyledDvtSidebarGroup,
+  StyledDvtSidebarIcon,
+  StyledDvtSidebarRotateIcon,
 } from './dvt-sidebar.module';
 import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
@@ -57,6 +63,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [editedData, setEditedData] = useState<EditedDataItem[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -353,91 +360,109 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         pathTitles(pathName) === 'SQL Lab' ||
         pathTitles(pathName) === 'Chart Add' ||
         pathTitles(pathName) === 'SQL History') && (
-        <StyledDvtSidebarBody pathName={pathName}>
-          {sidebarDataFindPathname?.data.map(
-            (
-              data: {
-                label: string;
-                values: { label: string; value: string }[];
-                placeholder: string;
-                valuesList?: { id: number; title: string; subtitle: string }[];
-                title: string;
-                datePicker?: boolean;
-                name: string;
-              },
-              index: number,
-            ) => (
-              <StyledDvtSidebarBodySelect key={index}>
-                {!data.datePicker && !data.valuesList && (
-                  <DvtSelect
-                    data={
-                      editedData && data.name === 'dataset'
-                        ? editedData
-                        : data.name === 'tags'
-                        ? tag
-                        : data.name === 'category'
-                        ? category
-                        : data.values
-                    }
-                    label={data.label}
-                    placeholder={data.placeholder}
-                    selectedValue={
-                      pathTitles(pathName) === 'Reports'
-                        ? reportsSelector[data.name]
-                        : pathTitles(pathName) === 'Alerts'
-                        ? alertsSelector[data.name]
-                        : pathTitles(pathName) === 'Connection'
-                        ? connectionSelector[data.name]
-                        : pathTitles(pathName) === 'Datasets'
-                        ? datasetsSelector[data.name]
-                        : pathTitles(pathName) === 'Chart Add'
-                        ? chartAddSelector[data.name]
-                        : undefined
-                    }
-                    setSelectedValue={value => {
-                      if (pathTitles(pathName) === 'Reports') {
-                        updateReportsProperty(value, data.name);
-                      } else if (pathTitles(pathName) === 'Alerts') {
-                        updateAlertsProperty(value, data.name);
-                      } else if (pathTitles(pathName) === 'Connection') {
-                        updateConnectionProperty(value, data.name);
-                      } else if (pathTitles(pathName) === 'Datasets') {
-                        updateDatasetsProperty(value, data.name);
-                      } else if (pathTitles(pathName) === 'Chart Add') {
-                        updateChartAddProperty(value, data.name);
-                      }
-                    }}
-                    maxWidth
-                  />
-                )}
-                {data.valuesList && (
-                  <>
-                    <DvtSelect
-                      data={data.values}
-                      label={data.label}
-                      placeholder={data.placeholder}
-                      selectedValue=""
-                      setSelectedValue={() => {}}
-                      maxWidth
-                    />
-                    <DvtList data={data.valuesList} title={data.title} />
-                  </>
-                )}
-                {data.datePicker && (
-                  <DvtDatePicker
-                    isOpen
-                    label={data.label}
-                    placeholder={data.placeholder}
-                    selectedDate={null}
-                    setIsOpen={() => {}}
-                    setSelectedDate={() => {}}
-                    maxWidth
-                  />
-                )}
-              </StyledDvtSidebarBodySelect>
-            ),
-          )}
-        </StyledDvtSidebarBody>
+        <StyledDvtSidebarGroup>
+          {DvtSidebarData.find(
+            (item: { pathname: string }) =>
+              item.pathname === '/superset/welcome/',
+          )
+            ?.data.filter((data: any) => data.titleMenu === 'folder navigation')
+            .map((filteredData: any, index: number) => (
+              <div key={index}>
+                <StyledDvtSidebarIconGroup>
+                  {filteredData.data.map((item: any, subIndex: number) => (
+                    <StyledDvtSidebarIcon
+                      to={item.url}
+                      isOpen={isOpen}
+                      active={pathName === item.url}
+                    >
+                      <Icon key={subIndex} fileName={item.fileName} />
+                      {isOpen && item.title}
+                    </StyledDvtSidebarIcon>
+                  ))}
+                  <StyledDvtSidebarRotateIcon
+                    isOpen={isOpen}
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <DoubleRightOutlined />
+                  </StyledDvtSidebarRotateIcon>
+                </StyledDvtSidebarIconGroup>
+              </div>
+            ))}
+          <StyledDvtSidebarBody pathName={pathName}>
+            {!isOpen &&
+              sidebarDataFindPathname?.data.map(
+                (
+                  data: {
+                    label: string;
+                    values: { label: string; value: string }[];
+                    placeholder: string;
+                    valuesList?: {
+                      id: number;
+                      title: string;
+                      subtitle: string;
+                    }[];
+                    title: string;
+                    datePicker?: boolean;
+                    name: string;
+                  },
+                  index: number,
+                ) => (
+                  <StyledDvtSidebarBodySelect key={index}>
+                    {!data.datePicker && !data.valuesList && (
+                      <DvtSelect
+                        data={data.values}
+                        label={data.label}
+                        placeholder={data.placeholder}
+                        selectedValue={
+                          pathTitles(pathName) === 'Reports'
+                            ? reportsSelector[data.name]
+                            : pathTitles(pathName) === 'Alerts'
+                            ? alertsSelector[data.name]
+                            : pathTitles(pathName) === 'Connection'
+                            ? connectionSelector[data.name]
+                            : undefined
+                        }
+                        setSelectedValue={value => {
+                          if (pathTitles(pathName) === 'Reports') {
+                            updateReportsProperty(value, data.name);
+                          } else if (pathTitles(pathName) === 'Alerts') {
+                            updateAlertsProperty(value, data.name);
+                          } else if (pathTitles(pathName) === 'Connection') {
+                            updateConnectionProperty(value, data.name);
+                          }
+                        }}
+                        maxWidth
+                      />
+                    )}
+                    {data.valuesList && (
+                      <>
+                        <DvtSelect
+                          data={data.values}
+                          label={data.label}
+                          placeholder={data.placeholder}
+                          selectedValue=""
+                          setSelectedValue={() => {}}
+                          maxWidth
+                        />
+                        <DvtList data={data.valuesList} title={data.title} />
+                      </>
+                    )}
+                    {data.datePicker && (
+                      <DvtDatePicker
+                        isOpen
+                        label={data.label}
+                        placeholder={data.placeholder}
+                        selectedDate={null}
+                        setIsOpen={() => {}}
+                        setSelectedDate={() => {}}
+                        maxWidth
+                      />
+                    )}
+                  </StyledDvtSidebarBodySelect>
+                ),
+              )}
+          </StyledDvtSidebarBody>
+        </StyledDvtSidebarGroup>
       )}
 
       {pathTitles(pathName) === 'Profile' && (

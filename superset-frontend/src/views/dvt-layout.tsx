@@ -29,12 +29,17 @@ import { routes } from 'src/views/dvt-routes';
 import { styled } from '@superset-ui/core';
 import { WithNavbarBottom } from 'src/components/DvtNavbar/dvt-navbar-tabs-data';
 
+interface StyledLayoutWidthProps {
+  navbarInHeight: boolean;
+  active: boolean;
+}
+
 interface StyledLayoutProps {
   navbarInHeight: boolean;
 }
 
-const StyledApp = styled.div<StyledLayoutProps>`
-  margin-left: 250px;
+const StyledApp = styled.div<StyledLayoutWidthProps>`
+  margin-left: ${({ active }) => (active ? '300px' : '250px')};
   padding-top: ${({ navbarInHeight }) => (navbarInHeight ? 160 : 80)}px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   height: 100vh;
@@ -64,7 +69,10 @@ const DvtLayout = () => {
   const { pathname } = location;
 
   return (
-    <StyledApp navbarInHeight={WithNavbarBottom.includes(pathname)}>
+    <StyledApp
+      navbarInHeight={WithNavbarBottom.includes(pathname)}
+      active={pathname !== '/superset/welcome/'}
+    >
       <GlobalStyles />
       <DvtSidebar pathName={pathname} />
       <DvtNavbar pathName={pathname} />
