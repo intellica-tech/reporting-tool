@@ -171,6 +171,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Owner',
+        name: 'owner',
       },
       {
         values: [
@@ -178,6 +179,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Database',
+        name: 'database',
       },
       {
         values: [
@@ -187,6 +189,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Dolor Sit Amet', value: 'success1' },
         ],
         placeholder: 'Schema',
+        name: 'schema',
       },
       {
         values: [
@@ -194,6 +197,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Type',
+        name: 'type',
       },
       {
         values: [
@@ -201,6 +205,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           { label: 'Success', value: 'success' },
         ],
         placeholder: 'Certified',
+        name: 'certified',
       },
     ],
   },
@@ -387,6 +392,24 @@ const DvtSidebarData: SidebarDataProps[] = [
         ],
         placeholder: 'See Table Schema',
         title: 'FFC 2019 Survey',
+      },
+    ],
+  },
+  {
+    pathname: '/dataset/add/',
+    data: [
+      {
+        values: [
+          { label: 'postgresql examples', value: 'postgresql_examples' },
+          { label: 'postgresql PostgreSQL', value: 'postgresql_postgresql' },
+        ],
+        placeholder: 'DATABASE',
+        name: 'database',
+      },
+      {
+        values: [{ label: 'Schema', value: 'schema' }],
+        placeholder: 'SCHEMA',
+        name: 'schema',
       },
     ],
   },
