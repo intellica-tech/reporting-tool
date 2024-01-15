@@ -20,20 +20,20 @@ import { styled } from '@superset-ui/core';
 
 const StyledInputDrop = styled.div`
   display: flex;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  flex-direction: column;
   border-radius: 4px;
   width: 100%;
-  height: 39px;
+  height: 100%;
+  gap: 12px;
 `;
 
 const StyledInputDropField = styled.input`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.colors.dvt.text.bold};
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   border: none;
   cursor: default;
-  
   &:focus {
     outline: none;
   }
@@ -61,9 +61,24 @@ const StyledInputDropIcon = styled.div`
   cursor: pointer;
 `;
 
+const StyledInputDropLabel = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+const StyledInputDropInputGroup = styled.div`
+  display: flex;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  align-items: center;
+  padding: 12px 14px;
+`;
+
 export {
   StyledInputDrop,
   StyledInputDropField,
   StyledInputDropIcon,
   StyledInputDropPlaceholder,
+  StyledInputDropLabel,
+  StyledInputDropInputGroup,
 };

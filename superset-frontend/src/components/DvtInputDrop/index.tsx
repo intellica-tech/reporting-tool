@@ -4,15 +4,25 @@ import {
   StyledInputDrop,
   StyledInputDropField,
   StyledInputDropIcon,
+  StyledInputDropInputGroup,
+  StyledInputDropLabel,
 } from './dvt-input-drop.module';
+import DvtPopper from '../DvtPopper';
+import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtInputDropProps {
+  label?: string;
+  popoverLabel?: string;
+  popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   placeholder?: string;
   onDrop?: (data: any) => void;
   addIconClick: () => void;
 }
 
 const DvtInputDrop = ({
+  label,
+  popoverLabel,
+  popoverDirection = 'top',
   placeholder,
   onDrop,
   addIconClick,
@@ -35,23 +45,35 @@ const DvtInputDrop = ({
     onDrop?.(droppedData);
   };
 
-  const handleIconClick = () => {
-    setDroppedData(null);
-  };
-
   return (
     <StyledInputDrop>
-      <StyledInputDropField
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        placeholder={placeholder}
-        type="text"
-        readOnly
-        value={droppedData?.name}
-      />
-      <StyledInputDropIcon onClick={addIconClick}>
-        <Icon fileName="dvt-add_square" iconSize="xl" />
-      </StyledInputDropIcon>
+      <StyledInputDropLabel>
+        {label}
+        {popoverLabel && (
+          <DvtPopper label={popoverLabel} direction={popoverDirection}>
+            <Icon
+              fileName="warning"
+              css={(theme: SupersetTheme) => ({
+                color: theme.colors.dvt.primary.base,
+              })}
+              iconSize="l"
+            />
+          </DvtPopper>
+        )}
+      </StyledInputDropLabel>
+      <StyledInputDropInputGroup>
+        <StyledInputDropField
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          placeholder={placeholder}
+          type="text"
+          readOnly
+          value={droppedData?.name}
+        />
+        <StyledInputDropIcon onClick={addIconClick}>
+          <Icon fileName="dvt-add_square" iconSize="xl" />
+        </StyledInputDropIcon>
+      </StyledInputDropInputGroup>
     </StyledInputDrop>
   );
 };
