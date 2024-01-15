@@ -18,6 +18,7 @@
  */
 import React from 'react';
 import DvtInputDrop, { DvtInputDropProps } from './index';
+import DvtDargCard from '../DvtDragCard';
 
 export default {
   title: 'Dvt-Components/DvtInputDrop',
@@ -28,6 +29,11 @@ export const Default = (args: DvtInputDropProps) => {
   return (
     <div style={{ width: 404 }}>
       <DvtInputDrop {...args} />
+      <DvtDargCard
+        label="arac"
+        value={{ id: 1, name: 'arac' }}
+        icon="dvt-hashtag"
+      />
     </div>
   );
 };

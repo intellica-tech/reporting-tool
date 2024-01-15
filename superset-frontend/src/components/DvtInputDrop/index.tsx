@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '../Icons/Icon';
 import {
   StyledInputDrop,
@@ -17,23 +17,38 @@ const DvtInputDrop = ({
   onDrop,
   addIconClick,
 }: DvtInputDropProps) => {
+  const [droppedData, setDroppedData] = useState<any | null>(null);
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const droppedDataString = e.dataTransfer.getData('drag-drop');
+    const droppedData = JSON.parse(droppedDataString);
+
+    if (droppedData) {
+      setDroppedData(droppedData);
+    }
+
+    onDrop?.(droppedData);
+  };
+
+  const handleIconClick = () => {
+    setDroppedData(null);
   };
 
   return (
     <StyledInputDrop>
       <StyledInputDropField
         onDragOver={handleDragOver}
-        onDrop={e => {
-          const droppedDataString = e.dataTransfer.getData('text/plain');
-          const droppedData = JSON.parse(droppedDataString);
-          onDrop?.(droppedData);
-        }}
+        onDrop={handleDrop}
         placeholder={placeholder}
         type="text"
         readOnly
-      ></StyledInputDropField>
+        value={droppedData?.name}
+      />
       <StyledInputDropIcon onClick={addIconClick}>
         <Icon fileName="dvt-add_square" iconSize="xl" />
       </StyledInputDropIcon>
