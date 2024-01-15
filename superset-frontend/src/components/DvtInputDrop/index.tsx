@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
 import {
   StyledInputDrop,
@@ -8,7 +9,6 @@ import {
   StyledInputDropLabel,
 } from './dvt-input-drop.module';
 import DvtPopper from '../DvtPopper';
-import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtInputDropProps {
   label?: string;

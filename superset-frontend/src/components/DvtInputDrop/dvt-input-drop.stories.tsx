@@ -25,25 +25,23 @@ export default {
   component: DvtInputDrop,
 };
 
-export const Default = (args: DvtInputDropProps) => {
-  return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', width: 404, gap: 20 }}
-    >
-      <DvtInputDrop {...args} />
-      <DvtDargCard
-        label="arac"
-        value={{ id: 1, name: 'arac' }}
-        icon="dvt-hashtag"
-      />
-      <DvtDargCard
-        label="arac2"
-        value={{ id: 1, name: 'arac2' }}
-        icon="dvt-hashtag"
-      />
-    </div>
-  );
-};
+export const Default = (args: DvtInputDropProps) => (
+  <div
+    style={{ display: 'flex', flexDirection: 'column', width: 404, gap: 20 }}
+  >
+    <DvtInputDrop {...args} />
+    <DvtDargCard
+      label="arac"
+      value={{ id: 1, name: 'arac' }}
+      icon="dvt-hashtag"
+    />
+    <DvtDargCard
+      label="arac2"
+      value={{ id: 1, name: 'arac2' }}
+      icon="dvt-hashtag"
+    />
+  </div>
+);
 
 Default.args = {
   placeholder: 'Drop columns here or click',
