@@ -61,10 +61,11 @@ const DvtInputDrop = ({
           </DvtPopper>
         )}
       </StyledInputDropLabel>
-      <StyledInputDropInputGroup>
+      <StyledInputDropInputGroup
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         <StyledInputDropField
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
           placeholder={placeholder}
           type="text"
           readOnly
