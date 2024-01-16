@@ -44,14 +44,18 @@ const DvtInputDrop = ({
     const droppedData = JSON.parse(droppedDataString);
 
     if (droppedData) {
-      setDroppedData((prevData: any[]) => {
-        return multiple ? [...prevData, droppedData] : [droppedData];
+      setDroppedData((prevData: any | any[]) => {
+        const newData = multiple
+          ? Array.isArray(prevData)
+            ? [...prevData, droppedData]
+            : [droppedData]
+          : [droppedData];
+        return newData;
       });
 
       onDrop?.([droppedData]);
     }
   };
-
   return (
     <StyledInputDrop>
       <StyledInputDropLabel>
@@ -87,7 +91,7 @@ const DvtInputDrop = ({
                   placeholder={placeholder}
                   type="text"
                   readOnly
-                  value={item && item.name ? item.name : ''}
+                  value={item?.name}
                 />
               </StyledInputDropFieldIcon>
             ))}
