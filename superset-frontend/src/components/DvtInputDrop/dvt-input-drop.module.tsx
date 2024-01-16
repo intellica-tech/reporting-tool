@@ -59,6 +59,7 @@ const StyledInputDropPlaceholder = styled.div`
 const StyledInputDropIcon = styled.div`
   color: ${({ theme }) => theme.colors.dvt.text.label};
   cursor: pointer;
+  align-items: center;
 `;
 
 const StyledInputDropLabel = styled.div`
@@ -69,9 +70,21 @@ const StyledInputDropLabel = styled.div`
 
 const StyledInputDropInputGroup = styled.div`
   display: flex;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   padding: 12px 14px;
+`;
+
+const StyledInputDropFieldIcon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const StyledInputDropFieldColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export {
@@ -81,4 +94,6 @@ export {
   StyledInputDropPlaceholder,
   StyledInputDropLabel,
   StyledInputDropInputGroup,
+  StyledInputDropFieldIcon,
+  StyledInputDropFieldColumn,
 };

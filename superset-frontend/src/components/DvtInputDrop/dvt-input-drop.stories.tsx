@@ -37,7 +37,7 @@ export const Default = (args: DvtInputDropProps) => (
     />
     <DvtDargCard
       label="arac2"
-      value={{ id: 1, name: 'arac2' }}
+      value={{ id: 2, name: 'arac2' }}
       icon="dvt-hashtag"
     />
   </div>

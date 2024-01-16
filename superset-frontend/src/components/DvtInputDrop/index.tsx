@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
+import DvtPopper from '../DvtPopper';
 import {
   StyledInputDrop,
   StyledInputDropField,
+  StyledInputDropFieldColumn,
+  StyledInputDropFieldIcon,
   StyledInputDropIcon,
   StyledInputDropInputGroup,
   StyledInputDropLabel,
 } from './dvt-input-drop.module';
-import DvtPopper from '../DvtPopper';
 
 export interface DvtInputDropProps {
   label?: string;
@@ -17,6 +19,7 @@ export interface DvtInputDropProps {
   placeholder?: string;
   onDrop?: (data: any) => void;
   addIconClick: () => void;
+  multiple?: boolean;
 }
 
 const DvtInputDrop = ({
@@ -26,8 +29,9 @@ const DvtInputDrop = ({
   placeholder,
   onDrop,
   addIconClick,
+  multiple,
 }: DvtInputDropProps) => {
-  const [droppedData, setDroppedData] = useState<any | null>(null);
+  const [droppedData, setDroppedData] = useState<any[] | null>(null);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -35,14 +39,17 @@ const DvtInputDrop = ({
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+
     const droppedDataString = e.dataTransfer.getData('drag-drop');
     const droppedData = JSON.parse(droppedDataString);
 
     if (droppedData) {
-      setDroppedData(droppedData);
-    }
+      setDroppedData((prevData: any[]) => {
+        return multiple ? [...prevData, droppedData] : [droppedData];
+      });
 
-    onDrop?.(droppedData);
+      onDrop?.(droppedData);
+    }
   };
 
   return (
@@ -65,15 +72,51 @@ const DvtInputDrop = ({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        <StyledInputDropField
-          placeholder={placeholder}
-          type="text"
-          readOnly
-          value={droppedData?.name}
-        />
-        <StyledInputDropIcon onClick={addIconClick}>
-          <Icon fileName="dvt-add_square" iconSize="xl" />
-        </StyledInputDropIcon>
+        <StyledInputDropFieldColumn>
+          {droppedData &&
+            droppedData.map((item, index) => (
+              <StyledInputDropFieldIcon key={item.index}>
+                <StyledInputDropIcon>
+                  <Icon
+                    fileName="close"
+                    iconSize="l"
+                    style={{ marginTop: 9 }}
+                  />
+                </StyledInputDropIcon>
+                <StyledInputDropField
+                  placeholder={placeholder}
+                  type="text"
+                  readOnly
+                  value={item && item.name ? item.name : ''}
+                />
+              </StyledInputDropFieldIcon>
+            ))}
+          {multiple ? (
+            <StyledInputDropFieldIcon>
+              <StyledInputDropField
+                placeholder={placeholder}
+                type="text"
+                readOnly
+              />
+              <StyledInputDropIcon onClick={addIconClick}>
+                <Icon fileName="dvt-add_square" iconSize="xl" />
+              </StyledInputDropIcon>
+            </StyledInputDropFieldIcon>
+          ) : (
+            !droppedData && (
+              <StyledInputDropFieldIcon>
+                <StyledInputDropField
+                  placeholder={placeholder}
+                  type="text"
+                  readOnly
+                />
+                <StyledInputDropIcon onClick={addIconClick}>
+                  <Icon fileName="dvt-add_square" iconSize="xl" />
+                </StyledInputDropIcon>
+              </StyledInputDropFieldIcon>
+            )
+          )}
+        </StyledInputDropFieldColumn>
       </StyledInputDropInputGroup>
     </StyledInputDrop>
   );
