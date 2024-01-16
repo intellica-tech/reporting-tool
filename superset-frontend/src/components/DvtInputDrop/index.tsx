@@ -48,7 +48,7 @@ const DvtInputDrop = ({
         return multiple ? [...prevData, droppedData] : [droppedData];
       });
 
-      onDrop?.(droppedData);
+      onDrop?.([droppedData]);
     }
   };
 
@@ -75,7 +75,7 @@ const DvtInputDrop = ({
         <StyledInputDropFieldColumn>
           {droppedData &&
             droppedData.map((item, index) => (
-              <StyledInputDropFieldIcon key={item.index}>
+              <StyledInputDropFieldIcon key={index}>
                 <StyledInputDropIcon>
                   <Icon
                     fileName="close"
