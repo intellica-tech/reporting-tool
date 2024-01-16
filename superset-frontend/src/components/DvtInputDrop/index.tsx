@@ -77,24 +77,19 @@ const DvtInputDrop = ({
         onDrop={handleDrop}
       >
         <StyledInputDropFieldColumn>
-          {droppedData &&
-            droppedData.map((item, index) => (
-              <StyledInputDropFieldIcon key={index}>
-                <StyledInputDropIcon>
-                  <Icon
-                    fileName="close"
-                    iconSize="l"
-                    style={{ marginTop: 9 }}
-                  />
-                </StyledInputDropIcon>
-                <StyledInputDropField
-                  placeholder={placeholder}
-                  type="text"
-                  readOnly
-                  value={item?.name}
-                />
-              </StyledInputDropFieldIcon>
-            ))}
+          {droppedData?.map((item, index) => (
+            <StyledInputDropFieldIcon key={index}>
+              <StyledInputDropIcon>
+                <Icon fileName="close" iconSize="l" style={{ marginTop: 9 }} />
+              </StyledInputDropIcon>
+              <StyledInputDropField
+                placeholder={placeholder}
+                type="text"
+                readOnly
+                value={item?.name}
+              />
+            </StyledInputDropFieldIcon>
+          ))}
           {multiple ? (
             <StyledInputDropFieldIcon>
               <StyledInputDropField
