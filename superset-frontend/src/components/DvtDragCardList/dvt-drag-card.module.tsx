@@ -36,7 +36,7 @@ const StyledDvtDragCard = styled.div`
   height: 660px;
   padding-right: 9px;
   overflow-y: auto;
-  width: 217px;
+  width: 100%;
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
