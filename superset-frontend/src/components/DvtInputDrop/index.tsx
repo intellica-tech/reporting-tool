@@ -56,6 +56,15 @@ const DvtInputDrop = ({
       onDrop?.([droppedData]);
     }
   };
+
+  const handleRemoveItem = (index: number) => {
+    setDroppedData((prevData: any[]) => {
+      const newData = [...prevData];
+      newData.splice(index, 1);
+      return newData;
+    });
+  };
+
   return (
     <StyledInputDrop>
       <StyledInputDropLabel>
@@ -79,7 +88,11 @@ const DvtInputDrop = ({
         <StyledInputDropFieldColumn>
           {droppedData?.map((item, index) => (
             <StyledInputDropFieldIcon key={index}>
-              <StyledInputDropIcon>
+              <StyledInputDropIcon
+                onClick={() =>
+                  multiple ? handleRemoveItem(index) : setDroppedData(null)
+                }
+              >
                 <Icon fileName="close" iconSize="l" style={{ marginTop: 9 }} />
               </StyledInputDropIcon>
               <StyledInputDropField
