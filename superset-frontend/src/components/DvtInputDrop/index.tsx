@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';
@@ -20,6 +20,8 @@ export interface DvtInputDropProps {
   onDrop?: (data: any) => void;
   addIconClick: () => void;
   multiple?: boolean;
+  droppedData: any[] | null;
+  setDroppedData: (newDroppedData: any[] | any) => void;
 }
 
 const DvtInputDrop = ({
@@ -30,9 +32,9 @@ const DvtInputDrop = ({
   onDrop,
   addIconClick,
   multiple,
+  droppedData,
+  setDroppedData,
 }: DvtInputDropProps) => {
-  const [droppedData, setDroppedData] = useState<any[] | null>(null);
-
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };

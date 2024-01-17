@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import DvtInputDrop, { DvtInputDropProps } from './index';
 import DvtDargCard from '../DvtDragCard';
 
@@ -25,24 +25,31 @@ export default {
   component: DvtInputDrop,
 };
 
-export const Default = (args: DvtInputDropProps) => (
-  <div
-    style={{ display: 'flex', flexDirection: 'column', width: 404, gap: 20 }}
-  >
-    <DvtInputDrop {...args} />
-    <DvtDargCard
-      label="arac"
-      value={{ id: 1, name: 'arac' }}
-      icon="dvt-hashtag"
-    />
-    <DvtDargCard
-      label="arac2"
-      value={{ id: 2, name: 'arac2' }}
-      icon="dvt-hashtag"
-    />
-  </div>
-);
+export const Default = (args: DvtInputDropProps) => {
+  const [droppedData, setDroppedData] = useState<any[] | null>(null);
 
+  return (
+    <div
+      style={{ display: 'flex', flexDirection: 'column', width: 404, gap: 20 }}
+    >
+      <DvtInputDrop
+        {...args}
+        droppedData={droppedData}
+        setDroppedData={setDroppedData}
+      />
+      <DvtDargCard
+        label="arac"
+        value={{ id: 1, name: 'arac' }}
+        icon="dvt-hashtag"
+      />
+      <DvtDargCard
+        label="arac2"
+        value={{ id: 2, name: 'arac2' }}
+        icon="dvt-hashtag"
+      />
+    </div>
+  );
+};
 Default.args = {
   placeholder: 'Drop columns here or click',
   label: 'Metrics',
