@@ -18,40 +18,36 @@
  */
 import { styled } from '@superset-ui/core';
 
-const StyledDvtCard = styled.div`
+const StyledDvtDragCardList = styled.div`
   display: flex;
-  width: 100%;
+  flex-direction: column;
 `;
 
-const StyledDvtCardCard = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 202px;
-  height: 48px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin-bottom: 12px;
-`;
-
-const StyledDvtCardIcon = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 13px;
-  color: ${({ theme }) => theme.colors.dvt.text.label};
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const StyledDvtCardLabel = styled.div`
-  display: flex;
-  align-items: center;
+const StyledDvtDragCardListSize = styled.div`
   color: ${({ theme }) => theme.colors.dvt.primary.light1};
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
 `;
 
-export {
-  StyledDvtCard,
-  StyledDvtCardCard,
-  StyledDvtCardIcon,
-  StyledDvtCardLabel,
-};
+const StyledDvtDragCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 660px;
+  padding-right: 9px;
+  overflow-y: auto;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
+`;
+
+export { StyledDvtDragCardList, StyledDvtDragCardListSize, StyledDvtDragCard };
