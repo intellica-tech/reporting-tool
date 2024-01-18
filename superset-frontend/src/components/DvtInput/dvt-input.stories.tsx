@@ -149,6 +149,8 @@ export const ChartsForm = (args: DvtInputProps) => {
     <div style={{ display: 'flex', width: 500, gap: 15 }}>
       <DvtInput
         {...args}
+        label="Y Axis Label"
+        placeholder="min"
         value={text}
         onChange={setText}
         handleSearchClick={() => {}}
@@ -161,12 +163,10 @@ export const ChartsForm = (args: DvtInputProps) => {
         }}
       >
         <DvtInput
+          {...args}
           value={inputText}
           onChange={setInputText}
           handleSearchClick={() => {}}
-          type="text"
-          size="small"
-          typeDesign="chartsForm"
           placeholder="max"
         />
       </div>
@@ -186,13 +186,5 @@ ChartsForm.argTypes = {
   typeDesign: {
     control: { type: 'select' },
     defaultValue: 'chartsForm',
-  },
-  label: {
-    control: { type: 'text' },
-    defaultValue: 'Y Axis Label',
-  },
-  placeholder: {
-    control: { type: 'text' },
-    defaultValue: 'min',
   },
 };

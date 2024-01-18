@@ -48,7 +48,7 @@ const DvtInput = ({
   label,
   placeholder = '',
   type = 'text',
-  size = 'medium',
+  size = 'small',
   value,
   typeDesign = 'text',
   onChange,
