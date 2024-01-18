@@ -19,6 +19,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
@@ -80,46 +81,64 @@ const headerData = [
 ];
 
 function DvtDashboardList() {
+  const history = useHistory<{ from: string }>();
+
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState([]);
   const [count, setCount] = useState<number>(0);
 
-  const history = useHistory<{ from: string }>();
+  const searchApiUrl = () => {
+    const filterData = [
+      { col: 'dashboard_title', opr: 'title_or_slug', value: '' },
+      { col: 'owners', opr: 'rel_m_m', value: '' },
+      { col: 'created_by', opr: 'rel_m_m', value: '' },
+      { col: 'published', opr: 'eq', value: '' },
+      { col: 'id', opr: 'dashboard_is_favorite', value: '' },
+      { col: 'id', opr: 'dashboard_is_certified', value: '' },
+    ];
+
+    let filters = '';
+    const sort = 'order_column:changed_on_delta_humanized,order_direction:desc';
+
+    const filteredData = filterData
+      .filter(item => item.value !== '')
+      .map(item => `(col:${item.col},opr:${item.opr},value:${item.value})`)
+      .join(',');
+
+    if (filterData.filter(item => item.value !== '').length) {
+      filters = `filters:!(${filteredData}),`;
+    }
+
+    return `?q=(${filters}${sort},page:${currentPage - 1},page_size:10)`;
+  };
+
+  const dashboardApi = useFetch({
+    url: `/api/v1/dashboard/${searchApiUrl()}`,
+  });
 
   useEffect(() => {
-    const apiUrl = `/api/v1/dashboard/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${
-      currentPage - 1
-    },page_size:10)`;
-
-    const fetchApi = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        setData(
-          data.result.map((item: any) => ({
-            ...item,
-            owners: item.owners.length
-              ? item.owners
-                  .map(
-                    (item: { first_name: string; last_name: string }) =>
-                      `${item.first_name} ${item.last_name}`,
-                  )
-                  .join(',')
-              : '',
-            createdbyName: item.changed_by
-              ? `${item.changed_by.first_name} ${item.changed_by.last_name}`
-              : '',
-          })),
-        );
-        setCount(data.count);
-      } catch (error) {
-        console.log('Error:', error);
-      }
-    };
-    fetchApi();
-    setSelectedRows([]);
-  }, [currentPage]);
+    if (dashboardApi) {
+      setData(
+        dashboardApi.result.map((item: any) => ({
+          ...item,
+          owners: item.owners.length
+            ? item.owners
+                .map(
+                  (item: { first_name: string; last_name: string }) =>
+                    `${item.first_name} ${item.last_name}`,
+                )
+                .join(',')
+            : '',
+          createdbyName: item.changed_by
+            ? `${item.changed_by.first_name} ${item.changed_by.last_name}`
+            : '',
+        })),
+      );
+      setCount(dashboardApi.count);
+      setSelectedRows([]);
+    }
+  }, [dashboardApi]);
 
   const handleDeselectAll = () => {
     setSelectedRows([]);

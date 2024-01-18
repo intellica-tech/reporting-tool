@@ -22,58 +22,31 @@ interface DvtPopperProps {
   direction: string;
 }
 
+interface DvtPopperFontSizeProps {
+  fontSize: 'small' | 'medium';
+}
+
 const StyledPopper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const StyledPopperUp = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid ${({ theme }) => theme.colors.dvt.primary.base};
-`;
-
-const StyledPopperDown = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 20px solid ${({ theme }) => theme.colors.dvt.primary.base};
-`;
-
-const StyledPopperLeft = styled.div`
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-right: 20px solid ${({ theme }) => theme.colors.dvt.primary.base};
-  border-bottom: 10px solid transparent;
-`;
-
-const StyledPopperRight = styled.div`
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-left: 20px solid ${({ theme }) => theme.colors.dvt.primary.base};
-  border-bottom: 10px solid transparent;
-`;
-
-const StyledPopperBody = styled.div`
+const StyledPopperBody = styled.div<DvtPopperFontSizeProps>`
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.dvt.primary.base};
   border-radius: 4px;
-  height: 44px;
   color: ${({ theme }) => theme.colors.grayscale.light5};
-  font-size: 16px;
+  font-size: ${({ fontSize }) => (fontSize === 'small' ? '12px' : '16px')};
   font-weight: 500;
   line-height: 140%;
   letter-spacing: 0.2px;
   cursor: pointer;
-  padding: 0 17px;
+  padding: ${({ fontSize }) =>
+    fontSize === 'small' ? '8px 10px' : '10px 15px'};
+  white-space: nowrap;
 `;
 
 const StyledPopperGroup = styled.div`
@@ -87,45 +60,75 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
   align-items: center;
   position: absolute;
   z-index: 999;
-  ${({ direction }) => {
+
+  &::before {
+    content: '';
+    position: absolute;
+  }
+
+  ${({ direction, theme }) => {
     if (direction === 'bottom') {
       return `
         left: 0;
         right: 0;
-        top: 100%;
+        top: calc(100% + 13px);
+
+        &::before {
+          top: -13px;
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-bottom: 13px solid ${theme.colors.dvt.primary.base};
+        }
       `;
     }
     if (direction === 'top') {
       return `
         left: 0;
         right: 0;
-        bottom: 100%;
+        bottom: calc(100% + 13px);
+
+        &::before {
+          bottom: -13px;
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-top: 13px solid ${theme.colors.dvt.primary.base};
+        }
       `;
     }
     if (direction === 'left') {
       return `
         top: 0;
         bottom: 0;
-        right: 100%;
+        right: calc(100% + 13px);
+
+        &::before {
+          right: -13px;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+          border-left: 13px solid ${theme.colors.dvt.primary.base};
+        }
       `;
     }
     if (direction === 'right') {
       return `
         top: 0;
         bottom: 0;
-        left: 100%;
+        left: calc(100% + 13px);
+
+        &::before {
+          left: -13px;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+          border-right: 13px solid ${theme.colors.dvt.primary.base};
+        }
       `;
     }
     return '';
-  }}
+  }};
 `;
 
 export {
   StyledPopper,
-  StyledPopperUp,
-  StyledPopperDown,
-  StyledPopperLeft,
-  StyledPopperRight,
   StyledPopperBody,
   StyledPopperGroup,
   StyledPopperAbsolute,

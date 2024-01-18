@@ -24,6 +24,10 @@ interface StyledSelectProps {
   selectedValue: string;
 }
 
+interface StyledSelectIconProps {
+  isOpen: boolean;
+}
+
 interface StyledSelectLabelProps {
   typeDesign: string;
 }
@@ -45,8 +49,7 @@ const optionsKeyframes = keyframes`
 `;
 
 interface StyledSelectOptionProps {
-  selectedValue: string;
-  value: string;
+  selectedValue: boolean;
   typeDesign: string;
 }
 
@@ -96,8 +99,8 @@ const StyledSelectLabel = styled.label<StyledSelectLabelProps>`
 const StyledSelectOption = styled.div<StyledSelectOptionProps>`
   padding: 13px;
   cursor: pointer;
-  ${({ theme, value, selectedValue, typeDesign }) =>
-    value === selectedValue
+  ${({ theme, selectedValue, typeDesign }) =>
+    selectedValue
       ? typeDesign === 'form' || typeDesign === 'navbar'
         ? `
         color: ${theme.colors.dvt.text.help};
@@ -142,11 +145,16 @@ const StyledSelectOptions = styled.div<StyledSelectOptionsProps>`
     border-radius: 3px;
   }
 `;
-const StyledSelectIcon = styled.div<StyledSelectProps>`
+const StyledSelectIcon = styled.div<StyledSelectIconProps>`
   position: absolute;
   right: 12px;
   transition: transform 0.3s ease-in-out;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
+`;
+
+const StyledSelectPopover = styled.div`
+  display: flex;
+  gap: 8px;
 `;
 
 export {
@@ -156,4 +164,5 @@ export {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectOptions,
+  StyledSelectPopover,
 };

@@ -17,34 +17,27 @@
  * under the License.
  */
 import React from 'react';
-import DvtButton from '../DvtButton';
-import DvtPopper, { DvtPopperProps } from '.';
+import { SupersetTheme } from '@superset-ui/core';
+import DvtCollapse, { DvtCollapseProps } from '.';
 
 export default {
-  title: 'Dvt-Components/DvtPopper',
-  component: DvtPopper,
+  title: 'Dvt-Components/DvtCollapse',
+  component: DvtCollapse,
 };
 
-export const Default = (args: DvtPopperProps) => (
+export const Default = (args: DvtCollapseProps) => (
   <div
-    style={{
-      width: '400px',
-      height: '400px',
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
+    css={(theme: SupersetTheme) => ({
+      backgroundColor: theme.colors.dvt.grayscale.light2,
+      width: '584px',
+      padding: '50px',
+    })}
   >
-    <DvtPopper {...args}>
-      <DvtButton label="Open/Close" onClick={() => {}} />
-    </DvtPopper>
+    <DvtCollapse {...args}>Default Collapse</DvtCollapse>
   </div>
 );
 
 Default.args = {
-  label: 'Export',
-  direction: 'top',
-  fontSize: 'medium',
+  label: 'Time',
+  popoverLabel: 'Default',
 };

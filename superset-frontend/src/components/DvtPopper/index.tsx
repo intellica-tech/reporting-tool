@@ -19,10 +19,6 @@
 import React, { ReactNode, useState } from 'react';
 import {
   StyledPopper,
-  StyledPopperUp,
-  StyledPopperDown,
-  StyledPopperLeft,
-  StyledPopperRight,
   StyledPopperBody,
   StyledPopperGroup,
   StyledPopperAbsolute,
@@ -32,12 +28,14 @@ export interface DvtPopperProps {
   label: string;
   children: ReactNode;
   direction?: 'top' | 'bottom' | 'left' | 'right';
+  size?: 'small' | 'medium';
 }
 
 const DvtPopper: React.FC<DvtPopperProps> = ({
   label,
   children,
   direction = 'bottom',
+  size = 'medium',
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -49,11 +47,7 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
       <StyledPopper>{children} </StyledPopper>
       {isHovered && (
         <StyledPopperAbsolute direction={direction}>
-          {direction === 'bottom' && <StyledPopperUp />}
-          {direction === 'right' && <StyledPopperLeft />}
-          <StyledPopperBody>{label}</StyledPopperBody>
-          {direction === 'top' && <StyledPopperDown />}{' '}
-          {direction === 'left' && <StyledPopperRight />}
+          <StyledPopperBody fontSize={size}>{label}</StyledPopperBody>
         </StyledPopperAbsolute>
       )}
     </StyledPopperGroup>

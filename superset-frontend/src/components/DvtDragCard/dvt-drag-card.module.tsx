@@ -16,35 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import DvtButton from '../DvtButton';
-import DvtPopper, { DvtPopperProps } from '.';
+import { styled } from '@superset-ui/core';
 
-export default {
-  title: 'Dvt-Components/DvtPopper',
-  component: DvtPopper,
-};
+const StyledDvtCard = styled.div`
+  display: flex;
+  width: 100%;
+`;
 
-export const Default = (args: DvtPopperProps) => (
-  <div
-    style={{
-      width: '400px',
-      height: '400px',
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <DvtPopper {...args}>
-      <DvtButton label="Open/Close" onClick={() => {}} />
-    </DvtPopper>
-  </div>
-);
+const StyledDvtCardCard = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 202px;
+  height: 48px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  margin-bottom: 12px;
+`;
 
-Default.args = {
-  label: 'Export',
-  direction: 'top',
-  fontSize: 'medium',
+const StyledDvtCardIcon = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 13px;
+`;
+
+const StyledDvtCardLabel = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export {
+  StyledDvtCard,
+  StyledDvtCardCard,
+  StyledDvtCardIcon,
+  StyledDvtCardLabel,
 };

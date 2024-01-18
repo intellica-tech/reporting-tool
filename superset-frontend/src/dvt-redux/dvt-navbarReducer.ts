@@ -16,35 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import DvtButton from '../DvtButton';
-import DvtPopper, { DvtPopperProps } from '.';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export default {
-  title: 'Dvt-Components/DvtPopper',
-  component: DvtPopper,
+interface DvtNavbarState {
+  sql: {
+    tabs: string;
+  };
+}
+
+const initialState: DvtNavbarState = {
+  sql: {
+    tabs: 'Query History',
+  },
 };
 
-export const Default = (args: DvtPopperProps) => (
-  <div
-    style={{
-      width: '400px',
-      height: '400px',
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <DvtPopper {...args}>
-      <DvtButton label="Open/Close" onClick={() => {}} />
-    </DvtPopper>
-  </div>
-);
+const dvtNavbarSlice = createSlice({
+  name: 'dvt-navbar',
+  initialState,
+  reducers: {
+    dvtNavbarSqlSetTabs: (state, action: PayloadAction<string>) => ({
+      ...state,
+      sql: {
+        ...state.sql,
+        tabs: action.payload,
+      },
+    }),
+  },
+});
 
-Default.args = {
-  label: 'Export',
-  direction: 'top',
-  fontSize: 'medium',
-};
+export const { dvtNavbarSqlSetTabs } = dvtNavbarSlice.actions;
+
+export default dvtNavbarSlice.reducer;
