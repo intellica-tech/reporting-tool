@@ -4,7 +4,7 @@ import {
   StyledDvtDragCardList,
   StyledDvtDragCardListSize,
   StyledDvtDragCard,
-} from './dvt-drag-card-List.module';
+} from './dvt-drag-card.module';
 
 interface CardProps {
   label: string;
