@@ -17,13 +17,13 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { useToasts } from 'src/components/MessageToasts/withToasts';
+import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import withToasts from 'src/components/MessageToasts/withToasts';
+
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
