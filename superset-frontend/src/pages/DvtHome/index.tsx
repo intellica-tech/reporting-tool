@@ -168,12 +168,16 @@ function DvtWelcome() {
     }
   };
 
-  const handleBulkDashboardExport = (item: any) => {
-    handleResourceExport('dashboard', [item.id], () => {});
-  };
+  // const handleBulkDashboardExport = (item: any) => {
+  //   handleResourceExport('dashboard', [item.id], () => {});
+  // };
 
-  const handleBulkChartsExport = (item: any) => {
-    handleResourceExport('chart', [item.id], () => {});
+  // const handleBulkChartsExport = (item: any) => {
+  //   handleResourceExport('chart', [item.id], () => {});
+  // };
+
+  const handleBulkExport = (type: string, item: any) => {
+    handleResourceExport(type, [item.id], () => {});
   };
 
   const copyQueryLink = (id: number) => {
@@ -205,7 +209,7 @@ function DvtWelcome() {
               label: t('Export'),
               icon: 'share',
               onClick: (item: any) => {
-                handleBulkDashboardExport(item);
+                handleBulkExport('dashboard', item);
               },
             },
             { label: 'Delete', icon: 'trash', onClick: () => {} },
@@ -223,7 +227,7 @@ function DvtWelcome() {
               label: t('Export'),
               icon: 'share',
               onClick: (item: any) => {
-                handleBulkChartsExport(item);
+                handleBulkExport('chart', item);
               },
             },
             { label: t('Delete'), icon: 'trash', onClick: () => {} },
