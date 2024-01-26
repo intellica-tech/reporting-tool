@@ -17,8 +17,12 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
+import { useDispatch } from 'react-redux';
+import { t } from '@superset-ui/core';
+import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
-import withToasts from 'src/components/MessageToasts/withToasts';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
@@ -91,6 +95,8 @@ const formatRecentData: FormatFunction = data =>
   }));
 
 function DvtWelcome() {
+  const dispatch = useDispatch();
+  const { addDangerToast } = useToasts();
   const [openCalendar, setOpenCalendar] = useState<boolean>(true);
   const [calendar, setCalendar] = useState<Moment | null>(null);
   const [recentData, setRecentData] = useState<CardDataProps[]>([]);
@@ -145,41 +151,92 @@ function DvtWelcome() {
     );
   }, []);
 
+  const handleEditDashboard = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/dashboard/${item.id}`);
+      const editedDashboardData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-dashboard',
+          meta: editedDashboardData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleBulkExport = (type: string, item: any) => {
+    handleResourceExport(type, [item.id], () => {});
+  };
+
+  const copyQueryLink = (id: number) => {
+    addDangerToast(t('Link Copied!'));
+    navigator.clipboard.writeText(
+      `${window.location.origin}/sqllab?savedQueryId=${id}`,
+    );
+  };
+
   return (
     <StyledDvtWelcome>
       <DataContainer>
-        <DvtTitleCardList title="Recents" data={recentData} />
-
+        <DvtTitleCardList title={t('Recents')} data={recentData} />
         <DvtTitleCardList
-          title="Dashboards"
+          title={t('Dashboards')}
           data={dashboardData}
           setFavorites={(id, isFavorite) =>
             handleSetFavorites(id, isFavorite, 'Dashboard')
           }
           dropdown={[
-            { label: 'Edit', icon: 'edit_alt', onClick: () => {} },
-            { label: 'Export', icon: 'share', onClick: () => {} },
+            {
+              label: t('Edit'),
+              icon: 'edit_alt',
+              onClick: (item: any) => {
+                handleEditDashboard(item);
+              },
+            },
+            {
+              label: t('Export'),
+              icon: 'share',
+              onClick: (item: any) => {
+                handleBulkExport('dashboard', item);
+              },
+            },
             { label: 'Delete', icon: 'trash', onClick: () => {} },
           ]}
         />
-
         <DvtTitleCardList
-          title="Charts"
+          title={t('Charts')}
           data={chartData}
           setFavorites={(id, isFavorite) =>
             handleSetFavorites(id, isFavorite, 'slice')
           }
           dropdown={[
-            { label: 'Edit', icon: 'edit_alt', onClick: () => {} },
-            { label: 'Export', icon: 'share', onClick: () => {} },
-            { label: 'Delete', icon: 'trash', onClick: () => {} },
+            { label: t('Edit'), icon: 'edit_alt', onClick: () => {} },
+            {
+              label: t('Export'),
+              icon: 'share',
+              onClick: (item: any) => {
+                handleBulkExport('chart', item);
+              },
+            },
+            { label: t('Delete'), icon: 'trash', onClick: () => {} },
           ]}
         />
-
         <DvtTitleCardList
-          title="Saved Queries"
+          title={t('Saved Queries')}
           data={savedQueriesData}
-          dropdown={[{ label: 'Share', onClick: () => {} }]}
+          dropdown={[
+            {
+              label: t('Share'),
+              onClick: (item: any) => {
+                if (item.id) {
+                  copyQueryLink(item.id);
+                }
+              },
+            },
+          ]}
         />
       </DataContainer>
       <CalendarContainer>
@@ -192,7 +249,7 @@ function DvtWelcome() {
           />
         ) : (
           <DvtButton
-            label="Open Calendar"
+            label={t('Open Calendar')}
             onClick={() => setOpenCalendar(true)}
           />
         )}

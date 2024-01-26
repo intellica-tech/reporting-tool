@@ -16,22 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import DvtDropdown, { DvtDropdownProps } from '.';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export default {
-  title: 'Dvt-Components/DvtDropdown',
-  component: DvtDropdown,
+interface ModalState {
+  component: string;
+  lastComponent?: string;
+  meta?: any;
+}
+
+const initialState: ModalState = {
+  component: '',
+  lastComponent: '',
+  meta: {},
 };
 
-export const Default = (args: DvtDropdownProps) => <DvtDropdown {...args} />;
+const dvtModalSlice = createSlice({
+  name: 'dvt-modal',
+  initialState,
+  reducers: {
+    openModal: (state, action: PayloadAction<ModalState>) => ({
+      ...state,
+      component: action.payload.component,
+      meta: action.payload.meta,
+    }),
+    closeModal: state => ({
+      ...state,
+      component: '',
+      lastComponent: state.component,
+      meta: {},
+    }),
+  },
+});
 
-Default.args = {
-  data: [
-    { label: 'Edit', icon: 'edit_alt', onClick: () => {} },
-    { label: 'Export', icon: 'share', onClick: () => {} },
-    { label: 'Delete', icon: 'trash', onClick: () => {} },
-  ],
-  icon: 'more_vert',
-  direction: 'right',
-};
+export const { openModal, closeModal } = dvtModalSlice.actions;
+
+export default dvtModalSlice.reducer;

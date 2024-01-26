@@ -16,22 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import DvtDropdown, { DvtDropdownProps } from '.';
+import { styled } from '@superset-ui/core';
+import { JsonEditor } from 'src/components/AsyncAceEditor';
 
-export default {
-  title: 'Dvt-Components/DvtDropdown',
-  component: DvtDropdown,
-};
+const StyledJsonEditor = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
 
-export const Default = (args: DvtDropdownProps) => <DvtDropdown {...args} />;
+const StyledJsonEditorLabel = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  font-size: 12px;
+  font-weight: 500;
+`;
 
-Default.args = {
-  data: [
-    { label: 'Edit', icon: 'edit_alt', onClick: () => {} },
-    { label: 'Export', icon: 'share', onClick: () => {} },
-    { label: 'Delete', icon: 'trash', onClick: () => {} },
-  ],
-  icon: 'more_vert',
-  direction: 'right',
-};
+const StyledJsonEditorInput = styled(JsonEditor)`
+  flex: 1 1 auto;
+  border-radius: 4px;
+
+  &.ace-github .ace_gutter {
+    background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  }
+`;
+
+export { StyledJsonEditor, StyledJsonEditorLabel, StyledJsonEditorInput };

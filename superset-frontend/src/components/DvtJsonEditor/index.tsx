@@ -17,21 +17,42 @@
  * under the License.
  */
 import React from 'react';
-import DvtDropdown, { DvtDropdownProps } from '.';
+import {
+  StyledJsonEditor,
+  StyledJsonEditorLabel,
+  StyledJsonEditorInput,
+} from './dvt-json-editor.module';
 
-export default {
-  title: 'Dvt-Components/DvtDropdown',
-  component: DvtDropdown,
-};
+export interface DvtJsonEditorProps {
+  label?: string;
+  placeholder?: string;
+  value: any;
+  onChange: (value: any) => void;
+  height?: string;
+  name?: string;
+}
 
-export const Default = (args: DvtDropdownProps) => <DvtDropdown {...args} />;
+const DvtJsonEditor = ({
+  label,
+  placeholder = '',
+  value,
+  onChange,
+  height = '169px',
+  name = '',
+}: DvtJsonEditorProps) => (
+  <StyledJsonEditor>
+    {label && <StyledJsonEditorLabel>{label}</StyledJsonEditorLabel>}
+    <StyledJsonEditorInput
+      showLoadingForImport
+      name={name}
+      value={value}
+      onChange={onChange}
+      tabSize={2}
+      width="100%"
+      height={height}
+      placeholder={placeholder}
+    />
+  </StyledJsonEditor>
+);
 
-Default.args = {
-  data: [
-    { label: 'Edit', icon: 'edit_alt', onClick: () => {} },
-    { label: 'Export', icon: 'share', onClick: () => {} },
-    { label: 'Delete', icon: 'trash', onClick: () => {} },
-  ],
-  icon: 'more_vert',
-  direction: 'right',
-};
+export default DvtJsonEditor;
