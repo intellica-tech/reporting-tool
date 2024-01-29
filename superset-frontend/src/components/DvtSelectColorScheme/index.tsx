@@ -32,6 +32,7 @@ import {
   StyledSelectColorSchemePopover,
   StyledSelectColors,
   StyledSelectColor,
+  StyledSelectColorsLabel,
 } from './dvt-select-color-scheme.module';
 
 export interface DvtSelectColorSchemeProps {
@@ -153,7 +154,9 @@ const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
               onClick={() => handleOptionClick(option)}
               typeDesign={typeDesign}
             >
-              {option[objectName]}
+              <StyledSelectColorsLabel>
+                {option[objectName]}
+              </StyledSelectColorsLabel>
               <StyledSelectColors>
                 {option.colors.map((color, colorIndex) => (
                   <StyledSelectColor key={colorIndex} color={color} />

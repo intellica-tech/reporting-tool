@@ -101,6 +101,9 @@ const StyledSelectColorSchemeLabel = styled.label<StyledSelectColorLabelProps>`
 `;
 
 const StyledSelectColorSchemeOption = styled.div<StyledSelectOptionProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   padding: 13px;
   cursor: pointer;
   ${({ theme, selectedValue, typeDesign }) =>
@@ -121,7 +124,7 @@ const StyledSelectColorSchemeOption = styled.div<StyledSelectOptionProps>`
       }
     `
       : `
-        color: ${theme.colors.dvt.primary.light1};
+        color: ${theme.colors.grayscale.dark1};
       }
     `}
 `;
@@ -161,6 +164,11 @@ const StyledSelectColorSchemePopover = styled.div`
   gap: 8px;
 `;
 
+const StyledSelectColorsLabel = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
 const StyledSelectColors = styled.div`
   display: flex;
   gap: 4px;
@@ -182,4 +190,5 @@ export {
   StyledSelectColorSchemePopover,
   StyledSelectColors,
   StyledSelectColor,
+  StyledSelectColorsLabel,
 };
