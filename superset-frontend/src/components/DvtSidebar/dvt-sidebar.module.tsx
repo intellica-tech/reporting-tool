@@ -36,7 +36,7 @@ const StyledDvtSidebar = styled.div<SidebarProps>`
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: ${({ pathName }) =>
+  width: ${({ pathName }) =>
     `${pathName === '/superset/welcome/' ? 250 : 300}`}px;
   padding: 32px 16px 39px 16px;
   position: fixed;
