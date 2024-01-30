@@ -22,13 +22,13 @@ import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import {
   StyledConnection,
   StyledConnectionButton,
@@ -63,7 +63,7 @@ const modifiedData = {
   ],
 };
 
-function ConnectionList() {
+function DvtConnection() {
   const dispatch = useDispatch();
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
@@ -161,4 +161,4 @@ function ConnectionList() {
   );
 }
 
-export default withToasts(ConnectionList);
+export default withToasts(DvtConnection);
