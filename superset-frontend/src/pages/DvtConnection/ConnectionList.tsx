@@ -1,69 +1,21 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import useFetch from 'src/hooks/useFetch';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
-import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
   StyledConnection,
   StyledConnectionButton,
 } from './dvt-connection.module';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import { modifiedData } from '.';
 
-const modifiedData = {
-  header: [
-    { id: 1, title: t('Database'), field: 'database_name', heartIcon: true },
-    { id: 2, title: t('Admin'), field: 'admin' },
-    { id: 3, title: t('Last Modified'), field: 'date' },
-    {
-      id: 4,
-      title: t('Action'),
-      clicks: [
-        {
-          icon: 'edit_alt',
-          click: () => {},
-          popperLabel: t('Edit'),
-        },
-        {
-          icon: 'share',
-          click: () => {},
-          popperLabel: t('Export'),
-        },
-        {
-          icon: 'trash',
-          click: () => {},
-          popperLabel: t('Delete'),
-        },
-      ],
-    },
-  ],
-};
-
-function ConnectionList() {
+export function ConnectionList() {
   const dispatch = useDispatch();
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
@@ -72,8 +24,44 @@ function ConnectionList() {
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
 
-  const searchApiUrls = fetchQueryParamsSearch({
-    filterData: [
+  const searchApiUrl = () => {
+    const filterData = [
+      {
+        col: 'expose_in_sqllab',
+        opr: 'eq',
+        value: connectionSelector.expose_in_sqllab?.value,
+      },
+      {
+        col: 'allow_run_async',
+        opr: 'eq',
+        value: connectionSelector.allow_run_async?.value,
+      },
+      {
+        col: 'database_name',
+        opr: 'ct',
+        value: connectionSelector.search,
+      },
+    ];
+
+    let filters = '';
+    const sort = 'order_column:changed_on_delta_humanized,order_direction:desc';
+
+    const withoutValues = [undefined, null, ''];
+
+    const filteredData = filterData
+      .filter(item => !withoutValues.includes(item.value))
+      .map(item => `(col:${item.col},opr:${item.opr},value:${item.value})`)
+      .join(',');
+
+    if (filterData.filter(item => !withoutValues.includes(item.value)).length) {
+      filters = `filters:!(${filteredData}),`;
+    }
+
+    return `?q=(${filters}${sort},page:${page - 1},page_size:10)`;
+  };
+
+  const searchApiUrl = fetchQueryParamsSearch(
+    [
       {
         col: 'expose_in_sqllab',
         opr: 'eq',
@@ -90,11 +78,13 @@ function ConnectionList() {
         value: connectionSelector.search,
       },
     ],
+    'order_column:changed_on_delta_humanized,order_direction:desc',
     page,
-  });
+    10,
+  );
 
   const connectionApi = useFetch({
-    url: `/api/v1/database/${searchApiUrls}`,
+    url: `/api/v1/database/${searchApiUrl}`,
   });
 
   useEffect(() => {
@@ -160,5 +150,3 @@ function ConnectionList() {
     </StyledConnection>
   );
 }
-
-export default withToasts(ConnectionList);

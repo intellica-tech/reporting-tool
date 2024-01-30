@@ -2,13 +2,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  dvtSidebarAlertsSetProperty,
   dvtSidebarChartAddSetProperty,
-  dvtSidebarConnectionSetProperty,
-  dvtSidebarDatasetsSetProperty,
-  dvtSidebarReportsSetProperty,
-  dvtSidebarDashboardSetProperty,
   dvtSidebarSetDataProperty,
+  dvtSidebarSetProperty,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { nativeFilterGate } from 'src/dashboard/components/nativeFilters/utils';
@@ -43,6 +39,7 @@ import {
 import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
 import { usePluginContext } from '../DynamicPlugins';
+import DvtInput from '../DvtInput';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -114,54 +111,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     },
   );
 
-  const updateReportsProperty = (value: string, propertyName: string) => {
+  const updateProperty = (pageKey: string, key: string, value: string) => {
     dispatch(
-      dvtSidebarReportsSetProperty({
-        reports: {
-          ...reportsSelector,
-          [propertyName]: value,
-        },
-      }),
-    );
-  };
-
-  const updateAlertsProperty = (value: string, propertyName: string) => {
-    dispatch(
-      dvtSidebarAlertsSetProperty({
-        alerts: {
-          ...alertsSelector,
-          [propertyName]: value,
-        },
-      }),
-    );
-  };
-
-  const updateConnectionProperty = (value: string, propertyName: string) => {
-    dispatch(
-      dvtSidebarConnectionSetProperty({
-        connection: {
-          ...connectionSelector,
-          [propertyName]: value,
-        },
-      }),
-    );
-  };
-
-  const updateDatasetsProperty = (value: string, propertyName: string) => {
-    dispatch(
-      dvtSidebarDatasetsSetProperty({
-        datasets: {
-          ...datasetsSelector,
-          [propertyName]: value,
-        },
-      }),
-    );
-  };
-
-  const updateDashboardProperty = (value: string, propertyName: string) => {
-    dispatch(
-      dvtSidebarDashboardSetProperty({
-        key: propertyName,
+      dvtSidebarSetProperty({
+        pageKey,
+        key,
         value,
       }),
     );
@@ -217,6 +171,23 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           url: `${apiV1}dashboard/related/created_by`,
         });
       }
+    } else if (pathTitles(pathName) === 'Datasets') {
+      if (!fetchedSelector.datasets.owner) {
+        setGetDataApiUrl({
+          name: 'datasets-owner',
+          url: `${apiV1}dataset/related/owners`,
+        });
+      } else if (!fetchedSelector.datasets.database) {
+        setGetDataApiUrl({
+          name: 'datasets-database',
+          url: `${apiV1}dataset/related/database`,
+        });
+      } else if (!fetchedSelector.datasets.schema) {
+        setGetDataApiUrl({
+          name: 'datasets-schema',
+          url: `${apiV1}dataset/distinct/schema`,
+        });
+      }
     } else if (pathTitles(pathName) === 'Chart Add') {
       if (!fetchedSelector.chartAdd.dataset) {
         setGetDataApiUrl({
@@ -225,7 +196,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         });
       }
     }
-  }, [fetchedSelector.dashboard, fetchedSelector.chartAdd]);
+  }, [
+    fetchedSelector.dashboard,
+    fetchedSelector.datasets,
+    fetchedSelector.chartAdd,
+    pathName,
+  ]);
 
   useEffect(() => {
     if (getApiData) {
@@ -252,6 +228,45 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           dvtSidebarSetDataProperty({
             pageKey: 'dashboard',
             key: 'createdBy',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'datasets-owner') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasets',
+            key: 'owner',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'datasets-database') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasets',
+            key: 'database',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'datasets-schema') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasets',
+            key: 'schema',
             value: editedData,
           }),
         );
@@ -377,6 +392,15 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       sData.name === 'createdBy'
     ) {
       dValue = dataSelector.dashboard.createdBy;
+    } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'owner') {
+      dValue = dataSelector.datasets.owner;
+    } else if (
+      pathTitles(pathName) === 'Datasets' &&
+      sData.name === 'database'
+    ) {
+      dValue = dataSelector.datasets.database;
+    } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'schema') {
+      dValue = dataSelector.datasets.schema;
     } else {
       dValue = sData.values;
     }
@@ -489,11 +513,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                     title: string;
                     datePicker?: boolean;
                     name: string;
+                    status: string;
                   },
                   index: number,
                 ) => (
                   <StyledDvtSidebarBodySelect key={index}>
-                    {!data.datePicker && !data.valuesList && (
+                    {!data.datePicker && !data.valuesList && !data.status && (
                       <DvtSelect
                         data={selectsData(data)}
                         label={data.label}
@@ -514,21 +539,50 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             : undefined
                         }
                         setSelectedValue={value => {
-                          if (pathTitles(pathName) === 'Reports') {
-                            updateReportsProperty(value, data.name);
-                          } else if (pathTitles(pathName) === 'Alerts') {
-                            updateAlertsProperty(value, data.name);
-                          } else if (pathTitles(pathName) === 'Connection') {
-                            updateConnectionProperty(value, data.name);
-                          } else if (pathTitles(pathName) === 'Datasets') {
-                            updateDatasetsProperty(value, data.name);
-                          } else if (pathTitles(pathName) === 'Chart Add') {
+                          if (pathTitles(pathName) === 'Chart Add') {
                             updateChartAddProperty(value, data.name);
-                          } else if (pathTitles(pathName) === 'Dashboards') {
-                            updateDashboardProperty(value, data.name);
+                          } else if (sidebarDataFindPathname.key) {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              value,
+                            );
                           }
                         }}
                         maxWidth
+                      />
+                    )}
+                    {data.status === 'input' && (
+                      <DvtInput
+                        typeDesign="chartsForm"
+                        label={data.label}
+                        placeholder={data.placeholder}
+                        value={
+                          pathTitles(pathName) === 'Reports'
+                            ? reportsSelector[data.name]
+                            : pathTitles(pathName) === 'Alerts'
+                            ? alertsSelector[data.name]
+                            : pathTitles(pathName) === 'Connection'
+                            ? connectionSelector[data.name]
+                            : pathTitles(pathName) === 'Datasets'
+                            ? datasetsSelector[data.name]
+                            : pathTitles(pathName) === 'Chart Add'
+                            ? chartAddSelector[data.name]
+                            : pathTitles(pathName) === 'Dashboards'
+                            ? dashboardSelector[data.name]
+                            : undefined
+                        }
+                        onChange={value => {
+                          if (pathTitles(pathName) === 'Chart Add') {
+                            updateChartAddProperty(value, data.name);
+                          } else if (sidebarDataFindPathname.key) {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              value,
+                            );
+                          }
+                        }}
                       />
                     )}
                     {data.valuesList && (
