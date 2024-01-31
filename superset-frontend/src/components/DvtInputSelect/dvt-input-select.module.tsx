@@ -30,6 +30,7 @@ interface StyledInputSelectIconProps {
 interface StyledInputDesignProps {
   typeDesign: string;
   isOpen: boolean;
+  selected: boolean;
 }
 
 interface StyledInputLengthDesignProps {
@@ -58,7 +59,7 @@ const StyledInputSelectInput = styled.div<StyledInputDesignProps>`
   border-radius: ${({ typeDesign }) =>
     typeDesign === 'form' ? '4px' : '12px'};
   width: 100%;
-  height: 48px;
+  min-height: 48px;
   background-color: ${({ isOpen, theme, typeDesign }) =>
     typeDesign === 'form' || typeDesign === 'navbar'
       ? theme.colors.grayscale.light5
@@ -68,29 +69,20 @@ const StyledInputSelectInput = styled.div<StyledInputDesignProps>`
   cursor: pointer;
 `;
 
-const StyledInputSelectField = styled.input<StyledInputDesignProps>`
+const StyledInputSelectField = styled.div<StyledInputDesignProps>`
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  height: 100%;
+  height: auto;
   border: none;
-  color: ${({ theme }) => theme.colors.dvt.text.bold};
+  color: ${({ theme, selected }) =>
+    selected ? theme.colors.dvt.text.bold : theme.colors.dvt.text.help};
   background-color: ${({ isOpen, theme, typeDesign }) =>
     typeDesign === 'form' || typeDesign === 'navbar'
       ? theme.colors.grayscale.light5
       : isOpen
       ? theme.colors.dvt.primary.light2
       : theme.colors.dvt.grayscale.light2};
-  &:focus {
-    outline: none;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.dvt.text.help};
-  }
-
-  ::-ms-reveal,
-  ::-ms-clear {
-    display: none;
-  }
 `;
 
 const StyledInputSelectIcon = styled.div<StyledInputSelectIconProps>`

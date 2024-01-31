@@ -56,7 +56,7 @@ const DvtInputSelect = ({
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
-  const toggleOption = (value: string) => {
+  const toggleOption = (value: number) => {
     if (selectedValues.includes(value)) {
       setSelectedValues(selectedValues.filter(val => val !== value));
     } else {
@@ -64,22 +64,38 @@ const DvtInputSelect = ({
     }
   };
 
+  const selectedOptions = data.filter(option =>
+    selectedValues.includes(option.value),
+  );
+  const unselectedOptions = data.filter(
+    option => !selectedValues.includes(option.value),
+  );
+
   return (
     <StyledInputSelect ref={ref}>
-      <StyledInputSelectLabel typeDesign={typeDesign} isOpen={isOpen}>
+      <StyledInputSelectLabel
+        typeDesign={typeDesign}
+        isOpen={isOpen}
+        selected={false}
+      >
         {label}
       </StyledInputSelectLabel>
       <StyledInputSelectInput
         typeDesign={typeDesign}
         isOpen={isOpen}
         onClick={() => setIsOpen(!isOpen)}
+        selected={false}
       >
         <StyledInputSelectField
-          placeholder={placeholder}
-          value={selectedValues.join(', ')}
           typeDesign={typeDesign}
           isOpen={isOpen}
-        />
+          selected={selectedValues.length > 0}
+        >
+          {data
+            .filter(option => selectedValues.includes(option.value))
+            .map(option => option.label)
+            .join(', ') || placeholder}
+        </StyledInputSelectField>
         <StyledInputSelectIcon isOpen={isOpen}>
           <Icon fileName="caret_right" iconSize="xl" />
         </StyledInputSelectIcon>
@@ -89,19 +105,19 @@ const DvtInputSelect = ({
           itemLength={data.length}
           typeDesign={typeDesign}
         >
-          {data.map(option => (
+          {[...selectedOptions, ...unselectedOptions].map(option => (
             <StyledInputSelectOptionsLabel
               key={option.value}
-              onClick={() => toggleOption(option.label)}
-              selected={selectedValues.includes(option.label)}
+              onClick={() => toggleOption(option.value)}
+              selected={selectedValues.includes(option.value)}
               typeDesign={typeDesign}
             >
               {option.label}
-              {selectedValues.includes(option.label) && (
+              {selectedValues.includes(option.value) && (
                 <StyledInputSelectDiv
                   onClick={e => {
                     e.stopPropagation();
-                    toggleOption(option.label);
+                    toggleOption(option.value);
                   }}
                 >
                   X
