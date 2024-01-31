@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useDispatch } from 'react-redux';
+import useFetch from 'src/hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
@@ -14,23 +15,25 @@ import {
 
 const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
+  const [deleteUrlApi, setDeleteUrlApi] = useState('');
+  const deleteApi = useFetch({ url: deleteUrlApi, method: 'DELETE' });
   const item = meta.item.id;
   const types = meta.type;
 
-  const handleDelete = async () => {
-    const deleteType = types;
-    try {
-      const response = await fetch(`/api/v1/${types}/${item}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        dispatch(dvtHomeDeleteSuccessStatus(deleteType));
-        onClose();
+  useEffect(() => {
+    const handleDelete = async () => {
+      try {
+        if (deleteApi.message === 'OK') {
+          dispatch(dvtHomeDeleteSuccessStatus(types));
+          onClose();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+
+    handleDelete();
+  }, [deleteUrlApi, deleteApi, dispatch, onClose]);
 
   return (
     <StyledDeleteModal>
@@ -43,7 +46,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
           <DvtButton
             label={t('DELETE')}
             colour="error"
-            onClick={handleDelete}
+            onClick={() => setDeleteUrlApi(`/api/v1/${types}/${item}`)}
             size="small"
             bold
           />
