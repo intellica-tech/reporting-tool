@@ -115,7 +115,7 @@ function ReportList() {
       const addedFavoriteData = [];
       const fvrArray = favoriteData.result;
 
-      for (let i = 0; i < fvrArray.length; i++) {
+      for (let i = 0; i < fvrArray.length; i += 1) {
         const favoriteItem = fvrArray[i];
         const editedItem = editedData.find(
           (item: any) => item.id === favoriteItem.id,
