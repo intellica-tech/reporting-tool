@@ -120,9 +120,10 @@ function ReportList() {
         const editedItem = editedData.find(
           (item: any) => item.id === favoriteItem.id,
         );
-        addedFavoriteData.push(
-          Object.assign({ isFavorite: favoriteItem.value }, editedItem),
-        );
+        addedFavoriteData.push({
+          ...editedItem,
+          isFavorite: favoriteItem.value,
+        });
       }
 
       setData(addedFavoriteData);
