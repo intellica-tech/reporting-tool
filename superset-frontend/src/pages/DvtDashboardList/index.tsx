@@ -38,6 +38,7 @@ import {
   StyledSelectedItem,
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
+import DvtTitleCardList from 'src/components/DvtTitleCardList';
 
 const headerData = [
   {
@@ -84,11 +85,11 @@ const headerData = [
 
 function DvtDashboardList() {
   const history = useHistory<{ from: string }>();
+  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.tabs);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
-
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
 
   const searchApiUrl = () => {
@@ -165,6 +166,28 @@ function DvtDashboardList() {
     history.push('/superset/dashboard');
   };
 
+  const handleSetFavorites = (id: number, isFavorite: boolean) => {
+    const updateData = (dataList: any[]) => {
+      const newData = dataList.map(item =>
+        item.id === id ? { ...item, isFavorite: !isFavorite } : item,
+      );
+      return newData;
+    };
+
+    const action = isFavorite ? 'unselect' : 'select';
+    fetch(`/superset/favstar/slice/${id}/${action}/`)
+      .then(res => {
+        if (res.ok) {
+          setData(updatedData => updateData(updatedData));
+        } else {
+          console.error('Favorite has been failed:', res.status);
+        }
+      })
+      .catch(error => {
+        console.error('Favorite has been failed:', error);
+      });
+  };
+
   return (
     <StyledDashboardList>
       <StyledDashboardListButtons>
@@ -205,13 +228,30 @@ function DvtDashboardList() {
         </StyledDashboardButtons>
       </StyledDashboardListButtons>
       <StyledDashboardTable>
-        <DvtTable
-          data={data}
-          header={headerData}
-          selected={selectedRows}
-          setSelected={setSelectedRows}
-          checkboxActiveField="id"
-        />
+        {activeTab === 'Table' ? (
+          <DvtTable
+            data={data}
+            header={headerData}
+            selected={selectedRows}
+            setSelected={setSelectedRows}
+            checkboxActiveField="id"
+          />
+        ) : (
+          <DvtTitleCardList
+            data={data.map((item: any) => ({
+              id: item.id,
+              title: item.dashboard_title,
+              label: item.changed_by_name,
+              description: `Modified ${item.created_on_delta_humanized}`,
+              isFavorite: item.isFavorite,
+              link: item.url,
+            }))}
+            title="Example"
+            setFavorites={(id, isFavorite) =>
+              handleSetFavorites(id, isFavorite)
+            }
+          />
+        )}
       </StyledDashboardTable>
       <StyledDashboardBottom>
         <StyledDashboardCreateDashboard>

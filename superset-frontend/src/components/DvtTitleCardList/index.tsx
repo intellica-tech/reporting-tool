@@ -31,7 +31,7 @@ import { OptionProps } from '../DvtDropdown';
 
 export interface CardDataProps {
   id: number;
-  title: string;
+  title: string | undefined;
   label: string;
   description: string;
   isFavorite: boolean | null;
@@ -72,7 +72,7 @@ const DvtTitleCardList: React.FC<DvtTitleCardListProps> = ({
       {data.map(item => (
         <DvtCard
           key={item.id}
-          title={item.title}
+          title={item.title ? item.title : ''}
           label={item.label}
           description={item.description}
           isFavorite={item.isFavorite}

@@ -27,6 +27,8 @@ import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
+import DvtTitleCardList from 'src/components/DvtTitleCardList';
+import useFetch from 'src/hooks/useFetch';
 
 const modifiedData = {
   header: [
@@ -67,11 +69,65 @@ const modifiedData = {
 
 function ReportList() {
   const dispatch = useDispatch();
+  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.tabs);
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [editedData, setEditedData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [editedData, setEditedData] = useState<any[]>([]);
+  const [count, setCount] = useState(0);
+
+  const [data, setData] = useState<any[]>([]);
+
+  const [favoriteApiUrl, setFavoriteApiUrl] = useState('');
+
+  const reportData = useFetch({
+    url: `/api/v1/chart/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${page},page_size:10)`,
+  });
+  const favoriteData = useFetch({ url: favoriteApiUrl });
+
+  useEffect(() => {
+    if (reportData) {
+      const editedDatas = reportData.result.map((item: any) => ({
+        ...item,
+        date: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
+        created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
+        changed_by: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
+        owner: `${item.owners[0].first_name} ${item.owners[0].last_name}`,
+        dashboards: item.dashboards[0]?.dashboard_title,
+        certified: item.certified_by,
+      }));
+      setEditedData(editedDatas);
+      setCount(reportData.count);
+    }
+  }, [reportData]);
+
+  useEffect(() => {
+    if (editedData.length > 0) {
+      const idGetData = editedData.map((item: { id: number }) => item.id);
+      setFavoriteApiUrl(
+        `/api/v1/chart/favorite_status/?q=!(${idGetData.join()})`,
+      );
+    }
+  }, [editedData]);
+
+  useEffect(() => {
+    if (favoriteData?.result.length > 0) {
+      const addedFavoriteData = [];
+      const fvrArray = favoriteData.result;
+
+      for (let i = 0; i < fvrArray.length; i++) {
+        const favoriteItem = fvrArray[i];
+        const editedItem = editedData.find(
+          (item: any) => item.id === favoriteItem.id,
+        );
+        addedFavoriteData.push(
+          Object.assign({ isFavorite: favoriteItem.value }, editedItem),
+        );
+      }
+
+      setData(addedFavoriteData);
+    }
+  }, [favoriteData]);
 
   const clearReports = () => {
     dispatch(
@@ -90,69 +146,27 @@ function ReportList() {
     );
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/v1/chart/');
-        const data = await response.json();
-        const newEditedData = data.result.map((item: any) => ({
-          ...item,
-          date: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
-          created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
-          changed_by: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
-          owner: `${item.owners[0].first_name} ${item.owners[0].last_name}`,
-          dashboards: item.dashboards[0]?.dashboard_title,
-          certified: item.certified_by,
-        }));
-
-        setEditedData(newEditedData);
-        setFilteredData(newEditedData);
-      } catch (error) {
-        console.error('Hata:', error);
-      }
+  const handleSetFavorites = (id: number, isFavorite: boolean) => {
+    const updateData = (dataList: any[]) => {
+      const newData = dataList.map(item =>
+        item.id === id ? { ...item, isFavorite: !isFavorite } : item,
+      );
+      return newData;
     };
-
-    fetchData();
-    setSelectedRows([]);
-  }, [page]);
+    fetch(
+      `/superset/favstar/slice/${id}/${isFavorite ? 'unselect' : 'select'}/`,
+    ).then(res => {
+      if (res.status === 200) {
+        setData(updatedData => updateData(updatedData));
+      }
+    });
+  };
 
   const handleDeselectAll = () => {
     setSelectedRows([]);
   };
 
-  useEffect(() => {
-    const filteredData = editedData.filter(
-      (item: any) =>
-        (reportsSelector.owner ? item.owner === reportsSelector.owner : true) &&
-        (reportsSelector.createdBy
-          ? item.created_by === reportsSelector.createdBy
-          : true) &&
-        (reportsSelector.chartType
-          ? item.type === reportsSelector.chartType
-          : true) &&
-        (reportsSelector.dataset
-          ? item.crontab_humanized === reportsSelector.dataset
-          : true) &&
-        (reportsSelector.dashboards
-          ? item.dashboards === reportsSelector.dashboards
-          : true) &&
-        (reportsSelector.certified
-          ? item.certified === reportsSelector.certified
-          : true),
-    );
-
-    setFilteredData(filteredData);
-  }, [reportsSelector]);
-
-  const itemsPerPageValue = 10;
-  const indexOfLastItem = page * itemsPerPageValue;
-  const indexOfFirstItem = (page - 1) * itemsPerPageValue;
-  const currentItems =
-    filteredData.length > 10
-      ? filteredData.slice(indexOfFirstItem, indexOfLastItem)
-      : filteredData;
-
-  return filteredData.length > 0 ? (
+  return data.length > 0 ? (
     <StyledReports>
       <div>
         <DvtButton
@@ -164,13 +178,28 @@ function ReportList() {
           onClick={handleDeselectAll}
         />
       </div>
-      <DvtTable
-        data={currentItems}
-        header={modifiedData.header}
-        selected={selectedRows}
-        setSelected={setSelectedRows}
-        checkboxActiveField="id"
-      />
+      {activeTab === 'Table' ? (
+        <DvtTable
+          data={data}
+          header={modifiedData.header}
+          selected={selectedRows}
+          setSelected={setSelectedRows}
+          checkboxActiveField="id"
+        />
+      ) : (
+        <DvtTitleCardList
+          data={data.map((item: any) => ({
+            id: item.id,
+            title: item.dashboards,
+            label: item.changed_by_name,
+            description: item.changed_on_delta_humanized,
+            isFavorite: item.isFavorite,
+            link: item.url,
+          }))}
+          title="Example"
+          setFavorites={(id, isFavorite) => handleSetFavorites(id, isFavorite)}
+        />
+      )}
       <StyledReportsButton>
         <DvtButton
           label={t('Create a New Graph/Chart')}
@@ -180,7 +209,7 @@ function ReportList() {
         <DvtPagination
           page={page}
           setPage={setPage}
-          itemSize={filteredData.length}
+          itemSize={count}
           pageItemSize={10}
         />
       </StyledReportsButton>
@@ -189,15 +218,13 @@ function ReportList() {
     <StyledReports>
       <DvtIconDataLabel
         label={
-          editedData.length === 0
+          data.length === 0
             ? t('No Alerts Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={
-          editedData.length === 0 ? t('Alert') : t('Clear All Filter')
-        }
+        buttonLabel={data.length === 0 ? t('Alert') : t('Clear All Filter')}
         buttonClick={() => {
-          if (editedData.length > 0) {
+          if (data.length > 0) {
             clearReports();
           }
         }}

@@ -178,6 +178,7 @@ function DvtWelcome() {
     );
   };
 
+  console.log(recentData);
   return (
     <StyledDvtWelcome>
       <DataContainer>

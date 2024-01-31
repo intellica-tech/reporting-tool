@@ -55,6 +55,32 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/dashboard/list/',
+    data: [
+      { 
+        label: t('Card'), 
+        icon: 'dvt-all',
+      },
+      { 
+        label: t('Table'), 
+        icon: 'dvt-mine',
+      },
+    ],
+  },
+  {
+    pathname: '/report/list/',
+    data: [
+      { 
+        label: t('Card'), 
+        icon: '',
+      },
+      { 
+        label: t('Table'), 
+        icon: '',
+      },
+    ],
+  },
 ];
 
 export const WithNavbarBottom: string[] = [
@@ -63,4 +89,6 @@ export const WithNavbarBottom: string[] = [
   '/superset/sqllab/history/',
   '/superset/sqllab/',
   '/chart/add',
+  '/dashboard/list/',
+  '/report/list/',
 ];
