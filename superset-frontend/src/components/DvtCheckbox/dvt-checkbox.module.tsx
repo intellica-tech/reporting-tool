@@ -21,31 +21,43 @@ import { styled } from '@superset-ui/core';
 interface StyledCheckboxProps {
   checked: boolean;
   disabled: boolean;
+  colour: string;
 }
 
-const StyledCheckbox = styled.div`
-  display: flex;
+const StyledCheckbox = styled.div<StyledCheckboxProps>`
+  display: inline-flex;
   gap: 9px;
   align-items: center;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const StyledCheckboxInput = styled.div<StyledCheckboxProps>`
   position: relative;
   width: 24px;
   height: 24px;
-  border: 2px solid ${({ theme }) => theme.colors.dvt.primary.base};
+  border: 2px solid
+    ${({ theme, checked, colour }) =>
+      checked
+        ? theme.colors.dvt.primary.base
+        : colour === 'black'
+        ? theme.colors.grayscale.dark2
+        : theme.colors.dvt.text.label};
   border-radius: 7px;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-
   &::after {
     content: '';
     position: absolute;
     top: 11px;
-    left: 3px;
+    left: 4px;
     transform: translate(-50%, -50%);
     width: 6px;
     height: 12px;
-    border: 2px solid ${({ theme }) => theme.colors.dvt.primary.base};
+    border: 2px solid
+      ${({ theme, checked, colour }) =>
+        checked
+          ? theme.colors.dvt.primary.base
+          : colour === 'black'
+          ? theme.colors.grayscale.dark2
+          : theme.colors.dvt.text.label};
     border-width: 2px 2px 0 0;
     border-radius: 1px;
     opacity: ${({ checked }) => (checked ? 1 : 0)};
@@ -55,9 +67,14 @@ const StyledCheckboxInput = styled.div<StyledCheckboxProps>`
   }
 `;
 
-const StyledCheckboxLabel = styled.div`
+const StyledCheckboxLabel = styled.div<StyledCheckboxProps>`
   font-size: 12px;
   font-weight: 600;
+  color: ${({ colour, theme }) =>
+    colour === 'black'
+      ? theme.colors.grayscale.dark2
+      : theme.colors.dvt.text.label};
+  transform-origin: left top; ;
 `;
 
 export { StyledCheckbox, StyledCheckboxInput, StyledCheckboxLabel };

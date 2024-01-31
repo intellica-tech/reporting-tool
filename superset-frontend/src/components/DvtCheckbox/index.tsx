@@ -28,6 +28,7 @@ export interface DvtCheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
+  colour?: 'black' | 'grey';
 }
 
 const DvtCheckbox: React.FC<DvtCheckboxProps> = ({
@@ -35,15 +36,31 @@ const DvtCheckbox: React.FC<DvtCheckboxProps> = ({
   checked,
   onChange,
   disabled = false,
+  colour = 'grey',
 }) => {
   const handleChange = () => {
     onChange(!checked);
   };
 
   return (
-    <StyledCheckbox onClick={() => !disabled && handleChange()}>
-      <StyledCheckboxInput checked={checked} disabled={disabled} />
-      <StyledCheckboxLabel>{label}</StyledCheckboxLabel>
+    <StyledCheckbox
+      checked={checked}
+      disabled={disabled}
+      onClick={() => !disabled && handleChange()}
+      colour={colour}
+    >
+      <StyledCheckboxInput
+        checked={checked}
+        disabled={disabled}
+        colour={colour}
+      />
+      <StyledCheckboxLabel
+        checked={checked}
+        disabled={disabled}
+        colour={colour}
+      >
+        {label}
+      </StyledCheckboxLabel>
     </StyledCheckbox>
   );
 };
