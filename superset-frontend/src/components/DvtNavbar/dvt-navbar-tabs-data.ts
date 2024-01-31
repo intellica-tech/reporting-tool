@@ -73,11 +73,11 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
     data: [
       {
         label: t('Card'),
-        icon: '',
+        icon: 'dvt-all',
       },
       {
         label: t('Table'),
-        icon: '',
+        icon: 'dvt-mine',
       },
     ],
   },

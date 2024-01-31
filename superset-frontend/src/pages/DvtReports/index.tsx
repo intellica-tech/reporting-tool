@@ -90,9 +90,9 @@ function ReportList() {
       const editedDatas = reportData.result.map((item: any) => ({
         ...item,
         date: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
-        created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
-        changed_by: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
-        owner: `${item.owners[0].first_name} ${item.owners[0].last_name}`,
+        created_by: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
+        changed_by: `${item.changed_by?.first_name} ${item.changed_by?.last_name}`,
+        owner: `${item.owners[0]?.first_name} ${item.owners[0]?.last_name}`,
         dashboards: item.dashboards[0]?.dashboard_title,
         certified: item.certified_by,
       }));
@@ -170,14 +170,16 @@ function ReportList() {
   return data.length > 0 ? (
     <StyledReports>
       <div>
-        <DvtButton
-          label={t('Deselect All')}
-          bold
-          colour="primary"
-          typeColour="outline"
-          size="medium"
-          onClick={handleDeselectAll}
-        />
+        {activeTab === 'Table' && (
+          <DvtButton
+            label={t('Deselect All')}
+            bold
+            colour="primary"
+            typeColour="outline"
+            size="medium"
+            onClick={handleDeselectAll}
+          />
+        )}
       </div>
       {activeTab === 'Table' ? (
         <DvtTable
@@ -191,13 +193,13 @@ function ReportList() {
         <DvtTitleCardList
           data={data.map((item: any) => ({
             id: item.id,
-            title: item.dashboards,
+            title: item.slice_name,
             label: item.changed_by_name,
             description: item.changed_on_delta_humanized,
             isFavorite: item.isFavorite,
             link: item.url,
           }))}
-          title="Example"
+          title="Data"
           setFavorites={(id, isFavorite) => handleSetFavorites(id, isFavorite)}
         />
       )}

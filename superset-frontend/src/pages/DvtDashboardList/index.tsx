@@ -149,7 +149,7 @@ function DvtDashboardList() {
                 .join(',')
             : '',
           createdbyName: item.changed_by
-            ? `${item.changed_by.first_name} ${item.changed_by.last_name}`
+            ? `${item.changed_by?.first_name} ${item.changed_by?.last_name}`
             : '',
         })),
       );
@@ -196,14 +196,16 @@ function DvtDashboardList() {
             <StyledSelectedItemCount>
               <span>{`${selectedRows.length} Selected`}</span>
             </StyledSelectedItemCount>
-            <DvtButton
-              label={t('Deselect All')}
-              bold
-              colour="primary"
-              typeColour="outline"
-              size="medium"
-              onClick={handleDeselectAll}
-            />
+            {activeTab === 'Table' && (
+              <DvtButton
+                label={t('Deselect All')}
+                bold
+                colour="primary"
+                typeColour="outline"
+                size="medium"
+                onClick={handleDeselectAll}
+              />
+            )}
           </StyledSelectedItem>
         </StyledDvtSelectButtons>
         <StyledDashboardButtons>
@@ -246,7 +248,7 @@ function DvtDashboardList() {
               isFavorite: item.isFavorite,
               link: item.url,
             }))}
-            title="Example"
+            title="Data"
             setFavorites={(id, isFavorite) =>
               handleSetFavorites(id, isFavorite)
             }
