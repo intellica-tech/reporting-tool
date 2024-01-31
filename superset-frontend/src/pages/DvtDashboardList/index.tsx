@@ -40,7 +40,6 @@ import {
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
 
-
 const headerData = [
   {
     id: 1,
