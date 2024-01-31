@@ -31,5 +31,5 @@ export const Default = (args: DvtCheckboxProps) => {
 };
 
 Default.args = {
-  label: 'State',
+  label: 'Checkbox',
 };

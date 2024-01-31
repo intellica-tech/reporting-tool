@@ -41,13 +41,9 @@ const DvtCheckbox: React.FC<DvtCheckboxProps> = ({
   };
 
   return (
-    <StyledCheckbox>
+    <StyledCheckbox onClick={() => !disabled && handleChange()}>
+      <StyledCheckboxInput checked={checked} disabled={disabled} />
       <StyledCheckboxLabel>{label}</StyledCheckboxLabel>
-      <StyledCheckboxInput
-        checked={checked}
-        disabled={disabled}
-        onChange={handleChange}
-      />
     </StyledCheckbox>
   );
 };
