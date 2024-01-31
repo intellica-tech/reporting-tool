@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { dvtHomeItem } from 'src/dvt-redux/dvt-homeReducer';
+import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
-import DvtInput from 'src/components/DvtInput';
 import {
   StyledDeleteModal,
   StyledDeleteModalHeader,
@@ -13,15 +13,22 @@ import {
 } from './delete-modal.module';
 
 const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
+  const dispatch = useDispatch();
   const item = meta.item.id;
   const types = meta.type;
 
   const handleDelete = async () => {
+    const deleteType = types;
     try {
-      await fetch(`/api/v1/${types}/${item}`, { method: 'DELETE' });
-      onClose();
+      const response = await fetch(`/api/v1/${types}/${item}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        dispatch(dvtHomeItem(deleteType));
+        onClose();
+      }
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error(error);
     }
   };
 

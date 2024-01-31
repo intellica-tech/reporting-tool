@@ -17,12 +17,14 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { dvtHomeItem } from 'src/dvt-redux/dvt-homeReducer';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
@@ -33,7 +35,6 @@ import {
   DataContainer,
   CalendarContainer,
 } from './dvt-home.module';
-import { useAppSelector } from 'src/hooks/useAppSelector';
 
 type ApiData = {
   result: any[];
@@ -104,7 +105,7 @@ function DvtWelcome() {
   const [dashboardData, setDashboardData] = useState<any[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
   const [savedQueriesData, setSavedQueriesData] = useState<CardDataProps[]>([]);
-  const component = useAppSelector(state => state.dvtModal.component);
+  const item = useAppSelector(state => state.dvtHome.item);
 
   const handleSetFavorites = (
     id: number,
@@ -151,7 +152,21 @@ function DvtWelcome() {
       formatRecentData,
       setRecentData,
     );
-  }, [component]);
+  }, []);
+
+  useEffect(() => {
+    if (item === 'chart') {
+      fetchAndFormatData('/api/v1/chart/', formatChartData, setChartData);
+      dispatch(dvtHomeItem(''));
+    } else if (item === 'dashboard') {
+      fetchAndFormatData(
+        '/api/v1/dashboard/',
+        formatDashboardData,
+        setDashboardData,
+      );
+      dispatch(dvtHomeItem(''));
+    }
+  }, [item]);
 
   const handleEditDashboard = async (item: any) => {
     try {
@@ -184,7 +199,7 @@ function DvtWelcome() {
     dispatch(
       openModal({
         component: 'delete-modal',
-        meta: { item, type },
+        meta: { item, type, title: 'dashboard' },
       }),
     );
   };

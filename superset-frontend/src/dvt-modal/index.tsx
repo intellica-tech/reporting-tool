@@ -50,9 +50,8 @@ const DvtModal = () => {
   return component ? (
     <StyledModal>
       <StyledModalCard size={size} ref={ref}>
-        <StyledModalCardClose onClick={() => handleCloseModal()}>
-          X
-        </StyledModalCardClose>
+        <StyledModalCardClose onClick={() => handleCloseModal()} />
+
         <StyledModalCardBody>
           {getComponent(component, meta, handleCloseModal)}
         </StyledModalCardBody>
