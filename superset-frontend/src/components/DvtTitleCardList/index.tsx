@@ -17,7 +17,7 @@
  * under the License.
  */
 import React from 'react';
-//import { supersetTheme } from '@superset-ui/core';
+// import { supersetTheme } from '@superset-ui/core';
 import DvtCard from '../DvtCard';
 import DvtTitleTotal from '../DvtTitleTotal';
 import {
@@ -26,7 +26,7 @@ import {
   StyledDvtCardList,
   StyledDvtTitleCardList,
 } from './dvt-title-card-list.module';
-//import Icon from '../Icons/Icon';
+// import Icon from '../Icons/Icon';
 import { OptionProps } from '../DvtDropdown';
 
 export interface CardDataProps {
