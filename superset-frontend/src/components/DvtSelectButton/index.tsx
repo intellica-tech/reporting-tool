@@ -49,13 +49,11 @@ const DvtSelectButton: React.FC<DvtSelectButtonProps> = ({
       >
         <Icon
           fileName={buttonData.icon}
-          onClick={() => {
-            setActiveButton(buttonData.popoverLabel);
-          }}
+          onClick={() => setActiveButton(buttonData.popoverLabel)}
           css={(theme: SupersetTheme) => ({
             color:
               activeButton === buttonData.popoverLabel
-                ? theme.colors.primary.base
+                ? theme.colors.dvt.primary.base
                 : theme.colors.grayscale.dark2,
             fontSize: '24px',
           })}
