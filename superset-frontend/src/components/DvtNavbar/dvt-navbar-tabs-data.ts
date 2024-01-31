@@ -58,12 +58,12 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
   {
     pathname: '/dashboard/list/',
     data: [
-      { 
-        label: t('Card'), 
+      {
+        label: t('Card'),
         icon: 'dvt-all',
       },
-      { 
-        label: t('Table'), 
+      {
+        label: t('Table'),
         icon: 'dvt-mine',
       },
     ],
@@ -71,12 +71,12 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
   {
     pathname: '/report/list/',
     data: [
-      { 
-        label: t('Card'), 
+      {
+        label: t('Card'),
         icon: '',
       },
-      { 
-        label: t('Table'), 
+      {
+        label: t('Table'),
         icon: '',
       },
     ],

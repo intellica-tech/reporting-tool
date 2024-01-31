@@ -26,9 +26,9 @@ import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import { StyledReports, StyledReportsButton } from './dvt-reports.module';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import useFetch from 'src/hooks/useFetch';
+import { StyledReports, StyledReportsButton } from './dvt-reports.module';
 
 const modifiedData = {
   header: [

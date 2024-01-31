@@ -25,6 +25,7 @@ import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
+import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import {
   StyledDashboardBottom,
@@ -38,7 +39,7 @@ import {
   StyledSelectedItem,
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
-import DvtTitleCardList from 'src/components/DvtTitleCardList';
+
 
 const headerData = [
   {
