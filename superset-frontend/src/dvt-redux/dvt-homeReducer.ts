@@ -19,24 +19,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtAppState {
-  item: string;
+  deleteSuccessStatus: string;
 }
 
 const initialState: DvtAppState = {
-  item: '',
+  deleteSuccessStatus: '',
 };
 
 const dvtHomeSlice = createSlice({
   name: 'dvt-home',
   initialState,
   reducers: {
-    dvtHomeItem: (state, action: PayloadAction<string>) => ({
+    dvtHomeDeleteSuccessStatus: (state, action: PayloadAction<string>) => ({
       ...state,
-      item: action.payload,
+      deleteSuccessStatus: action.payload,
     }),
   },
 });
 
-export const { dvtHomeItem } = dvtHomeSlice.actions;
+export const { dvtHomeDeleteSuccessStatus } = dvtHomeSlice.actions;
 
 export default dvtHomeSlice.reducer;

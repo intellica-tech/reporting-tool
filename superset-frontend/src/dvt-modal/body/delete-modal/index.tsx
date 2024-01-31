@@ -1,5 +1,5 @@
 import React from 'react';
-import { dvtHomeItem } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
@@ -24,7 +24,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
         method: 'DELETE',
       });
       if (response.ok) {
-        dispatch(dvtHomeItem(deleteType));
+        dispatch(dvtHomeDeleteSuccessStatus(deleteType));
         onClose();
       }
     } catch (error) {

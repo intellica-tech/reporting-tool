@@ -24,7 +24,7 @@ import { t } from '@superset-ui/core';
 import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import { dvtHomeItem } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
@@ -105,7 +105,9 @@ function DvtWelcome() {
   const [dashboardData, setDashboardData] = useState<any[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
   const [savedQueriesData, setSavedQueriesData] = useState<CardDataProps[]>([]);
-  const item = useAppSelector(state => state.dvtHome.item);
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
 
   const handleSetFavorites = (
     id: number,
@@ -155,18 +157,18 @@ function DvtWelcome() {
   }, []);
 
   useEffect(() => {
-    if (item === 'chart') {
+    if (deleteSuccessStatus === 'chart') {
       fetchAndFormatData('/api/v1/chart/', formatChartData, setChartData);
-      dispatch(dvtHomeItem(''));
-    } else if (item === 'dashboard') {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    } else if (deleteSuccessStatus === 'dashboard') {
       fetchAndFormatData(
         '/api/v1/dashboard/',
         formatDashboardData,
         setDashboardData,
       );
-      dispatch(dvtHomeItem(''));
+      dispatch(dvtHomeDeleteSuccessStatus(''));
     }
-  }, [item]);
+  }, [deleteSuccessStatus]);
 
   const handleEditDashboard = async (item: any) => {
     try {
