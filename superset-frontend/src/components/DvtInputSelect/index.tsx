@@ -41,6 +41,7 @@ export interface DvtInputSelectProps {
   placeholder?: string;
   selectedValues: any[];
   setSelectedValues: (newSelectedVales: any[]) => void;
+  typeDesign?: 'text' | 'form' | 'chartsForm';
 }
 
 const DvtInputSelect = ({
@@ -49,6 +50,7 @@ const DvtInputSelect = ({
   placeholder = '',
   selectedValues,
   setSelectedValues,
+  typeDesign = 'text',
 }: DvtInputSelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -63,25 +65,36 @@ const DvtInputSelect = ({
   };
 
   return (
-    <StyledInputSelect>
-      <StyledInputSelectLabel>{label}</StyledInputSelectLabel>
-      <StyledInputSelectInput>
+    <StyledInputSelect ref={ref}>
+      <StyledInputSelectLabel typeDesign={typeDesign} isOpen={isOpen}>
+        {label}
+      </StyledInputSelectLabel>
+      <StyledInputSelectInput
+        typeDesign={typeDesign}
+        isOpen={isOpen}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <StyledInputSelectField
           placeholder={placeholder}
           value={selectedValues.join(', ')}
-          onClick={() => setIsOpen(!isOpen)}
+          typeDesign={typeDesign}
+          isOpen={isOpen}
         />
         <StyledInputSelectIcon isOpen={isOpen}>
           <Icon fileName="caret_right" iconSize="xl" />
         </StyledInputSelectIcon>
       </StyledInputSelectInput>
       {isOpen && (
-        <StyledInputSelectOptions ref={ref}>
+        <StyledInputSelectOptions
+          itemLength={data.length}
+          typeDesign={typeDesign}
+        >
           {data.map(option => (
             <StyledInputSelectOptionsLabel
               key={option.value}
               onClick={() => toggleOption(option.label)}
               selected={selectedValues.includes(option.label)}
+              typeDesign={typeDesign}
             >
               {option.label}
               {selectedValues.includes(option.label) && (

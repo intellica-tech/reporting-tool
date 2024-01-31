@@ -18,12 +18,23 @@
  */
 import { keyframes, styled } from '@superset-ui/core';
 
-interface StyledInputSelect {
+interface StyledInputSelectProps {
   selected: boolean;
+  typeDesign: string;
 }
 
-interface StyledInputSelectIcon {
+interface StyledInputSelectIconProps {
   isOpen: boolean;
+}
+
+interface StyledInputDesignProps {
+  typeDesign: string;
+  isOpen: boolean;
+}
+
+interface StyledInputLengthDesignProps {
+  itemLength: number;
+  typeDesign: string;
 }
 
 const optionsKeyframes = keyframes`
@@ -35,24 +46,39 @@ const optionsKeyframes = keyframes`
   }
 `;
 
-const StyledInputSelectInput = styled.div`
+const StyledInputSelectInput = styled.div<StyledInputDesignProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  border: ${({ theme, typeDesign }) =>
+    typeDesign === 'navbar'
+      ? `1px solid ${theme.colors.dvt.primary.light2}`
+      : 'none'};
+  padding: ${({ typeDesign }) => (typeDesign === 'form' ? '12px 8px' : '12px')};
+  border-radius: ${({ typeDesign }) =>
+    typeDesign === 'form' ? '4px' : '12px'};
   width: 100%;
-  height: 40px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  height: 48px;
+  background-color: ${({ isOpen, theme, typeDesign }) =>
+    typeDesign === 'form' || typeDesign === 'navbar'
+      ? theme.colors.grayscale.light5
+      : isOpen
+      ? theme.colors.dvt.primary.light2
+      : theme.colors.dvt.grayscale.light2};
+  cursor: pointer;
 `;
 
-const StyledInputSelectField = styled.input`
+const StyledInputSelectField = styled.input<StyledInputDesignProps>`
   width: 100%;
   height: 100%;
   border: none;
   color: ${({ theme }) => theme.colors.dvt.text.bold};
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  background-color: ${({ isOpen, theme, typeDesign }) =>
+    typeDesign === 'form' || typeDesign === 'navbar'
+      ? theme.colors.grayscale.light5
+      : isOpen
+      ? theme.colors.dvt.primary.light2
+      : theme.colors.dvt.grayscale.light2};
   &:focus {
     outline: none;
   }
@@ -67,7 +93,7 @@ const StyledInputSelectField = styled.input`
   }
 `;
 
-const StyledInputSelectIcon = styled.div<StyledInputSelectIcon>`
+const StyledInputSelectIcon = styled.div<StyledInputSelectIconProps>`
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
@@ -80,13 +106,14 @@ const StyledInputSelect = styled.div`
   gap: 12px;
 `;
 
-const StyledInputSelectLabel = styled.div`
+const StyledInputSelectLabel = styled.div<StyledInputDesignProps>`
   color: ${({ theme }) => theme.colors.dvt.text.label};
   font-size: 12px;
   font-weight: 500;
+  margin-left: ${({ typeDesign }) => (typeDesign === 'form' ? '0' : '13px')};
 `;
 
-const StyledInputSelectOptions = styled.div`
+const StyledInputSelectOptions = styled.div<StyledInputLengthDesignProps>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -94,23 +121,58 @@ const StyledInputSelectOptions = styled.div`
   flex-direction: column;
   gap: 3px;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  max-height: 274px;
+  overflow-y: auto;
+  animation: ${optionsKeyframes} 0.3s ease-in-out;
+  z-index: 999;
+  transform-origin: top;
+  background: ${({ theme }) => theme.colors.dvt.primary.light2};
   margin-top: 5px;
-  border-radius: 4px;
+  border-radius: ${({ itemLength, typeDesign }) =>
+    itemLength > 6 ? '12px 0 0 12px' : typeDesign === 'form' ? '4px' : '12px'};
   padding: 8px 0 8px 0;
   animation: ${optionsKeyframes} 0.3s ease-in-out;
   transform-origin: top;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    border-radius: 3px;
+  }
 `;
 
-const StyledInputSelectOptionsLabel = styled.div<StyledInputSelect>`
+const StyledInputSelectOptionsLabel = styled.div<StyledInputSelectProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   cursor: pointer;
-  background-color: ${({ theme, selected }) =>
-    selected ? theme.colors.dvt.grayscale.light1 : ''};
   padding: 5px 13px 5px 13px;
+  ${({ theme, selected, typeDesign }) =>
+    selected
+      ? typeDesign === 'form' || typeDesign === 'navbar'
+        ? `
+        color: ${theme.colors.dvt.text.help};
+        background: ${theme.colors.dvt.primary.light2};
+      `
+        : `
+        color: ${theme.colors.grayscale.light5};
+        background: ${theme.colors.dvt.primary.light1};
+      `
+      : typeDesign === 'form' || typeDesign === 'navbar'
+      ? `
+        color: ${theme.colors.dvt.primary.light1};
+        background: ${theme.colors.dvt.primary.light3};
+      }
+    `
+      : `
+        color: ${theme.colors.dvt.primary.light1};
+      }
+    `}
 `;
 const StyledInputSelectDiv = styled.div`
   font-size: 15px;
