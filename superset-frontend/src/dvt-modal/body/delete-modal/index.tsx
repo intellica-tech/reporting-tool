@@ -21,7 +21,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
   const types = meta.type;
 
   useEffect(() => {
-    if (deleteApi.message === 'OK') {
+    if (deleteApi?.message === 'OK') {
       dispatch(dvtHomeDeleteSuccessStatus(types));
       onClose();
     }
