@@ -220,16 +220,20 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
           )}
           {pathName === '/dashboard/list/' && (
             <DvtButtonTabs
-              active={viewListSelector.tabs}
+              active={viewListSelector.dashboard}
               data={activeData}
-              setActive={value => dispatch(dvtNavbarViewlistTabs(value))}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'dashboard' }))
+              }
             />
           )}
           {pathName === '/report/list/' && (
             <DvtButtonTabs
-              active={viewListSelector.tabs}
+              active={viewListSelector.reports}
               data={activeData}
-              setActive={value => dispatch(dvtNavbarViewlistTabs(value))}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'reports' }))
+              }
             />
           )}
         </NavbarBottom>

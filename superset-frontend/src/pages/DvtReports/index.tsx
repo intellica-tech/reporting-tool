@@ -69,7 +69,7 @@ const modifiedData = {
 
 function ReportList() {
   const dispatch = useDispatch();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.tabs);
+  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.reports);
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -169,26 +169,26 @@ function ReportList() {
 
   return data.length > 0 ? (
     <StyledReports>
-      <div>
-        {activeTab === 'Table' && (
-          <DvtButton
-            label={t('Deselect All')}
-            bold
-            colour="primary"
-            typeColour="outline"
-            size="medium"
-            onClick={handleDeselectAll}
-          />
-        )}
-      </div>
       {activeTab === 'Table' ? (
-        <DvtTable
-          data={data}
-          header={modifiedData.header}
-          selected={selectedRows}
-          setSelected={setSelectedRows}
-          checkboxActiveField="id"
-        />
+        <>
+          <div>
+            <DvtButton
+              label={t('Deselect All')}
+              bold
+              colour="primary"
+              typeColour="outline"
+              size="medium"
+              onClick={handleDeselectAll}
+            />
+          </div>
+          <DvtTable
+            data={data}
+            header={modifiedData.header}
+            selected={selectedRows}
+            setSelected={setSelectedRows}
+            checkboxActiveField="id"
+          />
+        </>
       ) : (
         <DvtTitleCardList
           data={data.map((item: any) => ({

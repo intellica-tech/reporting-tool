@@ -23,7 +23,8 @@ interface DvtNavbarState {
     tabs: string;
   };
   viewlist: {
-    tabs: string;
+    dashboard: string;
+    reports: string;
   };
 }
 
@@ -32,7 +33,8 @@ const initialState: DvtNavbarState = {
     tabs: 'Query History',
   },
   viewlist: {
-    tabs: 'Table',
+    dashboard: 'Table',
+    reports: 'Table',
   },
 };
 
@@ -47,11 +49,11 @@ const dvtNavbarSlice = createSlice({
         tabs: action.payload,
       },
     }),
-    dvtNavbarViewlistTabs: (state, action: PayloadAction<string>) => ({
+    dvtNavbarViewlistTabs: (state, action: PayloadAction <{key:string, value:string}>) => ({
       ...state,
       viewlist: {
         ...state.viewlist,
-        tabs: action.payload,
+        [action.payload.key]: action.payload.value,
       },
     }),
   },

@@ -85,7 +85,7 @@ const headerData = [
 
 function DvtDashboardList() {
   const history = useHistory<{ from: string }>();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.tabs);
+  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -190,13 +190,14 @@ function DvtDashboardList() {
 
   return (
     <StyledDashboardList>
-      <StyledDashboardListButtons>
-        <StyledDvtSelectButtons>
-          <StyledSelectedItem>
-            <StyledSelectedItemCount>
-              <span>{`${selectedRows.length} Selected`}</span>
-            </StyledSelectedItemCount>
-            {activeTab === 'Table' && (
+      {activeTab === 'Table' && (
+        <StyledDashboardListButtons>
+          <StyledDvtSelectButtons>
+            <StyledSelectedItem>
+              <StyledSelectedItemCount>
+                <span>{`${selectedRows.length} Selected`}</span>
+              </StyledSelectedItemCount>
+
               <DvtButton
                 label={t('Deselect All')}
                 bold
@@ -205,30 +206,30 @@ function DvtDashboardList() {
                 size="medium"
                 onClick={handleDeselectAll}
               />
-            )}
-          </StyledSelectedItem>
-        </StyledDvtSelectButtons>
-        <StyledDashboardButtons>
-          <DvtButton
-            label={t('Delete')}
-            icon="dvt-delete"
-            iconToRight
-            colour="error"
-            size="small"
-            onClick={() => {}}
-          />
-          <DvtButton
-            label={t('Export')}
-            icon="dvt-export"
-            iconToRight
-            colour="primary"
-            bold
-            typeColour="powder"
-            size="small"
-            onClick={() => {}}
-          />
-        </StyledDashboardButtons>
-      </StyledDashboardListButtons>
+            </StyledSelectedItem>
+          </StyledDvtSelectButtons>
+          <StyledDashboardButtons>
+            <DvtButton
+              label={t('Delete')}
+              icon="dvt-delete"
+              iconToRight
+              colour="error"
+              size="small"
+              onClick={() => {}}
+            />
+            <DvtButton
+              label={t('Export')}
+              icon="dvt-export"
+              iconToRight
+              colour="primary"
+              bold
+              typeColour="powder"
+              size="small"
+              onClick={() => {}}
+            />
+          </StyledDashboardButtons>
+        </StyledDashboardListButtons>
+      )}
       <StyledDashboardTable>
         {activeTab === 'Table' ? (
           <DvtTable
