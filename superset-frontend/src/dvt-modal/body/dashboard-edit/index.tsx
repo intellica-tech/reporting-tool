@@ -58,7 +58,6 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
     url: '/api/v1/dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  console.log(selectedColorValues);
   const ownersOptions = updateDashboardDataFetchResult
     ? updateDashboardDataFetchResult.result.map((item: any) => ({
         label: item.text,
