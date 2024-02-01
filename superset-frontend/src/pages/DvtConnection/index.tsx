@@ -22,6 +22,8 @@ import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import useFetch from 'src/hooks/useFetch';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -34,12 +36,12 @@ import {
 
 const modifiedData = {
   header: [
-    { id: 1, title: t('Database'), field: 'database', heartIcon: true },
+    { id: 1, title: t('Database'), field: 'database_name', heartIcon: true },
     { id: 2, title: t('Admin'), field: 'admin' },
     { id: 3, title: t('Last Modified'), field: 'date' },
     {
       id: 4,
-      title: 'Action',
+      title: t('Action'),
       clicks: [
         {
           icon: 'edit_alt',
@@ -61,14 +63,52 @@ const modifiedData = {
   ],
 };
 
-function ConnectionList() {
+function DvtConnection() {
   const dispatch = useDispatch();
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
-  const [apiData, setApiData] = useState([]);
+  const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
-  const [editedData, setEditedData] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+
+  const searchApiUrls = fetchQueryParamsSearch({
+    filterData: [
+      {
+        col: 'expose_in_sqllab',
+        opr: 'eq',
+        value: connectionSelector.expose_in_sqllab?.value,
+      },
+      {
+        col: 'allow_run_async',
+        opr: 'eq',
+        value: connectionSelector.allow_run_async?.value,
+      },
+      {
+        col: 'database_name',
+        opr: 'ct',
+        value: connectionSelector.search,
+      },
+    ],
+    page,
+  });
+
+  const connectionApi = useFetch({
+    url: `/api/v1/database/${searchApiUrls}`,
+  });
+
+  useEffect(() => {
+    if (connectionApi) {
+      setData(
+        connectionApi.result.map((item: any) => ({
+          ...item,
+          admin: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
+          date: new Date(item.changed_on).toLocaleString('tr-TR'),
+        })),
+      );
+      setCount(connectionApi.count);
+    }
+  }, [connectionApi]);
 
   const clearConnection = () => {
     dispatch(
@@ -83,60 +123,9 @@ function ConnectionList() {
     );
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/v1/database/');
-        const data = await response.json();
-        const newEditedData = data.result.map((item: any) => ({
-          database: item.database_name,
-          admin: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
-          date: new Date(item.changed_on).toLocaleString('tr-TR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          expose_in_sqllab: item.expose_in_sqllab,
-          allow_run_async: item.allow_run_async,
-        }));
-
-        setEditedData(newEditedData);
-
-        const filteredData = newEditedData.filter(
-          (item: any) =>
-            (connectionSelector.expose_in_sqllab
-              ? item.expose_in_sqllab.toString() ===
-                connectionSelector.expose_in_sqllab
-              : true) &&
-            (connectionSelector.allow_run_async
-              ? item.allow_run_async.toString() ===
-                connectionSelector.allow_run_async
-              : true),
-        );
-
-        setApiData(filteredData);
-      } catch (error) {
-        console.error('Hata:', error);
-      }
-    };
-
-    fetchData();
-  }, [connectionSelector]);
-
-  const itemsPerPageValue = 10;
-  const indexOfLastItem = page * itemsPerPageValue;
-  const indexOfFirstItem = (page - 1) * itemsPerPageValue;
-  const currentItems =
-    apiData.length > 10
-      ? apiData.slice(indexOfFirstItem, indexOfLastItem)
-      : apiData;
-
-  return apiData.length > 0 ? (
+  return data.length > 0 ? (
     <StyledConnection>
-      <DvtTable data={currentItems} header={modifiedData.header} />
+      <DvtTable data={data} header={modifiedData.header} />
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}
@@ -146,7 +135,7 @@ function ConnectionList() {
         <DvtPagination
           page={page}
           setPage={setPage}
-          itemSize={apiData.length}
+          itemSize={count}
           pageItemSize={10}
         />
       </StyledConnectionButton>
@@ -155,15 +144,15 @@ function ConnectionList() {
     <StyledConnection>
       <DvtIconDataLabel
         label={
-          editedData.length === 0
+          data.length === 0
             ? t('No Connection Yet')
             : t('No results match your filter criteria')
         }
         buttonLabel={
-          editedData.length === 0 ? t('Connection') : t('Clear All Filter')
+          data.length === 0 ? t('Connection') : t('Clear All Filter')
         }
         buttonClick={() => {
-          if (editedData.length > 0) {
+          if (data.length > 0) {
             clearConnection();
           }
         }}
@@ -172,4 +161,4 @@ function ConnectionList() {
   );
 }
 
-export default withToasts(ConnectionList);
+export default withToasts(DvtConnection);

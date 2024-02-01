@@ -35,16 +35,17 @@ interface DvtSidebarState {
     search: string;
   };
   connection: {
-    expose_in_sqllab: string;
-    allow_run_async: string;
+    expose_in_sqllab: any;
+    allow_run_async: any;
     search: string;
   };
   datasets: {
-    owner: string;
-    database: string;
-    schema: string;
-    type: string;
-    certified: string;
+    owner: any;
+    database: any;
+    schema: any;
+    type: any;
+    certified: any;
+    search: string;
   };
   chartAdd: {
     dataset: string;
@@ -59,22 +60,47 @@ interface DvtSidebarState {
     favorite: any;
     certified: any;
   };
+  sqllab: {
+    database: any;
+    schema: any;
+    see_table_schema: any;
+  };
   data: {
     fetched: {
       dashboard: {
         owner: boolean;
         createdBy: boolean;
       };
+      datasets: {
+        owner: boolean;
+        database: boolean;
+        schema: boolean;
+      };
       chartAdd: {
         dataset: boolean;
+      };
+      sqllab: {
+        database: boolean;
+        schema: boolean;
+        see_table_schema: boolean;
       };
     };
     dashboard: {
       owner: any[];
       createdBy: any[];
     };
+    datasets: {
+      owner: any[];
+      database: any[];
+      schema: any[];
+    };
     chartAdd: {
       dataset: any[];
+    };
+    sqllab: {
+      database: any[];
+      schema: any[];
+      see_table_schema: any[];
     };
   };
 }
@@ -96,16 +122,17 @@ const initialState: DvtSidebarState = {
     search: '',
   },
   connection: {
-    expose_in_sqllab: '',
-    allow_run_async: '',
+    expose_in_sqllab: {},
+    allow_run_async: {},
     search: '',
   },
   datasets: {
-    owner: '',
-    database: '',
-    schema: '',
-    type: '',
-    certified: '',
+    owner: {},
+    database: {},
+    schema: {},
+    type: {},
+    certified: {},
+    search: '',
   },
   chartAdd: {
     dataset: '',
@@ -120,22 +147,47 @@ const initialState: DvtSidebarState = {
     favorite: {},
     certified: {},
   },
+  sqllab: {
+    database: {},
+    schema: {},
+    see_table_schema: {},
+  },
   data: {
     fetched: {
       dashboard: {
         owner: false,
         createdBy: false,
       },
+      datasets: {
+        owner: false,
+        database: false,
+        schema: false,
+      },
       chartAdd: {
         dataset: false,
+      },
+      sqllab: {
+        database: false,
+        schema: false,
+        see_table_schema: false,
       },
     },
     dashboard: {
       owner: [],
       createdBy: [],
     },
+    datasets: {
+      owner: [],
+      database: [],
+      schema: [],
+    },
     chartAdd: {
       dataset: [],
+    },
+    sqllab: {
+      database: [],
+      schema: [],
+      see_table_schema: [],
     },
   },
 };
@@ -174,16 +226,6 @@ const dvtSidebarSlice = createSlice({
         ...action.payload.connection,
       },
     }),
-    dvtSidebarDatasetsSetProperty: (
-      state,
-      action: PayloadAction<{ datasets: DvtSidebarState['datasets'] }>,
-    ) => ({
-      ...state,
-      datasets: {
-        ...state.datasets,
-        ...action.payload.datasets,
-      },
-    }),
     dvtSidebarChartAddSetProperty: (
       state,
       action: PayloadAction<{ chartAdd: DvtSidebarState['chartAdd'] }>,
@@ -194,13 +236,13 @@ const dvtSidebarSlice = createSlice({
         ...action.payload.chartAdd,
       },
     }),
-    dvtSidebarDashboardSetProperty: (
+    dvtSidebarSetProperty: (
       state,
-      action: PayloadAction<{ key: string; value: string }>,
+      action: PayloadAction<{ pageKey: string; key: string; value: string }>,
     ) => ({
       ...state,
-      dashboard: {
-        ...state.dashboard,
+      [action.payload.pageKey]: {
+        ...state[action.payload.pageKey],
         [action.payload.key]: action.payload.value,
       },
     }),
@@ -231,9 +273,8 @@ export const {
   dvtSidebarReportsSetProperty,
   dvtSidebarAlertsSetProperty,
   dvtSidebarConnectionSetProperty,
-  dvtSidebarDatasetsSetProperty,
   dvtSidebarChartAddSetProperty,
-  dvtSidebarDashboardSetProperty,
+  dvtSidebarSetProperty,
   dvtSidebarSetDataProperty,
 } = dvtSidebarSlice.actions;
 

@@ -2,8 +2,14 @@ import { t } from '@superset-ui/core';
 
 interface SidebarDataProps {
   pathname: string;
+  key?: string;
   data: any[];
 }
+
+const dataYesOrNo = [
+  { label: t('Yes'), value: '!t' },
+  { label: t('No'), value: '!f' },
+];
 
 const DvtSidebarData: SidebarDataProps[] = [
   {
@@ -20,7 +26,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           },
           {
             title: 'Dataset',
-            url: '/dataset/add/',
+            url: '/tablemodelview/list/',
             fileName: 'dvt-database',
           },
           {
@@ -91,38 +97,31 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/databaseview/list/',
+    key: 'connection',
     data: [
       {
         label: t('EXPOSE IN SQL LAB'),
-        values: [
-          { label: 'No', value: 'false' },
-          { label: 'Yes', value: 'true' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Select or type a value'),
         name: 'expose_in_sqllab',
       },
       {
         label: t('AQE'),
-        values: [
-          { label: 'No', value: 'false' },
-          { label: 'Yes', value: 'true' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Select or type a value'),
         name: 'allow_run_async',
       },
       {
         label: t('SEARCH'),
-        values: [
-          { label: 'Failed', value: 'failed' },
-          { label: 'Success', value: 'success' },
-        ],
         placeholder: t('Type a value'),
         name: 'search',
+        status: 'input',
       },
     ],
   },
   {
     pathname: '/superset/sqllab/history/',
+    key: 'sqllab',
     data: [
       {
         label: t('Database'),
@@ -199,6 +198,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/tablemodelview/list/',
+    key: 'datasets',
     data: [
       {
         values: [
@@ -228,19 +228,22 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
       {
         values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
+          { label: t('Virtual'), value: '!f' },
+          { label: t('Physical'), value: '!t' },
         ],
         placeholder: t('Type'),
         name: 'type',
       },
       {
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Certified'),
         name: 'certified',
+      },
+      {
+        label: t('SEARCH'),
+        placeholder: t('Type a value'),
+        name: 'search',
+        status: 'input',
       },
     ],
   },
@@ -432,6 +435,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/dataset/add/',
+    key: 'datasetAdd',
     data: [
       {
         values: [
@@ -450,6 +454,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/dashboard/list/',
+    key: 'dashboard',
     data: [
       {
         values: [],
@@ -470,18 +475,12 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'status',
       },
       {
-        values: [
-          { label: t('Yes'), value: '!t' },
-          { label: t('No'), value: '!f' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Favorite'),
         name: 'favorite',
       },
       {
-        values: [
-          { label: t('Yes'), value: '!t' },
-          { label: t('No'), value: '!f' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Certified'),
         name: 'certified',
       },
@@ -489,6 +488,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/report/list/',
+    key: 'reports',
     data: [
       {
         values: [{ label: t('Superset Admin'), value: 'Superset Admin' }],
@@ -575,6 +575,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/alert/list/',
+    key: 'alerts',
     data: [
       {
         label: t('Owner'),
@@ -655,6 +656,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/chart/add',
+    key: 'chartAdd',
     data: [
       {
         placeholder: t('Dataset'),
@@ -676,6 +678,24 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Tags'),
         name: 'tags',
+      },
+    ],
+  },
+  {
+    pathname: '/sqlhub/',
+    key: 'sqlhub',
+    data: [
+      {
+        placeholder: t('Database'),
+        name: 'database',
+      },
+      {
+        placeholder: t('Schema'),
+        name: 'schema',
+      },
+      {
+        placeholder: t('See Table Schema'),
+        name: 'see_table_schema',
       },
     ],
   },

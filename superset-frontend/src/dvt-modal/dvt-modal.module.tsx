@@ -19,7 +19,7 @@
 import { styled } from '@superset-ui/core';
 
 interface StyledModalProps {
-  size: 'small' | 'medium';
+  size: 'small' | 'medium' | 'xsmall';
 }
 
 const StyledModal = styled.div`
@@ -38,21 +38,44 @@ const StyledModal = styled.div`
 const StyledModalCard = styled.div<StyledModalProps>`
   position: relative;
   border-radius: 12px;
-  width: ${({ size }) => (size === 'small' ? '919px' : '1150.68px')};
-  height: ${({ size }) => (size === 'small' ? '683px' : '621.428px')};
+  width: ${({ size }) =>
+    size === 'small' ? '919px' : size === 'medium' ? '1150.68px' : '500px'};
+  height: ${({ size }) =>
+    size === 'small' ? '683px' : size === 'medium' ? '621.428px' : '250px'};
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
 `;
 
 const StyledModalCardClose = styled.div`
-  content: '';
   position: absolute;
   top: 23px;
   right: 43.63px;
   cursor: pointer;
-  opacity: 0.7;
-  transition: all 300ms;
-  font-size: 25px;
+  width: 25px;
+  height: 25px;
+  opacity: 0.3;
   color: ${({ theme }) => theme.colors.dvt.text.bold};
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 25px;
+    width: 2px;
+    background-color: ${({ theme }) => theme.colors.dvt.text.bold};
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
 `;
 
 const StyledModalCardBody = styled.div`

@@ -18,51 +18,25 @@
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface DvtNavbarState {
-  sql: {
-    tabs: string;
-  };
-  viewlist: {
-    dashboard: string;
-    reports: string;
-  };
+interface DvtAppState {
+  deleteSuccessStatus: string;
 }
 
-const initialState: DvtNavbarState = {
-  sql: {
-    tabs: 'Query History',
-  },
-  viewlist: {
-    dashboard: 'Table',
-    reports: 'Table',
-  },
+const initialState: DvtAppState = {
+  deleteSuccessStatus: '',
 };
 
-const dvtNavbarSlice = createSlice({
-  name: 'dvt-navbar',
+const dvtHomeSlice = createSlice({
+  name: 'dvt-home',
   initialState,
   reducers: {
-    dvtNavbarSqlSetTabs: (state, action: PayloadAction<string>) => ({
+    dvtHomeDeleteSuccessStatus: (state, action: PayloadAction<string>) => ({
       ...state,
-      sql: {
-        ...state.sql,
-        tabs: action.payload,
-      },
-    }),
-    dvtNavbarViewlistTabs: (
-      state,
-      action: PayloadAction<{ key: string; value: string }>,
-    ) => ({
-      ...state,
-      viewlist: {
-        ...state.viewlist,
-        [action.payload.key]: action.payload.value,
-      },
+      deleteSuccessStatus: action.payload,
     }),
   },
 });
 
-export const { dvtNavbarSqlSetTabs, dvtNavbarViewlistTabs } =
-  dvtNavbarSlice.actions;
+export const { dvtHomeDeleteSuccessStatus } = dvtHomeSlice.actions;
 
-export default dvtNavbarSlice.reducer;
+export default dvtHomeSlice.reducer;
