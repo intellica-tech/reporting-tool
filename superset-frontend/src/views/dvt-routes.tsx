@@ -106,7 +106,7 @@ const SavedQueryList = lazy(
 );
 
 const SqlLab = lazy(
-  () => import(/* webpackChunkName: "SqlLab" */ 'src/pages/SqlLab'),
+  () => import(/* webpackChunkName: "SqlLab" */ 'src/pages/DvtSqllab'),
 );
 
 const AllEntities = lazy(
@@ -223,7 +223,7 @@ export const routes: Routes = [
     Component: RowLevelSecurityList,
   },
   {
-    path: '/sqllab/',
+    path: '/sqlhub/',
     Component: SqlLab,
   },
 ];

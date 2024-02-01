@@ -60,6 +60,11 @@ interface DvtSidebarState {
     favorite: any;
     certified: any;
   };
+  sqllab: {
+    database: any;
+    schema: any;
+    see_table_schema: any;
+  };
   data: {
     fetched: {
       dashboard: {
@@ -74,6 +79,11 @@ interface DvtSidebarState {
       chartAdd: {
         dataset: boolean;
       };
+      sqllab: {
+        database: boolean;
+        schema: boolean;
+        see_table_schema: boolean;
+      };
     };
     dashboard: {
       owner: any[];
@@ -86,6 +96,11 @@ interface DvtSidebarState {
     };
     chartAdd: {
       dataset: any[];
+    };
+    sqllab: {
+      database: any[];
+      schema: any[];
+      see_table_schema: any[];
     };
   };
 }
@@ -132,6 +147,11 @@ const initialState: DvtSidebarState = {
     favorite: {},
     certified: {},
   },
+  sqllab: {
+    database: {},
+    schema: {},
+    see_table_schema: {},
+  },
   data: {
     fetched: {
       dashboard: {
@@ -146,6 +166,11 @@ const initialState: DvtSidebarState = {
       chartAdd: {
         dataset: false,
       },
+      sqllab: {
+        database: false,
+        schema: false,
+        see_table_schema: false,
+      },
     },
     dashboard: {
       owner: [],
@@ -158,6 +183,11 @@ const initialState: DvtSidebarState = {
     },
     chartAdd: {
       dataset: [],
+    },
+    sqllab: {
+      database: [],
+      schema: [],
+      see_table_schema: [],
     },
   },
 };

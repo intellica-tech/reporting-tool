@@ -681,6 +681,24 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/sqlhub/',
+    key: 'sqlhub',
+    data: [
+      {
+        placeholder: t('Database'),
+        name: 'database',
+      },
+      {
+        placeholder: t('Schema'),
+        name: 'schema',
+      },
+      {
+        placeholder: t('See Table Schema'),
+        name: 'see_table_schema',
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [
