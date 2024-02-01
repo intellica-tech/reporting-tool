@@ -35,16 +35,17 @@ interface DvtSidebarState {
     search: string;
   };
   connection: {
-    expose_in_sqllab: string;
-    allow_run_async: string;
+    expose_in_sqllab: any;
+    allow_run_async: any;
     search: string;
   };
   datasets: {
-    owner: string;
-    database: string;
-    schema: string;
-    type: string;
-    certified: string;
+    owner: any;
+    database: any;
+    schema: any;
+    type: any;
+    certified: any;
+    search: string;
   };
   chartAdd: {
     dataset: string;
@@ -65,6 +66,11 @@ interface DvtSidebarState {
         owner: boolean;
         createdBy: boolean;
       };
+      datasets: {
+        owner: boolean;
+        database: boolean;
+        schema: boolean;
+      };
       chartAdd: {
         dataset: boolean;
       };
@@ -72,6 +78,11 @@ interface DvtSidebarState {
     dashboard: {
       owner: any[];
       createdBy: any[];
+    };
+    datasets: {
+      owner: any[];
+      database: any[];
+      schema: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -96,16 +107,17 @@ const initialState: DvtSidebarState = {
     search: '',
   },
   connection: {
-    expose_in_sqllab: '',
-    allow_run_async: '',
+    expose_in_sqllab: {},
+    allow_run_async: {},
     search: '',
   },
   datasets: {
-    owner: '',
-    database: '',
-    schema: '',
-    type: '',
-    certified: '',
+    owner: {},
+    database: {},
+    schema: {},
+    type: {},
+    certified: {},
+    search: '',
   },
   chartAdd: {
     dataset: '',
@@ -126,6 +138,11 @@ const initialState: DvtSidebarState = {
         owner: false,
         createdBy: false,
       },
+      datasets: {
+        owner: false,
+        database: false,
+        schema: false,
+      },
       chartAdd: {
         dataset: false,
       },
@@ -133,6 +150,11 @@ const initialState: DvtSidebarState = {
     dashboard: {
       owner: [],
       createdBy: [],
+    },
+    datasets: {
+      owner: [],
+      database: [],
+      schema: [],
     },
     chartAdd: {
       dataset: [],
@@ -174,16 +196,6 @@ const dvtSidebarSlice = createSlice({
         ...action.payload.connection,
       },
     }),
-    dvtSidebarDatasetsSetProperty: (
-      state,
-      action: PayloadAction<{ datasets: DvtSidebarState['datasets'] }>,
-    ) => ({
-      ...state,
-      datasets: {
-        ...state.datasets,
-        ...action.payload.datasets,
-      },
-    }),
     dvtSidebarChartAddSetProperty: (
       state,
       action: PayloadAction<{ chartAdd: DvtSidebarState['chartAdd'] }>,
@@ -194,13 +206,13 @@ const dvtSidebarSlice = createSlice({
         ...action.payload.chartAdd,
       },
     }),
-    dvtSidebarDashboardSetProperty: (
+    dvtSidebarSetProperty: (
       state,
-      action: PayloadAction<{ key: string; value: string }>,
+      action: PayloadAction<{ pageKey: string; key: string; value: string }>,
     ) => ({
       ...state,
-      dashboard: {
-        ...state.dashboard,
+      [action.payload.pageKey]: {
+        ...state[action.payload.pageKey],
         [action.payload.key]: action.payload.value,
       },
     }),
@@ -231,9 +243,8 @@ export const {
   dvtSidebarReportsSetProperty,
   dvtSidebarAlertsSetProperty,
   dvtSidebarConnectionSetProperty,
-  dvtSidebarDatasetsSetProperty,
   dvtSidebarChartAddSetProperty,
-  dvtSidebarDashboardSetProperty,
+  dvtSidebarSetProperty,
   dvtSidebarSetDataProperty,
 } = dvtSidebarSlice.actions;
 

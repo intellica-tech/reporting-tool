@@ -163,15 +163,15 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
         </NavbarProfileMenu>
         {languages.length > 0 && (
           <DvtDropdown
-            label={
-              languages.find(
+            label={languages
+              .find(
                 (item: LanguagesProps) =>
                   item.flag === data.navbar_right.locale,
-              )?.name
-            }
+              )
+              ?.flag.toLocaleUpperCase()}
             direction="left"
             data={languages.map((item: any) => ({
-              label: item.name,
+              label: item.flag.toLocaleUpperCase(),
               onClick: () => {
                 window.location.href = `${window.location.origin}${item.url}`;
               },

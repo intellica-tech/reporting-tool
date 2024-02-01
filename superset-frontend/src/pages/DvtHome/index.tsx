@@ -17,12 +17,14 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
@@ -103,6 +105,9 @@ function DvtWelcome() {
   const [dashboardData, setDashboardData] = useState<any[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
   const [savedQueriesData, setSavedQueriesData] = useState<CardDataProps[]>([]);
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
 
   const handleSetFavorites = (
     id: number,
@@ -151,6 +156,20 @@ function DvtWelcome() {
     );
   }, []);
 
+  useEffect(() => {
+    if (deleteSuccessStatus === 'chart') {
+      fetchAndFormatData('/api/v1/chart/', formatChartData, setChartData);
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    } else if (deleteSuccessStatus === 'dashboard') {
+      fetchAndFormatData(
+        '/api/v1/dashboard/',
+        formatDashboardData,
+        setDashboardData,
+      );
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+  }, [deleteSuccessStatus]);
+
   const handleEditDashboard = async (item: any) => {
     try {
       const response = await fetch(`/api/v1/dashboard/${item.id}`);
@@ -178,7 +197,15 @@ function DvtWelcome() {
     );
   };
 
-  console.log(recentData);
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'dashboard' },
+      }),
+    );
+  };
+
   return (
     <StyledDvtWelcome>
       <DataContainer>
@@ -204,7 +231,13 @@ function DvtWelcome() {
                 handleBulkExport('dashboard', item);
               },
             },
-            { label: 'Delete', icon: 'trash', onClick: () => {} },
+            {
+              label: 'Delete',
+              icon: 'trash',
+              onClick: (item: any) => {
+                handleDelete('dashboard', item);
+              },
+            },
           ]}
         />
         <DvtTitleCardList
@@ -222,7 +255,13 @@ function DvtWelcome() {
                 handleBulkExport('chart', item);
               },
             },
-            { label: t('Delete'), icon: 'trash', onClick: () => {} },
+            {
+              label: t('Delete'),
+              icon: 'trash',
+              onClick: (item: any) => {
+                handleDelete('chart', item);
+              },
+            },
           ]}
         />
         <DvtTitleCardList

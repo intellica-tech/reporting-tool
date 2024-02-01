@@ -19,6 +19,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { useHistory } from 'react-router-dom';
+import { useAppSelector } from 'src/hooks/useAppSelector';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import useFetch from 'src/hooks/useFetch';
 import moment from 'moment';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
@@ -71,43 +75,74 @@ const header = [
 ];
 
 function DvtDatasets() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
+  const history = useHistory();
   const [data, setData] = useState([]);
+  const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  useEffect(() => {
-    const apiUrl = `/api/v1/dataset/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${
-      currentPage - 1
-    },page_size:10)`;
+  const searchApiUrls = fetchQueryParamsSearch({
+    filterData: [
+      {
+        col: 'owners',
+        opr: 'rel_m_m',
+        value: datasetsSelector.owner?.value,
+      },
+      {
+        col: 'database',
+        opr: 'rel_o_m',
+        value: datasetsSelector.database?.value,
+      },
+      {
+        col: 'schema',
+        opr: 'eq',
+        value: datasetsSelector.schema?.value,
+      },
+      {
+        col: 'sql',
+        opr: 'dataset_is_null_or_empty',
+        value: datasetsSelector.type?.value,
+      },
+      {
+        col: 'id',
+        opr: 'dataset_is_certified',
+        value: datasetsSelector.certified?.value,
+      },
+      {
+        col: 'table_name',
+        opr: 'ct',
+        value: datasetsSelector.search,
+      },
+    ],
+    page,
+  });
 
-    const fetchApi = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        setData(
-          data.result.map((item: any) => ({
-            ...item,
-            database: `${item.database.database_name}`,
-            changed_on_utc: moment(item.changed_on_utc).fromNow(),
-            owners: item.owners.length
-              ? item.owners
-                  .map(
-                    (item: { first_name: string; last_name: string }) =>
-                      `${item.first_name} ${item.last_name}`,
-                  )
-                  .join(',')
-              : '',
-          })),
-        );
-        setCount(data.count);
-      } catch (error) {
-        console.log('Error:', error);
-      }
-    };
-    fetchApi();
-    setSelectedRows([]);
-  }, [currentPage]);
+  const connectionApi = useFetch({
+    url: `/api/v1/dataset/${searchApiUrls}`,
+  });
+
+  useEffect(() => {
+    if (connectionApi) {
+      setData(
+        connectionApi.result.map((item: any) => ({
+          ...item,
+          database: `${item.database.database_name}`,
+          changed_on_utc: moment(item.changed_on_utc).fromNow(),
+          owners: item.owners.length
+            ? item.owners
+                .map(
+                  (item: { first_name: string; last_name: string }) =>
+                    `${item.first_name} ${item.last_name}`,
+                )
+                .join(',')
+            : '',
+        })),
+      );
+      setCount(connectionApi.count);
+      setSelectedRows([]);
+    }
+  }, [connectionApi]);
 
   const handleDeselectAll = () => {
     setSelectedRows([]);
@@ -142,14 +177,14 @@ function DvtDatasets() {
       <StyledButtons>
         <DvtButton
           label={t('Create a New Dataset')}
-          onClick={() => {}}
+          onClick={() => history.push('/dataset/add/')}
           colour="grayscale"
           typeColour="basic"
           size="small"
         />
         <DvtPagination
-          page={currentPage}
-          setPage={setCurrentPage}
+          page={page}
+          setPage={setPage}
           itemSize={count}
           pageItemSize={10}
         />
