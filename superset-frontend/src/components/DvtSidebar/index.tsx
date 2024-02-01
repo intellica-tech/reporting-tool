@@ -61,6 +61,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   );
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
+  const sqllabSelector = useAppSelector(state => state.dvtSidebar.sqllab);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
@@ -83,7 +84,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Reports';
       case '/databaseview/list/':
         return 'Connection';
-      case '/superset/sqllab/':
+      case '/sqlhub/':
         return 'SQL Lab';
       case '/tablemodelview/list/':
         return 'Datasets';
@@ -195,6 +196,23 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           url: `${apiV1}dataset/`,
         });
       }
+    } else if (pathTitles(pathName) === 'SQL Lab') {
+      if (!fetchedSelector.sqllab.database) {
+        setGetDataApiUrl({
+          name: 'sqllab-database',
+          url: `${apiV1}database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)`,
+        });
+      } else if (!fetchedSelector.sqllab.schema) {
+        setGetDataApiUrl({
+          name: 'sqllab-schema',
+          url: `${apiV1}database/1/schemas/?q=(force:!f)`,
+        });
+      } else if (!fetchedSelector.sqllab.see_table_schema) {
+        // setGetDataApiUrl({
+        //   name: 'sqllab-see_table_schema',
+        //   url: `${apiV1}dataset/distinct/schema`,
+        // });
+      }
     }
   }, [
     fetchedSelector.dashboard,
@@ -280,6 +298,45 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           dvtSidebarSetDataProperty({
             pageKey: 'chartAdd',
             key: 'dataset',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'sqllab-database') {
+        const editedData = data.map((item: any) => ({
+          value: item.explore_database_id,
+          label: item.database_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'sqllab',
+            key: 'database',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'sqllab-schema') {
+        const editedData = data.map((item: any) => ({
+          value: item.table_name,
+          label: item.table_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'sqllab',
+            key: 'schema',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'sqllab-see_table_schema') {
+        const editedData = data.map((item: any) => ({
+          value: item.table_name,
+          label: item.table_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'sqllab',
+            key: 'see_table_schema',
             value: editedData,
           }),
         );
@@ -408,6 +465,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     return dValue;
   };
 
+  const withForms = [
+    'Datasets',
+    'New Dataset',
+    'Dashboards',
+    'Alerts',
+    'Reports',
+    'Connection',
+    'SQL Lab',
+    'Chart Add',
+    'SQL History',
+  ];
+
   return (
     <StyledDvtSidebar pathName={pathName}>
       <StyledDvtSidebarHeader>
@@ -437,15 +506,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         </StyledDvtSidebarBody>
       )}
 
-      {(pathTitles(pathName) === 'Datasets' ||
-        pathTitles(pathName) === 'New Dataset' ||
-        pathTitles(pathName) === 'Dashboards' ||
-        pathTitles(pathName) === 'Alerts' ||
-        pathTitles(pathName) === 'Reports' ||
-        pathTitles(pathName) === 'Connection' ||
-        pathTitles(pathName) === 'SQL Lab' ||
-        pathTitles(pathName) === 'Chart Add' ||
-        pathTitles(pathName) === 'SQL History') && (
+      {withForms.includes(pathTitles(pathName)) && (
         <StyledDvtSidebarGroup>
           {DvtSidebarData.find(
             (item: { pathname: string }) =>
@@ -536,6 +597,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? chartAddSelector[data.name]
                             : pathTitles(pathName) === 'Dashboards'
                             ? dashboardSelector[data.name]
+                            : pathTitles(pathName) === 'SQL Lab'
+                            ? sqllabSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
