@@ -17,6 +17,7 @@
  * under the License.
  */
 import React, { useRef, useState } from 'react';
+import { SupersetTheme } from '@superset-ui/core';
 import useOnClickOutside from '../../hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import {
@@ -97,7 +98,16 @@ const DvtInputSelect = ({
             .join(', ') || placeholder}
         </StyledInputSelectField>
         <StyledInputSelectIcon isOpen={isOpen}>
-          <Icon fileName="caret_right" iconSize="xl" />
+          <Icon
+            fileName="caret_right"
+            iconSize="xxl"
+            css={(theme: SupersetTheme) => ({
+              color:
+                typeDesign === 'form'
+                  ? theme.colors.dvt.text.label
+                  : theme.colors.grayscale.dark2,
+            })}
+          />{' '}
         </StyledInputSelectIcon>
       </StyledInputSelectInput>
       {isOpen && (

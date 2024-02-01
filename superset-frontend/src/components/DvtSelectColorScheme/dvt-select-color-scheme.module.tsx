@@ -61,6 +61,7 @@ const StyledSelectColorScheme = styled.div<StyledSelectColorLabelProps>`
   position: relative;
   display: inline-flex;
   flex-direction: column;
+  gap: 12px;
 `;
 
 const StyledSelectColorSchemeSelect = styled.div<StyledSelectColorProps>`
@@ -69,7 +70,7 @@ const StyledSelectColorSchemeSelect = styled.div<StyledSelectColorProps>`
   align-items: center;
   padding: ${({ typeDesign }) => (typeDesign === 'form' ? '12px 8px' : '12px')};
   width: 100%;
-  height: 48px;
+  height: 40px;
   border-radius: ${({ typeDesign }) =>
     typeDesign === 'form' ? '4px' : '12px'};
   background-color: ${({ isOpen, theme, typeDesign }) =>
@@ -79,9 +80,9 @@ const StyledSelectColorSchemeSelect = styled.div<StyledSelectColorProps>`
       ? theme.colors.dvt.primary.light2
       : theme.colors.dvt.grayscale.light2};
   border: ${({ theme, typeDesign }) =>
-    typeDesign === 'navbar'
-      ? `1px solid ${theme.colors.dvt.primary.light2}`
-      : 'none'};
+    typeDesign === 'chartsForm'
+      ? 'none'
+      : `1px solid ${theme.colors.dvt.primary.light2}`};
   appearance: none;
   cursor: pointer;
   color: ${({ theme, selectedValue }) =>
@@ -93,7 +94,8 @@ const StyledSelectColorSchemeSelect = styled.div<StyledSelectColorProps>`
 
 const StyledSelectColorSchemeLabel = styled.label<StyledSelectColorLabelProps>`
   margin-left: ${({ typeDesign }) => (typeDesign === 'form' ? '0' : '13px')};
-  font-weight: 600;
+  font-weight: 500;
+  margin-bottom: 0;
   color: ${({ typeDesign, theme }) =>
     typeDesign === 'form'
       ? theme.colors.dvt.text.label
