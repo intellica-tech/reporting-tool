@@ -49,7 +49,10 @@ const dvtNavbarSlice = createSlice({
         tabs: action.payload,
       },
     }),
-    dvtNavbarViewlistTabs: (state, action: PayloadAction <{key:string, value:string}>) => ({
+    dvtNavbarViewlistTabs: (
+      state,
+      action: PayloadAction<{ key: string; value: string }>,
+    ) => ({
       ...state,
       viewlist: {
         ...state.viewlist,
