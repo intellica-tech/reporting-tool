@@ -22,11 +22,19 @@ interface DvtNavbarState {
   sql: {
     tabs: string;
   };
+  viewlist: {
+    dashboard: string;
+    reports: string;
+  };
 }
 
 const initialState: DvtNavbarState = {
   sql: {
     tabs: 'Query History',
+  },
+  viewlist: {
+    dashboard: 'Table',
+    reports: 'Table',
   },
 };
 
@@ -41,9 +49,20 @@ const dvtNavbarSlice = createSlice({
         tabs: action.payload,
       },
     }),
+    dvtNavbarViewlistTabs: (
+      state,
+      action: PayloadAction<{ key: string; value: string }>,
+    ) => ({
+      ...state,
+      viewlist: {
+        ...state.viewlist,
+        [action.payload.key]: action.payload.value,
+      },
+    }),
   },
 });
 
-export const { dvtNavbarSqlSetTabs } = dvtNavbarSlice.actions;
+export const { dvtNavbarSqlSetTabs, dvtNavbarViewlistTabs } =
+  dvtNavbarSlice.actions;
 
 export default dvtNavbarSlice.reducer;

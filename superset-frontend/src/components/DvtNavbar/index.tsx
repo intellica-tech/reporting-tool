@@ -22,7 +22,10 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
-import { dvtNavbarSqlSetTabs } from 'src/dvt-redux/dvt-navbarReducer';
+import {
+  dvtNavbarSqlSetTabs,
+  dvtNavbarViewlistTabs,
+} from 'src/dvt-redux/dvt-navbarReducer';
 import { t } from '@superset-ui/core';
 import {
   DvtNavbarTabsData,
@@ -65,6 +68,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   const dispatch = useDispatch();
   // const sort = useAppSelector(state => state.dvtApp.sort);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
+  const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [active, setActive] = useState<string>('All');
   const [activeData, setActiveData] = useState<TabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
@@ -212,6 +216,24 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
               active={sqlSelector.tabs}
               data={activeData}
               setActive={value => dispatch(dvtNavbarSqlSetTabs(value))}
+            />
+          )}
+          {pathName === '/dashboard/list/' && (
+            <DvtButtonTabs
+              active={viewListSelector.dashboard}
+              data={activeData}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'dashboard' }))
+              }
+            />
+          )}
+          {pathName === '/report/list/' && (
+            <DvtButtonTabs
+              active={viewListSelector.reports}
+              data={activeData}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'reports' }))
+              }
             />
           )}
         </NavbarBottom>

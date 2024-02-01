@@ -17,7 +17,7 @@
  * under the License.
  */
 import React from 'react';
-import { supersetTheme } from '@superset-ui/core';
+// import { supersetTheme } from '@superset-ui/core';
 import DvtCard from '../DvtCard';
 import DvtTitleTotal from '../DvtTitleTotal';
 import {
@@ -26,12 +26,12 @@ import {
   StyledDvtCardList,
   StyledDvtTitleCardList,
 } from './dvt-title-card-list.module';
-import Icon from '../Icons/Icon';
+// import Icon from '../Icons/Icon';
 import { OptionProps } from '../DvtDropdown';
 
 export interface CardDataProps {
   id: number;
-  title: string;
+  title: string | undefined;
   label: string;
   description: string;
   isFavorite: boolean | null;
@@ -55,7 +55,7 @@ const DvtTitleCardList: React.FC<DvtTitleCardListProps> = ({
     <DvtCardListHead>
       <DvtTitleTotal title={title} total={data.length} />
       <DvtCardListButton>
-        <Icon
+        {/* <Icon
           fileName="plus_large"
           iconSize="xl"
           iconColor={supersetTheme.colors.dvt.grayscale.base}
@@ -64,7 +64,7 @@ const DvtTitleCardList: React.FC<DvtTitleCardListProps> = ({
           fileName="more_horiz"
           iconSize="xl"
           iconColor={supersetTheme.colors.dvt.grayscale.base}
-        />
+        /> */}
       </DvtCardListButton>
     </DvtCardListHead>
 
@@ -72,7 +72,7 @@ const DvtTitleCardList: React.FC<DvtTitleCardListProps> = ({
       {data.map(item => (
         <DvtCard
           key={item.id}
-          title={item.title}
+          title={item.title ? item.title : ''}
           label={item.label}
           description={item.description}
           isFavorite={item.isFavorite}

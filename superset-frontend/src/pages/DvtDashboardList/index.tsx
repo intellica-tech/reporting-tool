@@ -25,6 +25,7 @@ import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
+import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import {
   StyledDashboardBottom,
@@ -84,11 +85,11 @@ const headerData = [
 
 function DvtDashboardList() {
   const history = useHistory<{ from: string }>();
+  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
-
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
 
   const searchApiUrl = () => {
@@ -148,7 +149,7 @@ function DvtDashboardList() {
                 .join(',')
             : '',
           createdbyName: item.changed_by
-            ? `${item.changed_by.first_name} ${item.changed_by.last_name}`
+            ? `${item.changed_by?.first_name} ${item.changed_by?.last_name}`
             : '',
         })),
       );
@@ -165,53 +166,95 @@ function DvtDashboardList() {
     history.push('/superset/dashboard');
   };
 
+  const handleSetFavorites = (id: number, isFavorite: boolean) => {
+    const updateData = (dataList: any[]) => {
+      const newData = dataList.map(item =>
+        item.id === id ? { ...item, isFavorite: !isFavorite } : item,
+      );
+      return newData;
+    };
+
+    const action = isFavorite ? 'unselect' : 'select';
+    fetch(`/superset/favstar/slice/${id}/${action}/`)
+      .then(res => {
+        if (res.ok) {
+          setData(updatedData => updateData(updatedData));
+        } else {
+          console.error('Favorite has been failed:', res.status);
+        }
+      })
+      .catch(error => {
+        console.error('Favorite has been failed:', error);
+      });
+  };
+
   return (
     <StyledDashboardList>
-      <StyledDashboardListButtons>
-        <StyledDvtSelectButtons>
-          <StyledSelectedItem>
-            <StyledSelectedItemCount>
-              <span>{`${selectedRows.length} Selected`}</span>
-            </StyledSelectedItemCount>
+      {activeTab === 'Table' && (
+        <StyledDashboardListButtons>
+          <StyledDvtSelectButtons>
+            <StyledSelectedItem>
+              <StyledSelectedItemCount>
+                <span>{`${selectedRows.length} Selected`}</span>
+              </StyledSelectedItemCount>
+
+              <DvtButton
+                label={t('Deselect All')}
+                bold
+                colour="primary"
+                typeColour="outline"
+                size="medium"
+                onClick={handleDeselectAll}
+              />
+            </StyledSelectedItem>
+          </StyledDvtSelectButtons>
+          <StyledDashboardButtons>
             <DvtButton
-              label={t('Deselect All')}
-              bold
-              colour="primary"
-              typeColour="outline"
-              size="medium"
-              onClick={handleDeselectAll}
+              label={t('Delete')}
+              icon="dvt-delete"
+              iconToRight
+              colour="error"
+              size="small"
+              onClick={() => {}}
             />
-          </StyledSelectedItem>
-        </StyledDvtSelectButtons>
-        <StyledDashboardButtons>
-          <DvtButton
-            label={t('Delete')}
-            icon="dvt-delete"
-            iconToRight
-            colour="error"
-            size="small"
-            onClick={() => {}}
-          />
-          <DvtButton
-            label={t('Export')}
-            icon="dvt-export"
-            iconToRight
-            colour="primary"
-            bold
-            typeColour="powder"
-            size="small"
-            onClick={() => {}}
-          />
-        </StyledDashboardButtons>
-      </StyledDashboardListButtons>
+            <DvtButton
+              label={t('Export')}
+              icon="dvt-export"
+              iconToRight
+              colour="primary"
+              bold
+              typeColour="powder"
+              size="small"
+              onClick={() => {}}
+            />
+          </StyledDashboardButtons>
+        </StyledDashboardListButtons>
+      )}
       <StyledDashboardTable>
-        <DvtTable
-          data={data}
-          header={headerData}
-          selected={selectedRows}
-          setSelected={setSelectedRows}
-          checkboxActiveField="id"
-        />
+        {activeTab === 'Table' ? (
+          <DvtTable
+            data={data}
+            header={headerData}
+            selected={selectedRows}
+            setSelected={setSelectedRows}
+            checkboxActiveField="id"
+          />
+        ) : (
+          <DvtTitleCardList
+            data={data.map((item: any) => ({
+              id: item.id,
+              title: item.dashboard_title,
+              label: item.changed_by_name,
+              description: `Modified ${item.created_on_delta_humanized}`,
+              isFavorite: item.isFavorite,
+              link: item.url,
+            }))}
+            title="Data"
+            setFavorites={(id, isFavorite) =>
+              handleSetFavorites(id, isFavorite)
+            }
+          />
+        )}
       </StyledDashboardTable>
       <StyledDashboardBottom>
         <StyledDashboardCreateDashboard>
