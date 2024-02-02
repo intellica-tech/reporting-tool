@@ -38,7 +38,7 @@ const StyledDashboardEditHeader = styled.div`
 
 const StyledDashboardEditBody = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   margin: 0px 27px 16px 27px;
   border-radius: 12px;
@@ -53,10 +53,15 @@ const StyledDashboardEditInput = styled.div`
   width: 50%;
   gap: 15px;
 `;
+const StyledDashboardEditGroup = styled.div`
+  display: flex;
+  gap: 15px;
+`;
 
 export {
   StyledDashboardEdit,
   StyledDashboardEditHeader,
   StyledDashboardEditBody,
   StyledDashboardEditInput,
+  StyledDashboardEditGroup,
 };
