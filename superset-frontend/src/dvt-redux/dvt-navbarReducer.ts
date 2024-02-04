@@ -17,24 +17,44 @@
  * under the License.
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { t } from '@superset-ui/core';
+import { ButtonTabsDataProps } from 'src/components/DvtButtonTabs';
 
 interface DvtNavbarState {
+  alert: {
+    tabs: ButtonTabsDataProps;
+  };
   sql: {
-    tabs: string;
+    tabs: ButtonTabsDataProps;
   };
   viewlist: {
-    dashboard: string;
-    reports: string;
+    dashboard: ButtonTabsDataProps;
+    reports: ButtonTabsDataProps;
   };
 }
 
 const initialState: DvtNavbarState = {
+  alert: {
+    tabs: {
+      label: t('Alerts'),
+      value: 'Alert',
+    },
+  },
   sql: {
-    tabs: 'Query History',
+    tabs: {
+      label: t('Query History'),
+      value: 'Query History',
+    },
   },
   viewlist: {
-    dashboard: 'Table',
-    reports: 'Table',
+    dashboard: {
+      label: t('Table'),
+      value: 'Table',
+    },
+    reports: {
+      label: t('Table'),
+      value: 'Table',
+    },
   },
 };
 
@@ -42,7 +62,20 @@ const dvtNavbarSlice = createSlice({
   name: 'dvt-navbar',
   initialState,
   reducers: {
-    dvtNavbarSqlSetTabs: (state, action: PayloadAction<string>) => ({
+    dvtNavbarAlertSetTabs: (
+      state,
+      action: PayloadAction<ButtonTabsDataProps>,
+    ) => ({
+      ...state,
+      alert: {
+        ...state.alert,
+        tabs: action.payload,
+      },
+    }),
+    dvtNavbarSqlSetTabs: (
+      state,
+      action: PayloadAction<ButtonTabsDataProps>,
+    ) => ({
       ...state,
       sql: {
         ...state.sql,
@@ -51,7 +84,7 @@ const dvtNavbarSlice = createSlice({
     }),
     dvtNavbarViewlistTabs: (
       state,
-      action: PayloadAction<{ key: string; value: string }>,
+      action: PayloadAction<{ key: string; value: ButtonTabsDataProps }>,
     ) => ({
       ...state,
       viewlist: {
@@ -62,7 +95,10 @@ const dvtNavbarSlice = createSlice({
   },
 });
 
-export const { dvtNavbarSqlSetTabs, dvtNavbarViewlistTabs } =
-  dvtNavbarSlice.actions;
+export const {
+  dvtNavbarAlertSetTabs,
+  dvtNavbarSqlSetTabs,
+  dvtNavbarViewlistTabs,
+} = dvtNavbarSlice.actions;
 
 export default dvtNavbarSlice.reducer;

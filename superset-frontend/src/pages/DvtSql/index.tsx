@@ -94,17 +94,17 @@ function DvtSql() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState<number>(0);
-  const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
+  const sqlTabValue = useAppSelector(state => state.dvtNavbar.sql.tabs.value);
 
   const [tabsAndPage, setTabsAndPage] = useState({
-    tab: sqlSelector.tabs,
+    tab: sqlTabValue,
     page: 1,
   });
 
   useEffect(() => {
-    setTabsAndPage({ tab: sqlSelector.tabs, page: 1 });
+    setTabsAndPage({ tab: sqlTabValue, page: 1 });
     setCurrentPage(1);
-  }, [sqlSelector.tabs]);
+  }, [sqlTabValue]);
 
   useEffect(() => {
     setTabsAndPage(state => ({ ...state, page: currentPage }));
@@ -165,10 +165,10 @@ function DvtSql() {
   return (
     <div>
       <div>
-        {sqlSelector.tabs === 'Query History' && (
+        {sqlTabValue === 'Query History' && (
           <DvtTable data={data} header={QueryHistoryHeader} />
         )}
-        {sqlSelector.tabs === 'Saved Queries' && (
+        {sqlTabValue === 'Saved Queries' && (
           <DvtTable data={data} header={SavedQueriesHeader} />
         )}
       </div>

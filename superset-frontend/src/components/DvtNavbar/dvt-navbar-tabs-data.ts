@@ -1,9 +1,5 @@
 import { t } from '@superset-ui/core';
-
-export interface TabsDataProps {
-  label: string;
-  icon?: string;
-}
+import { ButtonTabsDataProps } from '../DvtButtonTabs';
 
 interface UserDataProps {
   image: string;
@@ -11,7 +7,7 @@ interface UserDataProps {
 
 interface DvtNavbarTabsDataProps {
   pathname: string;
-  data: TabsDataProps[];
+  data: ButtonTabsDataProps[];
 }
 
 export const UserData: UserDataProps = {
@@ -25,9 +21,11 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
     data: [
       {
         label: t('Alerts'),
+        value: 'Alert',
       },
       {
         label: t('Reports'),
+        value: 'Report',
       },
     ],
   },
@@ -36,9 +34,11 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
     data: [
       {
         label: t('Saved Queries'),
+        value: 'Saved Queries',
       },
       {
         label: t('Query History'),
+        value: 'Query History',
       },
     ],
   },
@@ -48,10 +48,12 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       {
         label: t('Saved'),
         icon: 'caret_down',
+        value: 'Saved',
       },
       {
         label: t('Copy Link'),
         icon: 'link',
+        value: 'Copy Link',
       },
     ],
   },
@@ -61,10 +63,12 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       {
         label: t('Card'),
         icon: 'dvt-all',
+        value: 'Card',
       },
       {
         label: t('Table'),
         icon: 'dvt-mine',
+        value: 'Table',
       },
     ],
   },
@@ -74,10 +78,12 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       {
         label: t('Card'),
         icon: 'dvt-all',
+        value: 'Card',
       },
       {
         label: t('Table'),
         icon: 'dvt-mine',
+        value: 'Table',
       },
     ],
   },

@@ -70,7 +70,9 @@ const modifiedData = {
 
 function ReportList() {
   const dispatch = useDispatch();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.reports);
+  const activeTab = useAppSelector(
+    state => state.dvtNavbar.viewlist.reports.value,
+  );
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
