@@ -17,15 +17,16 @@ const useFetch = ({
 }: UseFetchProps) => {
   const { addDangerToast } = useToasts();
   const [data, setData] = useState<any | null>(null);
+  const csrf_token = document.querySelector<HTMLInputElement>('#csrf_token');
 
   useEffect(() => {
     if (url) {
       const fetchData = async () => {
         try {
-          const response = await fetch(url, {
+          const response = await fetch(`/api/v1/${url}`, {
             method,
             headers: {
-              'Content-Type': 'application/json',
+              'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
               ...headers,
             },
             body: method !== 'GET' ? JSON.stringify(body) : undefined,

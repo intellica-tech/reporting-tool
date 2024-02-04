@@ -132,7 +132,7 @@ function DvtDashboardList() {
   };
 
   const dashboardApi = useFetch({
-    url: `/api/v1/dashboard/${searchApiUrl()}`,
+    url: `dashboard/${searchApiUrl()}`,
   });
 
   useEffect(() => {

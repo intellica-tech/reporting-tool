@@ -51,7 +51,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
           colour="primary"
           label={t('SAVE')}
           typeColour="powder"
-          onClick={() => setDashboardApi(`/api/v1/dashboard/${meta.result.id}`)}
+          onClick={() => setDashboardApi(`dashboard/${meta.result.id}`)}
           size="small"
         />
       </StyledDashboardEditHeader>

@@ -73,7 +73,7 @@ function DvtConnection() {
   const [count, setCount] = useState<number>(0);
 
   const searchApiUrls = fetchQueryParamsSearch({
-    filterData: [
+    filters: [
       {
         col: 'expose_in_sqllab',
         opr: 'eq',
@@ -94,7 +94,7 @@ function DvtConnection() {
   });
 
   const connectionApi = useFetch({
-    url: `/api/v1/database/${searchApiUrls}`,
+    url: `database/${searchApiUrls}`,
   });
 
   useEffect(() => {
