@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { StyledSqlPagination } from './dvt-sql.module';
 
 const SavedQueriesHeader = [
@@ -92,7 +95,7 @@ const QueryHistoryHeader = [
 
 function DvtSql() {
   const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [count, setCount] = useState<number>(0);
   const sqlTabValue = useAppSelector(state => state.dvtNavbar.sql.tabs.value);
 
@@ -101,66 +104,49 @@ function DvtSql() {
     page: 1,
   });
 
+  const sqlData = useFetch({
+    url:
+      tabsAndPage.tab === 'Query History'
+        ? `query/${fetchQueryParamsSearch({
+            orderColumn: 'start_time',
+            page: page || tabsAndPage.page,
+          })}`
+        : `saved_query/${fetchQueryParamsSearch({
+            page: page || tabsAndPage.page,
+          })}`,
+  });
+
   useEffect(() => {
     setTabsAndPage({ tab: sqlTabValue, page: 1 });
-    setCurrentPage(1);
+    setPage(1);
   }, [sqlTabValue]);
 
   useEffect(() => {
-    setTabsAndPage(state => ({ ...state, page: currentPage }));
-  }, [currentPage]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          tabsAndPage.tab === 'Query History'
-            ? `/api/v1/query/?q=(order_column:start_time,order_direction:desc,page:${
-                tabsAndPage.page - 1
-              },page_size:10)`
-            : `/api/v1/saved_query/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${
-                tabsAndPage.page - 1
-              },page_size:10)`,
-        );
-        const rawData = await response.json();
-
-        const transformedData = rawData.result.map((item: any) => {
-          if (tabsAndPage.tab === 'Query History') {
-            return {
-              id: item.id,
-              changed_on: item.changed_on,
-              tab_name: item.tab_name,
-              database_name: item.database.database_name,
-              schema: item.schema,
-              table: item.sql_tables.table,
-              user: `${item.user.first_name} ${item.user.last_name}`,
-              rows: item.rows,
-              sql: '',
-            };
-          }
-          if (tabsAndPage.tab === 'Saved Queries') {
-            return {
-              id: item.id,
-              database_name: item.database.database_name,
-              schema: item.schema,
-              table: item.sql_tables.table,
-              created_on: item.created_on,
-              modified: item.modified,
-              user: `${item.created_by.first_name} ${item.created_by.last_name}`,
-            };
-          }
-          return item;
-        });
-
-        setData(transformedData);
-        setCount(rawData.count);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    fetchData();
-  }, [tabsAndPage.tab, tabsAndPage.page]);
+    if (sqlData) {
+      const transformedData = sqlData.result.map((item: any) => {
+        if (sqlTabValue === 'Query History') {
+          return {
+            ...item,
+            database_name: item.database.database_name,
+            table: item.sql_tables.table,
+            user: `${item.user.first_name} ${item.user.last_name}`,
+            sql: '',
+          };
+        }
+        if (sqlTabValue === 'Saved Queries') {
+          return {
+            ...item,
+            database_name: item.database.database_name,
+            table: item.sql_tables.table,
+            user: `${item.created_by.first_name} ${item.created_by.last_name}`,
+          };
+        }
+        return item;
+      });
+      setData(transformedData);
+      setCount(sqlData.count);
+    }
+  }, [sqlData]);
 
   return (
     <div>
@@ -174,8 +160,8 @@ function DvtSql() {
       </div>
       <StyledSqlPagination>
         <DvtPagination
-          page={currentPage}
-          setPage={setCurrentPage}
+          page={page}
+          setPage={setPage}
           itemSize={count}
           pageItemSize={10}
         />
