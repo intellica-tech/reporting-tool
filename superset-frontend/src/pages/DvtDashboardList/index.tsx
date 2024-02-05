@@ -19,6 +19,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { useDispatch } from 'react-redux';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
@@ -39,9 +42,6 @@ import {
   StyledSelectedItem,
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import { useDispatch } from 'react-redux';
-import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 const headerData = [
   {
