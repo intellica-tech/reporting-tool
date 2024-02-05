@@ -196,6 +196,7 @@ const initialState: DvtSidebarState = {
       owner: [],
       createdBy: [],
     },
+    annotationlayer: {
       name: [],
       descr: [],
     },
