@@ -108,11 +108,6 @@ const DvtDropdown: React.FC<DvtDropdownProps> = ({
                 {dataLength !== undefined && menuIndex !== dataLength - 1 && (
                   <StyledDropdownMenuLine />
                 )}
-                {console.log(
-                  menuIndex,
-                  menu.length,
-                  menuIndex + 1 !== menu.length,
-                )}
               </StyledDropdownMenu>
             ))}
           </DropdownMenu>

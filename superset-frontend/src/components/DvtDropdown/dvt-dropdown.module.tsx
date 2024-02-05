@@ -64,11 +64,9 @@ const DropdownMenu = styled.div<StyledDropdownMenuProps>`
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
   transform-origin: top;
   animation: ${optionsKeyframes} 0.3s ease-in-out;
-  border-radius: 4px;
   padding: 4px 0;
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
-  border-radius: ${({ menu }) => menu && '20px'};
-  padding: 20px;
+  border-radius: ${({ menu }) => (menu ? '16px' : '4px')};
 `;
 
 const DropdownOption = styled.div`
@@ -87,14 +85,18 @@ const StyledDropdownGroup = styled.div`
   display: flex;
 `;
 
-const StyledDropdownMenuLabel = styled.div``;
+const StyledDropdownMenuLabel = styled.div`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dvt.text.help};
+
+`;
 const StyledDropdownMenu = styled.div`
-  padding: 0 15px;
+  margin: 20px 22px 0px 22px;
 `;
 
 const StyledDropdownMenuLine = styled.div`
-  border: 1px solid #000;
-  margin: 10px 10px;
+  border-top: 1px solid ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  margin: 10px -20px 0 -20px;
 `;
 
 export {
