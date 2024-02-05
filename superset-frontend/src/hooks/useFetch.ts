@@ -4,6 +4,7 @@ import { useToasts } from 'src/components/MessageToasts/withToasts';
 
 type UseFetchProps = {
   url: string | null;
+  defaultParam?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
   body?: any;
@@ -11,6 +12,7 @@ type UseFetchProps = {
 
 const useFetch = ({
   url,
+  defaultParam = '/api/v1/',
   method = 'GET',
   body,
   headers = {},
@@ -23,7 +25,7 @@ const useFetch = ({
     if (url) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`/api/v1/${url}`, {
+          const response = await fetch(`${defaultParam}${url}`, {
             method,
             headers: {
               'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
