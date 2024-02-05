@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getCategoricalSchemeRegistry, t } from '@superset-ui/core';
+import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
+import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import {
   StyledDashboardEdit,
   StyledDashboardEditBody,
@@ -14,9 +15,6 @@ import {
   StyledDashboardEditInput,
 } from './dashboard-edit.module';
 import DvtCollapse from 'src/components/DvtCollapse';
-import DvtJsonEditor from 'src/components/DvtJsonEditor';
-import { omit } from 'lodash';
-import jsonStringify from 'json-stringify-pretty-compact';
 
 const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   const [title, setTitle] = useState<string>(meta.result.dashboard_title);
@@ -33,9 +31,9 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   );
   const [selectedColorValues, setSelectedColorValues] = useState<any | null>(
     () => {
-      const jsonData = JSON.parse(meta.result.json_metadata);
-      const colorScheme = jsonData.color_scheme || null;
-      return colorScheme ? { label: colorScheme } : null;
+      const jsonData = JSON.parse(meta.result.json_metadata || '{}');
+      const colorScheme = (jsonData !== '{}' && jsonData.color_scheme) || null;
+      return colorScheme ? { label: colorScheme } : '{}';
     },
   );
   const [jsonValue, setJsonValue] = useState<any | null>('');
