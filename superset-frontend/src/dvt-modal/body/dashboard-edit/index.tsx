@@ -7,6 +7,7 @@ import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
+import DvtCollapse from 'src/components/DvtCollapse';
 import {
   StyledDashboardEdit,
   StyledDashboardEditBody,
@@ -14,7 +15,6 @@ import {
   StyledDashboardEditHeader,
   StyledDashboardEditInput,
 } from './dashboard-edit.module';
-import DvtCollapse from 'src/components/DvtCollapse';
 
 const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   const [title, setTitle] = useState<string>(meta.result.dashboard_title);
