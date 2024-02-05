@@ -19,6 +19,9 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import handleResourceExport from 'src/utils/export';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarReportsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import DvtPagination from 'src/components/DvtPagination';
@@ -29,9 +32,6 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import useFetch from 'src/hooks/useFetch';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import handleResourceExport from 'src/utils/export';
-import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 const modifiedData = {
   header: [
