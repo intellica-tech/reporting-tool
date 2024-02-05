@@ -61,6 +61,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   );
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
+  const annotationLayerSelector = useAppSelector(
+    state => state.dvtSidebar.annotationlayer,
+  );
   const sqllabSelector = useAppSelector(state => state.dvtSidebar.sqllab);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const fetchedSelector = useAppSelector(
@@ -96,6 +99,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Chart Add';
       case '/dataset/add/':
         return 'New Dataset';
+      case '/annotationlayer/list/':
+        return 'Annotation Layers';
       default:
         return '';
     }
@@ -172,6 +177,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           url: `${apiV1}dashboard/related/created_by`,
         });
       }
+    } else if (pathTitles(pathName) === 'Annotation Layers') {
+      if (!fetchedSelector.annotationlayer.name) {
+        setGetDataApiUrl({
+          name: 'annotationlayer-name',
+          url: `${apiV1}annotation_layer/related/created_by`,
+        });
+      }
     } else if (pathTitles(pathName) === 'Datasets') {
       if (!fetchedSelector.datasets.owner) {
         setGetDataApiUrl({
@@ -216,6 +228,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     }
   }, [
     fetchedSelector.dashboard,
+    fetchedSelector.annotationlayer,
     fetchedSelector.datasets,
     fetchedSelector.chartAdd,
     pathName,
@@ -246,6 +259,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           dvtSidebarSetDataProperty({
             pageKey: 'dashboard',
             key: 'createdBy',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'annotationlayer-name') {
+        const editedData = data.map((item: any) => ({
+          value: item.text,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'annotationlayer',
+            key: 'name',
             value: editedData,
           }),
         );
@@ -469,6 +495,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     'Datasets',
     'New Dataset',
     'Dashboards',
+    'Annotation Layers',
     'Alerts',
     'Reports',
     'Connection',
@@ -597,6 +624,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? chartAddSelector[data.name]
                             : pathTitles(pathName) === 'Dashboards'
                             ? dashboardSelector[data.name]
+                            : pathTitles(pathName) === 'Annotation Layers'
+                            ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'SQL Lab'
                             ? sqllabSelector[data.name]
                             : undefined
@@ -633,6 +662,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? chartAddSelector[data.name]
                             : pathTitles(pathName) === 'Dashboards'
                             ? dashboardSelector[data.name]
+                            : pathTitles(pathName) === 'Annotation Layers'
+                            ? annotationLayerSelector[data.name]
                             : undefined
                         }
                         onChange={value => {
