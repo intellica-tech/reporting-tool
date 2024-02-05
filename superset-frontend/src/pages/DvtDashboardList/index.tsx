@@ -39,6 +39,9 @@ import {
   StyledSelectedItem,
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { useDispatch } from 'react-redux';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 const headerData = [
   {
@@ -84,6 +87,7 @@ const headerData = [
 ];
 
 function DvtDashboardList() {
+  const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
   const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
@@ -131,9 +135,21 @@ function DvtDashboardList() {
     return `?q=(${filters}${sort},page:${currentPage - 1},page_size:10)`;
   };
 
+  const dashboardPromiseUrl = `/api/v1/dashboard/${searchApiUrl()}`;
+  const [reportApiUrl, setReportApiUrl] = useState(dashboardPromiseUrl);
   const dashboardApi = useFetch({
-    url: `/api/v1/dashboard/${searchApiUrl()}`,
+    url: reportApiUrl,
   });
+
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
+
+  useEffect(() => {
+    setReportApiUrl('');
+    dispatch(dvtHomeDeleteSuccessStatus(''));
+    setTimeout(() => setReportApiUrl(dashboardPromiseUrl), 200);
+  }, [deleteSuccessStatus]);
 
   useEffect(() => {
     if (dashboardApi) {
@@ -186,6 +202,31 @@ function DvtDashboardList() {
       .catch(error => {
         console.error('Favorite has been failed:', error);
       });
+  };
+
+  const handleEditDashboards = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/dashboard/${item.id}`);
+      const editedDashboardData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-dashboard',
+          meta: editedDashboardData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'dashboard' },
+      }),
+    );
   };
 
   return (
@@ -253,6 +294,27 @@ function DvtDashboardList() {
             setFavorites={(id, isFavorite) =>
               handleSetFavorites(id, isFavorite)
             }
+            dropdown={[
+              {
+                label: t('Edit'),
+                icon: 'edit_alt',
+                onClick: (item: any) => {
+                  handleEditDashboards(item);
+                },
+              },
+              {
+                label: t('Export'),
+                icon: 'share',
+                onClick: () => {},
+              },
+              {
+                label: t('Delete'),
+                icon: 'trash',
+                onClick: (item: any) => {
+                  handleDelete('dashboard', item);
+                },
+              },
+            ]}
           />
         )}
       </StyledDashboardTable>

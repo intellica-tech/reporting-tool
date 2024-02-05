@@ -29,6 +29,9 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import useFetch from 'src/hooks/useFetch';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import handleResourceExport from 'src/utils/export';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 const modifiedData = {
   header: [
@@ -79,11 +82,23 @@ function ReportList() {
   const [data, setData] = useState<any[]>([]);
 
   const [favoriteApiUrl, setFavoriteApiUrl] = useState('');
+  const reportPromiseUrl = `/api/v1/chart/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${page},page_size:10)`;
+  const [reportApiUrl, setReportApiUrl] = useState(reportPromiseUrl);
 
   const reportData = useFetch({
-    url: `/api/v1/chart/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${page},page_size:10)`,
+    url: reportApiUrl,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
+
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
+
+  useEffect(() => {
+    setReportApiUrl('');
+    dispatch(dvtHomeDeleteSuccessStatus(''));
+    setTimeout(() => setReportApiUrl(reportPromiseUrl), 200);
+  }, [deleteSuccessStatus]);
 
   useEffect(() => {
     if (reportData) {
@@ -167,6 +182,36 @@ function ReportList() {
     setSelectedRows([]);
   };
 
+  const handleEditCharts = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/chart/${item.id}`);
+      const editedChartsData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-charts',
+          meta: editedChartsData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSingleExport = (id: number) => {
+    const exportUrl = `/api/v1/chart/export/?q=!(${id})`;
+    handleResourceExport(exportUrl, [id], () => {});
+  };
+
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'chart' },
+      }),
+    );
+  };
+
   return data.length > 0 ? (
     <StyledReports>
       {activeTab === 'Table' ? (
@@ -199,8 +244,31 @@ function ReportList() {
             isFavorite: item.isFavorite,
             link: item.url,
           }))}
-          title="Data"
+          title={t('Data')}
           setFavorites={(id, isFavorite) => handleSetFavorites(id, isFavorite)}
+          dropdown={[
+            {
+              label: t('Edit'),
+              icon: 'edit_alt',
+              onClick: (item: any) => {
+                handleEditCharts(item);
+              },
+            },
+            {
+              label: t('Export'),
+              icon: 'share',
+              onClick: (item: any) => {
+                handleSingleExport(item.id);
+              },
+            },
+            {
+              label: t('Delete'),
+              icon: 'trash',
+              onClick: (item: any) => {
+                handleDelete('chart', item);
+              },
+            },
+          ]}
         />
       )}
       <StyledReportsButton>
