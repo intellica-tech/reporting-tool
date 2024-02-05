@@ -35,3 +35,27 @@ Default.args = {
   icon: 'more_vert',
   direction: 'right',
 };
+
+export const MenuExample = (args: DvtDropdownProps) => (
+  <DvtDropdown {...args} />
+);
+
+MenuExample.args = {
+  data: [
+    { label: 'List Users', onClick: () => {}, menu: 'Security' },
+    { label: 'List Roles', onClick: () => {}, menu: 'Security' },
+    { label: 'Row Level Security', onClick: () => {}, menu: 'Security' },
+    { label: 'Action Log', onClick: () => {}, menu: 'Security' },
+    { label: 'Database Connections', onClick: () => {}, menu: 'Data' },
+    { label: 'CSS Templates', onClick: () => {}, menu: 'Manage' },
+    { label: 'Alerts & Reports', onClick: () => {}, menu: 'Manage' },
+    { label: 'Annotation Layers', onClick: () => {}, menu: 'Manage' },
+    { label: 'Profile', onClick: () => {}, menu: 'User' },
+    { label: 'Info', onClick: () => {}, menu: 'User' },
+    { label: 'Logout', onClick: () => {}, menu: 'User' },
+    { label: 'Version: 1.1.1-dev', onClick: () => {}, menu: 'About' },
+  ],
+  icon: 'more_vert',
+  direction: 'right',
+  menu: ['Security', 'Data', 'Manage', 'User', 'About'],
+};

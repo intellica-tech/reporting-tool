@@ -22,6 +22,10 @@ interface StyledDropdownProps {
   direction: string;
 }
 
+interface StyledDropdownMenuProps {
+  menu: string[];
+}
+
 const optionsKeyframes = keyframes`
   from {
     transform: scaleY(0);
@@ -45,8 +49,8 @@ const StyledDropdown = styled.div<StyledDropdownProps>`
   position: absolute;
   top: calc(100% + 2px);
   ${({ direction }) =>
-    (direction === 'right' && 'left: 50%') ||
-    (direction === 'left' && 'right: 50%')};
+    (direction === 'right' && 'left: 0') ||
+    (direction === 'left' && 'right: 0')};
   z-index: 100;
 `;
 
@@ -54,7 +58,7 @@ const StyledDropdownLabel = styled.div`
   font-size: 14px;
 `;
 
-const DropdownMenu = styled.div`
+const DropdownMenu = styled.div<StyledDropdownMenuProps>`
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
@@ -63,6 +67,8 @@ const DropdownMenu = styled.div`
   border-radius: 4px;
   padding: 4px 0;
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  border-radius: ${({ menu }) => menu && '20px'};
+  padding: 20px;
 `;
 
 const DropdownOption = styled.div`
@@ -71,7 +77,6 @@ const DropdownOption = styled.div`
   align-items: end;
   padding: 5px 12px;
   cursor: pointer;
-
   &:hover {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
   }
@@ -79,7 +84,17 @@ const DropdownOption = styled.div`
 
 const StyledDropdownGroup = styled.div`
   position: relative;
-  display: inline-flex;
+  display: flex;
+`;
+
+const StyledDropdownMenuLabel = styled.div``;
+const StyledDropdownMenu = styled.div`
+  padding: 0 15px;
+`;
+
+const StyledDropdownMenuLine = styled.div`
+  border: 1px solid #000;
+  margin: 10px 10px;
 `;
 
 export {
@@ -89,4 +104,7 @@ export {
   DropdownMenu,
   DropdownOption,
   StyledDropdownGroup,
+  StyledDropdownMenuLabel,
+  StyledDropdownMenuLine,
+  StyledDropdownMenu,
 };
