@@ -20,6 +20,9 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
+import handleResourceExport from 'src/utils/export';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
@@ -32,36 +35,12 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
   StyledConnection,
   StyledConnectionButton,
+  StyledConnectionButtons,
+  StyledConnectionListButtons,
+  StyledConnectionsButtons,
+  StyledSelectedItem,
+  StyledSelectedItemCount,
 } from './dvt-connection.module';
-
-const modifiedData = {
-  header: [
-    { id: 1, title: t('Database'), field: 'database_name', heartIcon: true },
-    { id: 2, title: t('Admin'), field: 'admin' },
-    { id: 3, title: t('Last Modified'), field: 'date' },
-    {
-      id: 4,
-      title: t('Action'),
-      clicks: [
-        {
-          icon: 'edit_alt',
-          click: () => {},
-          popperLabel: t('Edit'),
-        },
-        {
-          icon: 'share',
-          click: () => {},
-          popperLabel: t('Export'),
-        },
-        {
-          icon: 'trash',
-          click: () => {},
-          popperLabel: t('Delete'),
-        },
-      ],
-    },
-  ],
-};
 
 function DvtConnection() {
   const dispatch = useDispatch();
@@ -71,6 +50,11 @@ function DvtConnection() {
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
 
   const searchApiUrls = fetchQueryParamsSearch({
     filterData: [
@@ -93,9 +77,18 @@ function DvtConnection() {
     page,
   });
 
+  const connectionPromiseUrl = `/api/v1/database/${searchApiUrls}`;
+
+  const [connectionApiUrl, setConnectionApiUrl] = useState('');
+
   const connectionApi = useFetch({
-    url: `/api/v1/database/${searchApiUrls}`,
+    url: connectionApiUrl,
   });
+
+  useEffect(() => {
+    dispatch(dvtHomeDeleteSuccessStatus(''));
+    setConnectionApiUrl(connectionPromiseUrl);
+  }, [deleteSuccessStatus, connectionSelector]);
 
   useEffect(() => {
     if (connectionApi) {
@@ -107,6 +100,7 @@ function DvtConnection() {
         })),
       );
       setCount(connectionApi.count);
+      setConnectionApiUrl('');
     }
   }, [connectionApi]);
 
@@ -123,9 +117,125 @@ function DvtConnection() {
     );
   };
 
+  const handleDeselectAll = () => {
+    setSelectedRows([]);
+  };
+
+  const handleSingleExport = (id: number) => {
+    handleResourceExport('database', [id], () => {});
+  };
+
+  const handleBulkExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('chart', selectedIds, () => {});
+  };
+
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'database' },
+      }),
+    );
+  };
+
+  const handleBulkDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'chart' },
+      }),
+    );
+    setSelectedRows([]);
+  };
+
+  const modifiedData = {
+    header: [
+      {
+        id: 1,
+        title: t('Database'),
+        field: 'database_name',
+        checkbox: true,
+        heartIcon: true,
+      },
+      { id: 2, title: t('Admin'), field: 'admin' },
+      { id: 3, title: t('Last Modified'), field: 'date' },
+      {
+        id: 4,
+        title: t('Action'),
+        clicks: [
+          {
+            icon: 'edit_alt',
+            click: () => {},
+            popperLabel: t('Edit'),
+          },
+          {
+            icon: 'share',
+            click: (item: any) => {
+              handleSingleExport(item.id);
+            },
+            popperLabel: t('Export'),
+          },
+          {
+            icon: 'trash',
+            click: (item: any) => {
+              handleDelete('database', item);
+            },
+            popperLabel: t('Delete'),
+          },
+        ],
+      },
+    ],
+  };
+
   return data.length > 0 ? (
     <StyledConnection>
-      <DvtTable data={data} header={modifiedData.header} />
+      <StyledConnectionListButtons>
+        <StyledConnectionButtons>
+          <StyledSelectedItem>
+            <StyledSelectedItemCount>
+              <span>{`${selectedRows.length} Selected`}</span>
+            </StyledSelectedItemCount>
+            <DvtButton
+              label={t('Deselect All')}
+              bold
+              colour="primary"
+              typeColour="outline"
+              size="medium"
+              onClick={handleDeselectAll}
+            />
+          </StyledSelectedItem>
+        </StyledConnectionButtons>
+        <StyledConnectionsButtons>
+          <DvtButton
+            label={t('Delete')}
+            icon="dvt-delete"
+            iconToRight
+            colour="error"
+            size="small"
+            onClick={() => {
+              handleBulkDelete('chart', selectedRows);
+            }}
+          />
+          <DvtButton
+            label={t('Export')}
+            icon="dvt-export"
+            iconToRight
+            colour="primary"
+            bold
+            typeColour="powder"
+            size="small"
+            onClick={handleBulkExport}
+          />
+        </StyledConnectionsButtons>
+      </StyledConnectionListButtons>
+      <DvtTable
+        data={data}
+        header={modifiedData.header}
+        selected={selectedRows}
+        setSelected={setSelectedRows}
+        checkboxActiveField="id"
+      />
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}

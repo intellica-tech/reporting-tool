@@ -31,44 +31,14 @@ import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import useFetch from 'src/hooks/useFetch';
-import { StyledReports, StyledReportsButton } from './dvt-reports.module';
-
-const modifiedData = {
-  header: [
-    {
-      id: 1,
-      title: t('Name'),
-      field: 'slice_name',
-      checkbox: true,
-    },
-    { id: 2, title: t('Visualization Type'), field: 'viz_type' },
-    { id: 3, title: t('Dataset'), field: 'datasource_name_text' },
-    { id: 4, title: t('Modified date'), field: 'date' },
-    { id: 5, title: t('Modified by'), field: 'changed_by' },
-    { id: 6, title: t('Created by'), field: 'created_by' },
-    {
-      id: 9,
-      title: t('Action'),
-      clicks: [
-        {
-          icon: 'edit_alt',
-          click: () => {},
-          popperLabel: t('Edit'),
-        },
-        {
-          icon: 'share',
-          click: () => {},
-          popperLabel: t('Export'),
-        },
-        {
-          icon: 'trash',
-          click: () => {},
-          popperLabel: t('Delete'),
-        },
-      ],
-    },
-  ],
-};
+import {
+  StyledReports,
+  StyledReportsButton,
+  StyledReportsButtons,
+  StyledReportsListButtons,
+  StyledSelectedItem,
+  StyledSelectedItemCount,
+} from './dvt-reports.module';
 
 function ReportList() {
   const dispatch = useDispatch();
@@ -199,8 +169,12 @@ function ReportList() {
   };
 
   const handleSingleExport = (id: number) => {
-    const exportUrl = `/api/v1/chart/export/?q=!(${id})`;
-    handleResourceExport(exportUrl, [id], () => {});
+    handleResourceExport('chart', [id], () => {});
+  };
+
+  const handleBulkExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('chart', selectedIds, () => {});
   };
 
   const handleDelete = async (type: string, item: any) => {
@@ -212,20 +186,100 @@ function ReportList() {
     );
   };
 
+  const handleBulkDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'chart' },
+      }),
+    );
+    setSelectedRows([]);
+  };
+
+  const modifiedData = {
+    header: [
+      {
+        id: 1,
+        title: t('Name'),
+        field: 'slice_name',
+        checkbox: true,
+      },
+      { id: 2, title: t('Visualization Type'), field: 'viz_type' },
+      { id: 3, title: t('Dataset'), field: 'datasource_name_text' },
+      { id: 4, title: t('Modified date'), field: 'date' },
+      { id: 5, title: t('Modified by'), field: 'changed_by' },
+      { id: 6, title: t('Created by'), field: 'created_by' },
+      {
+        id: 9,
+        title: t('Action'),
+        clicks: [
+          {
+            icon: 'edit_alt',
+            click: () => {},
+            popperLabel: t('Edit'),
+          },
+          {
+            icon: 'share',
+            click: (item: any) => {
+              handleSingleExport(item.id);
+            },
+            popperLabel: t('Export'),
+          },
+          {
+            icon: 'trash',
+            click: (item: any) => {
+              handleDelete('chart', item);
+            },
+            popperLabel: t('Delete'),
+          },
+        ],
+      },
+    ],
+  };
+
   return data.length > 0 ? (
     <StyledReports>
       {activeTab === 'Table' ? (
         <>
-          <div>
-            <DvtButton
-              label={t('Deselect All')}
-              bold
-              colour="primary"
-              typeColour="outline"
-              size="medium"
-              onClick={handleDeselectAll}
-            />
-          </div>
+          <StyledReportsListButtons>
+            <StyledReportsButtons>
+              <StyledSelectedItem>
+                <StyledSelectedItemCount>
+                  <span>{`${selectedRows.length} Selected`}</span>
+                </StyledSelectedItemCount>
+                <DvtButton
+                  label={t('Deselect All')}
+                  bold
+                  colour="primary"
+                  typeColour="outline"
+                  size="medium"
+                  onClick={handleDeselectAll}
+                />
+              </StyledSelectedItem>
+            </StyledReportsButtons>
+            <StyledReportsButtons>
+              <DvtButton
+                label={t('Delete')}
+                icon="dvt-delete"
+                iconToRight
+                colour="error"
+                size="small"
+                onClick={() => {
+                  handleBulkDelete('chart', selectedRows);
+                }}
+              />
+              <DvtButton
+                label={t('Export')}
+                icon="dvt-export"
+                iconToRight
+                colour="primary"
+                bold
+                typeColour="powder"
+                size="small"
+                onClick={handleBulkExport}
+              />
+            </StyledReportsButtons>
+          </StyledReportsListButtons>
           <DvtTable
             data={data}
             header={modifiedData.header}

@@ -17,11 +17,30 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [deleteUrlApi, setDeleteUrlApi] = useState('');
   const deleteApi = useFetch({ url: deleteUrlApi, method: 'DELETE' });
-  const item = meta.item.id;
+  const item = meta.item.length
+    ? meta.item
+        .map(({ id }: { id: number }) => {
+          return id;
+        })
+        .join(',')
+    : meta.item.id;
+
   const types = meta.type;
 
+  const itemMessage = meta.item.length
+    ? `Deleted ${meta.item.length} ${meta.title}${
+        meta.item.length > 1 ? 's' : ''
+      }`
+    : 'OK';
+
+  console.log(itemMessage);
+
+  const deleteUrl = meta.item.length
+    ? `/api/v1/${types}/?q=!(${item})`
+    : `/api/v1/${types}/${item}`;
+
   useEffect(() => {
-    if (deleteApi?.message === 'OK') {
+    if (deleteApi?.message === itemMessage) {
       dispatch(dvtHomeDeleteSuccessStatus(types));
       onClose();
     }
@@ -38,7 +57,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
           <DvtButton
             label={t('DELETE')}
             colour="error"
-            onClick={() => setDeleteUrlApi(`/api/v1/${types}/${item}`)}
+            onClick={() => setDeleteUrlApi(deleteUrl)}
             size="small"
             bold
           />
