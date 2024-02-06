@@ -20,6 +20,9 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import handleResourceExport from 'src/utils/export';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
 import { dvtSidebarReportsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
@@ -31,50 +34,14 @@ import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
-import { StyledReports, StyledReportsButton } from './dvt-reports.module';
-
-const modifiedData = {
-  header: [
-    {
-      id: 1,
-      title: t('Chart'),
-      field: 'slice_name',
-      checkbox: true,
-      urlField: 'url',
-    },
-    { id: 2, title: t('Visualization Type'), field: 'viz_type' },
-    {
-      id: 3,
-      title: t('Dataset'),
-      field: 'datasource_name_text',
-      urlField: 'datasource_url',
-    },
-    { id: 4, title: t('Modified date'), field: 'date' },
-    { id: 5, title: t('Modified by'), field: 'changed_by' },
-    { id: 6, title: t('Created by'), field: 'created_by' },
-    {
-      id: 9,
-      title: t('Action'),
-      clicks: [
-        {
-          icon: 'edit_alt',
-          click: () => {},
-          popperLabel: t('Edit'),
-        },
-        {
-          icon: 'share',
-          click: () => {},
-          popperLabel: t('Export'),
-        },
-        {
-          icon: 'trash',
-          click: () => {},
-          popperLabel: t('Delete'),
-        },
-      ],
-    },
-  ],
-};
+import {
+  StyledReports,
+  StyledReportsButton,
+  StyledReportsButtons,
+  StyledReportsListButtons,
+  StyledSelectedItem,
+  StyledSelectedItemCount,
+} from './dvt-reports.module';
 
 function ReportList() {
   const dispatch = useDispatch();
@@ -133,11 +100,27 @@ function ReportList() {
       value: reportsSelector.search,
     },
   ];
+  const reportPromiseUrl = `chart/${fetchQueryParamsSearch({
+    filters: reportFilters,
+    page,
+  })}`;
+  const [reportApiUrl, setReportApiUrl] = useState('');
 
   const reportData = useFetch({
-    url: `chart/${fetchQueryParamsSearch({ filters: reportFilters, page })}`,
+    url: reportApiUrl,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
+
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
+
+  useEffect(() => {
+    setReportApiUrl(reportPromiseUrl);
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+  }, [deleteSuccessStatus, reportsSelector]);
 
   useEffect(() => {
     if (reportData) {
@@ -152,6 +135,7 @@ function ReportList() {
       setData(editedDatas);
       setCount(reportData.count);
       setDataOnReady(true);
+      setReportApiUrl('');
     }
   }, [reportData]);
 
@@ -245,20 +229,140 @@ function ReportList() {
     setSelectedRows([]);
   };
 
+  const handleEditCharts = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/chart/${item.id}`);
+      const editedChartsData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-charts',
+          meta: editedChartsData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSingleExport = (id: number) => {
+    handleResourceExport('chart', [id], () => {});
+  };
+
+  const handleBulkExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('chart', selectedIds, () => {});
+  };
+
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'chart' },
+      }),
+    );
+  };
+
+  const handleBulkDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'chart' },
+      }),
+    );
+    setSelectedRows([]);
+  };
+
+  const modifiedData = {
+    header: [
+      {
+        id: 1,
+        title: t('Chart'),
+        field: 'slice_name',
+        checkbox: true,
+        urlField: 'url',
+      },
+      { id: 2, title: t('Visualization Type'), field: 'viz_type' },
+      {
+        id: 3,
+        title: t('Dataset'),
+        field: 'datasource_name_text',
+        urlField: 'datasource_url',
+      },
+      { id: 4, title: t('Modified date'), field: 'date' },
+      { id: 5, title: t('Modified by'), field: 'changed_by' },
+      { id: 6, title: t('Created by'), field: 'created_by' },
+      {
+        id: 7,
+        title: t('Action'),
+        clicks: [
+          {
+            icon: 'edit_alt',
+            click: () => {},
+            popperLabel: t('Edit'),
+          },
+          {
+            icon: 'share',
+            click: (item: any) => {
+              handleSingleExport(item.id);
+            },
+            popperLabel: t('Export'),
+          },
+          {
+            icon: 'trash',
+            click: (item: any) => {
+              handleDelete('chart', item);
+            },
+            popperLabel: t('Delete'),
+          },
+        ],
+      },
+    ],
+  };
+
   return data.length > 0 ? (
     <StyledReports>
       {activeTab === 'Table' ? (
         <>
-          <div>
-            <DvtButton
-              label={t('Deselect All')}
-              bold
-              colour="primary"
-              typeColour="outline"
-              size="medium"
-              onClick={handleDeselectAll}
-            />
-          </div>
+          <StyledReportsListButtons>
+            <StyledReportsButtons>
+              <StyledSelectedItem>
+                <StyledSelectedItemCount>
+                  <span>{`${selectedRows.length} Selected`}</span>
+                </StyledSelectedItemCount>
+                <DvtButton
+                  label={t('Deselect All')}
+                  bold
+                  colour="primary"
+                  typeColour="outline"
+                  size="medium"
+                  onClick={handleDeselectAll}
+                />
+              </StyledSelectedItem>
+            </StyledReportsButtons>
+            <StyledReportsButtons>
+              <DvtButton
+                label={t('Delete')}
+                icon="dvt-delete"
+                iconToRight
+                colour="error"
+                size="small"
+                onClick={() => {
+                  handleBulkDelete('chart', selectedRows);
+                }}
+              />
+              <DvtButton
+                label={t('Export')}
+                icon="dvt-export"
+                iconToRight
+                colour="primary"
+                bold
+                typeColour="powder"
+                size="small"
+                onClick={handleBulkExport}
+              />
+            </StyledReportsButtons>
+          </StyledReportsListButtons>
           <DvtTable
             data={data}
             header={modifiedData.header}
@@ -278,8 +382,31 @@ function ReportList() {
             link: item.url,
             paramUrl: 'chart',
           }))}
-          title="Data"
+          title={t('Data')}
           setFavorites={handleSetFavorites}
+          dropdown={[
+            {
+              label: t('Edit'),
+              icon: 'edit_alt',
+              onClick: (item: any) => {
+                handleEditCharts(item);
+              },
+            },
+            {
+              label: t('Export'),
+              icon: 'share',
+              onClick: (item: any) => {
+                handleSingleExport(item.id);
+              },
+            },
+            {
+              label: t('Delete'),
+              icon: 'trash',
+              onClick: (item: any) => {
+                handleDelete('chart', item);
+              },
+            },
+          ]}
         />
       )}
       <StyledReportsButton>
