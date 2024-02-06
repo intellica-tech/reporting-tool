@@ -13,7 +13,7 @@ import useFetch from 'src/hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import DvtLogo from '../DvtLogo';
-import DvtDarkMode from '../DvtDarkMode';
+// import DvtDarkMode from '../DvtDarkMode';
 import DvtTitlePlus from '../DvtTitlePlus';
 import DvtNavigation from '../DvtNavigation';
 import DvtPopper from '../DvtPopper';
@@ -28,7 +28,7 @@ import {
   StyledDvtSidebarBody,
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
-  StyledDvtSidebarFooter,
+  // StyledDvtSidebarFooter,
   StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
@@ -69,7 +69,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -224,12 +224,35 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         //   url: 'dataset/distinct/schema',
         // });
       }
+    } else if (pathTitles(pathName) === 'Reports') {
+      if (!fetchedSelector.reports.owner) {
+        setGetDataApiUrl({
+          name: 'reports-owner',
+          url: 'chart/related/owners',
+        });
+      } else if (!fetchedSelector.reports.createdBy) {
+        setGetDataApiUrl({
+          name: 'reports-createdBy',
+          url: 'chart/related/created_by',
+        });
+      } else if (!fetchedSelector.reports.dataset) {
+        setGetDataApiUrl({
+          name: 'reports-dataset',
+          url: 'dataset/?q=(columns:!(datasource_name,datasource_id),keys:!(none),order_column:table_name,order_direction:asc,page:0,page_size:100)',
+        });
+      } else if (!fetchedSelector.reports.dashboards) {
+        setGetDataApiUrl({
+          name: 'reports-dashboards',
+          url: 'dashboard/?q=(columns:!(dashboard_title,id),keys:!(none),order_column:dashboard_title,order_direction:asc,page:0,page_size:100)',
+        });
+      }
     }
   }, [
     fetchedSelector.dashboard,
     fetchedSelector.annotationlayer,
     fetchedSelector.datasets,
     fetchedSelector.chartAdd,
+    fetchedSelector.reports,
     pathName,
   ]);
 
@@ -366,6 +389,47 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           }),
         );
       }
+      const getDataApiUrlKeys = getDataApiUrl.name.split('-');
+      const apiDataValueAndText = ['reports-owner', 'reports-createdBy'];
+      if (apiDataValueAndText.includes(getDataApiUrl.name)) {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: getDataApiUrlKeys[0],
+            key: getDataApiUrlKeys[1],
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'reports-dataset') {
+        const editedData = data.map((item: any) => ({
+          value: item.id,
+          label: item.table_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'reports',
+            key: 'dataset',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'reports-dashboards') {
+        const editedData = data.map((item: any) => ({
+          value: item.id,
+          label: item.dashboard_title,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'reports',
+            key: 'dashboards',
+            value: editedData,
+          }),
+        );
+      }
     }
   }, [getApiData]);
 
@@ -455,6 +519,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const selectsData = (sData: any) => {
     let dValue = [];
 
+    const selectionObjectKeys: any[] = [
+      {
+        title: 'Reports',
+        key: 'reports',
+        keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
+      },
+    ];
+    const findPathTitle = selectionObjectKeys.find(
+      item => item.title === pathTitles(pathName),
+    );
+    const onlyKeyNames = findPathTitle.keyNames;
+
     if (pathTitles(pathName) === 'Chart Add' && sData.name === 'dataset') {
       dValue = dataSelector.chartAdd.dataset;
     } else if (pathTitles(pathName) === 'Chart Add' && sData.name === 'tags') {
@@ -488,6 +564,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       sData.name === 'createdBy'
     ) {
       dValue = dataSelector.annotationlayer.createdBy;
+    } else if (findPathTitle && onlyKeyNames.includes(sData.name)) {
+      dValue = dataSelector[findPathTitle.key][sData.name];
     } else {
       dValue = sData.values;
     }

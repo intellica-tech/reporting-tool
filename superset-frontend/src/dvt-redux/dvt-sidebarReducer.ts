@@ -20,13 +20,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtSidebarState {
   reports: {
-    owner: string;
-    createdBy: string;
-    chartType: string;
-    dataset: string;
-    dashboards: string;
-    favorite: string;
-    certified: string;
+    owner: any;
+    createdBy: any;
+    chartType: any;
+    dataset: any;
+    dashboards: any;
+    favorite: any;
+    certified: any;
+    search: string;
   };
   alerts: {
     createdBy: string;
@@ -71,6 +72,12 @@ interface DvtSidebarState {
   };
   data: {
     fetched: {
+      reports: {
+        owner: boolean;
+        createdBy: boolean;
+        dataset: boolean;
+        dashboards: boolean;
+      };
       dashboard: {
         owner: boolean;
         createdBy: boolean;
@@ -92,6 +99,12 @@ interface DvtSidebarState {
         schema: boolean;
         see_table_schema: boolean;
       };
+    };
+    reports: {
+      owner: any[];
+      createdBy: any[];
+      dataset: any[];
+      dashboards: any[];
     };
     dashboard: {
       owner: any[];
@@ -119,13 +132,14 @@ interface DvtSidebarState {
 
 const initialState: DvtSidebarState = {
   reports: {
-    owner: '',
-    createdBy: '',
-    chartType: '',
-    dataset: '',
-    dashboards: '',
-    favorite: '',
-    certified: '',
+    owner: {},
+    createdBy: {},
+    chartType: {},
+    dataset: {},
+    dashboards: {},
+    favorite: {},
+    certified: {},
+    search: '',
   },
   alerts: {
     createdBy: '',
@@ -170,6 +184,12 @@ const initialState: DvtSidebarState = {
   },
   data: {
     fetched: {
+      reports: {
+        owner: false,
+        createdBy: false,
+        dataset: false,
+        dashboards: false,
+      },
       dashboard: {
         owner: false,
         createdBy: false,
@@ -191,6 +211,12 @@ const initialState: DvtSidebarState = {
         schema: false,
         see_table_schema: false,
       },
+    },
+    reports: {
+      owner: [],
+      createdBy: [],
+      dataset: [],
+      dashboards: [],
     },
     dashboard: {
       owner: [],
