@@ -529,7 +529,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     const findPathTitle = selectionObjectKeys.find(
       item => item.title === pathTitles(pathName),
     );
-    const onlyKeyNames = findPathTitle.keyNames;
+    const onlyKeyNames = findPathTitle?.keyNames;
 
     if (pathTitles(pathName) === 'Chart Add' && sData.name === 'dataset') {
       dValue = dataSelector.chartAdd.dataset;
@@ -589,7 +589,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   return (
     <StyledDvtSidebar pathName={pathName}>
       <StyledDvtSidebarHeader>
-        <DvtLogo title="AppName" />
+        <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>
       {pathTitles(pathName) === 'Welcome Page' && (
         <StyledDvtSidebarBody pathName={pathName}>
