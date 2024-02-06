@@ -180,7 +180,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       if (!fetchedSelector.annotationlayer.createdBy) {
         setGetDataApiUrl({
           name: 'annotationlayer-created-by',
-          url: `${apiV1}annotation_layer/related/created_by`,
+          url: 'annotation_layer/related/created_by',
         });
       }
     } else if (pathTitles(pathName) === 'Datasets') {
