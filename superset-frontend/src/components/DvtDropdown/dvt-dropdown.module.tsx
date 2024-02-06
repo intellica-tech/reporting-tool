@@ -22,10 +22,6 @@ interface StyledDropdownProps {
   direction: string;
 }
 
-interface StyledDropdownMenuProps {
-  menu: string[];
-}
-
 const optionsKeyframes = keyframes`
   from {
     transform: scaleY(0);
@@ -49,8 +45,8 @@ const StyledDropdown = styled.div<StyledDropdownProps>`
   position: absolute;
   top: calc(100% + 2px);
   ${({ direction }) =>
-    (direction === 'right' && 'left: 0') ||
-    (direction === 'left' && 'right: 0')};
+    (direction === 'right' && 'left: 50%') ||
+    (direction === 'left' && 'right: 50%')};
   z-index: 100;
 `;
 
@@ -58,15 +54,15 @@ const StyledDropdownLabel = styled.div`
   font-size: 14px;
 `;
 
-const DropdownMenu = styled.div<StyledDropdownMenuProps>`
+const DropdownMenu = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
   transform-origin: top;
   animation: ${optionsKeyframes} 0.3s ease-in-out;
+  border-radius: 4px;
   padding: 4px 0;
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
-  border-radius: ${({ menu }) => (menu ? '16px' : '4px')};
 `;
 
 const DropdownOption = styled.div`
@@ -75,6 +71,7 @@ const DropdownOption = styled.div`
   align-items: end;
   padding: 5px 12px;
   cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
   }
@@ -82,21 +79,7 @@ const DropdownOption = styled.div`
 
 const StyledDropdownGroup = styled.div`
   position: relative;
-  display: flex;
-`;
-
-const StyledDropdownMenuLabel = styled.div`
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.dvt.text.help};
-
-`;
-const StyledDropdownMenu = styled.div`
-  margin: 20px 22px 0px 22px;
-`;
-
-const StyledDropdownMenuLine = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.colors.dvt.grayscale.light1};
-  margin: 10px -20px 0 -20px;
+  display: inline-flex;
 `;
 
 export {
@@ -106,7 +89,4 @@ export {
   DropdownMenu,
   DropdownOption,
   StyledDropdownGroup,
-  StyledDropdownMenuLabel,
-  StyledDropdownMenuLine,
-  StyledDropdownMenu,
 };

@@ -26,16 +26,12 @@ import {
   DropdownMenu,
   DropdownOption,
   StyledDropdownGroup,
-  StyledDropdownMenuLabel,
-  StyledDropdownMenuLine,
-  StyledDropdownMenu,
 } from './dvt-dropdown.module';
 
 export interface OptionProps {
   label: string;
   icon?: string;
   onClick: (item: any) => void;
-  menu?: string;
 }
 
 export interface DvtDropdownProps {
@@ -44,7 +40,6 @@ export interface DvtDropdownProps {
   item?: any;
   direction?: 'left' | 'right';
   label?: string;
-  menu?: string[];
 }
 
 const DvtDropdown: React.FC<DvtDropdownProps> = ({
@@ -53,12 +48,10 @@ const DvtDropdown: React.FC<DvtDropdownProps> = ({
   item = {},
   direction = 'right',
   label = '',
-  menu,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
-  const dataLength = menu?.length;
 
   return (
     <StyledDropdownGroup>
@@ -70,8 +63,8 @@ const DvtDropdown: React.FC<DvtDropdownProps> = ({
         )}
       </StyledDropdownOpen>
       <StyledDropdown ref={ref} direction={direction}>
-        {isOpen && !menu && (
-          <DropdownMenu menu={[]}>
+        {isOpen && (
+          <DropdownMenu>
             {data.map((data, index) => (
               <DropdownOption
                 key={index}
@@ -83,32 +76,6 @@ const DvtDropdown: React.FC<DvtDropdownProps> = ({
                 {data.icon && <Icon fileName={data.icon} />}
                 {data.label}
               </DropdownOption>
-            ))}
-          </DropdownMenu>
-        )}
-        {isOpen && menu && (
-          <DropdownMenu menu={menu}>
-            {menu.map((menu, menuIndex) => (
-              <StyledDropdownMenu key={menuIndex}>
-                <StyledDropdownMenuLabel>{menu}</StyledDropdownMenuLabel>
-                {data
-                  .filter(item => item.menu === menu)
-                  .map((data, index) => (
-                    <DropdownOption
-                      key={index}
-                      onClick={() => {
-                        data.onClick(item);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {data.icon && <Icon fileName={data.icon} />}
-                      {data.label}
-                    </DropdownOption>
-                  ))}
-                {dataLength !== undefined && menuIndex !== dataLength - 1 && (
-                  <StyledDropdownMenuLine />
-                )}
-              </StyledDropdownMenu>
             ))}
           </DropdownMenu>
         )}
