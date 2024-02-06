@@ -29,6 +29,7 @@ const StyledDvtNavbar = styled.div<SidebarIcon>`
   top: 0;
   right: 0;
   left: ${({ active }) => (active ? '300px' : '250px')};
+  z-index: 1000;
 `;
 
 const NavbarTop = styled.div`
