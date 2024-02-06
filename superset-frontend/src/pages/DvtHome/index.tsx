@@ -107,16 +107,16 @@ function DvtWelcome() {
   // );
 
   const dashboardPromise = useFetch({
-    url: `dashboard/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+    url: `dashboard/${fetchQueryParamsSearch({ pageSize: 3 })}`,
   });
   const datasetPromise = useFetch({
-    url: `dataset/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+    url: `dataset/${fetchQueryParamsSearch({ pageSize: 3 })}`,
   });
   const chartPromise = useFetch({
-    url: `chart/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+    url: `chart/${fetchQueryParamsSearch({ pageSize: 3 })}`,
   });
 
-  const recentsPromise = useFetch({ url: 'log/recent_activity/1/' });
+  const recentsPromise = useFetch({ url: 'log/recent_activity' });
 
   const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({
@@ -133,7 +133,7 @@ function DvtWelcome() {
 
   const favoritePromise = useFetch({
     url: favoriteUrl.url,
-    defaultParam: '/superset/',
+    // defaultParam: '/superset/',
   });
 
   useEffect(() => {
