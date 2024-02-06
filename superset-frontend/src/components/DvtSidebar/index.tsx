@@ -178,9 +178,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         });
       }
     } else if (pathTitles(pathName) === 'Annotation Layers') {
-      if (!fetchedSelector.annotationlayer.name) {
+      if (!fetchedSelector.annotationlayer.createdBy) {
         setGetDataApiUrl({
-          name: 'annotationlayer-name',
+          name: 'annotationlayer-created-by',
           url: `${apiV1}annotation_layer/related/created_by`,
         });
       }
@@ -263,7 +263,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           }),
         );
       }
-      if (getDataApiUrl.name === 'annotationlayer-name') {
+      if (getDataApiUrl.name === 'annotationlayer-created-by') {
         const editedData = data.map((item: any) => ({
           value: item.value,
           label: item.text,
@@ -271,7 +271,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'annotationlayer',
-            key: 'name',
+            key: 'createdBy',
             value: editedData,
           }),
         );
@@ -486,9 +486,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       dValue = dataSelector.datasets.schema;
     } else if (
       pathTitles(pathName) === 'Annotation Layers' &&
-      sData.name === 'name'
+      sData.name === 'createdBy'
     ) {
-      dValue = dataSelector.annotationlayer.name;
+      dValue = dataSelector.annotationlayer.createdBy;
     } else {
       dValue = sData.values;
     }

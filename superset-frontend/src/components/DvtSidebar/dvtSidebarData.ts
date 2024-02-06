@@ -710,13 +710,14 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         values: [],
-        placeholder: t('Name'),
-        name: 'name',
+        placeholder: t('Created By'),
+        name: 'createdBy',
       },
       {
-        values: [],
-        placeholder: t('Description'),
-        name: 'descr',
+        status: 'input',
+        values: '',
+        placeholder: t('Search'),
+        name: 'search',
       },
     ],
   },

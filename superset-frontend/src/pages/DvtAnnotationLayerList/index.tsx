@@ -56,8 +56,10 @@ const headerData = [
     urlField: 'descr',
   },
   { id: 3, title: t('Last Modified'), field: 'changed_on_delta_humanized' },
+  { id: 4, title: t('Created on'), field: 'created_on' },
+  { id: 5, title: t('Created by'), field: 'created_by' },
   {
-    id: 4,
+    id: 6,
     title: t('Action'),
     showHover: true,
     clicks: [
@@ -65,11 +67,6 @@ const headerData = [
         icon: 'edit_alt',
         click: () => {},
         popperLabel: t('Edit'),
-      },
-      {
-        icon: 'share',
-        click: () => {},
-        popperLabel: t('Export'),
       },
       {
         icon: 'trash',
@@ -124,6 +121,8 @@ function DvtAnnotationLayerList() {
       setData(
         annotationLayerApi.result.map((item: any) => ({
           ...item,
+          created_on: `${new Date(item.created_on).getDay()}.${new Date(item.created_on).getMonth()}.${new Date(item.created_on).getFullYear()}`,
+          created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
         })),
       );
       setCount(annotationLayerApi.count);
@@ -187,16 +186,6 @@ function DvtAnnotationLayerList() {
               icon="dvt-delete"
               iconToRight
               colour="error"
-              size="small"
-              onClick={() => {}}
-            />
-            <DvtButton
-              label={t('Export')}
-              icon="dvt-export"
-              iconToRight
-              colour="primary"
-              bold
-              typeColour="powder"
               size="small"
               onClick={() => {}}
             />
