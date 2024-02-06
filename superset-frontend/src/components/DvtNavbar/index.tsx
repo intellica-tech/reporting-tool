@@ -73,29 +73,29 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   const pathTitles = (pathname: string) => {
     switch (pathname) {
       case '/superset/welcome/':
-        return 'Welcome Page';
+        return t('Welcome Page');
       case '/dashboard/list/':
-        return 'Dashboards';
+        return t('Dashboards');
       case '/alert/list/':
-        return 'Alerts';
+        return t('Alerts');
       case '/report/list/':
-        return 'Reports';
+        return t('Reports');
       case '/databaseview/list/':
-        return 'Connection';
-      case '/superset/sqllab/':
-        return 'SQL';
+        return t('Connection');
+      case '/sqlhub/':
+        return t('SQLHub');
       case '/tablemodelview/list/':
-        return 'Datasets';
+        return t('Datasets');
       case '/superset/sqllab/history/':
-        return 'SQL';
+        return t('SQL');
       case '/superset/profile/admin/':
-        return 'Profile';
+        return t('Profile');
       case '/chart/add':
-        return 'Create New Chart';
+        return t('Create New Chart');
       case '/dataset/add/':
-        return 'New Dataset';
+        return t('New Dataset');
       case '/annotationlayer/list/':
-        return 'Annotation Layers';
+        return t('Annotation Layers');
       default:
         return '';
     }
