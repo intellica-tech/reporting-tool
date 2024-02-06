@@ -1,5 +1,11 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { useHistory } from 'react-router-dom';
+import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useDispatch } from 'react-redux';
+import { dvtSidebarSetDataProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
@@ -9,6 +15,39 @@ import {
 } from './dvt-new-datasets.module';
 
 function DvtNewDatasets() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const datasetAddSelector = useAppSelector(
+    state => state.dvtSidebar.datasetAdd,
+  );
+
+  const [getSchemaDataApiUrl, setGetSchemaDataApiUrl] = useState('');
+
+  const getSchemaData = useFetch({ url: getSchemaDataApiUrl });
+
+  useEffect(() => {
+    if (datasetAddSelector.database?.value) {
+      setGetSchemaDataApiUrl(
+        `database/${datasetAddSelector.database.value}/schemas/?q=(force:!f)`,
+      );
+    }
+  }, [datasetAddSelector.database]);
+
+  useEffect(() => {
+    if (getSchemaData) {
+      dispatch(
+        dvtSidebarSetDataProperty({
+          pageKey: 'datasetAdd',
+          key: 'schema',
+          value: getSchemaData.result.map((s: string) => ({
+            value: s,
+            label: s,
+          })),
+        }),
+      );
+    }
+  }, [getSchemaData]);
+
   return (
     <StyledDvtNewDatasets>
       <StyledDatasetsIconLabel>
@@ -26,7 +65,7 @@ function DvtNewDatasets() {
           size="small"
           colour="primary"
           typeColour="basic"
-          onClick={() => {}}
+          onClick={() => history.push('/tablemodelview/list/')}
         />
         <DvtButton
           label={t('Create Dataset and Create Chart')}

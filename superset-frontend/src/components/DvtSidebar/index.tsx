@@ -56,6 +56,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const alertsSelector = useAppSelector(state => state.dvtSidebar.alerts);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
+  const datasetAddSelector = useAppSelector(
+    state => state.dvtSidebar.datasetAdd,
+  );
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
@@ -198,6 +201,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         setGetDataApiUrl({
           name: 'datasets-schema',
           url: 'dataset/distinct/schema',
+        });
+      }
+    } else if (pathTitles(pathName) === 'New Dataset') {
+      if (!fetchedSelector.datasetAdd.database) {
+        setGetDataApiUrl({
+          name: 'datasetAdd-database',
+          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
         });
       }
     } else if (pathTitles(pathName) === 'Chart Add') {
@@ -430,6 +440,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           }),
         );
       }
+      if (getDataApiUrl.name === 'datasetAdd-database') {
+        const editedData = data.map((item: any) => ({
+          value: item.explore_database_id,
+          label: item.database_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasetAdd',
+            key: 'database',
+            value: editedData,
+          }),
+        );
+      }
     }
   }, [getApiData]);
 
@@ -524,6 +547,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         title: 'Reports',
         key: 'reports',
         keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
+      },
+      {
+        title: 'New Dataset',
+        key: 'datasetAdd',
+        keyNames: ['database', 'schema'],
       },
     ];
     const findPathTitle = selectionObjectKeys.find(
@@ -710,6 +738,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'SQL Lab'
                             ? sqllabSelector[data.name]
+                            : pathTitles(pathName) === 'New Dataset'
+                            ? datasetAddSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {

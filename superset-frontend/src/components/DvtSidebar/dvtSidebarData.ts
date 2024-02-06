@@ -443,15 +443,12 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'datasetAdd',
     data: [
       {
-        values: [
-          { label: t('postgresql examples'), value: 'postgresql_examples' },
-          { label: t('postgresql PostgreSQL'), value: 'postgresql_postgresql' },
-        ],
+        values: [],
         placeholder: t('DATABASE'),
         name: 'database',
       },
       {
-        values: [{ label: t('Schema'), value: 'schema' }],
+        values: [],
         placeholder: t('SCHEMA'),
         name: 'schema',
       },
