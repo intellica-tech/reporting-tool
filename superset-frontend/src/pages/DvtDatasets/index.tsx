@@ -27,13 +27,8 @@ import moment from 'moment';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
-import {
-  StyledButtons,
-  StyledDeselect,
-  StyledDeselectButton,
-  StyledDvtDatasets,
-  StyledSelected,
-} from './dvt-datasets.module';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
+import { StyledButtons, StyledDvtDatasets } from './dvt-datasets.module';
 
 const header = [
   {
@@ -150,21 +145,12 @@ function DvtDatasets() {
 
   return (
     <StyledDvtDatasets>
-      <StyledDeselectButton>
-        <StyledSelected>
-          <span>{`${selectedRows.length} Selected`}</span>
-        </StyledSelected>
-        <StyledDeselect>
-          <DvtButton
-            label={t('Deselect All')}
-            bold
-            colour="primary"
-            typeColour="outline"
-            size="medium"
-            onClick={handleDeselectAll}
-          />
-        </StyledDeselect>
-      </StyledDeselectButton>
+      <DvtDeselectDeleteExport
+        count={selectedRows.length}
+        handleDeselectAll={handleDeselectAll}
+        handleDelete={() => {}}
+        handleExport={() => {}}
+      />
       <div>
         <DvtTable
           data={data}
