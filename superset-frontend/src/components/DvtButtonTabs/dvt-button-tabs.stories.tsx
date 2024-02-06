@@ -19,7 +19,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 import { useState } from '@storybook/addons';
-import DvtButtonTabs, { DvtButtonTabsProps } from '.';
+import DvtButtonTabs, { DvtButtonTabsProps, ButtonTabsDataProps } from '.';
 
 export default {
   title: 'Dvt-Components/DvtButtonTabs',
@@ -27,7 +27,10 @@ export default {
 } as Meta;
 
 export const Default = (args: DvtButtonTabsProps) => {
-  const [active, setActive] = useState<string>('Query History');
+  const [active, setActive] = useState<ButtonTabsDataProps>({
+    label: 'Query History',
+    value: 'query_history',
+  });
   return (
     <div>
       <DvtButtonTabs {...args} active={active} setActive={setActive} />
@@ -36,13 +39,17 @@ export const Default = (args: DvtButtonTabsProps) => {
 };
 
 Default.args = {
-  data: [{ label: 'Saved Queries' }, { label: 'Query History' }],
-  active: 'Query History',
-  setActive: (tabs: string) => console.log(`Selected tabs: ${tabs}`),
+  data: [
+    { label: 'Saved Queries', value: 'saved_queries' },
+    { label: 'Query History', value: 'query_history' },
+  ],
 } as DvtButtonTabsProps;
 
 export const WithIcons = (args: DvtButtonTabsProps) => {
-  const [active, setActive] = useState<string>('Mine');
+  const [active, setActive] = useState<ButtonTabsDataProps>({
+    label: 'Mine',
+    value: 'mine',
+  });
   return (
     <div>
       <DvtButtonTabs {...args} active={active} setActive={setActive} />
@@ -52,7 +59,7 @@ export const WithIcons = (args: DvtButtonTabsProps) => {
 
 WithIcons.args = {
   data: [
-    { label: 'All', icon: 'full' },
-    { label: 'Mine', icon: 'minus' },
+    { label: 'All', icon: 'full', value: 'all' },
+    { label: 'Mine', icon: 'minus', value: 'mine' },
   ],
 };

@@ -13,7 +13,7 @@ import useFetch from 'src/hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import DvtLogo from '../DvtLogo';
-import DvtDarkMode from '../DvtDarkMode';
+// import DvtDarkMode from '../DvtDarkMode';
 import DvtTitlePlus from '../DvtTitlePlus';
 import DvtNavigation from '../DvtNavigation';
 import DvtPopper from '../DvtPopper';
@@ -28,7 +28,7 @@ import {
   StyledDvtSidebarBody,
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
-  StyledDvtSidebarFooter,
+  // StyledDvtSidebarFooter,
   StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
@@ -61,12 +61,15 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   );
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
+  const annotationLayerSelector = useAppSelector(
+    state => state.dvtSidebar.annotationlayer,
+  );
   const sqllabSelector = useAppSelector(state => state.dvtSidebar.sqllab);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -96,6 +99,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Chart Add';
       case '/dataset/add/':
         return 'New Dataset';
+      case '/annotationlayer/list/':
+        return 'Annotation Layers';
       default:
         return '';
     }
@@ -159,65 +164,95 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const getApiData = useFetch({ url: getDataApiUrl.url });
 
   useEffect(() => {
-    const apiV1 = '/api/v1/';
     if (pathTitles(pathName) === 'Dashboards') {
       if (!fetchedSelector.dashboard.owner) {
         setGetDataApiUrl({
           name: 'dashboard-owner',
-          url: `${apiV1}dashboard/related/owners`,
+          url: 'dashboard/related/owners',
         });
       } else if (!fetchedSelector.dashboard.createdBy) {
         setGetDataApiUrl({
           name: 'dashboard-createdBy',
-          url: `${apiV1}dashboard/related/created_by`,
+          url: 'dashboard/related/created_by',
+        });
+      }
+    } else if (pathTitles(pathName) === 'Annotation Layers') {
+      if (!fetchedSelector.annotationlayer.createdBy) {
+        setGetDataApiUrl({
+          name: 'annotationlayer-created-by',
+          url: 'annotation_layer/related/created_by',
         });
       }
     } else if (pathTitles(pathName) === 'Datasets') {
       if (!fetchedSelector.datasets.owner) {
         setGetDataApiUrl({
           name: 'datasets-owner',
-          url: `${apiV1}dataset/related/owners`,
+          url: 'dataset/related/owners',
         });
       } else if (!fetchedSelector.datasets.database) {
         setGetDataApiUrl({
           name: 'datasets-database',
-          url: `${apiV1}dataset/related/database`,
+          url: 'dataset/related/database',
         });
       } else if (!fetchedSelector.datasets.schema) {
         setGetDataApiUrl({
           name: 'datasets-schema',
-          url: `${apiV1}dataset/distinct/schema`,
+          url: 'dataset/distinct/schema',
         });
       }
     } else if (pathTitles(pathName) === 'Chart Add') {
       if (!fetchedSelector.chartAdd.dataset) {
         setGetDataApiUrl({
           name: 'chartAdd-dataset',
-          url: `${apiV1}dataset/`,
+          url: 'dataset/',
         });
       }
     } else if (pathTitles(pathName) === 'SQL Lab') {
       if (!fetchedSelector.sqllab.database) {
         setGetDataApiUrl({
           name: 'sqllab-database',
-          url: `${apiV1}database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)`,
+          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
         });
       } else if (!fetchedSelector.sqllab.schema) {
         setGetDataApiUrl({
           name: 'sqllab-schema',
-          url: `${apiV1}database/1/schemas/?q=(force:!f)`,
+          url: 'database/1/schemas/?q=(force:!f)',
         });
       } else if (!fetchedSelector.sqllab.see_table_schema) {
         // setGetDataApiUrl({
         //   name: 'sqllab-see_table_schema',
-        //   url: `${apiV1}dataset/distinct/schema`,
+        //   url: 'dataset/distinct/schema',
         // });
+      }
+    } else if (pathTitles(pathName) === 'Reports') {
+      if (!fetchedSelector.reports.owner) {
+        setGetDataApiUrl({
+          name: 'reports-owner',
+          url: 'chart/related/owners',
+        });
+      } else if (!fetchedSelector.reports.createdBy) {
+        setGetDataApiUrl({
+          name: 'reports-createdBy',
+          url: 'chart/related/created_by',
+        });
+      } else if (!fetchedSelector.reports.dataset) {
+        setGetDataApiUrl({
+          name: 'reports-dataset',
+          url: 'dataset/?q=(columns:!(datasource_name,datasource_id),keys:!(none),order_column:table_name,order_direction:asc,page:0,page_size:100)',
+        });
+      } else if (!fetchedSelector.reports.dashboards) {
+        setGetDataApiUrl({
+          name: 'reports-dashboards',
+          url: 'dashboard/?q=(columns:!(dashboard_title,id),keys:!(none),order_column:dashboard_title,order_direction:asc,page:0,page_size:100)',
+        });
       }
     }
   }, [
     fetchedSelector.dashboard,
+    fetchedSelector.annotationlayer,
     fetchedSelector.datasets,
     fetchedSelector.chartAdd,
+    fetchedSelector.reports,
     pathName,
   ]);
 
@@ -245,6 +280,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'dashboard',
+            key: 'createdBy',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'annotationlayer-created-by') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'annotationlayer',
             key: 'createdBy',
             value: editedData,
           }),
@@ -341,6 +389,47 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           }),
         );
       }
+      const getDataApiUrlKeys = getDataApiUrl.name.split('-');
+      const apiDataValueAndText = ['reports-owner', 'reports-createdBy'];
+      if (apiDataValueAndText.includes(getDataApiUrl.name)) {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: getDataApiUrlKeys[0],
+            key: getDataApiUrlKeys[1],
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'reports-dataset') {
+        const editedData = data.map((item: any) => ({
+          value: item.id,
+          label: item.table_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'reports',
+            key: 'dataset',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'reports-dashboards') {
+        const editedData = data.map((item: any) => ({
+          value: item.id,
+          label: item.dashboard_title,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'reports',
+            key: 'dashboards',
+            value: editedData,
+          }),
+        );
+      }
     }
   }, [getApiData]);
 
@@ -430,6 +519,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const selectsData = (sData: any) => {
     let dValue = [];
 
+    const selectionObjectKeys: any[] = [
+      {
+        title: 'Reports',
+        key: 'reports',
+        keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
+      },
+    ];
+    const findPathTitle = selectionObjectKeys.find(
+      item => item.title === pathTitles(pathName),
+    );
+    const onlyKeyNames = findPathTitle?.keyNames;
+
     if (pathTitles(pathName) === 'Chart Add' && sData.name === 'dataset') {
       dValue = dataSelector.chartAdd.dataset;
     } else if (pathTitles(pathName) === 'Chart Add' && sData.name === 'tags') {
@@ -458,6 +559,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       dValue = dataSelector.datasets.database;
     } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'schema') {
       dValue = dataSelector.datasets.schema;
+    } else if (
+      pathTitles(pathName) === 'Annotation Layers' &&
+      sData.name === 'createdBy'
+    ) {
+      dValue = dataSelector.annotationlayer.createdBy;
+    } else if (findPathTitle && onlyKeyNames.includes(sData.name)) {
+      dValue = dataSelector[findPathTitle.key][sData.name];
     } else {
       dValue = sData.values;
     }
@@ -469,6 +577,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     'Datasets',
     'New Dataset',
     'Dashboards',
+    'Annotation Layers',
     'Alerts',
     'Reports',
     'Connection',
@@ -480,7 +589,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   return (
     <StyledDvtSidebar pathName={pathName}>
       <StyledDvtSidebarHeader>
-        <DvtLogo title="AppName" />
+        <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>
       {pathTitles(pathName) === 'Welcome Page' && (
         <StyledDvtSidebarBody pathName={pathName}>
@@ -597,6 +706,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? chartAddSelector[data.name]
                             : pathTitles(pathName) === 'Dashboards'
                             ? dashboardSelector[data.name]
+                            : pathTitles(pathName) === 'Annotation Layers'
+                            ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'SQL Lab'
                             ? sqllabSelector[data.name]
                             : undefined
@@ -633,6 +744,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? chartAddSelector[data.name]
                             : pathTitles(pathName) === 'Dashboards'
                             ? dashboardSelector[data.name]
+                            : pathTitles(pathName) === 'Annotation Layers'
+                            ? annotationLayerSelector[data.name]
                             : undefined
                         }
                         onChange={value => {
@@ -695,7 +808,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           ))}
         </StyledDvtSidebarBody>
       )}
-      {pathTitles(pathName) === 'Welcome Page' && (
+      {/* {pathTitles(pathName) === 'Welcome Page' && (
         <StyledDvtSidebarFooter>
           <DvtDarkMode
             title={t('Dark Mode')}
@@ -703,7 +816,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
             setDarkMode={setDarkMode}
           />
         </StyledDvtSidebarFooter>
-      )}
+      )} */}
     </StyledDvtSidebar>
   );
 };

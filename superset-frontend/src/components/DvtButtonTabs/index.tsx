@@ -20,15 +20,16 @@ import React from 'react';
 import DvtButton from '../DvtButton';
 import { StyledDvtButtonTabs } from './dvt-button-tabs.module';
 
-interface TabData {
+export interface ButtonTabsDataProps {
   label: string;
+  value: string;
   icon?: string;
 }
 
 export interface DvtButtonTabsProps {
-  data: TabData[];
-  active: string;
-  setActive: (tabs: string) => void;
+  data: ButtonTabsDataProps[];
+  active: ButtonTabsDataProps;
+  setActive: (tabs: ButtonTabsDataProps) => void;
 }
 
 const DvtButtonTabs: React.FC<DvtButtonTabsProps> = ({
@@ -37,14 +38,14 @@ const DvtButtonTabs: React.FC<DvtButtonTabsProps> = ({
   setActive,
 }) => (
   <StyledDvtButtonTabs>
-    {data.map((tabs: TabData, index: number) => (
+    {data.map((tabs: ButtonTabsDataProps, index: number) => (
       <DvtButton
         key={index}
-        colour={active === tabs.label ? 'primary' : 'grayscale'}
-        typeColour={active === tabs.label ? 'powder' : 'outline'}
+        colour={active.label === tabs.label ? 'primary' : 'grayscale'}
+        typeColour={active.label === tabs.label ? 'powder' : 'outline'}
         label={tabs.label}
         icon={tabs.icon}
-        onClick={() => setActive(tabs.label)}
+        onClick={() => setActive({ label: tabs.label, value: tabs.value })}
       />
     ))}
   </StyledDvtButtonTabs>

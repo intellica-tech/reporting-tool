@@ -23,17 +23,14 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
 import {
+  dvtNavbarAlertSetTabs,
   dvtNavbarSqlSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { t } from '@superset-ui/core';
-import {
-  DvtNavbarTabsData,
-  UserData,
-  TabsDataProps,
-  WithNavbarBottom,
-} from './dvt-navbar-tabs-data';
-import DvtButtonTabs from '../DvtButtonTabs';
+import { DvtNavbarTabsData, WithNavbarBottom } from './dvt-navbar-tabs-data';
+import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
+import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
 import DvtDotTitle from '../DvtDotTitle';
 
@@ -67,36 +64,38 @@ interface LanguagesProps {
 const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   const dispatch = useDispatch();
   // const sort = useAppSelector(state => state.dvtApp.sort);
+  const alertSelector = useAppSelector(state => state.dvtNavbar.alert);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
-  const [active, setActive] = useState<string>('All');
-  const [activeData, setActiveData] = useState<TabsDataProps[]>([]);
+  const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
       case '/superset/welcome/':
-        return 'Welcome Page';
+        return t('Welcome Page');
       case '/dashboard/list/':
-        return 'Dashboards';
+        return t('Dashboards');
       case '/alert/list/':
-        return 'Alerts';
+        return t('Alerts');
       case '/report/list/':
-        return 'Reports';
+        return t('Reports');
       case '/databaseview/list/':
-        return 'Connection';
-      case '/superset/sqllab/':
-        return 'SQL';
+        return t('Connection');
+      case '/sqlhub/':
+        return t('SQLHub');
       case '/tablemodelview/list/':
-        return 'Datasets';
+        return t('Datasets');
       case '/superset/sqllab/history/':
-        return 'SQL';
+        return t('SQL');
       case '/superset/profile/admin/':
-        return 'Profile';
+        return t('Profile');
       case '/chart/add':
-        return 'Create New Chart';
+        return t('Create New Chart');
       case '/dataset/add/':
-        return 'New Dataset';
+        return t('New Dataset');
+      case '/annotationlayer/list/':
+        return t('Annotation Layers');
       default:
         return '';
     }
@@ -108,7 +107,6 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
     );
 
     if (tabsDataFindPathname?.pathname) {
-      setActive(tabsDataFindPathname.data[0].label);
       setActiveData(tabsDataFindPathname.data);
     }
   }, [pathName]);
@@ -159,7 +157,10 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
           </NavbarProfileIcon>
         )}
         <NavbarProfileMenu>
-          <DvtProfileMenu img={UserData.image} />
+          <DvtProfileMenu
+            img={ImageProfileAdmin}
+            version={data?.navbar_right?.version_string}
+          />
         </NavbarProfileMenu>
         {languages.length > 0 && (
           <DvtDropdown
@@ -184,8 +185,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
           {pathName === '/alert/list/' && (
             <>
               <DvtButtonTabs
-                active={active}
-                setActive={setActive}
+                active={alertSelector.tabs}
+                setActive={v => dispatch(dvtNavbarAlertSetTabs(v))}
                 data={activeData}
               />
               {/* <NavbarBottomRight>

@@ -20,13 +20,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtSidebarState {
   reports: {
-    owner: string;
-    createdBy: string;
-    chartType: string;
-    dataset: string;
-    dashboards: string;
-    favorite: string;
-    certified: string;
+    owner: any;
+    createdBy: any;
+    chartType: any;
+    dataset: any;
+    dashboards: any;
+    favorite: any;
+    certified: any;
+    search: string;
   };
   alerts: {
     createdBy: string;
@@ -60,6 +61,10 @@ interface DvtSidebarState {
     favorite: any;
     certified: any;
   };
+  annotationlayer: {
+    createdBy: string;
+    search: string;
+  };
   sqllab: {
     database: any;
     schema: any;
@@ -67,9 +72,19 @@ interface DvtSidebarState {
   };
   data: {
     fetched: {
+      reports: {
+        owner: boolean;
+        createdBy: boolean;
+        dataset: boolean;
+        dashboards: boolean;
+      };
       dashboard: {
         owner: boolean;
         createdBy: boolean;
+      };
+      annotationlayer: {
+        createdBy: boolean;
+        search: boolean;
       };
       datasets: {
         owner: boolean;
@@ -85,9 +100,19 @@ interface DvtSidebarState {
         see_table_schema: boolean;
       };
     };
+    reports: {
+      owner: any[];
+      createdBy: any[];
+      dataset: any[];
+      dashboards: any[];
+    };
     dashboard: {
       owner: any[];
       createdBy: any[];
+    };
+    annotationlayer: {
+      createdBy: any[];
+      search: any[];
     };
     datasets: {
       owner: any[];
@@ -107,13 +132,14 @@ interface DvtSidebarState {
 
 const initialState: DvtSidebarState = {
   reports: {
-    owner: '',
-    createdBy: '',
-    chartType: '',
-    dataset: '',
-    dashboards: '',
-    favorite: '',
-    certified: '',
+    owner: {},
+    createdBy: {},
+    chartType: {},
+    dataset: {},
+    dashboards: {},
+    favorite: {},
+    certified: {},
+    search: '',
   },
   alerts: {
     createdBy: '',
@@ -147,6 +173,10 @@ const initialState: DvtSidebarState = {
     favorite: {},
     certified: {},
   },
+  annotationlayer: {
+    createdBy: '',
+    search: '',
+  },
   sqllab: {
     database: {},
     schema: {},
@@ -154,9 +184,19 @@ const initialState: DvtSidebarState = {
   },
   data: {
     fetched: {
+      reports: {
+        owner: false,
+        createdBy: false,
+        dataset: false,
+        dashboards: false,
+      },
       dashboard: {
         owner: false,
         createdBy: false,
+      },
+      annotationlayer: {
+        createdBy: false,
+        search: false,
       },
       datasets: {
         owner: false,
@@ -172,9 +212,19 @@ const initialState: DvtSidebarState = {
         see_table_schema: false,
       },
     },
+    reports: {
+      owner: [],
+      createdBy: [],
+      dataset: [],
+      dashboards: [],
+    },
     dashboard: {
       owner: [],
       createdBy: [],
+    },
+    annotationlayer: {
+      createdBy: [],
+      search: [],
     },
     datasets: {
       owner: [],

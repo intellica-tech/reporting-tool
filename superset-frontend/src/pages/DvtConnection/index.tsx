@@ -57,7 +57,7 @@ function DvtConnection() {
   );
 
   const searchApiUrls = fetchQueryParamsSearch({
-    filterData: [
+    filters: [
       {
         col: 'expose_in_sqllab',
         opr: 'eq',
@@ -77,7 +77,7 @@ function DvtConnection() {
     page,
   });
 
-  const connectionPromiseUrl = `/api/v1/database/${searchApiUrls}`;
+  const connectionPromiseUrl = `database/${searchApiUrls}`;
 
   const [connectionApiUrl, setConnectionApiUrl] = useState('');
 

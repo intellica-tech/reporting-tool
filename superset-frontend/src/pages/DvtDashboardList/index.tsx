@@ -47,7 +47,9 @@ import {
 function DvtDashboardList() {
   const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
+  const activeTab = useAppSelector(
+    state => state.dvtNavbar.viewlist.dashboard.value,
+  );
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -93,7 +95,7 @@ function DvtDashboardList() {
     return `?q=(${filters}${sort},page:${currentPage - 1},page_size:10)`;
   };
 
-  const dashboardPromiseUrl = `/api/v1/dashboard/${searchApiUrl()}`;
+  const dashboardPromiseUrl = `dashboard/${searchApiUrl()}`;
   const [reportApiUrl, setReportApiUrl] = useState(dashboardPromiseUrl);
   const dashboardApi = useFetch({
     url: reportApiUrl,

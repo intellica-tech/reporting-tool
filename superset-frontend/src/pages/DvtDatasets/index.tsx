@@ -83,7 +83,7 @@ function DvtDatasets() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   const searchApiUrls = fetchQueryParamsSearch({
-    filterData: [
+    filters: [
       {
         col: 'owners',
         opr: 'rel_m_m',
@@ -118,14 +118,14 @@ function DvtDatasets() {
     page,
   });
 
-  const connectionApi = useFetch({
-    url: `/api/v1/dataset/${searchApiUrls}`,
+  const datasetApi = useFetch({
+    url: `dataset/${searchApiUrls}`,
   });
 
   useEffect(() => {
-    if (connectionApi) {
+    if (datasetApi) {
       setData(
-        connectionApi.result.map((item: any) => ({
+        datasetApi.result.map((item: any) => ({
           ...item,
           database: `${item.database.database_name}`,
           changed_on_utc: moment(item.changed_on_utc).fromNow(),
@@ -139,10 +139,10 @@ function DvtDatasets() {
             : '',
         })),
       );
-      setCount(connectionApi.count);
+      setCount(datasetApi.count);
       setSelectedRows([]);
     }
-  }, [connectionApi]);
+  }, [datasetApi]);
 
   const handleDeselectAll = () => {
     setSelectedRows([]);

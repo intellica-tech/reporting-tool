@@ -31,17 +31,18 @@ import { OptionProps } from '../DvtDropdown';
 
 export interface CardDataProps {
   id: number;
-  title: string | undefined;
-  label: string;
-  description: string;
+  title: string | undefined | null;
+  label: string | undefined | null;
+  description: string | undefined | null;
   isFavorite: boolean | null;
   link: string;
+  paramUrl?: string;
 }
 
 export interface DvtTitleCardListProps {
   title: string;
   data: CardDataProps[];
-  setFavorites?: (id: number, isFavorite: boolean) => void;
+  setFavorites?: (id: number, paramUrl: string, isFavorite?: boolean) => void;
   dropdown?: OptionProps[];
 }
 
@@ -73,12 +74,13 @@ const DvtTitleCardList: React.FC<DvtTitleCardListProps> = ({
         <DvtCard
           key={item.id}
           title={item.title ? item.title : ''}
-          label={item.label}
-          description={item.description}
+          label={item.label ? item.label : ''}
+          description={item.description ? item.description : ''}
           isFavorite={item.isFavorite}
           setFavorite={() =>
             setFavorites?.(
               item.id,
+              item.paramUrl ? item.paramUrl : '',
               item.isFavorite === null ? false : item.isFavorite,
             )
           }

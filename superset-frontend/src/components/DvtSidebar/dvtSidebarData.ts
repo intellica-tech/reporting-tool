@@ -44,6 +44,11 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/alert/list/',
             fileName: 'dvt-alert',
           },
+          {
+            title: 'Sqllab',
+            url: '/sqlhub/',
+            fileName: 'dvt-box',
+          },
         ],
       },
       {
@@ -491,12 +496,12 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'reports',
     data: [
       {
-        values: [{ label: t('Superset Admin'), value: 'Superset Admin' }],
+        values: [],
         placeholder: t('Owner'),
         name: 'owner',
       },
       {
-        values: [{ label: t('Superset Admin'), value: 'Superset Admin' }],
+        values: [],
         placeholder: t('Created by'),
         name: 'createdBy',
       },
@@ -521,56 +526,48 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'chartType',
       },
       {
-        values: [
-          { label: t('arac'), value: 'dwh.arac' },
-          { label: t('alarm_event'), value: 'cap.alarm_event' },
-          {
-            label: t('FCC 2018 Survey'),
-            value: 'public.FCC 2018 Survey',
-          },
-          { label: t('video_game_sales'), value: 'public.video_game_sales' },
-          { label: t('hrrr2'), value: 'public.hrrr2' },
-          {
-            label: t('users_channels-uzooNNtSRO'),
-            value: 'public.users_channels-uzooNNtSRO',
-          },
-        ],
+        values: [],
         placeholder: t('Dataset'),
         name: 'dataset',
       },
       {
-        values: [
-          { label: t('Unicode Test'), value: 'Unicode Test' },
-          {
-            label: t('COVID Vaccine Dashboard'),
-            value: 'COVID Vaccine Dashboard',
-          },
-          { label: t('untitled dashboard'), value: 'untitled dashboard' },
-          {
-            label: t('FCC New Coder Survey 2018'),
-            value: 'FCC New Coder Survey 2018',
-          },
-          { label: t('Video Game Sales'), value: 'Video Game Sales' },
-        ],
+        values: [],
         placeholder: t('Dashboards'),
         name: 'dashboards',
       },
       {
-        values: [
-          { label: t('Yes'), value: 'true' },
-          { label: t('No'), value: 'false' },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Favorite'),
         name: 'favorite',
       },
       {
-        values: [
-          { label: t('Yes'), value: 'true' },
-          { label: t('No'), value: null },
-        ],
+        values: dataYesOrNo,
         placeholder: t('Certified'),
         name: 'certified',
       },
+      {
+        placeholder: t('Search'),
+        name: 'search',
+        status: 'input',
+      },
+      // {
+      //   values: [
+      //     {
+      //       label: t('Alphabetical'),
+      //       value: 'slice_name',
+      //     },
+      //     {
+      //       label: t('Recently modified'),
+      //       value: 'changed_on_delta_humanized',
+      //     },
+      //     {
+      //       label: t('Least recently modified'),
+      //       value: 'changed_on_delta_humanized',
+      //     },
+      //   ],
+      //   placeholder: t('Sort'),
+      //   name: 'sort',
+      // },
     ],
   },
   {
@@ -696,6 +693,23 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('See Table Schema'),
         name: 'see_table_schema',
+      },
+    ],
+  },
+  {
+    pathname: '/annotationlayer/list/',
+    key: 'annotationlayer',
+    data: [
+      {
+        values: [],
+        placeholder: t('Created By'),
+        name: 'createdBy',
+      },
+      {
+        status: 'input',
+        values: '',
+        placeholder: t('Search'),
+        name: 'search',
       },
     ],
   },

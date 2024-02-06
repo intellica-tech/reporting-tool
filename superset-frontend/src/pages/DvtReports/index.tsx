@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,15 +23,17 @@ import { useDispatch } from 'react-redux';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import handleResourceExport from 'src/utils/export';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { useHistory } from 'react-router-dom';
 import { dvtSidebarReportsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
-import useFetch from 'src/hooks/useFetch';
 import {
   StyledReports,
   StyledReportsButton,
@@ -42,18 +45,66 @@ import {
 
 function ReportList() {
   const dispatch = useDispatch();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.reports);
+  const history = useHistory();
+  const activeTab = useAppSelector(
+    state => state.dvtNavbar.viewlist.reports.value,
+  );
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [editedData, setEditedData] = useState<any[]>([]);
   const [count, setCount] = useState(0);
-
   const [data, setData] = useState<any[]>([]);
+  const [dataOnReady, setDataOnReady] = useState<boolean>(false);
 
   const [favoriteApiUrl, setFavoriteApiUrl] = useState('');
-  const reportPromiseUrl = `/api/v1/chart/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${page},page_size:10)`;
-  const [reportApiUrl, setReportApiUrl] = useState(reportPromiseUrl);
+
+  const reportFilters = [
+    {
+      col: 'owners',
+      opr: 'rel_m_m',
+      value: reportsSelector.owner?.value,
+    },
+    {
+      col: 'created_by',
+      opr: 'rel_o_m',
+      value: reportsSelector.createdBy?.value,
+    },
+    {
+      col: 'viz_type',
+      opr: 'eq',
+      value: reportsSelector.chartType?.value,
+    },
+    {
+      col: 'datasource_id',
+      opr: 'eq',
+      value: reportsSelector.dataset?.value,
+    },
+    {
+      col: 'dashboards',
+      opr: 'rel_m_m',
+      value: reportsSelector.dashboards?.value,
+    },
+    {
+      col: 'id',
+      opr: 'chart_is_favorite',
+      value: reportsSelector.favorite?.value,
+    },
+    {
+      col: 'id',
+      opr: 'chart_is_certified',
+      value: reportsSelector.certified?.value,
+    },
+    {
+      col: 'slice_name',
+      opr: 'chart_all_text',
+      value: reportsSelector.search,
+    },
+  ];
+  const reportPromiseUrl = `chart/${fetchQueryParamsSearch({
+    filters: reportFilters,
+    page,
+  })}`;
+  const [reportApiUrl, setReportApiUrl] = useState('');
 
   const reportData = useFetch({
     url: reportApiUrl,
@@ -65,10 +116,11 @@ function ReportList() {
   );
 
   useEffect(() => {
-    setReportApiUrl('');
-    dispatch(dvtHomeDeleteSuccessStatus(''));
-    setTimeout(() => setReportApiUrl(reportPromiseUrl), 200);
-  }, [deleteSuccessStatus]);
+    setReportApiUrl(reportPromiseUrl);
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+  }, [deleteSuccessStatus, reportsSelector]);
 
   useEffect(() => {
     if (reportData) {
@@ -79,21 +131,21 @@ function ReportList() {
         changed_by: `${item.changed_by?.first_name} ${item.changed_by?.last_name}`,
         owner: `${item.owners[0]?.first_name} ${item.owners[0]?.last_name}`,
         dashboards: item.dashboards[0]?.dashboard_title,
-        certified: item.certified_by,
       }));
-      setEditedData(editedDatas);
+      setData(editedDatas);
       setCount(reportData.count);
+      setDataOnReady(true);
+      setReportApiUrl('');
     }
   }, [reportData]);
 
   useEffect(() => {
-    if (editedData.length > 0) {
-      const idGetData = editedData.map((item: { id: number }) => item.id);
-      setFavoriteApiUrl(
-        `/api/v1/chart/favorite_status/?q=!(${idGetData.join()})`,
-      );
+    if (dataOnReady && data.length > 0) {
+      const idGetData = data.map((item: { id: number }) => item.id);
+      setFavoriteApiUrl(`chart/favorite_status/?q=!(${idGetData.join()})`);
+      setDataOnReady(false);
     }
-  }, [editedData]);
+  }, [dataOnReady]);
 
   useEffect(() => {
     if (favoriteData?.result.length > 0) {
@@ -102,7 +154,7 @@ function ReportList() {
 
       for (let i = 0; i < fvrArray.length; i += 1) {
         const favoriteItem = fvrArray[i];
-        const editedItem = editedData.find(
+        const editedItem = data.find(
           (item: any) => item.id === favoriteItem.id,
         );
         addedFavoriteData.push({
@@ -132,19 +184,44 @@ function ReportList() {
     );
   };
 
-  const handleSetFavorites = (id: number, isFavorite: boolean) => {
-    const updateData = (dataList: any[]) => {
-      const newData = dataList.map(item =>
-        item.id === id ? { ...item, isFavorite: !isFavorite } : item,
-      );
-      return newData;
-    };
-    fetch(
-      `/superset/favstar/slice/${id}/${isFavorite ? 'unselect' : 'select'}/`,
-    ).then(res => {
-      if (res.status === 200) {
-        setData(updatedData => updateData(updatedData));
-      }
+  const [favoriteUrl, setFavoriteUrl] = useState<{
+    url: string;
+    title: string;
+    id: number;
+    isFavorite: boolean;
+  }>({ url: '', title: '', id: 0, isFavorite: false });
+
+  const favoritePromise = useFetch({
+    url: favoriteUrl.url,
+    method: favoriteUrl.isFavorite ? 'DELETE' : 'POST',
+  });
+
+  useEffect(() => {
+    if (favoritePromise?.result === 'OK') {
+      setData(state => {
+        const itemRemovedData = state.filter(
+          item => item.id !== favoriteUrl.id,
+        );
+        const findItem = state.find(item => item.id === favoriteUrl.id);
+
+        return [
+          ...itemRemovedData,
+          { ...findItem, isFavorite: !findItem.isFavorite },
+        ].sort((a, b) => a.id - b.id);
+      });
+    }
+  }, [favoritePromise]);
+
+  const handleSetFavorites = (
+    id: number,
+    title: string,
+    isFavorite: boolean,
+  ) => {
+    setFavoriteUrl({
+      url: `${title}/${id}/favorites/`,
+      title,
+      id,
+      isFavorite,
     });
   };
 
@@ -200,17 +277,23 @@ function ReportList() {
     header: [
       {
         id: 1,
-        title: t('Name'),
+        title: t('Chart'),
         field: 'slice_name',
         checkbox: true,
+        urlField: 'url',
       },
       { id: 2, title: t('Visualization Type'), field: 'viz_type' },
-      { id: 3, title: t('Dataset'), field: 'datasource_name_text' },
+      {
+        id: 3,
+        title: t('Dataset'),
+        field: 'datasource_name_text',
+        urlField: 'datasource_url',
+      },
       { id: 4, title: t('Modified date'), field: 'date' },
       { id: 5, title: t('Modified by'), field: 'changed_by' },
       { id: 6, title: t('Created by'), field: 'created_by' },
       {
-        id: 9,
+        id: 7,
         title: t('Action'),
         clicks: [
           {
@@ -297,9 +380,10 @@ function ReportList() {
             description: item.changed_on_delta_humanized,
             isFavorite: item.isFavorite,
             link: item.url,
+            paramUrl: 'chart',
           }))}
           title={t('Data')}
-          setFavorites={(id, isFavorite) => handleSetFavorites(id, isFavorite)}
+          setFavorites={handleSetFavorites}
           dropdown={[
             {
               label: t('Edit'),
@@ -328,7 +412,7 @@ function ReportList() {
       <StyledReportsButton>
         <DvtButton
           label={t('Create a New Graph/Chart')}
-          onClick={() => {}}
+          onClick={() => history.push('/chart/add')}
           colour="grayscale"
         />
         <DvtPagination

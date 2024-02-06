@@ -8,11 +8,14 @@ export default {
 } as Meta;
 
 export const Default = (args: DvtProfileMenuProps) => (
-  <DvtProfileMenu {...args} />
+  <div style={{ display: 'flex', justifyContent: 'end' }}>
+    <DvtProfileMenu {...args} />
+  </div>
 );
 
 Default.args = {
   img: 'https://demos.pixinvent.com/vuexy-html-admin-template/assets/img/avatars/1.png',
+  version: '0.0.1',
 };
 
 Default.argsTypes = {

@@ -36,8 +36,8 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
   console.log(itemMessage);
 
   const deleteUrl = meta.item.length
-    ? `/api/v1/${types}/?q=!(${item})`
-    : `/api/v1/${types}/${item}`;
+    ? `${types}/?q=!(${item})`
+    : `${types}/${item}`;
 
   useEffect(() => {
     if (deleteApi?.message === itemMessage) {
