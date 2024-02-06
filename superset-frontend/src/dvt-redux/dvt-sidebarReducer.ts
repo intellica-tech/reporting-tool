@@ -60,6 +60,10 @@ interface DvtSidebarState {
     favorite: any;
     certified: any;
   };
+  annotationlayer: {
+    createdBy: string;
+    search: string;
+  };
   sqllab: {
     database: any;
     schema: any;
@@ -70,6 +74,10 @@ interface DvtSidebarState {
       dashboard: {
         owner: boolean;
         createdBy: boolean;
+      };
+      annotationlayer: {
+        createdBy: boolean;
+        search: boolean;
       };
       datasets: {
         owner: boolean;
@@ -88,6 +96,10 @@ interface DvtSidebarState {
     dashboard: {
       owner: any[];
       createdBy: any[];
+    };
+    annotationlayer: {
+      createdBy: any[];
+      search: any[];
     };
     datasets: {
       owner: any[];
@@ -147,6 +159,10 @@ const initialState: DvtSidebarState = {
     favorite: {},
     certified: {},
   },
+  annotationlayer: {
+    createdBy: '',
+    search: '',
+  },
   sqllab: {
     database: {},
     schema: {},
@@ -157,6 +173,10 @@ const initialState: DvtSidebarState = {
       dashboard: {
         owner: false,
         createdBy: false,
+      },
+      annotationlayer: {
+        createdBy: false,
+        search: false,
       },
       datasets: {
         owner: false,
@@ -175,6 +195,10 @@ const initialState: DvtSidebarState = {
     dashboard: {
       owner: [],
       createdBy: [],
+    },
+    annotationlayer: {
+      createdBy: [],
+      search: [],
     },
     datasets: {
       owner: [],

@@ -44,6 +44,11 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/alert/list/',
             fileName: 'dvt-alert',
           },
+          {
+            title: 'Annotation Layer',
+            url: '/annotationlayer/list/',
+            fileName: 'dvt-box',
+          },
         ],
       },
       {
@@ -696,6 +701,23 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('See Table Schema'),
         name: 'see_table_schema',
+      },
+    ],
+  },
+  {
+    pathname: '/annotationlayer/list/',
+    key: 'annotationlayer',
+    data: [
+      {
+        values: [],
+        placeholder: t('Created By'),
+        name: 'createdBy',
+      },
+      {
+        status: 'input',
+        values: '',
+        placeholder: t('Search'),
+        name: 'search',
       },
     ],
   },

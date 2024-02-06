@@ -97,6 +97,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
         return 'Create New Chart';
       case '/dataset/add/':
         return 'New Dataset';
+      case '/annotationlayer/list/':
+        return 'Annotation Layers';
       default:
         return '';
     }

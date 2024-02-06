@@ -29,7 +29,7 @@ const ChartCreation = lazy(
 const AnnotationLayerList = lazy(
   () =>
     import(
-      /* webpackChunkName: "AnnotationLayerList" */ 'src/pages/AnnotationLayerList'
+      /* webpackChunkName: "AnnotationLayerList" */ 'src/pages/DvtAnnotationLayerList'
     ),
 );
 
