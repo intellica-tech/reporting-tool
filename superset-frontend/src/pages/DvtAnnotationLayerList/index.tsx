@@ -83,9 +83,6 @@ const headerData = [
 function DvtAnnotationLayerList() {
   const history = useHistory<{ from: string }>();
   const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
-  const annotationLayerSelector = useAppSelector(
-    state => state.dvtSidebar.annotationlayer,
-  );
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
