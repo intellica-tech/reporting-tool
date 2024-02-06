@@ -4,9 +4,14 @@ import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
+import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
+import DvtJsonEditor from 'src/components/DvtJsonEditor';
+import DvtCollapse from 'src/components/DvtCollapse';
 import {
   StyledDashboardEdit,
   StyledDashboardEditBody,
+  StyledDashboardEditGroup,
   StyledDashboardEditHeader,
   StyledDashboardEditInput,
 } from './dashboard-edit.module';
@@ -14,9 +19,6 @@ import {
 const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   const [title, setTitle] = useState<string>(meta.result.dashboard_title);
   const [slugUrl, setSlugUrl] = useState<string>(meta.result.slug);
-  const [owners, setOwners] = useState<string>(
-    `${meta.result.owners[0].first_name} ${meta.result.owners[0].last_name}`,
-  );
   const [changedNyName, setChangedByName] = useState<string>(
     meta.result.changed_by_name,
   );
@@ -24,6 +26,17 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
     meta.result.certified_by,
   );
   const [dashboardApi, setDashboardApi] = useState<string>('');
+  const [selectedValues, setSelectedValues] = useState<any[]>(
+    meta.result.owners.map((item: any) => item.id),
+  );
+  const [selectedColorValues, setSelectedColorValues] = useState<any | null>(
+    () => {
+      const jsonData = JSON.parse(meta.result.json_metadata || '{}');
+      const colorScheme = (jsonData !== '{}' && jsonData.color_scheme) || null;
+      return colorScheme ? { label: colorScheme } : '{}';
+    },
+  );
+  const [jsonValue, setJsonValue] = useState<any | null>('');
 
   const updateDashboardData = useFetch({
     url: dashboardApi,
@@ -32,17 +45,37 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
       certification_details: certifiedBy,
       certified_by: changedNyName,
       dashboard_title: title,
-      owners: [1],
+      owners: selectedValues,
       slug: slugUrl,
-      json_metadata: '{"shared_label_colors": {}, "color_scheme_domain": []}',
+      json_metadata: jsonValue,
     },
   });
+
+  const updateDashboardDataFetchResult = useFetch({
+    url: '/api/v1/dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
+  });
+
+  const ownersOptions = updateDashboardDataFetchResult
+    ? updateDashboardDataFetchResult.result.map((item: any) => ({
+        label: item.text,
+        value: item.value,
+      }))
+    : [];
 
   useEffect(() => {
     if (updateDashboardData?.id) {
       onClose();
     }
   }, [onClose, updateDashboardData]);
+
+  const defaultJsonValue = `{
+    "timed_refresh_immune_slices": [],
+    "expanded_slices": {},
+    "refresh_frequency": 0,
+    "color_scheme": "${selectedColorValues?.label || ''}",
+    "label_colors": {},
+    "cross_filters_enabled": true
+  }`;
 
   return (
     <StyledDashboardEdit>
@@ -56,40 +89,52 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
         />
       </StyledDashboardEditHeader>
       <StyledDashboardEditBody>
-        <StyledDashboardEditInput>
-          <DvtInput
-            value={title}
-            label={t('Title')}
-            onChange={setTitle}
-            typeDesign="form"
-          />
-          <DvtInput
-            value={slugUrl}
-            label={t('Url Slug')}
-            onChange={setSlugUrl}
-            typeDesign="form"
-          />
-          <DvtInput
-            value={owners}
-            label={t('Owners')}
-            onChange={setOwners}
-            typeDesign="form"
-          />
-        </StyledDashboardEditInput>
-        <StyledDashboardEditInput>
-          <DvtInput
-            value={changedNyName}
-            label={t('CERTIFIED BY')}
-            onChange={setChangedByName}
-            typeDesign="form"
-          />
-          <DvtInput
-            value={certifiedBy}
-            label={t('CERTIFICATION DETAILS')}
-            onChange={setCertifiedBy}
-            typeDesign="form"
-          />
-        </StyledDashboardEditInput>
+        <StyledDashboardEditGroup>
+          <StyledDashboardEditInput>
+            <DvtInput
+              value={title}
+              label={t('Title')}
+              onChange={setTitle}
+              typeDesign="form"
+            />
+            <DvtInput
+              value={changedNyName}
+              label={t('CERTIFIED BY')}
+              onChange={setChangedByName}
+              typeDesign="form"
+            />
+            <DvtInputSelect
+              label={t('Owners')}
+              data={ownersOptions}
+              selectedValues={selectedValues}
+              setSelectedValues={setSelectedValues}
+              typeDesign="form"
+            />
+          </StyledDashboardEditInput>
+          <StyledDashboardEditInput>
+            <DvtInput
+              value={slugUrl}
+              label={t('Url Slug')}
+              onChange={setSlugUrl}
+              typeDesign="form"
+            />
+            <DvtSelectColorScheme
+              label={t('Color Scheme')}
+              selectedValue={selectedColorValues}
+              setSelectedValue={setSelectedColorValues}
+              typeDesign="form"
+            />
+            <DvtInput
+              value={certifiedBy}
+              label={t('Certification Details')}
+              onChange={setCertifiedBy}
+              typeDesign="form"
+            />
+          </StyledDashboardEditInput>
+        </StyledDashboardEditGroup>
+        <DvtCollapse label="ADVANCED">
+          <DvtJsonEditor value={defaultJsonValue} onChange={setJsonValue} />
+        </DvtCollapse>
       </StyledDashboardEditBody>
     </StyledDashboardEdit>
   );

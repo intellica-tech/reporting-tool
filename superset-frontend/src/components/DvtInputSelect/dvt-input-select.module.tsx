@@ -52,14 +52,14 @@ const StyledInputSelectInput = styled.div<StyledInputDesignProps>`
   align-items: center;
   justify-content: center;
   border: ${({ theme, typeDesign }) =>
-    typeDesign === 'navbar'
-      ? `1px solid ${theme.colors.dvt.primary.light2}`
-      : 'none'};
-  padding: ${({ typeDesign }) => (typeDesign === 'form' ? '12px 8px' : '12px')};
+    typeDesign === 'chartsForm'
+      ? 'none'
+      : `1px solid ${theme.colors.dvt.primary.light2}`};
+  padding: ${({ typeDesign }) => (typeDesign === 'form' ? '2px 8px' : '12px')};
   border-radius: ${({ typeDesign }) =>
     typeDesign === 'form' ? '4px' : '12px'};
   width: 100%;
-  min-height: 48px;
+  min-height: 40px;
   background-color: ${({ isOpen, theme, typeDesign }) =>
     typeDesign === 'form' || typeDesign === 'navbar'
       ? theme.colors.grayscale.light5
