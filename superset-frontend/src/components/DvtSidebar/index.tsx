@@ -730,7 +730,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           ))}
         </StyledDvtSidebarBody>
       )}
-      {pathTitles(pathName) === 'Welcome Page' && (
+      {/* {pathTitles(pathName) === 'Welcome Page' && (
         <StyledDvtSidebarFooter>
           <DvtDarkMode
             title={t('Dark Mode')}
@@ -738,7 +738,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
             setDarkMode={setDarkMode}
           />
         </StyledDvtSidebarFooter>
-      )}
+      )} */}
     </StyledDvtSidebar>
   );
 };
