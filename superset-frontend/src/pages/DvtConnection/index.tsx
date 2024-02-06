@@ -127,7 +127,7 @@ function DvtConnection() {
 
   const handleBulkExport = () => {
     const selectedIds = selectedRows.map(item => item.id);
-    handleResourceExport('chart', selectedIds, () => {});
+    handleResourceExport('database', selectedIds, () => {});
   };
 
   const handleDelete = async (type: string, item: any) => {
@@ -143,7 +143,7 @@ function DvtConnection() {
     dispatch(
       openModal({
         component: 'delete-modal',
-        meta: { item, type, title: 'chart' },
+        meta: { item, type, title: 'database' },
       }),
     );
     setSelectedRows([]);
@@ -214,7 +214,7 @@ function DvtConnection() {
             colour="error"
             size="small"
             onClick={() => {
-              handleBulkDelete('chart', selectedRows);
+              handleBulkDelete('database', selectedRows);
             }}
           />
           <DvtButton
