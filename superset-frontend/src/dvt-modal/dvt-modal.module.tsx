@@ -32,7 +32,7 @@ const StyledModal = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 10000;
 `;
 
 const StyledModalCard = styled.div<StyledModalProps>`
