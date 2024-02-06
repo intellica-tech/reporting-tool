@@ -121,7 +121,9 @@ function DvtAnnotationLayerList() {
       setData(
         annotationLayerApi.result.map((item: any) => ({
           ...item,
-          created_on: `${new Date(item.created_on).getDay()}.${new Date(item.created_on).getMonth()}.${new Date(item.created_on).getFullYear()}`,
+          created_on: `${new Date(item.created_on).getDay()}.${new Date(
+            item.created_on,
+          ).getMonth()}.${new Date(item.created_on).getFullYear()}`,
           created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
         })),
       );
