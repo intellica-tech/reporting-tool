@@ -159,7 +159,10 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
           </NavbarProfileIcon>
         )}
         <NavbarProfileMenu>
-          <DvtProfileMenu img={UserData.image} />
+          <DvtProfileMenu
+            img={UserData.image}
+            version={data?.navbar_right?.version_string}
+          />
         </NavbarProfileMenu>
         {languages.length > 0 && (
           <DvtDropdown

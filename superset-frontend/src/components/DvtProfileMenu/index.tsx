@@ -1,83 +1,78 @@
 import React, { useRef, useState } from 'react';
 import { supersetTheme } from '@superset-ui/core';
+import { useHistory } from 'react-router-dom';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import {
   DropdownMenu,
   DropdownOption,
   StyledDropdown,
-  StyledDropdownMenuLine,
   StyledProfile,
   StyledProfileButton,
   StyledProfileDropdownMenu,
   StyledProfileDropdownMenuLabel,
   StyledProfileMenu,
+  StyledIconCaretRotate,
 } from './dvt-profile-menu.module';
-
-export interface OptionProps {
-  label: string;
-  onClick: (item: any) => void;
-  menu?: string;
-}
+import DvtProfileMenuData from './dvtProfileMenuData';
 
 export interface DvtProfileMenuProps {
   img: string;
-  data: OptionProps[];
-  item?: any;
-  menu: string[];
+  version: string;
 }
 
 const DvtProfileMenu: React.FC<DvtProfileMenuProps> = ({
   img,
-  data,
-  item = {},
-  menu,
+  version = '0.0.0',
 }) => {
+  const history = useHistory();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
-  const dataLength = menu?.length;
-  
+
   return (
     <StyledProfileMenu>
-      <StyledProfile src={img} width={48} height={48} alt="Profile" />
-      <StyledProfileButton>
-        <Icon
-          fileName="caret_down"
-          iconSize="xl"
-          iconColor={supersetTheme.colors.dvt.text.help}
-          onClick={() => setIsOpen(!isOpen)}
-        />
+      <StyledProfileButton onClick={() => setIsOpen(!isOpen)}>
+        <StyledProfile src={img} width={48} height={48} alt="Profile" />
+        <StyledIconCaretRotate open={isOpen}>
+          <Icon
+            fileName="caret_down"
+            iconSize="xl"
+            iconColor={supersetTheme.colors.dvt.text.help}
+          />
+        </StyledIconCaretRotate>
       </StyledProfileButton>
-      <StyledDropdown ref={ref}>
-        {isOpen && (
+      {isOpen && (
+        <StyledDropdown ref={ref}>
           <DropdownMenu>
-            {menu.map((menu, menuIndex) => (
-              <StyledProfileDropdownMenu key={menuIndex}>
+            {DvtProfileMenuData.map((m, mIndex) => (
+              <StyledProfileDropdownMenu key={mIndex}>
                 <StyledProfileDropdownMenuLabel>
-                  {menu}
+                  {m.title}
                 </StyledProfileDropdownMenuLabel>
-                {data
-                  .filter(item => item.menu === menu)
-                  .map((data, index) => (
-                    <DropdownOption
-                      key={index}
-                      onClick={() => {
-                        data.onClick(item);
+                {m.menu.map((item, index) => (
+                  <DropdownOption
+                    key={index}
+                    onClick={() => {
+                      if (item.link) {
+                        if (item.link === '/logout/') {
+                          window.location.href = item.link;
+                        } else {
+                          history.push(item.link);
+                        }
                         setIsOpen(false);
-                      }}
-                    >
-                      {data.label}
-                    </DropdownOption>
-                  ))}
-                {dataLength !== undefined && menuIndex !== dataLength - 1 && (
-                  <StyledDropdownMenuLine />
-                )}
+                      }
+                    }}
+                    withoutLink={!!item.link}
+                  >
+                    {item.link ? item.label : `${item.label}${version}`}
+                  </DropdownOption>
+                ))}
               </StyledProfileDropdownMenu>
             ))}
           </DropdownMenu>
-        )}
-      </StyledDropdown>
+        </StyledDropdown>
+      )}
     </StyledProfileMenu>
   );
 };
