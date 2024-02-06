@@ -265,7 +265,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       }
       if (getDataApiUrl.name === 'annotationlayer-name') {
         const editedData = data.map((item: any) => ({
-          value: item.text,
+          value: item.value,
           label: item.text,
         }));
         dispatch(
@@ -484,6 +484,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       dValue = dataSelector.datasets.database;
     } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'schema') {
       dValue = dataSelector.datasets.schema;
+    } else if (
+      pathTitles(pathName) === 'Annotation Layers' &&
+      sData.name === 'name'
+    ) {
+      dValue = dataSelector.annotationlayer.name;
     } else {
       dValue = sData.values;
     }
