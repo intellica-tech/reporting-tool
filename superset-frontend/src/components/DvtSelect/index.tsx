@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
@@ -29,6 +29,7 @@ import {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectPopover,
+  StyledSelectClearWrapper,
 } from './dvt-select.module';
 
 export interface DvtSelectProps {
@@ -64,11 +65,21 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [clearTrigger, setClearTrigger] = useState(false);
   useOnClickOutside(ref, () => setIsOpen(false));
 
   const handleSelectClick = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleClearClick = () => {
+    setClearTrigger(!clearTrigger);
+  };
+
+  useEffect(() => {
+    setSelectedValue('');
+    setIsOpen(false);
+  }, [clearTrigger]);
 
   const handleOptionClick = (value: any) => {
     setSelectedValue(value);
@@ -123,6 +134,13 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
         selectedValue={selectedValue[objectName]}
       >
         {selectedValue[objectName] || placeholder}
+        {selectedValue !== '' ? (
+          <StyledSelectClearWrapper onClick={handleClearClick}>
+            X
+          </StyledSelectClearWrapper>
+        ) : (
+          <StyledSelectClearWrapper disabled />
+        )}
         <StyledSelectIcon isOpen={isOpen}>
           <Icon
             fileName="caret_right"

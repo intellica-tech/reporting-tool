@@ -63,6 +63,7 @@ const StyledSelectSelect = styled.div<StyledSelectProps>`
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: ${({ typeDesign }) => (typeDesign === 'form' ? '12px 8px' : '12px')};
   width: 100%;
   height: 48px;
@@ -152,6 +153,26 @@ const StyledSelectIcon = styled.div<StyledSelectIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
+const StyledSelectClearWrapper = styled.div<{ disabled?: boolean }>`
+  z-index: 1000;
+  cursor: pointer;
+  border-radius: 100%;
+  position: absolute;
+  right: 40px;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border: ${props =>
+    props.disabled ? 'none' : `2px solid ${props.theme.colors.dvt.text.label}`};
+
+  text-align: 'center';
+  color: ${props => `${props.theme.colors.dvt.text.label}`};
+  font-weight: 1000;
+`;
+
 const StyledSelectPopover = styled.div`
   display: flex;
   gap: 8px;
@@ -164,5 +185,6 @@ export {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectOptions,
+  StyledSelectClearWrapper,
   StyledSelectPopover,
 };

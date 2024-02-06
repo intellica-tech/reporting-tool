@@ -32,7 +32,7 @@ const sizes = {
 const StyledInputInput = styled.div<StyledInputProps>`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border: ${({ theme, typeDesign }) =>
     typeDesign === 'chartsForm'
       ? 'none'
@@ -50,6 +50,22 @@ const StyledInputInput = styled.div<StyledInputProps>`
     typeDesign === 'chartsForm'
       ? theme.colors.dvt.grayscale.light2
       : theme.colors.grayscale.light5};
+
+  &:hover {
+    border: ${({ theme, typeDesign }) =>
+      typeDesign === 'chartsForm'
+        ? 'none'
+        : `1px solid ${theme.colors.dvt.primary.light1}`};
+  }
+
+  &:focus-within {
+    border: ${({ theme, typeDesign }) =>
+      typeDesign === 'chartsForm'
+        ? 'none'
+        : `1px solid ${theme.colors.dvt.primary.base}`};
+  }
+
+  transition: 0.15s;
 `;
 
 const StyledInputField = styled.input<StyledInputProps>`
@@ -85,6 +101,25 @@ const StyledInput = styled.div`
   gap: 12px;
 `;
 
+const StyledInputClearWrapper = styled.div<{ disabled?: boolean }>`
+  cursor: pointer;
+  border-radius: 100%;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border: ${props =>
+    props.disabled ? 'none' : `2px solid ${props.theme.colors.dvt.text.label}`};
+
+  text-align: 'center';
+  color: ${props => `${props.theme.colors.dvt.text.label}`};
+  font-weight: 1000;
+`;
+
+const StyledInputClearLine = styled.div<{ disabled?: boolean }>``;
+
 const StyledInputLabel = styled.div`
   color: ${({ theme }) => theme.colors.dvt.text.label};
   font-size: 12px;
@@ -102,5 +137,7 @@ export {
   StyledInputIcon,
   StyledInputLabel,
   StyledInputInput,
+  StyledInputClearWrapper,
+  StyledInputClearLine,
   StyledInputPopover,
 };
