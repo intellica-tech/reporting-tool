@@ -21,13 +21,14 @@ import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { dvtSidebarReportsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
-import useFetch from 'src/hooks/useFetch';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
 
 const modifiedData = {
@@ -69,7 +70,9 @@ const modifiedData = {
 
 function ReportList() {
   const dispatch = useDispatch();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.reports);
+  const activeTab = useAppSelector(
+    state => state.dvtNavbar.viewlist.reports.value,
+  );
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -81,7 +84,7 @@ function ReportList() {
   const [favoriteApiUrl, setFavoriteApiUrl] = useState('');
 
   const reportData = useFetch({
-    url: `/api/v1/chart/?q=(order_column:changed_on_delta_humanized,order_direction:desc,page:${page},page_size:10)`,
+    url: `chart/${fetchQueryParamsSearch({ page })}`,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
 
@@ -104,9 +107,7 @@ function ReportList() {
   useEffect(() => {
     if (editedData.length > 0) {
       const idGetData = editedData.map((item: { id: number }) => item.id);
-      setFavoriteApiUrl(
-        `/api/v1/chart/favorite_status/?q=!(${idGetData.join()})`,
-      );
+      setFavoriteApiUrl(`chart/favorite_status/?q=!(${idGetData.join()})`);
     }
   }, [editedData]);
 

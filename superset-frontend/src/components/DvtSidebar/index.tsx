@@ -159,58 +159,57 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const getApiData = useFetch({ url: getDataApiUrl.url });
 
   useEffect(() => {
-    const apiV1 = '/api/v1/';
     if (pathTitles(pathName) === 'Dashboards') {
       if (!fetchedSelector.dashboard.owner) {
         setGetDataApiUrl({
           name: 'dashboard-owner',
-          url: `${apiV1}dashboard/related/owners`,
+          url: 'dashboard/related/owners',
         });
       } else if (!fetchedSelector.dashboard.createdBy) {
         setGetDataApiUrl({
           name: 'dashboard-createdBy',
-          url: `${apiV1}dashboard/related/created_by`,
+          url: 'dashboard/related/created_by',
         });
       }
     } else if (pathTitles(pathName) === 'Datasets') {
       if (!fetchedSelector.datasets.owner) {
         setGetDataApiUrl({
           name: 'datasets-owner',
-          url: `${apiV1}dataset/related/owners`,
+          url: 'dataset/related/owners',
         });
       } else if (!fetchedSelector.datasets.database) {
         setGetDataApiUrl({
           name: 'datasets-database',
-          url: `${apiV1}dataset/related/database`,
+          url: 'dataset/related/database',
         });
       } else if (!fetchedSelector.datasets.schema) {
         setGetDataApiUrl({
           name: 'datasets-schema',
-          url: `${apiV1}dataset/distinct/schema`,
+          url: 'dataset/distinct/schema',
         });
       }
     } else if (pathTitles(pathName) === 'Chart Add') {
       if (!fetchedSelector.chartAdd.dataset) {
         setGetDataApiUrl({
           name: 'chartAdd-dataset',
-          url: `${apiV1}dataset/`,
+          url: 'dataset/',
         });
       }
     } else if (pathTitles(pathName) === 'SQL Lab') {
       if (!fetchedSelector.sqllab.database) {
         setGetDataApiUrl({
           name: 'sqllab-database',
-          url: `${apiV1}database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)`,
+          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
         });
       } else if (!fetchedSelector.sqllab.schema) {
         setGetDataApiUrl({
           name: 'sqllab-schema',
-          url: `${apiV1}database/1/schemas/?q=(force:!f)`,
+          url: 'database/1/schemas/?q=(force:!f)',
         });
       } else if (!fetchedSelector.sqllab.see_table_schema) {
         // setGetDataApiUrl({
         //   name: 'sqllab-see_table_schema',
-        //   url: `${apiV1}dataset/distinct/schema`,
+        //   url: 'dataset/distinct/schema',
         // });
       }
     }

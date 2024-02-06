@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,14 +18,16 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from 'src/hooks/useAppSelector';
-import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
+// import { useAppSelector } from 'src/hooks/useAppSelector';
+import withToasts from 'src/components/MessageToasts/withToasts';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+// import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
 import DvtTitleCardList, {
@@ -36,58 +39,42 @@ import {
   CalendarContainer,
 } from './dvt-home.module';
 
-type ApiData = {
-  result: any[];
-};
-
-type FormatFunction = (data: ApiData) => CardDataProps[];
-
-const fetchAndFormatData = async (
-  url: string,
-  formatFunction: FormatFunction,
-  setDataFunction: React.Dispatch<React.SetStateAction<CardDataProps[]>>,
-) => {
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    setDataFunction(formatFunction(data).sort((a, b) => a.id - b.id));
-  } catch (error) {
-    console.error('API request failed:', error);
-  }
-};
-
-const formatDashboardData: FormatFunction = data =>
-  data.result.slice(0, 5).map(item => ({
+const formatDashboardData = (data: any[]) =>
+  data.map(item => ({
     id: item.id,
     title: item.dashboard_title,
     label: item.changed_by_name,
     description: `Modified ${item.changed_on_delta_humanized}`,
-    isFavorite: item.published,
+    isFavorite: false,
     link: item.url,
+    favoriteUrl: 'Dashboard',
+    paramUrl: 'dashboard',
   }));
 
-const formatChartData: FormatFunction = data =>
-  data.result.slice(0, 5).map(item => ({
+const formatDatasetData = (data: any[]) =>
+  data.map(item => ({
+    id: item.id,
+    title: item.table_name,
+    label: item.schema,
+    description: `Modified ${item.changed_on_delta_humanized}`,
+    isFavorite: false,
+    link: item.explore_url,
+  }));
+
+const formatChartData = (data: any[]) =>
+  data.map(item => ({
     id: item.id,
     title: item.slice_name,
-    label: item.changed_by_name,
-    description: `Modified ${item.created_on_delta_humanized}`,
-    isFavorite: item.is_managed_externally,
+    label: item.datasource_type,
+    description: `Modified ${item.changed_on_delta_humanized}`,
+    isFavorite: false,
     link: item.url,
+    favoriteUrl: 'slice',
+    paramUrl: 'chart',
   }));
 
-const formatSavedQueriesData: FormatFunction = data =>
-  data.result.slice(0, 5).map(item => ({
-    id: item.id,
-    title: item.label,
-    label: item.description,
-    description: `Ran ${item.last_run_delta_humanized}`,
-    isFavorite: null,
-    link: '',
-  }));
-
-const formatRecentData: FormatFunction = data =>
-  data.result.slice(0, 5).map(item => ({
+const formatRecentData = (data: any[]) =>
+  data.map(item => ({
     id: Math.floor(item.time),
     title: item.item_title,
     label: '',
@@ -98,175 +85,220 @@ const formatRecentData: FormatFunction = data =>
 
 function DvtWelcome() {
   const dispatch = useDispatch();
-  const { addDangerToast } = useToasts();
   const [openCalendar, setOpenCalendar] = useState<boolean>(true);
   const [calendar, setCalendar] = useState<Moment | null>(null);
+  const [whatsNewData, setWhatsNewData] = useState<CardDataProps[]>([]);
   const [recentData, setRecentData] = useState<CardDataProps[]>([]);
-  const [dashboardData, setDashboardData] = useState<any[]>([]);
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [savedQueriesData, setSavedQueriesData] = useState<CardDataProps[]>([]);
-  const deleteSuccessStatus = useAppSelector(
-    state => state.dvtHome.deleteSuccessStatus,
+  const [dashboardFavoriteData, setDashboardFavoriteData] = useState<
+    CardDataProps[]
+  >([]);
+  const [chartFavoriteData, setChartFavoriteData] = useState<CardDataProps[]>(
+    [],
   );
+
+  const [favoriteUrl, setFavoriteUrl] = useState<{
+    url: string;
+    title: string;
+    id: number;
+  }>({ url: '', title: '', id: 0 });
+
+  // const deleteSuccessStatus = useAppSelector(
+  //   state => state.dvtHome.deleteSuccessStatus,
+  // );
+
+  const dashboardPromise = useFetch({
+    url: `dashboard/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+  });
+  const datasetPromise = useFetch({
+    url: `dataset/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+  });
+  const chartPromise = useFetch({
+    url: `chart/${fetchQueryParamsSearch({ pageSize: 5 })}`,
+  });
+
+  const recentsPromise = useFetch({ url: 'log/recent_activity/1/' });
+
+  const dashboardFavouritePromise = useFetch({
+    url: `dashboard/${fetchQueryParamsSearch({
+      filters: [{ col: 'id', opr: 'dashboard_is_favorite', value: '!t' }],
+      pageSize: 5,
+    })}`,
+  });
+  const chartFavouritePromise = useFetch({
+    url: `chart/${fetchQueryParamsSearch({
+      filters: [{ col: 'id', opr: 'chart_is_favorite', value: '!t' }],
+      pageSize: 5,
+    })}`,
+  });
+
+  const favoritePromise = useFetch({
+    url: favoriteUrl.url,
+    defaultParam: '/superset/',
+  });
+
+  useEffect(() => {
+    if (dashboardPromise) {
+      setWhatsNewData(state => [
+        ...state,
+        ...formatDashboardData(dashboardPromise.result),
+      ]);
+    }
+  }, [dashboardPromise]);
+
+  useEffect(() => {
+    if (datasetPromise) {
+      setWhatsNewData(state => [
+        ...state,
+        ...formatDatasetData(datasetPromise.result),
+      ]);
+    }
+  }, [datasetPromise]);
+
+  useEffect(() => {
+    if (chartPromise) {
+      setWhatsNewData(state => [
+        ...state,
+        ...formatChartData(chartPromise.result),
+      ]);
+    }
+  }, [chartPromise]);
+
+  useEffect(() => {
+    if (recentsPromise) {
+      setRecentData(formatRecentData(recentsPromise.result));
+    }
+  }, [recentsPromise]);
+
+  useEffect(() => {
+    if (dashboardFavouritePromise) {
+      setDashboardFavoriteData(
+        formatDashboardData(dashboardFavouritePromise.result),
+      );
+    }
+  }, [dashboardFavouritePromise]);
+
+  useEffect(() => {
+    if (chartFavouritePromise) {
+      setChartFavoriteData(formatChartData(chartFavouritePromise.result));
+    }
+  }, [chartFavouritePromise]);
 
   const handleSetFavorites = (
     id: number,
     isFavorite: boolean,
     title: string,
   ) => {
-    const updateData = (dataList: CardDataProps[]) => {
-      const findItem = dataList.find(item => item.id === id);
-      const withoutItemData = dataList.filter(item => item.id !== id);
-      return [
-        ...withoutItemData,
-        { ...findItem, isFavorite: !isFavorite },
-      ].sort((a: CardDataProps, b: CardDataProps) => a.id - b.id);
-    };
-
-    fetch(
-      `/superset/favstar/${title}/${id}/${isFavorite ? 'unselect' : 'select'}/`,
-    ).then(res => {
-      if (res.status === 200) {
-        if (title === 'Dashboard') {
-          setDashboardData(updatedData => updateData(updatedData));
-        }
-        if (title === 'slice') {
-          setChartData(updatedData => updateData(updatedData));
-        }
-      }
+    setFavoriteUrl({
+      url: `favstar/${title}/${id}/${isFavorite ? 'unselect' : 'select'}/`,
+      title,
+      id,
     });
   };
 
   useEffect(() => {
-    fetchAndFormatData('/api/v1/chart/', formatChartData, setChartData);
-    fetchAndFormatData(
-      '/api/v1/dashboard/',
-      formatDashboardData,
-      setDashboardData,
-    );
-    fetchAndFormatData(
-      '/api/v1/saved_query/',
-      formatSavedQueriesData,
-      setSavedQueriesData,
-    );
-    fetchAndFormatData(
-      '/api/v1/log/recent_activity/1/',
-      formatRecentData,
-      setRecentData,
-    );
-  }, []);
-
-  useEffect(() => {
-    if (deleteSuccessStatus === 'chart') {
-      fetchAndFormatData('/api/v1/chart/', formatChartData, setChartData);
-      dispatch(dvtHomeDeleteSuccessStatus(''));
-    } else if (deleteSuccessStatus === 'dashboard') {
-      fetchAndFormatData(
-        '/api/v1/dashboard/',
-        formatDashboardData,
-        setDashboardData,
-      );
-      dispatch(dvtHomeDeleteSuccessStatus(''));
+    if (favoritePromise) {
+      if (favoriteUrl.title === 'Dashboard') {
+        setDashboardFavoriteData(state =>
+          state.filter(item => item.id !== favoriteUrl.id),
+        );
+      }
+      if (favoriteUrl.title === 'slice') {
+        setChartFavoriteData(state =>
+          state.filter(item => item.id !== favoriteUrl.id),
+        );
+      }
     }
-  }, [deleteSuccessStatus]);
+  }, [favoritePromise]);
 
-  const handleEditDashboard = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/dashboard/${item.id}`);
-      const editedDashboardData = await response.json();
+  // useEffect(() => {
+  //   if (deleteSuccessStatus === 'chart') {
+  //     setChartFavoriteData(state =>
+  //       state.filter(item => item.id !== favoriteUrl.id),
+  //     );
+  //     dispatch(dvtHomeDeleteSuccessStatus(''));
+  //   } else if (deleteSuccessStatus === 'dashboard') {
+  //     setDashboardFavoriteData(state =>
+  //       state.filter(item => item.id !== favoriteUrl.id),
+  //     );
+  //     dispatch(dvtHomeDeleteSuccessStatus(''));
+  //   }
+  // }, [deleteSuccessStatus]);
 
-      dispatch(
-        openModal({
-          component: 'edit-dashboard',
-          meta: editedDashboardData,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
+  // const handleEditDashboard = async (item: any) => {
+  //   try {
+  //     const response = await fetch(`/api/v1/dashboard/${item.id}`);
+  //     const editedDashboardData = await response.json();
+
+  //     dispatch(
+  //       openModal({
+  //         component: 'edit-dashboard',
+  //         meta: editedDashboardData,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const handleBulkExport = (item: any) => {
+    handleResourceExport(item.paramUrl, [item.id], () => {});
   };
 
-  const handleBulkExport = (type: string, item: any) => {
-    handleResourceExport(type, [item.id], () => {});
-  };
-
-  const copyQueryLink = (id: number) => {
-    addDangerToast(t('Link Copied!'));
-    navigator.clipboard.writeText(
-      `${window.location.origin}/sqllab?savedQueryId=${id}`,
-    );
-  };
-
-  const handleDelete = async (type: string, item: any) => {
+  const handleDelete = (item: any) => {
     dispatch(
       openModal({
         component: 'delete-modal',
-        meta: { item, type, title: 'dashboard' },
+        meta: { item, type: item.paramUrl },
       }),
     );
   };
 
+  // const copyQueryLink = (id: number) => {
+  //   addDangerToast(t('Link Copied!'));
+  //   navigator.clipboard.writeText(
+  //     `${window.location.origin}/sqllab?savedQueryId=${id}`,
+  //   );
+  // };
+
   return (
     <StyledDvtWelcome>
       <DataContainer>
-        <DvtTitleCardList title={t('Recents')} data={recentData} />
         <DvtTitleCardList
-          title={t('Dashboards')}
-          data={dashboardData}
-          setFavorites={(id, isFavorite) =>
-            handleSetFavorites(id, isFavorite, 'Dashboard')
-          }
-          dropdown={[
-            {
-              label: t('Edit'),
-              icon: 'edit_alt',
-              onClick: (item: any) => {
-                handleEditDashboard(item);
-              },
-            },
-            {
-              label: t('Export'),
-              icon: 'share',
-              onClick: (item: any) => {
-                handleBulkExport('dashboard', item);
-              },
-            },
-            {
-              label: 'Delete',
-              icon: 'trash',
-              onClick: (item: any) => {
-                handleDelete('dashboard', item);
-              },
-            },
-          ]}
+          title={t("What's new")}
+          data={whatsNewData.map(item => ({
+            ...item,
+            isFavorite: null,
+          }))}
         />
+        <DvtTitleCardList title={t('Recent')} data={recentData} />
         <DvtTitleCardList
-          title={t('Charts')}
-          data={chartData}
-          setFavorites={(id, isFavorite) =>
-            handleSetFavorites(id, isFavorite, 'slice')
-          }
+          title={t('Favorites')}
+          data={[...dashboardFavoriteData, ...chartFavoriteData].map(item => ({
+            ...item,
+            isFavorite: true,
+          }))}
+          setFavorites={handleSetFavorites}
           dropdown={[
             { label: t('Edit'), icon: 'edit_alt', onClick: () => {} },
             {
               label: t('Export'),
               icon: 'share',
               onClick: (item: any) => {
-                handleBulkExport('chart', item);
+                handleBulkExport(item);
               },
             },
             {
               label: t('Delete'),
               icon: 'trash',
               onClick: (item: any) => {
-                handleDelete('chart', item);
+                handleDelete(item);
               },
             },
           ]}
         />
-        <DvtTitleCardList
-          title={t('Saved Queries')}
-          data={savedQueriesData}
+        {/* <DvtTitleCardList
+          title={t('Most Used')}
+          data={[]}
           dropdown={[
             {
               label: t('Share'),
@@ -277,7 +309,7 @@ function DvtWelcome() {
               },
             },
           ]}
-        />
+        /> */}
       </DataContainer>
       <CalendarContainer>
         {openCalendar ? (

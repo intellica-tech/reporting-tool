@@ -4,6 +4,7 @@ import { useToasts } from 'src/components/MessageToasts/withToasts';
 
 type UseFetchProps = {
   url: string | null;
+  defaultParam?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
   body?: any;
@@ -11,21 +12,23 @@ type UseFetchProps = {
 
 const useFetch = ({
   url,
+  defaultParam = '/api/v1/',
   method = 'GET',
   body,
   headers = {},
 }: UseFetchProps) => {
   const { addDangerToast } = useToasts();
   const [data, setData] = useState<any | null>(null);
+  const csrf_token = document.querySelector<HTMLInputElement>('#csrf_token');
 
   useEffect(() => {
     if (url) {
       const fetchData = async () => {
         try {
-          const response = await fetch(url, {
+          const response = await fetch(`${defaultParam}${url}`, {
             method,
             headers: {
-              'Content-Type': 'application/json',
+              'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
               ...headers,
             },
             body: method !== 'GET' ? JSON.stringify(body) : undefined,

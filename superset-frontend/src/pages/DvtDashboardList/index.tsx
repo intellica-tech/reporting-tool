@@ -85,7 +85,9 @@ const headerData = [
 
 function DvtDashboardList() {
   const history = useHistory<{ from: string }>();
-  const activeTab = useAppSelector(state => state.dvtNavbar.viewlist.dashboard);
+  const activeTab = useAppSelector(
+    state => state.dvtNavbar.viewlist.dashboard.value,
+  );
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -132,7 +134,7 @@ function DvtDashboardList() {
   };
 
   const dashboardApi = useFetch({
-    url: `/api/v1/dashboard/${searchApiUrl()}`,
+    url: `dashboard/${searchApiUrl()}`,
   });
 
   useEffect(() => {

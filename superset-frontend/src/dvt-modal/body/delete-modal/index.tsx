@@ -38,7 +38,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
           <DvtButton
             label={t('DELETE')}
             colour="error"
-            onClick={() => setDeleteUrlApi(`/api/v1/${types}/${item}`)}
+            onClick={() => setDeleteUrlApi(`${types}/${item}`)}
             size="small"
             bold
           />
