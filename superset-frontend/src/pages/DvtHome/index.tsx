@@ -47,7 +47,6 @@ const formatDashboardData = (data: any[]) =>
     description: `Modified ${item.changed_on_delta_humanized}`,
     isFavorite: false,
     link: item.url,
-    favoriteUrl: 'Dashboard',
     paramUrl: 'dashboard',
   }));
 
@@ -69,7 +68,6 @@ const formatChartData = (data: any[]) =>
     description: `Modified ${item.changed_on_delta_humanized}`,
     isFavorite: false,
     link: item.url,
-    favoriteUrl: 'slice',
     paramUrl: 'chart',
   }));
 
@@ -133,7 +131,7 @@ function DvtWelcome() {
 
   const favoritePromise = useFetch({
     url: favoriteUrl.url,
-    // defaultParam: '/superset/',
+    method: 'DELETE',
   });
 
   useEffect(() => {
@@ -183,26 +181,24 @@ function DvtWelcome() {
     }
   }, [chartFavouritePromise]);
 
-  const handleSetFavorites = (
-    id: number,
-    isFavorite: boolean,
-    title: string,
-  ) => {
+  const handleSetFavorites = (id: number, title: string) => {
     setFavoriteUrl({
-      url: `favstar/${title}/${id}/${isFavorite ? 'unselect' : 'select'}/`,
+      url: `${title}/${id}/favorites/`,
       title,
       id,
     });
   };
 
+  // /api/v1/chart/*/favorites/
+
   useEffect(() => {
-    if (favoritePromise) {
-      if (favoriteUrl.title === 'Dashboard') {
+    if (favoritePromise?.result === 'OK') {
+      if (favoriteUrl.title === 'dashboard') {
         setDashboardFavoriteData(state =>
           state.filter(item => item.id !== favoriteUrl.id),
         );
       }
-      if (favoriteUrl.title === 'slice') {
+      if (favoriteUrl.title === 'chart') {
         setChartFavoriteData(state =>
           state.filter(item => item.id !== favoriteUrl.id),
         );

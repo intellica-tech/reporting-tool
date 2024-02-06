@@ -28,11 +28,8 @@ import {
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { t } from '@superset-ui/core';
-import {
-  DvtNavbarTabsData,
-  UserData,
-  WithNavbarBottom,
-} from './dvt-navbar-tabs-data';
+import { DvtNavbarTabsData, WithNavbarBottom } from './dvt-navbar-tabs-data';
+import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
 import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
 import DvtDotTitle from '../DvtDotTitle';
@@ -161,7 +158,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
         )}
         <NavbarProfileMenu>
           <DvtProfileMenu
-            img={UserData.image}
+            img={ImageProfileAdmin}
             version={data?.navbar_right?.version_string}
           />
         </NavbarProfileMenu>
