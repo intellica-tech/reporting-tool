@@ -133,6 +133,26 @@ const StyledConnectionAddGroup = styled.div`
     border-radius: 3px;
   }
 `;
+
+const StyledConnectionAddGroupStep3 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 580px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    border-radius: 3px;
+  }
+`;
+
 const StyledConnectionAddGroups = styled.div`
   display: flex;
   justify-content: space-between;
@@ -171,4 +191,5 @@ export {
   StyledConnectionAddGroups,
   StyledConnectionAddInputGroup,
   StyledConnectionAddCheckboxGroup,
+  StyledConnectionAddGroupStep3,
 };

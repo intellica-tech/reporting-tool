@@ -47,7 +47,7 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   setIsOpen,
 }) => (
   <StyledCollapse>
-    <StyledCollapseGroup>
+    <StyledCollapseGroup onClick={() => setIsOpen(!isOpen)}>
       <StyledCollapseLabel>
         {label}
         {popoverLabel && (
@@ -75,11 +75,7 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
         )}
       </StyledCollapseLabel>
       <StyledCollapseIcon isOpen={isOpen}>
-        <Icon
-          fileName="caret_down"
-          iconSize="xxl"
-          onClick={() => setIsOpen(!isOpen)}
-        />
+        <Icon fileName="caret_down" iconSize="xxl" />
       </StyledCollapseIcon>
     </StyledCollapseGroup>
 
