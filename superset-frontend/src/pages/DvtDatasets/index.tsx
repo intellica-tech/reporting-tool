@@ -157,7 +157,7 @@ function DvtDatasets() {
       flex: 3,
       checkbox: true,
       folderIcon: true,
-      onLink: true,
+      urlField: 'explore_url',
     },
     { id: 2, title: t('Type'), field: 'kind' },
     { id: 3, title: t('Database'), field: 'database' },

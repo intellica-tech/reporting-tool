@@ -20,6 +20,10 @@ import { styled } from '@superset-ui/core';
 import { Link } from 'react-router-dom';
 
 interface SidebarProps {
+  minWidth: number;
+}
+
+interface StyledDvtSidebarBodyProps {
   pathName: string;
 }
 
@@ -36,8 +40,7 @@ const StyledDvtSidebar = styled.div<SidebarProps>`
   display: flex;
   flex-direction: column;
   position: relative;
-  width: ${({ pathName }) =>
-    `${pathName === '/superset/welcome/' ? 250 : 300}`}px;
+  width: ${({ minWidth }) => minWidth}px;
   padding: 32px 16px 39px 16px;
   position: fixed;
   top: 0;
@@ -56,7 +59,7 @@ const StyledDvtSidebarHeader = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.dvt.border.base};
 `;
 
-const StyledDvtSidebarBody = styled.div<SidebarProps>`
+const StyledDvtSidebarBody = styled.div<StyledDvtSidebarBodyProps>`
   padding: ${({ pathName }) =>
     `0 ${pathName === '/superset/welcome/' ? 16 : 8}`}px;
   flex: 1;

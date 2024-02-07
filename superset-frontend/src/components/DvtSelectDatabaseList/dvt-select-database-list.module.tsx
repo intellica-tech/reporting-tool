@@ -38,7 +38,7 @@ const StyledDvtSelectDatabaseListLabel = styled.div`
 const StyledDvtSelectDatabaseListScroll = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   height: 500px;
   padding-right: 9px;
   margin-top: 20px;
@@ -64,11 +64,12 @@ const StyledDvtSelectDatabaseListItem = styled.button<StyledDvtSelectDatabaseLis
   background-color: ${({ theme, active }) =>
     active ? theme.colors.dvt.primary.base : theme.colors.dvt.grayscale.light2};
   border-radius: 8px;
-  min-height: 28px;
+  min-height: 38px;
   font-size: 12px;
   color: ${({ theme, active }) =>
     active ? theme.colors.grayscale.light5 : theme.colors.dvt.text.label};
   text-align: left;
+  word-break: break-all;
 `;
 
 export {
