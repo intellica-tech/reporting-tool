@@ -93,7 +93,7 @@ const ExecutionLogList = lazy(
 );
 
 const Chart = lazy(
-  () => import(/* webpackChunkName: "Chart" */ 'src/pages/Chart'),
+  () => import(/* webpackChunkName: "Chart" */ 'src/pages/DvtChart'),
 );
 
 const QueryHistoryList = lazy(

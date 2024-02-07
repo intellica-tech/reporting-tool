@@ -101,6 +101,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Profile';
       case '/chart/add':
         return 'Chart Add';
+      case '/explore/':
+        return 'Charts';
       case '/dataset/add/':
         return 'New Dataset';
       case '/annotationlayer/list/':
@@ -614,6 +616,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     'SQL Lab',
     'Chart Add',
     'SQL History',
+    'Charts',
   ];
 
   return (

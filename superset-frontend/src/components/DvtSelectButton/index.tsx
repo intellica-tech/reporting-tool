@@ -24,6 +24,7 @@ import { StyledSelectButton } from './dvt-select-button.module';
 
 interface DvtSelectButtonData {
   popoverLabel: string;
+  status: string;
   icon: string;
 }
 
@@ -46,13 +47,14 @@ const DvtSelectButton: React.FC<DvtSelectButtonProps> = ({
         key={index}
         label={buttonData.popoverLabel}
         direction={popoverDirection}
+        size="small"
       >
         <Icon
           fileName={buttonData.icon}
-          onClick={() => setActiveButton(buttonData.popoverLabel)}
+          onClick={() => setActiveButton(buttonData.status)}
           css={(theme: SupersetTheme) => ({
             color:
-              activeButton === buttonData.popoverLabel
+              activeButton === buttonData.status
                 ? theme.colors.dvt.primary.base
                 : theme.colors.grayscale.dark2,
             fontSize: '24px',

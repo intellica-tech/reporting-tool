@@ -676,6 +676,18 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
+    pathname: '/explore/',
+    key: 'chartAdd',
+    data: [
+      {
+        label: t('Chart Source'),
+        placeholder: t('Search Metrics & Columns'),
+        name: 'search',
+        status: 'input',
+      },
+    ],
+  },
+  {
     pathname: '/sqlhub/',
     key: 'sqlhub',
     data: [

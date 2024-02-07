@@ -87,6 +87,19 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/explore/',
+    data: [
+      {
+        label: t('Data'),
+        value: 'data',
+      },
+      {
+        label: t('Customize'),
+        value: 'customize',
+      },
+    ],
+  },
 ];
 
 export const WithNavbarBottom: string[] = [
@@ -97,4 +110,5 @@ export const WithNavbarBottom: string[] = [
   '/chart/add',
   '/dashboard/list/',
   '/report/list/',
+  '/explore/',
 ];

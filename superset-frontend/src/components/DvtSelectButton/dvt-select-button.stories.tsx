@@ -41,22 +41,27 @@ Default.args = {
   data: [
     {
       popoverLabel: 'Button 1',
+      status: 'button_1',
       icon: 'dvt-linear_chart',
     },
     {
       popoverLabel: 'Button 2',
+      status: 'button_2',
       icon: 'dvt-status_up',
     },
     {
       popoverLabel: 'Button 3',
+      status: 'button_3',
       icon: 'dvt-diagram',
     },
     {
       popoverLabel: 'Button 4',
+      status: 'button_4',
       icon: 'dvt-chart',
     },
     {
       popoverLabel: 'Button 5',
+      status: 'button_5',
       icon: 'dvt-4k',
     },
   ],
