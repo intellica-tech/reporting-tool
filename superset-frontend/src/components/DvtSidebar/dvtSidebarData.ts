@@ -45,7 +45,7 @@ const DvtSidebarData: SidebarDataProps[] = [
             fileName: 'dvt-alert',
           },
           {
-            title: 'Sqllab',
+            title: 'Sqlhub',
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
