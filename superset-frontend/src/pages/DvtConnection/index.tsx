@@ -29,6 +29,7 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
+import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -46,6 +47,9 @@ function DvtConnection() {
   );
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
+  );
+  const editSuccessStatus = useAppSelector(
+    state => state.dvtConnection.editSuccessStatus,
   );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
@@ -92,7 +96,19 @@ function DvtConnection() {
       setCount(connectionApi.count);
       setSelectedRows([]);
     }
-  }, [connectionApi]);
+    if (editSuccessStatus) {
+      setData(
+        connectionApi.result.map((item: any) => ({
+          ...item,
+          admin: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
+          date: new Date(item.changed_on).toLocaleString('tr-TR'),
+        })),
+      );
+      setCount(connectionApi.count);
+      setSelectedRows([]);
+      dispatch(dvtConnectionEditSuccessStatus(''));
+    }
+  }, [connectionApi, editSuccessStatus]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
