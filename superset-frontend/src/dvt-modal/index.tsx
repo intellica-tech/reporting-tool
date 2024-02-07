@@ -4,6 +4,7 @@ import useOnClickOutside from '../hooks/useOnClickOutsite';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { closeModal } from '../dvt-redux/dvt-modalReducer';
 import DvtDashboardEdit from './body/dashboard-edit';
+import DvtChartEdit from './body/chart-edit';
 import DvtDeleteModal from './body/delete-modal';
 import {
   StyledModal,
@@ -23,6 +24,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtDashboardEdit meta={meta} onClose={onClose} />;
     case 'delete-modal':
       return <DvtDeleteModal meta={meta} onClose={onClose} />;
+    case 'edit-chart':
+      return <DvtChartEdit meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }

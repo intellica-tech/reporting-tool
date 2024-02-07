@@ -26,14 +26,14 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
     certifiedBy: '',
     certificationDetails: '',
   });
-  const [dashboardApi, setDashboardApi] = useState<string>('');
+  const [chartApi, setChartApi] = useState<string>('');
   const [jsonValue, setJsonValue] = useState<any | null>('');
 
-  const dashboardItemApi = useFetch({ url: `dashboard/${meta.id}` });
+  const chartItemApi = useFetch({ url: `chart/${meta.id}` });
 
   useEffect(() => {
-    if (dashboardItemApi) {
-      const { result } = dashboardItemApi;
+    if (chartItemApi) {
+      const { result } = chartItemApi;
       const jsonData = JSON.parse(result.json_metadata || '{}');
       const colorScheme = (jsonData !== '{}' && jsonData?.color_scheme) || null;
       const findedColorSchema = colorScheme
@@ -43,55 +43,46 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
-        title: result.dashboard_title || '',
-        urlSlug: result.slug || '',
+        title: result.slice_name || '',
+        description: result.description || '',
+        url: result.url || '',
         owners: ownersFixed,
-        colorSchema: findedColorSchema,
+        cacheTimeout: result.cache_timeout || '',
         certifiedBy: result.certified_by || '',
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [dashboardItemApi]);
+  }, [chartItemApi]);
 
-  const updateDashboardData = useFetch({
-    url: dashboardApi,
+  const updateChartData = useFetch({
+    url: chartApi,
     method: 'PUT',
     body: {
+      cache_timeout: values.cacheTimeout,
       certification_details: values.certificationDetails,
       certified_by: values.certifiedBy,
-      dashboard_title: values.title,
+      description: values.description,
+      slice_name: values.title,
       owners: values.owners,
-      slug: values.urlSlug,
-      json_metadata: JSON.stringify(jsonValue),
     },
   });
 
-  const updateDashboardDataFetchResult = useFetch({
+  const updateChartDataFetchResult = useFetch({
     url: 'dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  const ownersOptions = updateDashboardDataFetchResult
-    ? updateDashboardDataFetchResult.result.map((item: any) => ({
+  const ownersOptions = updateChartDataFetchResult
+    ? updateChartDataFetchResult.result.map((item: any) => ({
         label: item.text,
         value: item.value,
       }))
     : [];
 
   useEffect(() => {
-    if (updateDashboardData?.id) {
+    if (updateChartData?.id) {
       onClose();
     }
-  }, [onClose, updateDashboardData]);
-
-  const defaultJsonValue = `{
-    "color_scheme": "${values.colorSchema?.label || ''}",
-    "label_colors": {},
-    "timed_refresh_immune_slices": [],
-    "expanded_slices": {},
-    "refresh_frequency": 0,
-    "cross_filters_enabled": true,
-    "shared_label_colors": {},
-  }`;
+  }, [onClose, updateChartData]);
 
   const handleOnChange = (key: string, value: any) => {
     setValues((state: any) => ({ ...state, [key]: value }));
@@ -104,23 +95,44 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
           colour="primary"
           label={t('SAVE')}
           typeColour="powder"
-          onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
+          onClick={() => setChartApi(`chart/${meta?.id}`)}
           size="small"
         />
       </StyledChartEditHeader>
       <StyledChartEditBody>
         <StyledChartEditGroup>
           <StyledChartEditInput>
+            {meta.result.dashboards.dashboard_title}
             <DvtInput
               value={values.title}
-              label={t('Title')}
+              label={t('Name')}
               onChange={v => handleOnChange('title', v)}
               typeDesign="form"
             />
             <DvtInput
+              value={values.description}
+              label={t('Description')}
+              onChange={v => handleOnChange('description', v)}
+              typeDesign="form"
+            />
+            <DvtInput
               value={values.certifiedBy}
-              label={t('CERTIFIED BY')}
+              label={t('Certified By')}
               onChange={v => handleOnChange('certifiedBy', v)}
+              typeDesign="form"
+            />
+            <DvtInput
+              value={values.certificationDetails}
+              label={t('Certified Details')}
+              onChange={v => handleOnChange('certificationDetails', v)}
+              typeDesign="form"
+            />
+          </StyledChartEditInput>
+          <StyledChartEditInput>
+            <DvtInput
+              value={values.cache_timeout}
+              label={t('Cache Timeout')}
+              onChange={v => handleOnChange('cacheTimeout', v)}
               typeDesign="form"
             />
             <DvtInputSelect
@@ -131,30 +143,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
               typeDesign="form"
             />
           </StyledChartEditInput>
-          <StyledChartEditInput>
-            <DvtInput
-              value={values.urlSlug}
-              label={t('Url Slug')}
-              onChange={v => handleOnChange('urlSlug', v)}
-              typeDesign="form"
-            />
-            <DvtSelectColorScheme
-              label={t('Color Scheme')}
-              selectedValue={values.colorSchema}
-              setSelectedValue={v => handleOnChange('colorSchema', v)}
-              typeDesign="form"
-            />
-            <DvtInput
-              value={values.certificationDetails}
-              label={t('Certification Details')}
-              onChange={v => handleOnChange('certificationDetails', v)}
-              typeDesign="form"
-            />
-          </StyledChartEditInput>
         </StyledChartEditGroup>
-        <DvtCollapse label="ADVANCED">
-          <DvtJsonEditor value={defaultJsonValue} onChange={setJsonValue} />
-        </DvtCollapse>
       </StyledChartEditBody>
     </StyledChartEdit>
   );

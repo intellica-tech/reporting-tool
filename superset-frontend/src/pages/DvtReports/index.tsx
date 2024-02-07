@@ -232,12 +232,12 @@ function ReportList() {
   const handleEditCharts = async (item: any) => {
     try {
       const response = await fetch(`/api/v1/chart/${item.id}`);
-      const editedChartsData = await response.json();
+      const editedChartData = await response.json();
 
       dispatch(
         openModal({
-          component: 'edit-charts',
-          meta: editedChartsData,
+          component: 'edit-chart',
+          meta: editedChartData,
         }),
       );
     } catch (error) {
@@ -298,7 +298,7 @@ function ReportList() {
         clicks: [
           {
             icon: 'edit_alt',
-            click: () => {},
+            click: (item: any) => handleEditCharts(item),
             popperLabel: t('Edit'),
           },
           {
