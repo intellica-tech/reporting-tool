@@ -129,12 +129,12 @@ function DvtNewDatasets() {
           key: 'dataset',
           value: {
             id: postDataset.id,
-            value: postDataset.table_name,
-            label: postDataset.table_name,
+            value: postDataset.result.table_name,
+            label: postDataset.result.table_name,
           },
         }),
       );
-      history.push('/chart/add/');
+      history.push('/chart/add');
     }
   }, [postDataset]);
 
@@ -158,15 +158,18 @@ function DvtNewDatasets() {
           label={t('Cancel')}
           size="small"
           colour="primary"
-          typeColour="basic"
           onClick={() => history.push('/tablemodelview/list/')}
         />
         <DvtButton
           label={t('Create Dataset and Create Chart')}
           size="small"
           colour="grayscale"
-          typeColour="basic"
-          onClick={handleCreateDataset}
+          typeColour={
+            datasetAddSelector.selectDatabase?.value ? 'basic' : 'powder'
+          }
+          onClick={() =>
+            datasetAddSelector.selectDatabase?.value && handleCreateDataset()
+          }
         />
       </StyledNewDatasetsButtons>
     </StyledDvtNewDatasets>
