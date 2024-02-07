@@ -165,7 +165,7 @@ const StyledSelectIcon = styled.div<StyledSelectIconProps>`
 `;
 
 const StyledSelectClear = styled.div<{ disabled?: boolean }>`
-  z-index: 1000;
+  z-index: 900;
   cursor: pointer;
   border-radius: 100%;
   position: absolute;
