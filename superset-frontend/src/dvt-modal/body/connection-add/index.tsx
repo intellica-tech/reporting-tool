@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import useFetch from 'src/hooks/useFetch';
 import {
   DvtConnectionData,
@@ -39,7 +39,6 @@ import {
   StyledConnectionAddCheckboxGroup,
   StyledConnectionAddGroupStep3,
 } from './connection-add.module';
-import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 
 const DvtConnectionAdd = ({ onClose }: ModalProps) => {
   const dispatch = useDispatch();
@@ -187,9 +186,6 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
         port: input.port,
         encryption: input.switch,
       },
-    },
-    headers: {
-      'Content-Type': 'application/json',
     },
   });
 
@@ -354,9 +350,12 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                             <DvtButton
                               bold
                               label={t('CONNECT')}
-                              onClick={() =>
-                                setApiUrl('database/validate_parameters/')
-                              }
+                              onClick={() => {
+                                setApiUrl('database/validate_parameters/');
+                                setTimeout(() => {
+                                  setApiUrl('');
+                                }, 100);
+                              }}
                             />
                           </StyledConnectionAddButton>
                         </StyledConnectionAddButtonGroup>
@@ -817,7 +816,12 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                 <DvtButton
                   bold
                   label={t('CONNECT')}
-                  onClick={() => setApiUrl('database/validate_parameters/')}
+                  onClick={() => {
+                    setApiUrl('database/validate_parameters/');
+                    setTimeout(() => {
+                      setApiUrl('');
+                    }, 100);
+                  }}
                   size="small"
                 />
               </StyledConnectionAddButtons>
