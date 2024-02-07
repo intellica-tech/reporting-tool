@@ -16,9 +16,10 @@ import {
 const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   const [values, setValues] = useState<any>({
     title: '',
-    urlSlug: '',
+    description: '',
+    url: '',
     owners: [],
-    colorSchema: {},
+    cacheTimeout: '',
     certifiedBy: '',
     certificationDetails: '',
   });
@@ -119,7 +120,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
           </StyledChartEditInput>
           <StyledChartEditInput>
             <DvtInput
-              value={values.cache_timeout}
+              value={values.cacheTimeout}
               label={t('Cache Timeout')}
               onChange={v => handleOnChange('cacheTimeout', v)}
               typeDesign="form"
