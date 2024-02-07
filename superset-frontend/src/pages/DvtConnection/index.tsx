@@ -27,6 +27,7 @@ import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReduce
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -35,11 +36,6 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
   StyledConnection,
   StyledConnectionButton,
-  StyledConnectionButtons,
-  StyledConnectionListButtons,
-  StyledConnectionsButtons,
-  StyledSelectedItem,
-  StyledSelectedItemCount,
 } from './dvt-connection.module';
 
 function DvtConnection() {
@@ -146,7 +142,6 @@ function DvtConnection() {
         meta: { item, type, title: 'database' },
       }),
     );
-    setSelectedRows([]);
   };
 
   const modifiedData = {
@@ -190,45 +185,12 @@ function DvtConnection() {
 
   return data.length > 0 ? (
     <StyledConnection>
-      <StyledConnectionListButtons>
-        <StyledConnectionButtons>
-          <StyledSelectedItem>
-            <StyledSelectedItemCount>
-              <span>{`${selectedRows.length} Selected`}</span>
-            </StyledSelectedItemCount>
-            <DvtButton
-              label={t('Deselect All')}
-              bold
-              colour="primary"
-              typeColour="outline"
-              size="medium"
-              onClick={handleDeselectAll}
-            />
-          </StyledSelectedItem>
-        </StyledConnectionButtons>
-        <StyledConnectionsButtons>
-          <DvtButton
-            label={t('Delete')}
-            icon="dvt-delete"
-            iconToRight
-            colour="error"
-            size="small"
-            onClick={() => {
-              handleBulkDelete('database', selectedRows);
-            }}
-          />
-          <DvtButton
-            label={t('Export')}
-            icon="dvt-export"
-            iconToRight
-            colour="primary"
-            bold
-            typeColour="powder"
-            size="small"
-            onClick={handleBulkExport}
-          />
-        </StyledConnectionsButtons>
-      </StyledConnectionListButtons>
+      <DvtDeselectDeleteExport
+        count={selectedRows.length}
+        handleDeselectAll={handleDeselectAll}
+        handleDelete={() => handleBulkDelete('database', selectedRows)}
+        handleExport={handleBulkExport}
+      />
       <DvtTable
         data={data}
         header={modifiedData.header}

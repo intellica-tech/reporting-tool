@@ -48,7 +48,7 @@ const DvtDeselectDeleteExport = ({
         colour="primary"
         typeColour="outline"
         size="medium"
-        onClick={handleDeselectAll}
+        onClick={() => !!count && handleDeselectAll()}
       />
     </StyledDvtDeselectDeleteExportSelects>
     <ButtonContainer>
@@ -58,7 +58,7 @@ const DvtDeselectDeleteExport = ({
         iconToRight
         colour="error"
         size="small"
-        onClick={handleDelete}
+        onClick={() => !!count && handleDelete()}
       />
       <DvtButton
         label={t('Export')}
@@ -68,7 +68,7 @@ const DvtDeselectDeleteExport = ({
         bold
         typeColour="powder"
         size="small"
-        onClick={handleExport}
+        onClick={() => !!count && handleExport()}
       />
     </ButtonContainer>
   </StyledDvtDeselectDeleteExport>

@@ -24,46 +24,6 @@ const StyledConnection = styled.div`
   height: 100%;
 `;
 
-const StyledConnectionButtons = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
-
-const StyledSelectedItem = styled.div`
-  display: flex;
-  gap: 45px;
-  padding: 35px;
-`;
-
-const StyledSelectedItemCount = styled.div`
-  display: flex;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.secondary.dark3};
-`;
-
-const StyledConnectionsButtons = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
-
-const StyledConnectionListButtons = styled.div`
-  display: flex;
-  border-radius: 12px;
-  height: 56px;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.grayscale.light5};
-`;
-
 const StyledConnectionButton = styled.div`
   display: flex;
   justify-content: space-between;
@@ -71,12 +31,4 @@ const StyledConnectionButton = styled.div`
   padding: 30px 0px 36px 0px;
 `;
 
-export {
-  StyledConnection,
-  StyledConnectionButton,
-  StyledConnectionListButtons,
-  StyledConnectionButtons,
-  StyledSelectedItem,
-  StyledSelectedItemCount,
-  StyledConnectionsButtons,
-};
+export { StyledConnection, StyledConnectionButton };
