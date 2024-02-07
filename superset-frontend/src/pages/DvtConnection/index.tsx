@@ -34,7 +34,6 @@ import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import {
   StyledConnection,
   StyledConnectionButton,
@@ -121,14 +120,15 @@ function DvtConnection() {
       }),
     );
   };
-  
+
   const handleConnectionAdd = () => {
     dispatch(
       openModal({
         component: 'connection-add-modal',
       }),
     );
-    
+  };
+
   const handleDeselectAll = () => {
     setSelectedRows([]);
   };
