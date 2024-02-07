@@ -121,6 +121,14 @@ function DvtConnection() {
     );
   };
 
+  const handleConnectionAdd = () => {
+    dispatch(
+      openModal({
+        component: 'connection-add-modal',
+      }),
+    );
+  };
+
   const handleDeselectAll = () => {
     setSelectedRows([]);
   };
@@ -197,7 +205,7 @@ function DvtConnection() {
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}
-          onClick={() => {}}
+          onClick={handleConnectionAdd}
           colour="grayscale"
         />
         <DvtPagination

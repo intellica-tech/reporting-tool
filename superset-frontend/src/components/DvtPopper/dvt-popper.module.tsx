@@ -20,6 +20,7 @@ import { styled } from '@superset-ui/core';
 
 interface DvtPopperProps {
   direction: string;
+  childWidth: number;
 }
 
 interface DvtPopperFontSizeProps {
@@ -46,7 +47,6 @@ const StyledPopperBody = styled.div<DvtPopperFontSizeProps>`
   cursor: pointer;
   padding: ${({ fontSize }) =>
     fontSize === 'small' ? '8px 10px' : '10px 15px'};
-  white-space: nowrap;
 `;
 
 const StyledPopperGroup = styled.div`
@@ -66,11 +66,10 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     position: absolute;
   }
 
-  ${({ direction, theme }) => {
+  ${({ direction, childWidth, theme }) => {
     if (direction === 'bottom') {
       return `
-        left: 0;
-        right: 0;
+      transform: translateX(calc(-50% + ${childWidth}px));
         top: calc(100% + 13px);
 
         &::before {
@@ -83,8 +82,7 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     }
     if (direction === 'top') {
       return `
-        left: 0;
-        right: 0;
+      transform: translateX(calc(-50% + ${childWidth}px));
         bottom: calc(100% + 13px);
 
         &::before {

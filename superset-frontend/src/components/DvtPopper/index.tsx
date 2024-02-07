@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useRef, useEffect } from 'react';
 import {
   StyledPopper,
   StyledPopperBody,
@@ -37,17 +37,44 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
   direction = 'bottom',
   size = 'medium',
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [childWidth, setChildWidth] = useState<number>(0);
+
+  useEffect(() => {
+    if (ref.current) {
+      setChildWidth(ref.current.offsetWidth / 2);
+    }
+  }, [ref]);
+
+  const setMinWidth = (numberic: number) => {
+    let fixMinWidth: string | number = 'auto';
+    if (numberic > 50 && numberic < 90) {
+      fixMinWidth = 150;
+    } else if (numberic > 90 && numberic < 150) {
+      fixMinWidth = 200;
+    } else if (numberic > 150) {
+      fixMinWidth = 300;
+    } else {
+      fixMinWidth = 'auto';
+    }
+    return fixMinWidth;
+  };
 
   return (
     <StyledPopperGroup
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <StyledPopper>{children} </StyledPopper>
+      <StyledPopper ref={ref}>{children} </StyledPopper>
       {isHovered && (
-        <StyledPopperAbsolute direction={direction}>
-          <StyledPopperBody fontSize={size}>{label}</StyledPopperBody>
+        <StyledPopperAbsolute direction={direction} childWidth={childWidth}>
+          <StyledPopperBody
+            fontSize={size}
+            style={{ minWidth: setMinWidth(label.length) }}
+          >
+            {label}
+          </StyledPopperBody>
         </StyledPopperAbsolute>
       )}
     </StyledPopperGroup>

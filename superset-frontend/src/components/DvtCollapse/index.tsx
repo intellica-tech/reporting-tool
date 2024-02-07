@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
 import {
@@ -34,6 +34,8 @@ export interface DvtCollapseProps {
   children: ReactNode;
   popoverLabel?: string;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
+  isOpen: boolean;
+  setIsOpen: (newOpen: boolean) => void;
 }
 
 const DvtCollapse: React.FC<DvtCollapseProps> = ({
@@ -41,27 +43,17 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   children,
   popoverDirection = 'top',
   popoverLabel = '',
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <StyledCollapse>
-      <StyledCollapseGroup>
-        <StyledCollapseLabel>
-          {label}
-          {popoverLabel && (
-            <StyledCollapsePopover>
-              {popoverLabel ? (
-                <DvtPopper label={popoverLabel} direction={popoverDirection}>
-                  <Icon
-                    fileName="warning"
-                    css={(theme: SupersetTheme) => ({
-                      color: theme.colors.dvt.primary.base,
-                    })}
-                    iconSize="l"
-                  />
-                </DvtPopper>
-              ) : (
+  isOpen,
+  setIsOpen,
+}) => (
+  <StyledCollapse>
+    <StyledCollapseGroup>
+      <StyledCollapseLabel>
+        {label}
+        {popoverLabel && (
+          <StyledCollapsePopover>
+            {popoverLabel ? (
+              <DvtPopper label={popoverLabel} direction={popoverDirection}>
                 <Icon
                   fileName="warning"
                   css={(theme: SupersetTheme) => ({
@@ -69,22 +61,30 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
                   })}
                   iconSize="l"
                 />
-              )}
-            </StyledCollapsePopover>
-          )}
-        </StyledCollapseLabel>
-        <StyledCollapseIcon isOpen={isOpen}>
-          <Icon
-            fileName="caret_down"
-            iconSize="xxl"
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        </StyledCollapseIcon>
-      </StyledCollapseGroup>
+              </DvtPopper>
+            ) : (
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color: theme.colors.dvt.primary.base,
+                })}
+                iconSize="l"
+              />
+            )}
+          </StyledCollapsePopover>
+        )}
+      </StyledCollapseLabel>
+      <StyledCollapseIcon isOpen={isOpen}>
+        <Icon
+          fileName="caret_down"
+          iconSize="xxl"
+          onClick={() => setIsOpen(!isOpen)}
+        />
+      </StyledCollapseIcon>
+    </StyledCollapseGroup>
 
-      {isOpen && <StyledCollapseChildren>{children}</StyledCollapseChildren>}
-    </StyledCollapse>
-  );
-};
+    {isOpen && <StyledCollapseChildren>{children}</StyledCollapseChildren>}
+  </StyledCollapse>
+);
 
 export default DvtCollapse;
