@@ -101,7 +101,7 @@ const StyledInput = styled.div`
   gap: 12px;
 `;
 
-const StyledInputClearWrapper = styled.div<{ disabled?: boolean }>`
+const StyledInputClear = styled.div<{ disabled?: boolean }>`
   cursor: pointer;
   border-radius: 100%;
   height: 14px;
@@ -116,9 +116,35 @@ const StyledInputClearWrapper = styled.div<{ disabled?: boolean }>`
   text-align: 'center';
   color: ${props => `${props.theme.colors.dvt.text.label}`};
   font-weight: 1000;
-`;
 
-const StyledInputClearLine = styled.div<{ disabled?: boolean }>``;
+  &::before {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(135deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.dvt.text.label}`};
+    background-color: ${props =>
+      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+  }
+
+  &::after {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(45deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.dvt.text.label}`};
+    background-color: ${props =>
+      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+  }
+`;
 
 const StyledInputLabel = styled.div`
   color: ${({ theme }) => theme.colors.dvt.text.label};
@@ -137,7 +163,6 @@ export {
   StyledInputIcon,
   StyledInputLabel,
   StyledInputInput,
-  StyledInputClearWrapper,
-  StyledInputClearLine,
+  StyledInputClear,
   StyledInputPopover,
 };

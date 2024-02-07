@@ -29,7 +29,7 @@ import {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectPopover,
-  StyledSelectClearWrapper,
+  StyledSelectClear,
 } from './dvt-select.module';
 
 export interface DvtSelectProps {
@@ -135,11 +135,9 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
       >
         {selectedValue[objectName] || placeholder}
         {selectedValue !== '' ? (
-          <StyledSelectClearWrapper onClick={handleClearClick}>
-            X
-          </StyledSelectClearWrapper>
+          <StyledSelectClear onClick={handleClearClick} />
         ) : (
-          <StyledSelectClearWrapper disabled />
+          <StyledSelectClear disabled />
         )}
         <StyledSelectIcon isOpen={isOpen}>
           <Icon

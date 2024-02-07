@@ -153,7 +153,7 @@ const StyledSelectIcon = styled.div<StyledSelectIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
-const StyledSelectClearWrapper = styled.div<{ disabled?: boolean }>`
+const StyledSelectClear = styled.div<{ disabled?: boolean }>`
   z-index: 1000;
   cursor: pointer;
   border-radius: 100%;
@@ -171,6 +171,34 @@ const StyledSelectClearWrapper = styled.div<{ disabled?: boolean }>`
   text-align: 'center';
   color: ${props => `${props.theme.colors.dvt.text.label}`};
   font-weight: 1000;
+
+  &::before {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(135deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.dvt.text.label}`};
+    background-color: ${props =>
+      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+  }
+
+  &::after {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(45deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.dvt.text.label}`};
+    background-color: ${props =>
+      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+  }
 `;
 
 const StyledSelectPopover = styled.div`
@@ -185,6 +213,6 @@ export {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectOptions,
-  StyledSelectClearWrapper,
+  StyledSelectClear,
   StyledSelectPopover,
 };
