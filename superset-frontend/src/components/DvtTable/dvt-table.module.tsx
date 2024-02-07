@@ -19,6 +19,8 @@
 import { styled } from '@superset-ui/core';
 
 const StyledTable = styled.div`
+  width: 100%;
+
   .ant-checkbox-indeterminate .ant-checkbox-inner::after {
     display: inline-flex;
     width: 15px;

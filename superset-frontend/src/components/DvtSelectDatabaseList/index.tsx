@@ -62,8 +62,9 @@ const DvtSelectDatabaseList = ({
         placeholder={t('Search tables')}
       />
       <StyledDvtSelectDatabaseListScroll>
-        {searchData.map(item => (
+        {searchData.map((item, index) => (
           <StyledDvtSelectDatabaseListItem
+            key={index}
             active={item.value === active?.value}
             onClick={() => setActive(item)}
           >
