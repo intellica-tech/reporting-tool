@@ -350,6 +350,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       }
       if (getDataApiUrl.name === 'chartAdd-dataset') {
         const editedData = data.map((item: any) => ({
+          id: item.id,
           value: item.table_name,
           label: item.table_name,
         }));

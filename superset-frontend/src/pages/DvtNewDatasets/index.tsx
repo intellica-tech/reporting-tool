@@ -4,7 +4,10 @@ import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
-import { dvtSidebarSetDataProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import {
+  dvtSidebarSetDataProperty,
+  dvtSidebarSetProperty,
+} from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -36,11 +39,21 @@ function DvtNewDatasets() {
     key: '',
   });
   const [getTableDataApiUrl, setGetTableDataApiUrl] = useState('');
+  const [postDataSetUrl, setPostDataSetUrl] = useState('');
   const [data, setData] = useState([]);
 
   const getSchemaData = useFetch({ url: getSchemaDataApiUrl.url });
   const getTableData = useFetch({
     url: getTableDataApiUrl,
+  });
+  const postDataset = useFetch({
+    url: postDataSetUrl,
+    method: 'POST',
+    body: {
+      database: datasetAddSelector.database?.value,
+      schema: datasetAddSelector.schema?.value,
+      table_name: datasetAddSelector.selectDatabase?.value,
+    },
   });
 
   useEffect(() => {
@@ -101,6 +114,30 @@ function DvtNewDatasets() {
     }
   }, [getTableData]);
 
+  const handleCreateDataset = () => {
+    setPostDataSetUrl('dataset/');
+    setTimeout(() => {
+      setPostDataSetUrl('');
+    }, 200);
+  };
+
+  useEffect(() => {
+    if (postDataset) {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'chartAdd',
+          key: 'dataset',
+          value: {
+            id: postDataset.id,
+            value: postDataset.table_name,
+            label: postDataset.table_name,
+          },
+        }),
+      );
+      history.push('/chart/add/');
+    }
+  }, [postDataset]);
+
   return (
     <StyledDvtNewDatasets>
       {data.length > 0 ? (
@@ -129,7 +166,7 @@ function DvtNewDatasets() {
           size="small"
           colour="grayscale"
           typeColour="basic"
-          onClick={() => {}}
+          onClick={handleCreateDataset}
         />
       </StyledNewDatasetsButtons>
     </StyledDvtNewDatasets>
