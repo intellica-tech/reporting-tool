@@ -5,6 +5,7 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import { closeModal } from '../dvt-redux/dvt-modalReducer';
 import DvtDashboardEdit from './body/dashboard-edit';
 import DvtDeleteModal from './body/delete-modal';
+import DvtConnectionAdd from './body/connection-add';
 import {
   StyledModal,
   StyledModalCard,
@@ -23,6 +24,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtDashboardEdit meta={meta} onClose={onClose} />;
     case 'delete-modal':
       return <DvtDeleteModal meta={meta} onClose={onClose} />;
+    case 'connection-add-modal':
+      return <DvtConnectionAdd meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }

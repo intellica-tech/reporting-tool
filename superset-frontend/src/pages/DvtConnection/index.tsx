@@ -33,6 +33,7 @@ import {
   StyledConnection,
   StyledConnectionButton,
 } from './dvt-connection.module';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 
 const modifiedData = {
   header: [
@@ -123,13 +124,21 @@ function DvtConnection() {
     );
   };
 
+  const handleConnectionAdd = () => {
+    dispatch(
+      openModal({
+        component: 'connection-add-modal',
+      }),
+    );
+  };
+
   return data.length > 0 ? (
     <StyledConnection>
       <DvtTable data={data} header={modifiedData.header} />
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}
-          onClick={() => {}}
+          onClick={handleConnectionAdd}
           colour="grayscale"
         />
         <DvtPagination

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import DvtCollapse, { DvtCollapseProps } from '.';
 
@@ -25,17 +25,22 @@ export default {
   component: DvtCollapse,
 };
 
-export const Default = (args: DvtCollapseProps) => (
-  <div
-    css={(theme: SupersetTheme) => ({
-      backgroundColor: theme.colors.dvt.grayscale.light2,
-      width: '584px',
-      padding: '50px',
-    })}
-  >
-    <DvtCollapse {...args}>Default Collapse</DvtCollapse>
-  </div>
-);
+export const Default = (args: DvtCollapseProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  return (
+    <div
+      css={(theme: SupersetTheme) => ({
+        backgroundColor: theme.colors.dvt.grayscale.light2,
+        width: '584px',
+        padding: '50px',
+      })}
+    >
+      <DvtCollapse {...args} isOpen={isOpen} setIsOpen={setIsOpen}>
+        Default Collapse
+      </DvtCollapse>
+    </div>
+  );
+};
 
 Default.args = {
   label: 'Time',

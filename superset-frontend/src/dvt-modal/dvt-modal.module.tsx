@@ -41,7 +41,7 @@ const StyledModalCard = styled.div<StyledModalProps>`
   width: ${({ size }) =>
     size === 'small' ? '919px' : size === 'medium' ? '1150.68px' : '500px'};
   height: ${({ size }) =>
-    size === 'small' ? '683px' : size === 'medium' ? '621.428px' : '250px'};
+    size === 'small' ? '713px' : size === 'medium' ? '621.428px' : '250px'};
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
 `;
 
