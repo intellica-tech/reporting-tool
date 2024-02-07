@@ -23,15 +23,15 @@ const DvtProfileMenuData: DvtProfileMenuDataProps[] = [
       { label: t('Action Log'), link: '/logmodelview/list/' },
     ],
   },
-  {
-    title: t('Data'),
-    menu: [{ label: t('Database Connections'), link: '/databaseview/list/' }],
-  },
+  // {
+  //   title: t('Data'),
+  //   menu: [{ label: t('Database Connections'), link: '/databaseview/list/' }],
+  // },
   {
     title: t('Manage'),
     menu: [
       { label: t('CSS Templates'), link: '/csstemplatemodelview/list/' },
-      { label: t('Alerts & Reports'), link: '/alert/list/' },
+      // { label: t('Alerts & Reports'), link: '/alert/list/' },
       { label: t('Annotation Layers'), link: '/annotationlayer/list/' },
     ],
   },
