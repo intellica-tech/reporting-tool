@@ -19,7 +19,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { useDispatch } from 'react-redux';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
+import handleResourceExport from 'src/utils/export';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
@@ -40,50 +44,8 @@ import {
   StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
 
-const headerData = [
-  {
-    id: 1,
-    title: t('Title'),
-    field: 'dashboard_title',
-    flex: 3,
-    checkbox: true,
-    urlField: 'url',
-  },
-  {
-    id: 2,
-    title: t('Modified By'),
-    field: 'changed_by_name',
-    urlField: 'changed_by_url',
-  },
-  { id: 3, title: t('Status'), field: 'status' },
-  { id: 4, title: t('Modified'), field: 'created_on_delta_humanized' },
-  { id: 5, title: t('Created By'), field: 'createdbyName' },
-  { id: 6, title: t('Owners'), field: 'owners' },
-  {
-    id: 7,
-    title: t('Action'),
-    showHover: true,
-    clicks: [
-      {
-        icon: 'edit_alt',
-        click: () => {},
-        popperLabel: t('Edit'),
-      },
-      {
-        icon: 'share',
-        click: () => {},
-        popperLabel: t('Export'),
-      },
-      {
-        icon: 'trash',
-        click: () => {},
-        popperLabel: t('Delete'),
-      },
-    ],
-  },
-];
-
 function DvtDashboardList() {
+  const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
   const activeTab = useAppSelector(
     state => state.dvtNavbar.viewlist.dashboard.value,
@@ -133,9 +95,21 @@ function DvtDashboardList() {
     return `?q=(${filters}${sort},page:${currentPage - 1},page_size:10)`;
   };
 
+  const dashboardPromiseUrl = `dashboard/${searchApiUrl()}`;
+  const [reportApiUrl, setReportApiUrl] = useState(dashboardPromiseUrl);
   const dashboardApi = useFetch({
-    url: `dashboard/${searchApiUrl()}`,
+    url: reportApiUrl,
   });
+
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
+
+  useEffect(() => {
+    setReportApiUrl('');
+    dispatch(dvtHomeDeleteSuccessStatus(''));
+    setTimeout(() => setReportApiUrl(dashboardPromiseUrl), 200);
+  }, [deleteSuccessStatus]);
 
   useEffect(() => {
     if (dashboardApi) {
@@ -190,6 +164,98 @@ function DvtDashboardList() {
       });
   };
 
+  const handleEditDashboards = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/dashboard/${item.id}`);
+      const editedDashboardData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-dashboard',
+          meta: editedDashboardData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSingleExport = (id: number) => {
+    handleResourceExport('dashboard', [id], () => {});
+  };
+
+  const handleBulkExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('dashboard', selectedIds, () => {});
+  };
+
+  const handleDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'dashboard' },
+      }),
+    );
+  };
+
+  const handleBulkDelete = async (type: string, item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type, title: 'dashboard' },
+      }),
+    );
+  };
+
+  const headerData = [
+    {
+      id: 1,
+      title: t('Title'),
+      field: 'dashboard_title',
+      flex: 3,
+      checkbox: true,
+      urlField: 'url',
+    },
+    {
+      id: 2,
+      title: t('Modified By'),
+      field: 'changed_by_name',
+      urlField: 'changed_by_url',
+    },
+    { id: 3, title: t('Status'), field: 'status' },
+    { id: 4, title: t('Modified'), field: 'created_on_delta_humanized' },
+    { id: 5, title: t('Created By'), field: 'createdbyName' },
+    { id: 6, title: t('Owners'), field: 'owners' },
+    {
+      id: 7,
+      title: t('Action'),
+      showHover: true,
+      clicks: [
+        {
+          icon: 'edit_alt',
+          click: (item: any) => {
+            handleEditDashboards(item);
+          },
+          popperLabel: t('Edit'),
+        },
+        {
+          icon: 'share',
+          click: (item: any) => {
+            handleSingleExport(item.id);
+          },
+          popperLabel: t('Export'),
+        },
+        {
+          icon: 'trash',
+          click: (item: any) => {
+            handleDelete('dashboard', item);
+          },
+          popperLabel: t('Delete'),
+        },
+      ],
+    },
+  ];
+
   return (
     <StyledDashboardList>
       {activeTab === 'Table' && (
@@ -217,7 +283,9 @@ function DvtDashboardList() {
               iconToRight
               colour="error"
               size="small"
-              onClick={() => {}}
+              onClick={() => {
+                handleBulkDelete('dashboard', selectedRows);
+              }}
             />
             <DvtButton
               label={t('Export')}
@@ -227,7 +295,7 @@ function DvtDashboardList() {
               bold
               typeColour="powder"
               size="small"
-              onClick={() => {}}
+              onClick={handleBulkExport}
             />
           </StyledDashboardButtons>
         </StyledDashboardListButtons>
@@ -255,6 +323,29 @@ function DvtDashboardList() {
             setFavorites={(id, isFavorite) =>
               handleSetFavorites(id, isFavorite)
             }
+            dropdown={[
+              {
+                label: t('Edit'),
+                icon: 'edit_alt',
+                onClick: (item: any) => {
+                  handleEditDashboards(item);
+                },
+              },
+              {
+                label: t('Export'),
+                icon: 'share',
+                onClick: (item: any) => {
+                  handleSingleExport(item.id);
+                },
+              },
+              {
+                label: t('Delete'),
+                icon: 'trash',
+                onClick: (item: any) => {
+                  handleDelete('dashboard', item);
+                },
+              },
+            ]}
           />
         )}
       </StyledDashboardTable>

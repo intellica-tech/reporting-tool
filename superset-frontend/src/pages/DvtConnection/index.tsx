@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,10 +21,14 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
+import handleResourceExport from 'src/utils/export';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -35,67 +40,45 @@ import {
   StyledConnectionButton,
 } from './dvt-connection.module';
 
-const modifiedData = {
-  header: [
-    { id: 1, title: t('Database'), field: 'database_name', heartIcon: true },
-    { id: 2, title: t('Admin'), field: 'admin' },
-    { id: 3, title: t('Last Modified'), field: 'date' },
-    {
-      id: 4,
-      title: t('Action'),
-      clicks: [
-        {
-          icon: 'edit_alt',
-          click: () => {},
-          popperLabel: t('Edit'),
-        },
-        {
-          icon: 'share',
-          click: () => {},
-          popperLabel: t('Export'),
-        },
-        {
-          icon: 'trash',
-          click: () => {},
-          popperLabel: t('Delete'),
-        },
-      ],
-    },
-  ],
-};
-
 function DvtConnection() {
   const dispatch = useDispatch();
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const searchApiUrls = fetchQueryParamsSearch({
-    filters: [
-      {
-        col: 'expose_in_sqllab',
-        opr: 'eq',
-        value: connectionSelector.expose_in_sqllab?.value,
-      },
-      {
-        col: 'allow_run_async',
-        opr: 'eq',
-        value: connectionSelector.allow_run_async?.value,
-      },
-      {
-        col: 'database_name',
-        opr: 'ct',
-        value: connectionSelector.search,
-      },
-    ],
-    page,
-  });
+  const searchApiUrls = (gPage: number) =>
+    `database/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'expose_in_sqllab',
+          opr: 'eq',
+          value: connectionSelector.expose_in_sqllab?.value,
+        },
+        {
+          col: 'allow_run_async',
+          opr: 'eq',
+          value: connectionSelector.allow_run_async?.value,
+        },
+        {
+          col: 'database_name',
+          opr: 'ct',
+          value: connectionSelector.search,
+        },
+      ],
+      page: gPage,
+    })}`;
+
+  const [connectionApiUrl, setConnectionApiUrl] = useState<string>('');
 
   const connectionApi = useFetch({
-    url: `database/${searchApiUrls}`,
+    url: connectionApiUrl,
   });
 
   useEffect(() => {
@@ -108,8 +91,23 @@ function DvtConnection() {
         })),
       );
       setCount(connectionApi.count);
+      setSelectedRows([]);
     }
   }, [connectionApi]);
+
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setConnectionApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setConnectionApiUrl(searchApiUrls(page));
+    }
+  }, [connectionSelector]);
 
   const clearConnection = () => {
     dispatch(
@@ -123,18 +121,87 @@ function DvtConnection() {
       }),
     );
   };
-
+  
   const handleConnectionAdd = () => {
     dispatch(
       openModal({
         component: 'connection-add-modal',
       }),
     );
+    
+  const handleDeselectAll = () => {
+    setSelectedRows([]);
+  };
+
+  const handleModalDelete = (item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type: 'database', title: 'database' },
+      }),
+    );
+    setConnectionApiUrl('');
+  };
+
+  const handleSingleExport = (id: number) => {
+    handleResourceExport('database', [id], () => {});
+  };
+
+  const handleBulkExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('database', selectedIds, () => {});
+  };
+
+  const modifiedData = {
+    header: [
+      {
+        id: 1,
+        title: t('Database'),
+        field: 'database_name',
+        checkbox: true,
+        heartIcon: true,
+      },
+      { id: 2, title: t('Admin'), field: 'admin' },
+      { id: 3, title: t('Last Modified'), field: 'date' },
+      {
+        id: 4,
+        title: t('Action'),
+        clicks: [
+          {
+            icon: 'edit_alt',
+            click: () => {},
+            popperLabel: t('Edit'),
+          },
+          {
+            icon: 'share',
+            click: (item: any) => handleSingleExport(item.id),
+            popperLabel: t('Export'),
+          },
+          {
+            icon: 'trash',
+            click: (item: any) => handleModalDelete(item),
+            popperLabel: t('Delete'),
+          },
+        ],
+      },
+    ],
   };
 
   return data.length > 0 ? (
     <StyledConnection>
-      <DvtTable data={data} header={modifiedData.header} />
+      <DvtDeselectDeleteExport
+        count={selectedRows.length}
+        handleDeselectAll={handleDeselectAll}
+        handleDelete={() => handleModalDelete(selectedRows)}
+        handleExport={handleBulkExport}
+      />
+      <DvtTable
+        data={data}
+        header={modifiedData.header}
+        selected={selectedRows}
+        setSelected={setSelectedRows}
+        checkboxActiveField="id"
+      />
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}

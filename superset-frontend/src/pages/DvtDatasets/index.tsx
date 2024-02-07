@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,108 +19,75 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import handleResourceExport from 'src/utils/export';
 import moment from 'moment';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
-import {
-  StyledButtons,
-  StyledDeselect,
-  StyledDeselectButton,
-  StyledDvtDatasets,
-  StyledSelected,
-} from './dvt-datasets.module';
-
-const header = [
-  {
-    id: 1,
-    title: t('Name'),
-    field: 'table_name',
-    flex: 3,
-    checkbox: true,
-    folderIcon: true,
-    onLink: true,
-  },
-  { id: 2, title: t('Type'), field: 'kind' },
-  { id: 3, title: t('Database'), field: 'database' },
-  { id: 4, title: t('Schema'), field: 'schema' },
-  { id: 5, title: t('Modified Date'), field: 'changed_on_utc' },
-  { id: 6, title: t('Modified by'), field: 'changed_by_name' },
-  { id: 7, title: t('Owners'), field: 'owners' },
-  {
-    id: 8,
-    title: t('Actions'),
-    clicks: [
-      {
-        icon: 'edit_alt',
-        click: () => {},
-        popperLabel: t('Edit'),
-      },
-      {
-        icon: 'share',
-        click: () => {},
-        popperLabel: t('Export'),
-      },
-      {
-        icon: 'trash',
-        click: () => {},
-        popperLabel: t('Delete'),
-      },
-    ],
-  },
-];
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
+import { StyledButtons, StyledDvtDatasets } from './dvt-datasets.module';
 
 function DvtDatasets() {
-  const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
+  const dispatch = useDispatch();
   const history = useHistory();
+  const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const searchApiUrls = fetchQueryParamsSearch({
-    filters: [
-      {
-        col: 'owners',
-        opr: 'rel_m_m',
-        value: datasetsSelector.owner?.value,
-      },
-      {
-        col: 'database',
-        opr: 'rel_o_m',
-        value: datasetsSelector.database?.value,
-      },
-      {
-        col: 'schema',
-        opr: 'eq',
-        value: datasetsSelector.schema?.value,
-      },
-      {
-        col: 'sql',
-        opr: 'dataset_is_null_or_empty',
-        value: datasetsSelector.type?.value,
-      },
-      {
-        col: 'id',
-        opr: 'dataset_is_certified',
-        value: datasetsSelector.certified?.value,
-      },
-      {
-        col: 'table_name',
-        opr: 'ct',
-        value: datasetsSelector.search,
-      },
-    ],
-    page,
-  });
+  const searchApiUrls = (gPage: number) =>
+    `dataset/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'owners',
+          opr: 'rel_m_m',
+          value: datasetsSelector.owner?.value,
+        },
+        {
+          col: 'database',
+          opr: 'rel_o_m',
+          value: datasetsSelector.database?.value,
+        },
+        {
+          col: 'schema',
+          opr: 'eq',
+          value: datasetsSelector.schema?.value,
+        },
+        {
+          col: 'sql',
+          opr: 'dataset_is_null_or_empty',
+          value: datasetsSelector.type?.value,
+        },
+        {
+          col: 'id',
+          opr: 'dataset_is_certified',
+          value: datasetsSelector.certified?.value,
+        },
+        {
+          col: 'table_name',
+          opr: 'ct',
+          value: datasetsSelector.search,
+        },
+      ],
+      page: gPage,
+    })}`;
+
+  const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
 
   const datasetApi = useFetch({
-    url: `dataset/${searchApiUrls}`,
+    url: datasetApiUrl,
   });
 
   useEffect(() => {
@@ -144,27 +112,90 @@ function DvtDatasets() {
     }
   }, [datasetApi]);
 
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setDatasetApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setDatasetApiUrl(searchApiUrls(page));
+    }
+  }, [datasetsSelector]);
+
   const handleDeselectAll = () => {
     setSelectedRows([]);
   };
 
+  const handleModalDelete = (item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type: 'dataset', title: 'dataset' },
+      }),
+    );
+    setDatasetApiUrl('');
+  };
+
+  const handleSingleExport = (id: number) => {
+    handleResourceExport('dataset', [id], () => {});
+  };
+
+  const handleSelectedExport = () => {
+    const selectedIds = selectedRows.map(item => item.id);
+    handleResourceExport('dataset', selectedIds, () => {});
+  };
+
+  const header = [
+    {
+      id: 1,
+      title: t('Name'),
+      field: 'table_name',
+      flex: 3,
+      checkbox: true,
+      folderIcon: true,
+      onLink: true,
+    },
+    { id: 2, title: t('Type'), field: 'kind' },
+    { id: 3, title: t('Database'), field: 'database' },
+    { id: 4, title: t('Schema'), field: 'schema' },
+    { id: 5, title: t('Modified Date'), field: 'changed_on_utc' },
+    { id: 6, title: t('Modified by'), field: 'changed_by_name' },
+    { id: 7, title: t('Owners'), field: 'owners' },
+    {
+      id: 8,
+      title: t('Actions'),
+      clicks: [
+        {
+          icon: 'edit_alt',
+          click: () => {},
+          popperLabel: t('Edit'),
+        },
+        {
+          icon: 'share',
+          click: (item: any) => handleSingleExport(item.id),
+          popperLabel: t('Export'),
+        },
+        {
+          icon: 'trash',
+          click: (item: any) => handleModalDelete(item),
+          popperLabel: t('Delete'),
+        },
+      ],
+    },
+  ];
+
   return (
     <StyledDvtDatasets>
-      <StyledDeselectButton>
-        <StyledSelected>
-          <span>{`${selectedRows.length} Selected`}</span>
-        </StyledSelected>
-        <StyledDeselect>
-          <DvtButton
-            label={t('Deselect All')}
-            bold
-            colour="primary"
-            typeColour="outline"
-            size="medium"
-            onClick={handleDeselectAll}
-          />
-        </StyledDeselect>
-      </StyledDeselectButton>
+      <DvtDeselectDeleteExport
+        count={selectedRows.length}
+        handleDeselectAll={handleDeselectAll}
+        handleDelete={() => handleModalDelete(selectedRows)}
+        handleExport={handleSelectedExport}
+      />
       <div>
         <DvtTable
           data={data}

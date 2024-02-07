@@ -45,7 +45,7 @@ const DvtSidebarData: SidebarDataProps[] = [
             fileName: 'dvt-alert',
           },
           {
-            title: 'Sqllab',
+            title: 'Sqlhub',
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
@@ -443,15 +443,12 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'datasetAdd',
     data: [
       {
-        values: [
-          { label: t('postgresql examples'), value: 'postgresql_examples' },
-          { label: t('postgresql PostgreSQL'), value: 'postgresql_postgresql' },
-        ],
+        values: [],
         placeholder: t('DATABASE'),
         name: 'database',
       },
       {
-        values: [{ label: t('Schema'), value: 'schema' }],
+        values: [],
         placeholder: t('SCHEMA'),
         name: 'schema',
       },
@@ -675,6 +672,18 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Tags'),
         name: 'tags',
+      },
+    ],
+  },
+  {
+    pathname: '/explore/',
+    key: 'chartAdd',
+    data: [
+      {
+        label: t('Chart Source'),
+        placeholder: t('Search Metrics & Columns'),
+        name: 'search',
+        status: 'input',
       },
     ],
   },

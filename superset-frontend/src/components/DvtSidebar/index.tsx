@@ -40,6 +40,7 @@ import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
 import { usePluginContext } from '../DynamicPlugins';
 import DvtInput from '../DvtInput';
+import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -56,6 +57,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   const alertsSelector = useAppSelector(state => state.dvtSidebar.alerts);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
+  const datasetAddSelector = useAppSelector(
+    state => state.dvtSidebar.datasetAdd,
+  );
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
@@ -97,6 +101,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         return 'Profile';
       case '/chart/add':
         return 'Chart Add';
+      case '/explore/':
+        return 'Charts';
       case '/dataset/add/':
         return 'New Dataset';
       case '/annotationlayer/list/':
@@ -198,6 +204,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         setGetDataApiUrl({
           name: 'datasets-schema',
           url: 'dataset/distinct/schema',
+        });
+      }
+    } else if (pathTitles(pathName) === 'New Dataset') {
+      if (!fetchedSelector.datasetAdd.database) {
+        setGetDataApiUrl({
+          name: 'datasetAdd-database',
+          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
         });
       }
     } else if (pathTitles(pathName) === 'Chart Add') {
@@ -339,6 +352,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
       }
       if (getDataApiUrl.name === 'chartAdd-dataset') {
         const editedData = data.map((item: any) => ({
+          id: item.id,
           value: item.table_name,
           label: item.table_name,
         }));
@@ -426,6 +440,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
           dvtSidebarSetDataProperty({
             pageKey: 'reports',
             key: 'dashboards',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'datasetAdd-database') {
+        const editedData = data.map((item: any) => ({
+          value: item.explore_database_id,
+          label: item.database_name,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasetAdd',
+            key: 'database',
             value: editedData,
           }),
         );
@@ -525,6 +552,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
         key: 'reports',
         keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
       },
+      {
+        title: 'New Dataset',
+        key: 'datasetAdd',
+        keyNames: ['database', 'schema'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.title === pathTitles(pathName),
@@ -584,6 +616,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
     'SQL Lab',
     'Chart Add',
     'SQL History',
+    'Charts',
   ];
 
   return (
@@ -710,6 +743,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'SQL Lab'
                             ? sqllabSelector[data.name]
+                            : pathTitles(pathName) === 'New Dataset'
+                            ? datasetAddSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -788,10 +823,25 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                   </StyledDvtSidebarBodySelect>
                 ),
               )}
+            {pathTitles(pathName) === 'New Dataset' &&
+              dataSelector.datasetAdd.selectDatabase.length > 0 && (
+                <DvtSelectDatabaseList
+                  data={dataSelector.datasetAdd.selectDatabase}
+                  active={datasetAddSelector.selectDatabase}
+                  setActive={vItem =>
+                    dispatch(
+                      dvtSidebarSetProperty({
+                        pageKey: 'datasetAdd',
+                        key: 'selectDatabase',
+                        value: vItem,
+                      }),
+                    )
+                  }
+                />
+              )}
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
-
       {pathTitles(pathName) === 'Profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
           {sidebarDataFindPathname?.data.map((data: any, index: number) => (

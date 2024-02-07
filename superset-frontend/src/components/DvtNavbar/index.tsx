@@ -20,10 +20,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useHistory } from 'react-router-dom';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
 import {
   dvtNavbarAlertSetTabs,
+  dvtNavbarChartsSetTabs,
   dvtNavbarSqlSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
@@ -63,9 +65,11 @@ interface LanguagesProps {
 
 const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   // const sort = useAppSelector(state => state.dvtApp.sort);
   const alertSelector = useAppSelector(state => state.dvtNavbar.alert);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
+  const chartsSelector = useAppSelector(state => state.dvtNavbar.charts);
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
@@ -92,6 +96,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
         return t('Profile');
       case '/chart/add':
         return t('Create New Chart');
+      case '/explore/':
+        return t('Charts');
       case '/dataset/add/':
         return t('New Dataset');
       case '/annotationlayer/list/':
@@ -206,7 +212,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
                 <DvtButton
                   typeColour="powder"
                   label="Create New Chart"
-                  onClick={() => {}}
+                  onClick={() => history.push('/explore/')}
                   bold
                 />
               </NavbarBottomRight>
@@ -236,6 +242,20 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
                 dispatch(dvtNavbarViewlistTabs({ value, key: 'reports' }))
               }
             />
+          )}
+          {pathName === '/explore/' && (
+            <>
+              <DvtButtonTabs
+                active={chartsSelector.tabs}
+                data={activeData}
+                setActive={value => dispatch(dvtNavbarChartsSetTabs(value))}
+              />
+              <DvtButton
+                label={t('Save')}
+                typeColour="powder"
+                onClick={() => {}}
+              />
+            </>
           )}
         </NavbarBottom>
       )}

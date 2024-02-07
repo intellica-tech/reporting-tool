@@ -3,8 +3,8 @@ import { styled } from '@superset-ui/core';
 const StyledDvtNewDatasets = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
   align-items: center;
+  min-height: -webkit-fill-available;
 `;
 
 const StyledNewDatasetsButtons = styled.div`

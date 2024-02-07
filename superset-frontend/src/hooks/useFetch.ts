@@ -28,6 +28,7 @@ const useFetch = ({
           const response = await fetch(`${defaultParam}${url}`, {
             method,
             headers: {
+              'Content-Type': 'application/json',
               'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
               ...headers,
             },

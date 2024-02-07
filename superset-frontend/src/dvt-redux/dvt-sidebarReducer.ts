@@ -48,6 +48,11 @@ interface DvtSidebarState {
     certified: any;
     search: string;
   };
+  datasetAdd: {
+    database: any;
+    schema: any;
+    selectDatabase: any;
+  };
   chartAdd: {
     dataset: string;
     recommended_tags: string;
@@ -91,6 +96,10 @@ interface DvtSidebarState {
         database: boolean;
         schema: boolean;
       };
+      datasetAdd: {
+        database: boolean;
+        schema: boolean;
+      };
       chartAdd: {
         dataset: boolean;
       };
@@ -118,6 +127,11 @@ interface DvtSidebarState {
       owner: any[];
       database: any[];
       schema: any[];
+    };
+    datasetAdd: {
+      database: any[];
+      schema: any[];
+      selectDatabase: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -159,6 +173,11 @@ const initialState: DvtSidebarState = {
     type: {},
     certified: {},
     search: '',
+  },
+  datasetAdd: {
+    database: {},
+    schema: {},
+    selectDatabase: {},
   },
   chartAdd: {
     dataset: '',
@@ -203,6 +222,10 @@ const initialState: DvtSidebarState = {
         database: false,
         schema: false,
       },
+      datasetAdd: {
+        database: false,
+        schema: false,
+      },
       chartAdd: {
         dataset: false,
       },
@@ -230,6 +253,11 @@ const initialState: DvtSidebarState = {
       owner: [],
       database: [],
       schema: [],
+    },
+    datasetAdd: {
+      database: [],
+      schema: [],
+      selectDatabase: [],
     },
     chartAdd: {
       dataset: [],
@@ -288,7 +316,7 @@ const dvtSidebarSlice = createSlice({
     }),
     dvtSidebarSetProperty: (
       state,
-      action: PayloadAction<{ pageKey: string; key: string; value: string }>,
+      action: PayloadAction<{ pageKey: string; key: string; value: any }>,
     ) => ({
       ...state,
       [action.payload.pageKey]: {
