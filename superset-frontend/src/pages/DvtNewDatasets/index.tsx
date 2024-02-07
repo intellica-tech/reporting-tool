@@ -21,30 +21,54 @@ function DvtNewDatasets() {
     state => state.dvtSidebar.datasetAdd,
   );
 
-  const [getSchemaDataApiUrl, setGetSchemaDataApiUrl] = useState('');
+  const [getSchemaDataApiUrl, setGetSchemaDataApiUrl] = useState({
+    url: '',
+    key: '',
+  });
 
-  const getSchemaData = useFetch({ url: getSchemaDataApiUrl });
+  const getSchemaData = useFetch({ url: getSchemaDataApiUrl.url });
 
   useEffect(() => {
     if (datasetAddSelector.database?.value) {
-      setGetSchemaDataApiUrl(
-        `database/${datasetAddSelector.database.value}/schemas/?q=(force:!f)`,
-      );
+      setGetSchemaDataApiUrl({
+        url: `database/${datasetAddSelector.database.value}/schemas/?q=(force:!f)`,
+        key: 'database',
+      });
     }
   }, [datasetAddSelector.database]);
 
   useEffect(() => {
+    if (datasetAddSelector.schema?.value) {
+      setGetSchemaDataApiUrl({
+        url: `database/1/tables/?q=(force:!f,schema_name:${datasetAddSelector.schema.value})`,
+        key: 'schema',
+      });
+    }
+  }, [datasetAddSelector.schema]);
+
+  useEffect(() => {
     if (getSchemaData) {
-      dispatch(
-        dvtSidebarSetDataProperty({
-          pageKey: 'datasetAdd',
-          key: 'schema',
-          value: getSchemaData.result.map((s: string) => ({
-            value: s,
-            label: s,
-          })),
-        }),
-      );
+      if (getSchemaDataApiUrl.key === 'database') {
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasetAdd',
+            key: 'schema',
+            value: getSchemaData.result.map((s: string) => ({
+              value: s,
+              label: s,
+            })),
+          }),
+        );
+      }
+      if (getSchemaDataApiUrl.key === 'schema') {
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'datasetAdd',
+            key: 'selectDatabase',
+            value: getSchemaData.result,
+          }),
+        );
+      }
     }
   }, [getSchemaData]);
 

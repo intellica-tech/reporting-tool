@@ -51,6 +51,7 @@ interface DvtSidebarState {
   datasetAdd: {
     database: any;
     schema: any;
+    selectDatabase: any;
   };
   chartAdd: {
     dataset: string;
@@ -130,6 +131,7 @@ interface DvtSidebarState {
     datasetAdd: {
       database: any[];
       schema: any[];
+      selectDatabase: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -175,6 +177,7 @@ const initialState: DvtSidebarState = {
   datasetAdd: {
     database: {},
     schema: {},
+    selectDatabase: {},
   },
   chartAdd: {
     dataset: '',
@@ -254,6 +257,7 @@ const initialState: DvtSidebarState = {
     datasetAdd: {
       database: [],
       schema: [],
+      selectDatabase: [],
     },
     chartAdd: {
       dataset: [],
@@ -312,7 +316,7 @@ const dvtSidebarSlice = createSlice({
     }),
     dvtSidebarSetProperty: (
       state,
-      action: PayloadAction<{ pageKey: string; key: string; value: string }>,
+      action: PayloadAction<{ pageKey: string; key: string; value: any }>,
     ) => ({
       ...state,
       [action.payload.pageKey]: {

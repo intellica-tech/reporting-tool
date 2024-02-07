@@ -40,6 +40,7 @@ import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
 import { usePluginContext } from '../DynamicPlugins';
 import DvtInput from '../DvtInput';
+import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -818,10 +819,25 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                   </StyledDvtSidebarBodySelect>
                 ),
               )}
+            {pathTitles(pathName) === 'New Dataset' &&
+              dataSelector.datasetAdd.selectDatabase.length > 0 && (
+                <DvtSelectDatabaseList
+                  data={dataSelector.datasetAdd.selectDatabase}
+                  active={datasetAddSelector.selectDatabase}
+                  setActive={vItem =>
+                    dispatch(
+                      dvtSidebarSetProperty({
+                        pageKey: 'datasetAdd',
+                        key: 'selectDatabase',
+                        value: vItem,
+                      }),
+                    )
+                  }
+                />
+              )}
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
-
       {pathTitles(pathName) === 'Profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
           {sidebarDataFindPathname?.data.map((data: any, index: number) => (
