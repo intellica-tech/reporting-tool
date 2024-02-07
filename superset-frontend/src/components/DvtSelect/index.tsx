@@ -147,7 +147,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
               color:
                 typeDesign === 'form' || typeDesign === 'navbar'
                   ? theme.colors.dvt.text.label
-                  : theme.colors.grayscale.dark2,
+                  : theme.colors.grayscale.base,
             })}
           />
         </StyledSelectIcon>

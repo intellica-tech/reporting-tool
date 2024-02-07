@@ -73,19 +73,29 @@ const StyledSelectSelect = styled.div<StyledSelectProps>`
     typeDesign === 'form' || typeDesign === 'navbar'
       ? theme.colors.grayscale.light5
       : isOpen
-      ? theme.colors.dvt.primary.light2
-      : theme.colors.dvt.grayscale.light2};
-  border: ${({ theme, typeDesign }) =>
+      ? theme.colors.grayscale.light5
+      : theme.colors.grayscale.light5};
+  border: ${({ theme, typeDesign, selectedValue }) =>
     typeDesign === 'navbar'
       ? `1px solid ${theme.colors.dvt.primary.light2}`
-      : 'none'};
+      : selectedValue
+      ? `1px solid ${theme.colors.dvt.primary.base}`
+      : `1px solid ${theme.colors.dvt.primary.light2}`};
   appearance: none;
   cursor: pointer;
   color: ${({ theme, selectedValue }) =>
-    selectedValue
-      ? theme.colors.grayscale.dark2
-      : theme.colors.dvt.primary.light1};
+    selectedValue ? theme.colors.grayscale.dark2 : theme.colors.grayscale.base};
   transition: background-color 0.3s ease-in-out;
+  transition: border 0.15s;
+
+  &:hover {
+    border: ${({ theme, typeDesign, selectedValue }) =>
+      typeDesign === 'chartsForm'
+        ? 'none'
+        : selectedValue
+        ? `1px solid ${theme.colors.dvt.primary.base}`
+        : `1px solid ${theme.colors.dvt.primary.light1}`};
+  }
 `;
 
 const StyledSelectLabel = styled.label<StyledSelectLabelProps>`
@@ -118,7 +128,8 @@ const StyledSelectOption = styled.div<StyledSelectOptionProps>`
       }
     `
       : `
-        color: ${theme.colors.dvt.primary.light1};
+        color: ${theme.colors.grayscale.dark2};
+        background: ${theme.colors.dvt.primary.light3};
       }
     `}
 `;
@@ -166,7 +177,7 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
   justify-content: center;
   aspect-ratio: 1;
   border: ${props =>
-    props.disabled ? 'none' : `2px solid ${props.theme.colors.dvt.text.label}`};
+    props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
 
   text-align: 'center';
   color: ${props => `${props.theme.colors.dvt.text.label}`};
@@ -181,9 +192,9 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
     border: ${props =>
       props.disabled
         ? 'none'
-        : `1px solid ${props.theme.colors.dvt.text.label}`};
+        : `1px solid ${props.theme.colors.grayscale.base}`};
     background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+      props.disabled ? 'transparent' : `${props.theme.colors.grayscale.base}`};
   }
 
   &::after {
@@ -195,9 +206,9 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
     border: ${props =>
       props.disabled
         ? 'none'
-        : `1px solid ${props.theme.colors.dvt.text.label}`};
+        : `1px solid ${props.theme.colors.grayscale.base}`};
     background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+      props.disabled ? 'transparent' : `${props.theme.colors.grayscale.base}`};
   }
 `;
 
