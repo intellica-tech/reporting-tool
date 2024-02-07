@@ -85,6 +85,51 @@ const StyledInput = styled.div`
   gap: 12px;
 `;
 
+const StyledInputClear = styled.div<{ disabled?: boolean }>`
+  cursor: pointer;
+  border-radius: 100%;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border: ${props =>
+    props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
+
+  &::before {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(135deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
+    background-color: ${props =>
+      props.disabled
+        ? 'transparent'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
+  }
+
+  &::after {
+    content: '';
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    transform: rotate(45deg);
+    border: ${props =>
+      props.disabled
+        ? 'none'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
+    background-color: ${props =>
+      props.disabled
+        ? 'transparent'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
+  }
+`;
+
 const StyledInputLabel = styled.div`
   color: ${({ theme }) => theme.colors.dvt.text.label};
   font-size: 12px;
@@ -100,6 +145,7 @@ export {
   StyledInput,
   StyledInputField,
   StyledInputIcon,
+  StyledInputClear,
   StyledInputLabel,
   StyledInputInput,
   StyledInputPopover,

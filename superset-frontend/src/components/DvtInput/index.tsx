@@ -27,6 +27,7 @@ import {
   StyledInputIcon,
   StyledInputLabel,
   StyledInputPopover,
+  StyledInputClear,
 } from './dvt-input.module';
 
 export interface DvtInputProps {
@@ -125,6 +126,17 @@ const DvtInput = ({
           onChange={handleChange}
           disabled={disabled}
         />
+        {value ? (
+          <StyledInputClear
+            onClick={() => {
+              if (value !== '') {
+                onChange('');
+              }
+            }}
+          />
+        ) : (
+          <StyledInputClear disabled />
+        )}
         {type === 'password' && (
           <StyledInputIcon onClick={() => setShow(!show)}>
             <Icon
