@@ -46,6 +46,7 @@ export interface DvtSelectProps {
   important?: boolean;
   importantLabel?: string;
   objectName?: string;
+  onShowClear?: boolean;
 }
 
 const DvtSelect: React.FC<DvtSelectProps> = ({
@@ -62,6 +63,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
   important,
   importantLabel = 'Cannot be empty',
   objectName = 'label',
+  onShowClear = false,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -137,10 +139,10 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
         onMouseOver={() => setOnHover(true)}
       >
         {selectedValue[objectName] || placeholder}
-        {selectedValue !== '' && onHover && (
+        {onShowClear && selectedValue !== '' && onHover && (
           <StyledSelectClear onClick={handleClearClick} />
         )}
-        {!(selectedValue !== '' && onHover) && (
+        {!(onShowClear && selectedValue !== '' && onHover) && (
           <StyledSelectIcon isOpen={isOpen}>
             <Icon
               fileName="caret_right"
