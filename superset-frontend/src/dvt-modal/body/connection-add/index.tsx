@@ -35,6 +35,7 @@ import {
   StyledConnectionAddGroup,
   StyledConnectionAddGroups,
   StyledConnectionAddInputGroup,
+  StyledConnectionAddCheckboxGroup,
 } from './connection-add.module';
 
 const DvtConnectionAdd = ({ onClose }: ModalProps) => {
@@ -43,7 +44,6 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [apiUrl, setApiUrl] = useState<string>('');
-  const [exposeCheckbox, setExposeCheckbox] = useState<boolean>(false);
   const [selectedConnectionType, setSelectedConnectionType] =
     useState<string>('');
   const [collapseValues, setCollapseValues] = useState<{
@@ -67,6 +67,16 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
     display_name: string;
     addittional_parameters: string;
     switch: boolean;
+    Sqlalchemy_Uri: string;
+    chart_cache_timeout: string;
+    scheme_cache_timeout: string;
+    table_cache_timeout: string;
+    secure_extra: string;
+    root_certificate: string;
+    schemes_allowed_for_file: string;
+    metadata_parameters: string;
+    engine_parameters: string;
+    version: string;
   }>({
     host: '',
     port: '',
@@ -76,6 +86,42 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
     display_name: selectedConnectionType,
     addittional_parameters: '',
     switch: false,
+    Sqlalchemy_Uri: '',
+    chart_cache_timeout: '',
+    scheme_cache_timeout: '',
+    table_cache_timeout: '',
+    secure_extra: '',
+    root_certificate: '',
+    schemes_allowed_for_file: '',
+    metadata_parameters: '',
+    engine_parameters: '',
+    version: '',
+  });
+
+  const [checkbox, setcheckbox] = useState<{
+    expose: boolean;
+    createTable: boolean;
+    createView: boolean;
+    DML: boolean;
+    enableQuery: boolean;
+    databaseExplored: boolean;
+    disabledSqlLab: boolean;
+    asynchronous_query_execution: boolean;
+    cancel_query_on_window_unload_event: boolean;
+    impersonate_logged_in_user: boolean;
+    allow_file_uploads_to_database: boolean;
+  }>({
+    expose: false,
+    createTable: false,
+    createView: false,
+    DML: false,
+    enableQuery: false,
+    databaseExplored: false,
+    disabledSqlLab: false,
+    asynchronous_query_execution: false,
+    cancel_query_on_window_unload_event: false,
+    impersonate_logged_in_user: false,
+    allow_file_uploads_to_database: false,
   });
 
   useEffect(() => {}, [selectedFile]);
@@ -326,8 +372,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                   Enter Primary Credentials Need help? Learn how to connect your
                   database here.
                   <DvtInput
-                    value=""
-                    onChange={() => {}}
+                    value={input.display_name}
+                    onChange={text =>
+                      setInput({ ...input, display_name: text })
+                    }
                     label={t('DISPLAY NAME')}
                     popoverLabel={t('Cannot be empty')}
                     popoverDirection="right"
@@ -336,8 +384,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                     )}
                   />
                   <DvtInput
-                    value=""
-                    onChange={() => {}}
+                    value={input.Sqlalchemy_Uri}
+                    onChange={text =>
+                      setInput({ ...input, Sqlalchemy_Uri: text })
+                    }
                     label={t('SQLALCHEMY URI')}
                     importantLabel={t(
                       'Refer to the for more information on how to structure your URI.',
@@ -367,8 +417,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                     >
                       <StyledConnectionAddSwitch>
                         <DvtCheckbox
-                          checked={exposeCheckbox}
-                          onChange={setExposeCheckbox}
+                          checked={checkbox.expose}
+                          onChange={bol =>
+                            setcheckbox({ ...checkbox, expose: bol })
+                          }
                           label={t('Expose database in SQL Lab')}
                         />
                         <DvtPopper
@@ -387,12 +439,14 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           />
                         </DvtPopper>
                       </StyledConnectionAddSwitch>
-                      {exposeCheckbox && (
-                        <>
+                      {checkbox.expose && (
+                        <StyledConnectionAddCheckboxGroup>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.createTable}
+                              onChange={bol =>
+                                setcheckbox({ ...checkbox, createTable: bol })
+                              }
                               label={t('Allow CREATE TABLE AS')}
                             />
                             <DvtPopper
@@ -413,8 +467,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           </StyledConnectionAddSwitch>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.createView}
+                              onChange={bol =>
+                                setcheckbox({ ...checkbox, createView: bol })
+                              }
                               label={t('Allow CREATE VIEW AS')}
                             />
                             <DvtPopper
@@ -435,8 +491,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           </StyledConnectionAddSwitch>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.DML}
+                              onChange={bol =>
+                                setcheckbox({ ...checkbox, DML: bol })
+                              }
                               label={t('Allow DML')}
                             />
                             <DvtPopper
@@ -457,8 +515,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           </StyledConnectionAddSwitch>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.enableQuery}
+                              onChange={bol =>
+                                setcheckbox({ ...checkbox, enableQuery: bol })
+                              }
                               label={t('Enable query cost estimation')}
                             />
                             <DvtPopper
@@ -479,8 +539,13 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           </StyledConnectionAddSwitch>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.databaseExplored}
+                              onChange={bol =>
+                                setcheckbox({
+                                  ...checkbox,
+                                  databaseExplored: bol,
+                                })
+                              }
                               label={t('Allow this database to be explored')}
                             />
                             <DvtPopper
@@ -501,8 +566,13 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                           </StyledConnectionAddSwitch>
                           <StyledConnectionAddSwitch>
                             <DvtCheckbox
-                              checked={false}
-                              onChange={() => {}}
+                              checked={checkbox.disabledSqlLab}
+                              onChange={bol =>
+                                setcheckbox({
+                                  ...checkbox,
+                                  disabledSqlLab: bol,
+                                })
+                              }
                               label={t('Disable SQL Lab data preview queries')}
                             />
                             <DvtPopper
@@ -521,7 +591,7 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                               />
                             </DvtPopper>
                           </StyledConnectionAddSwitch>
-                        </>
+                        </StyledConnectionAddCheckboxGroup>
                       )}
                     </DvtCollapse>
                     <DvtCollapse
@@ -532,8 +602,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                       <StyledConnectionAddInputGroup>
                         <DvtInput
                           label={t('CHART CACHE TIMEOUT')}
-                          value=""
-                          onChange={() => {}}
+                          value={input.chart_cache_timeout}
+                          onChange={text =>
+                            setInput({ ...input, chart_cache_timeout: text })
+                          }
                           placeholder={t('Enter duration in seconds')}
                           popoverDirection="right"
                           popoverLabel={t(
@@ -542,8 +614,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                         />
                         <DvtInput
                           label={t('SCHEMA CACHE TIMEOUT')}
-                          value=""
-                          onChange={() => {}}
+                          value={input.scheme_cache_timeout}
+                          onChange={text =>
+                            setInput({ ...input, scheme_cache_timeout: text })
+                          }
                           placeholder={t('Enter duration in seconds')}
                           popoverDirection="right"
                           popoverLabel={t(
@@ -552,8 +626,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                         />
                         <DvtInput
                           label={t('TABLE CACHE TIMEOUT')}
-                          value=""
-                          onChange={() => {}}
+                          value={input.table_cache_timeout}
+                          onChange={text =>
+                            setInput({ ...input, table_cache_timeout: text })
+                          }
                           placeholder={t('Enter duration in seconds')}
                           popoverDirection="right"
                           popoverLabel={t(
@@ -562,8 +638,13 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                         />
                         <StyledConnectionAddSwitch>
                           <DvtCheckbox
-                            checked={false}
-                            onChange={() => {}}
+                            checked={checkbox.asynchronous_query_execution}
+                            onChange={bol =>
+                              setcheckbox({
+                                ...checkbox,
+                                asynchronous_query_execution: bol,
+                              })
+                            }
                             label={t('Asynchronous query execution')}
                           />
                           <DvtPopper
@@ -584,8 +665,15 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                         </StyledConnectionAddSwitch>
                         <StyledConnectionAddSwitch>
                           <DvtCheckbox
-                            checked={false}
-                            onChange={() => {}}
+                            checked={
+                              checkbox.cancel_query_on_window_unload_event
+                            }
+                            onChange={bol =>
+                              setcheckbox({
+                                ...checkbox,
+                                cancel_query_on_window_unload_event: bol,
+                              })
+                            }
                             label={t('Cancel query on window unload event')}
                           />
                           <DvtPopper
@@ -628,8 +716,13 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                       />
                       <StyledConnectionAddSwitch>
                         <DvtCheckbox
-                          checked={false}
-                          onChange={() => {}}
+                          checked={checkbox.impersonate_logged_in_user}
+                          onChange={bol =>
+                            setcheckbox({
+                              ...checkbox,
+                              impersonate_logged_in_user: bol,
+                            })
+                          }
                           label={t(
                             'Impersonate logged in user (Presto, Trino, Drill, Hive, and GSheets)',
                           )}
@@ -651,14 +744,21 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                         </DvtPopper>
                       </StyledConnectionAddSwitch>
                       <DvtCheckbox
-                        checked={false}
-                        onChange={() => {}}
+                        checked={checkbox.allow_file_uploads_to_database}
+                        onChange={bol =>
+                          setcheckbox({
+                            ...checkbox,
+                            allow_file_uploads_to_database: bol,
+                          })
+                        }
                         label={t('Allow file uploads to database')}
                       />
                       <DvtInput
                         label={t('SCHEMAS ALLOWED FOR FILE UPLOAD')}
-                        value=""
-                        onChange={() => {}}
+                        value={input.schemes_allowed_for_file}
+                        onChange={text =>
+                          setInput({ ...input, schemes_allowed_for_file: text })
+                        }
                         placeholder={t('schema1,schema2')}
                         popoverDirection="right"
                         popoverLabel={t(
@@ -687,8 +787,8 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                       />
                       <DvtInput
                         label={t('VERSION')}
-                        value=""
-                        onChange={() => {}}
+                        value={input.version}
+                        onChange={text => setInput({ ...input, version: text })}
                         placeholder={t('Version Number')}
                         popoverDirection="right"
                         popoverLabel={t(

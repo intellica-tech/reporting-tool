@@ -143,6 +143,13 @@ const StyledConnectionAddInputGroup = styled.div`
   gap: 5px;
 `;
 
+const StyledConnectionAddCheckboxGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 10px 0 5px 10px;
+`;
+
 export {
   StyledConnectionAdd,
   StyledConnectionAddHeader,
@@ -163,4 +170,5 @@ export {
   StyledConnectionAddGroup,
   StyledConnectionAddGroups,
   StyledConnectionAddInputGroup,
+  StyledConnectionAddCheckboxGroup,
 };
