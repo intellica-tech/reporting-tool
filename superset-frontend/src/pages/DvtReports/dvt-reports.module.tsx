@@ -25,36 +25,6 @@ const StyledReports = styled.div`
   height: 100%;
 `;
 
-const StyledReportsListButtons = styled.div`
-  display: flex;
-  border-radius: 12px;
-  height: 56px;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.grayscale.light5};
-`;
-
-const StyledDvtSelectButtons = styled.div`
-  display: flex;
-`;
-
-const StyledSelectedItem = styled.div`
-  display: flex;
-  gap: 45px;
-  padding: 35px;
-`;
-
-const StyledSelectedItemCount = styled.div`
-  display: flex;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.secondary.dark3};
-`;
-
 const StyledReportsButton = styled.div`
   display: flex;
   justify-content: space-between;
@@ -62,19 +32,4 @@ const StyledReportsButton = styled.div`
   padding: 30px 0px 36px 0px;
 `;
 
-const StyledReportsButtons = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-direction: row;
-  justify-content: flex-end;
-`;
-
-export {
-  StyledReports,
-  StyledReportsButton,
-  StyledDvtSelectButtons,
-  StyledSelectedItemCount,
-  StyledSelectedItem,
-  StyledReportsListButtons,
-  StyledReportsButtons,
-};
+export { StyledReports, StyledReportsButton };
