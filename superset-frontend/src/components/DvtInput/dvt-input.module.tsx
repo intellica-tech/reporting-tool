@@ -85,7 +85,7 @@ const StyledInput = styled.div`
   gap: 12px;
 `;
 
-const StyledInputClear = styled.div<{ disabled?: boolean }>`
+const StyledInputClear = styled.div`
   cursor: pointer;
   border-radius: 100%;
   height: 14px;
@@ -94,39 +94,31 @@ const StyledInputClear = styled.div<{ disabled?: boolean }>`
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border: ${props =>
-    props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  transition: all 300ms;
+  position: relative;
 
-  &::before {
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+  }
+
+  &::before,
+  &::after {
     content: '';
+    top: 50%;
+    left: 50%;
     width: 1px;
     height: 7px;
     position: absolute;
-    transform: rotate(135deg);
-    border: ${props =>
-      props.disabled
-        ? 'none'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
-    background-color: ${props =>
-      props.disabled
-        ? 'transparent'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
+    background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(135deg);
   }
 
   &::after {
-    content: '';
-    width: 1px;
-    height: 7px;
-    position: absolute;
-    transform: rotate(45deg);
-    border: ${props =>
-      props.disabled
-        ? 'none'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
-    background-color: ${props =>
-      props.disabled
-        ? 'transparent'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 `;
 

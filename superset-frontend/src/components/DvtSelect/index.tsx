@@ -66,6 +66,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [clearTrigger, setClearTrigger] = useState(false);
+  const [onHover, setOnHover] = useState(false);
   useOnClickOutside(ref, () => setIsOpen(false));
 
   const handleSelectClick = () => {
@@ -91,6 +92,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
       ref={ref}
       typeDesign={typeDesign}
       style={{ minWidth: maxWidth ? '100%' : width }}
+      onMouseLeave={() => setOnHover(false)}
     >
       <StyledSelectPopover>
         {label && (
@@ -132,14 +134,13 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
         onClick={handleSelectClick}
         typeDesign={typeDesign}
         selectedValue={selectedValue[objectName]}
+        onMouseOver={() => setOnHover(true)}
       >
         {selectedValue[objectName] || placeholder}
-        {selectedValue !== '' ? (
+        {selectedValue !== '' && onHover && (
           <StyledSelectClear onClick={handleClearClick} />
-        ) : (
-          <StyledSelectClear disabled />
         )}
-        {selectedValue === '' && (
+        {!(selectedValue !== '' && onHover) && (
           <StyledSelectIcon isOpen={isOpen}>
             <Icon
               fileName="caret_right"

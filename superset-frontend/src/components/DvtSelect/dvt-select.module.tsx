@@ -152,7 +152,7 @@ const StyledSelectIcon = styled.div<StyledSelectIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
-const StyledSelectClear = styled.div<{ disabled?: boolean }>`
+const StyledSelectClear = styled.div`
   z-index: 900;
   cursor: pointer;
   border-radius: 100%;
@@ -164,35 +164,29 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border: ${props =>
-    props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
 
-  &::before {
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+  }
+
+  &::before,
+  &::after {
     content: '';
+    top: 50%;
+    left: 50%;
     width: 1px;
     height: 7px;
     position: absolute;
-    transform: rotate(135deg);
-    border: ${props =>
-      props.disabled
-        ? 'none'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
-    background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.grayscale.base}`};
+    background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(135deg);
   }
 
   &::after {
-    content: '';
-    width: 1px;
-    height: 7px;
-    position: absolute;
-    transform: rotate(45deg);
-    border: ${props =>
-      props.disabled
-        ? 'none'
-        : `1px solid ${props.theme.colors.grayscale.base}`};
-    background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.grayscale.base}`};
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 `;
 
