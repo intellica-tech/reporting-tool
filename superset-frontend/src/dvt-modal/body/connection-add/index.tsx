@@ -266,7 +266,8 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                       )}
                       {data.type === 'switch' && (
                         <StyledConnectionAddSwitch>
-                          <Switch
+                          <DvtCheckbox
+                            label="SSL"
                             checked={input.switch}
                             onChange={bol => setInputValue(data.value, bol)}
                           />
