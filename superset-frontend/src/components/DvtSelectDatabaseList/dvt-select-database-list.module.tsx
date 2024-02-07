@@ -65,11 +65,19 @@ const StyledDvtSelectDatabaseListItem = styled.button<StyledDvtSelectDatabaseLis
     active ? theme.colors.dvt.primary.base : theme.colors.dvt.grayscale.light2};
   border-radius: 8px;
   min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const StyledDvtSelectDatabaseListItemLabel = styled.p<StyledDvtSelectDatabaseListItemProps>`
   font-size: 12px;
+  margin: 0;
+  word-break: break-all;
   color: ${({ theme, active }) =>
     active ? theme.colors.grayscale.light5 : theme.colors.dvt.text.label};
+  margin-right: 5px;
   text-align: left;
-  word-break: break-all;
 `;
 
 export {
@@ -77,4 +85,5 @@ export {
   StyledDvtSelectDatabaseListLabel,
   StyledDvtSelectDatabaseListScroll,
   StyledDvtSelectDatabaseListItem,
+  StyledDvtSelectDatabaseListItemLabel,
 };

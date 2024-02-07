@@ -17,19 +17,22 @@
  * under the License.
  */
 import React, { useState } from 'react';
-import { t } from '@superset-ui/core';
+import { SupersetTheme, t } from '@superset-ui/core';
 import DvtInput from '../DvtInput';
+import Icon from '../Icons/Icon';
 import {
   StyledDvtSelectDatabaseList,
   StyledDvtSelectDatabaseListLabel,
   StyledDvtSelectDatabaseListScroll,
   StyledDvtSelectDatabaseListItem,
+  StyledDvtSelectDatabaseListItemLabel,
 } from './dvt-select-database-list.module';
 
 interface CardProps {
   extra: string;
   type: string;
   value: string;
+  already: boolean;
 }
 
 export interface DvtSelectDatabaseListProps {
@@ -68,7 +71,23 @@ const DvtSelectDatabaseList = ({
             active={item.value === active?.value}
             onClick={() => setActive(item)}
           >
-            {item.value}
+            <StyledDvtSelectDatabaseListItemLabel
+              active={item.value === active?.value}
+            >
+              {item.value}
+            </StyledDvtSelectDatabaseListItemLabel>
+            {item.already && (
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color:
+                    item.value === active?.value
+                      ? theme.colors.grayscale.light5
+                      : theme.colors.dvt.primary.base,
+                })}
+                iconSize="l"
+              />
+            )}
           </StyledDvtSelectDatabaseListItem>
         ))}
       </StyledDvtSelectDatabaseListScroll>
