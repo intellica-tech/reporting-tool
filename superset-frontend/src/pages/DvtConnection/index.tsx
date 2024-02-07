@@ -29,11 +29,11 @@ import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import {
   StyledConnection,
   StyledConnectionButton,
 } from './dvt-connection.module';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 
 const modifiedData = {
   header: [

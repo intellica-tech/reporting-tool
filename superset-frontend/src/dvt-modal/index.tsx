@@ -45,6 +45,8 @@ const DvtModal = () => {
         return 'medium';
       case 'delete-modal':
         return 'xsmall';
+      case 'connection-add-modal':
+        return 'large';
       default:
         return 'small';
     }

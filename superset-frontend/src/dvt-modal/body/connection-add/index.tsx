@@ -40,7 +40,6 @@ import {
 const DvtConnectionAdd = ({ onClose }: ModalProps) => {
   const [step, setStep] = useState<number>(1);
   const [supporedDatabase, setSupporedDatabase] = useState<string>();
-  const [ssl, setSsl] = useState<boolean>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [apiUrl, setApiUrl] = useState<string>('');
@@ -63,6 +62,7 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
     host: string;
     port: string;
     database_name: string;
+    user_name: string;
     password: string;
     display_name: string;
     addittional_parameters: string;
@@ -71,17 +71,14 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
     host: '',
     port: '',
     database_name: '',
+    user_name: '',
     password: '',
     display_name: selectedConnectionType,
     addittional_parameters: '',
     switch: false,
   });
 
-  useEffect(() => {
-    if (selectedFile) {
-      console.log('Selected file:', selectedFile);
-    }
-  }, [selectedFile]);
+  useEffect(() => {}, [selectedFile]);
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -133,13 +130,16 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
       engine_information: ConnectionDataFindType?.engine_information,
       expose_in_sqllab: true,
       parameters: {
-        database: '12',
-        host: '172.16.66.16',
-        password: '1',
-        port: '5434',
-        username: '1',
-        encryption: true,
+        database: input.database_name,
+        host: input.host,
+        password: input.password,
+        port: input.port,
+        username: input.display_name,
+        encryption: input.switch,
       },
+    },
+    headers: {
+      'Content-Type': 'application/json',
     },
   });
 
@@ -266,7 +266,10 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                       )}
                       {data.type === 'switch' && (
                         <StyledConnectionAddSwitch>
-                          <Switch checked={ssl} onChange={bol => setSsl(bol)} />
+                          <Switch
+                            checked={input.switch}
+                            onChange={bol => setInputValue(data.value, bol)}
+                          />
                           <DvtPopper
                             label={data.importantLabel}
                             direction="right"

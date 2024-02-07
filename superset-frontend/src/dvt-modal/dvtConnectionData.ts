@@ -46,6 +46,15 @@ const DvtConnectionData: ConnectionDataProps[] = [
           'Copy the name of the database you are trying to connect to.',
       },
       {
+        title: 'USER NAME',
+        value: 'user_name',
+        type: 'text',
+        placeholder: 'e.g Analytics',
+        popoverLabel: 'Cannot be empty',
+        importantLabel:
+          'Copy the name of the database you are trying to connect to.',
+      },
+      {
         title: 'PASSWORD',
         value: 'password',
         type: 'password',
@@ -90,6 +99,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
     data: [
       {
         title: 'HOST',
+        value: 'host',
         type: 'text',
         importantLabel:
           'This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).',
@@ -98,12 +108,23 @@ const DvtConnectionData: ConnectionDataProps[] = [
       },
       {
         title: 'PORT',
+        value: 'port',
         type: 'text',
         placeholder: 'e.g 5432',
         popoverLabel: 'Cannot be empty',
       },
       {
         title: 'DATABASE NAME',
+        value: 'database_name',
+        type: 'text',
+        placeholder: 'e.g Analytics',
+        popoverLabel: 'Cannot be empty',
+        importantLabel:
+          'Copy the name of the database you are trying to connect to.',
+      },
+      {
+        title: 'USER NAME',
+        value: 'user_name',
         type: 'text',
         placeholder: 'e.g Analytics',
         popoverLabel: 'Cannot be empty',
@@ -112,23 +133,27 @@ const DvtConnectionData: ConnectionDataProps[] = [
       },
       {
         title: 'PASSWORD',
+        value: 'password',
         type: 'password',
         placeholder: 'e.g *******',
       },
       {
         title: 'DISPLAY NAME',
+        value: 'display_name',
         type: 'text',
         importantLabel:
           'Pick a nickname for how the database will display in Superset.',
       },
       {
         title: 'ADDITIONAL PARAMETERS',
+        value: 'addittional_parameters',
         type: 'text',
         placeholder: 'e.g param1=value1&param2=value2',
         importantLabel: 'Add additional custom parameterss',
       },
       {
         type: 'switch',
+        value: 'switch',
         importantLabel: 'SSL Mode "require" will be used.',
       },
       {

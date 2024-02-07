@@ -120,8 +120,18 @@ const StyledConnectionAddGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  max-height: 500px;
+  height: 580px;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    border-radius: 3px;
+  }
 `;
 const StyledConnectionAddGroups = styled.div`
   display: flex;
