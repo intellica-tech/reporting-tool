@@ -139,18 +139,20 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
         ) : (
           <StyledSelectClear disabled />
         )}
-        <StyledSelectIcon isOpen={isOpen}>
-          <Icon
-            fileName="caret_right"
-            iconSize="xxl"
-            css={(theme: SupersetTheme) => ({
-              color:
-                typeDesign === 'form' || typeDesign === 'navbar'
-                  ? theme.colors.dvt.text.label
-                  : theme.colors.grayscale.base,
-            })}
-          />
-        </StyledSelectIcon>
+        {selectedValue === '' && (
+          <StyledSelectIcon isOpen={isOpen}>
+            <Icon
+              fileName="caret_right"
+              iconSize="xxl"
+              css={(theme: SupersetTheme) => ({
+                color:
+                  typeDesign === 'form' || typeDesign === 'navbar'
+                    ? theme.colors.dvt.text.label
+                    : theme.colors.grayscale.base,
+              })}
+            />
+          </StyledSelectIcon>
+        )}
       </StyledSelectSelect>
       {isOpen && (
         <StyledSelectOptions

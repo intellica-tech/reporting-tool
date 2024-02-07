@@ -169,7 +169,7 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
   cursor: pointer;
   border-radius: 100%;
   position: absolute;
-  right: 40px;
+  right: 18px;
   height: 14px;
   width: 14px;
   display: flex;
