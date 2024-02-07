@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,23 +26,20 @@ import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
 import handleResourceExport from 'src/utils/export';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import withToasts from 'src/components/MessageToasts/withToasts';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import {
   StyledDashboardBottom,
-  StyledDashboardButtons,
   StyledDashboardCreateDashboard,
   StyledDashboardList,
-  StyledDashboardListButtons,
   StyledDashboardPagination,
   StyledDashboardTable,
-  StyledDvtSelectButtons,
-  StyledSelectedItem,
-  StyledSelectedItemCount,
 } from './dvtdashboardlist.module';
 
 function DvtDashboardList() {
@@ -51,65 +49,48 @@ function DvtDashboardList() {
     state => state.dvtNavbar.viewlist.dashboard.value,
   );
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [data, setData] = useState<any[]>([]);
-  const [count, setCount] = useState<number>(0);
-
-  const searchApiUrl = () => {
-    const filterData = [
-      { col: 'dashboard_title', opr: 'title_or_slug', value: '' },
-      { col: 'owners', opr: 'rel_m_m', value: dashboardSelector.owner?.value },
-      {
-        col: 'created_by',
-        opr: 'rel_o_m',
-        value: dashboardSelector.createdBy?.value,
-      },
-      { col: 'published', opr: 'eq', value: dashboardSelector.status?.value },
-      {
-        col: 'id',
-        opr: 'dashboard_is_favorite',
-        value: dashboardSelector.favorite?.value,
-      },
-      {
-        col: 'id',
-        opr: 'dashboard_is_certified',
-        value: dashboardSelector.certified?.value,
-      },
-    ];
-
-    let filters = '';
-    const sort = 'order_column:changed_on_delta_humanized,order_direction:desc';
-
-    const withoutValues = [undefined, null, ''];
-
-    const filteredData = filterData
-      .filter(item => !withoutValues.includes(item.value))
-      .map(item => `(col:${item.col},opr:${item.opr},value:${item.value})`)
-      .join(',');
-
-    if (filterData.filter(item => !withoutValues.includes(item.value)).length) {
-      filters = `filters:!(${filteredData}),`;
-    }
-
-    return `?q=(${filters}${sort},page:${currentPage - 1},page_size:10)`;
-  };
-
-  const dashboardPromiseUrl = `dashboard/${searchApiUrl()}`;
-  const [reportApiUrl, setReportApiUrl] = useState(dashboardPromiseUrl);
-  const dashboardApi = useFetch({
-    url: reportApiUrl,
-  });
-
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
   );
+  const [data, setData] = useState<any[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [count, setCount] = useState<number>(0);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  useEffect(() => {
-    setReportApiUrl('');
-    dispatch(dvtHomeDeleteSuccessStatus(''));
-    setTimeout(() => setReportApiUrl(dashboardPromiseUrl), 200);
-  }, [deleteSuccessStatus]);
+  const searchApiUrls = (gPage: number) =>
+    `dashboard/${fetchQueryParamsSearch({
+      filters: [
+        { col: 'dashboard_title', opr: 'title_or_slug', value: '' },
+        {
+          col: 'owners',
+          opr: 'rel_m_m',
+          value: dashboardSelector.owner?.value,
+        },
+        {
+          col: 'created_by',
+          opr: 'rel_o_m',
+          value: dashboardSelector.createdBy?.value,
+        },
+        { col: 'published', opr: 'eq', value: dashboardSelector.status?.value },
+        {
+          col: 'id',
+          opr: 'dashboard_is_favorite',
+          value: dashboardSelector.favorite?.value,
+        },
+        {
+          col: 'id',
+          opr: 'dashboard_is_certified',
+          value: dashboardSelector.certified?.value,
+        },
+      ],
+      page: gPage,
+    })}`;
+
+  const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
+
+  const dashboardApi = useFetch({
+    url: dashboardApiUrl,
+  });
 
   useEffect(() => {
     if (dashboardApi) {
@@ -134,50 +115,41 @@ function DvtDashboardList() {
     }
   }, [dashboardApi]);
 
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setDashboardApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setDashboardApiUrl(searchApiUrls(page));
+    }
+  }, [dashboardSelector]);
+
   const handleDeselectAll = () => {
     setSelectedRows([]);
   };
 
-  const handleCreateDashboard = () => {
-    history.push('/superset/dashboard');
+  const handleEditDashboards = (item: any) => {
+    dispatch(
+      openModal({
+        component: 'edit-dashboard',
+        meta: { id: item.id },
+      }),
+    );
   };
 
-  const handleSetFavorites = (id: number, isFavorite: boolean) => {
-    const updateData = (dataList: any[]) => {
-      const newData = dataList.map(item =>
-        item.id === id ? { ...item, isFavorite: !isFavorite } : item,
-      );
-      return newData;
-    };
-
-    const action = isFavorite ? 'unselect' : 'select';
-    fetch(`/superset/favstar/slice/${id}/${action}/`)
-      .then(res => {
-        if (res.ok) {
-          setData(updatedData => updateData(updatedData));
-        } else {
-          console.error('Favorite has been failed:', res.status);
-        }
-      })
-      .catch(error => {
-        console.error('Favorite has been failed:', error);
-      });
-  };
-
-  const handleEditDashboards = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/dashboard/${item.id}`);
-      const editedDashboardData = await response.json();
-
-      dispatch(
-        openModal({
-          component: 'edit-dashboard',
-          meta: editedDashboardData,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
+  const handleModalDelete = (item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type: 'dashboard', title: 'dashboard' },
+      }),
+    );
+    setDashboardApiUrl('');
   };
 
   const handleSingleExport = (id: number) => {
@@ -189,22 +161,45 @@ function DvtDashboardList() {
     handleResourceExport('dashboard', selectedIds, () => {});
   };
 
-  const handleDelete = async (type: string, item: any) => {
-    dispatch(
-      openModal({
-        component: 'delete-modal',
-        meta: { item, type, title: 'dashboard' },
-      }),
-    );
-  };
+  const [favoriteUrl, setFavoriteUrl] = useState<{
+    url: string;
+    title: string;
+    id: number;
+    isFavorite: boolean;
+  }>({ url: '', title: '', id: 0, isFavorite: false });
 
-  const handleBulkDelete = async (type: string, item: any) => {
-    dispatch(
-      openModal({
-        component: 'delete-modal',
-        meta: { item, type, title: 'dashboard' },
-      }),
-    );
+  const favoritePromise = useFetch({
+    url: favoriteUrl.url,
+    method: favoriteUrl.isFavorite ? 'DELETE' : 'POST',
+  });
+
+  useEffect(() => {
+    if (favoritePromise?.result === 'OK') {
+      setData(state => {
+        const itemRemovedData = state.filter(
+          item => item.id !== favoriteUrl.id,
+        );
+        const findItem = state.find(item => item.id === favoriteUrl.id);
+
+        return [
+          ...itemRemovedData,
+          { ...findItem, isFavorite: !findItem.isFavorite },
+        ].sort((a, b) => a.id - b.id);
+      });
+    }
+  }, [favoritePromise]);
+
+  const handleSetFavorites = (
+    id: number,
+    title: string,
+    isFavorite: boolean,
+  ) => {
+    setFavoriteUrl({
+      url: `${title}/${id}/favorites/`,
+      title,
+      id,
+      isFavorite,
+    });
   };
 
   const headerData = [
@@ -233,23 +228,17 @@ function DvtDashboardList() {
       clicks: [
         {
           icon: 'edit_alt',
-          click: (item: any) => {
-            handleEditDashboards(item);
-          },
+          click: (item: any) => handleEditDashboards(item),
           popperLabel: t('Edit'),
         },
         {
           icon: 'share',
-          click: (item: any) => {
-            handleSingleExport(item.id);
-          },
+          click: (item: any) => handleSingleExport(item.id),
           popperLabel: t('Export'),
         },
         {
           icon: 'trash',
-          click: (item: any) => {
-            handleDelete('dashboard', item);
-          },
+          click: (item: any) => handleModalDelete(item),
           popperLabel: t('Delete'),
         },
       ],
@@ -259,46 +248,12 @@ function DvtDashboardList() {
   return (
     <StyledDashboardList>
       {activeTab === 'Table' && (
-        <StyledDashboardListButtons>
-          <StyledDvtSelectButtons>
-            <StyledSelectedItem>
-              <StyledSelectedItemCount>
-                <span>{`${selectedRows.length} Selected`}</span>
-              </StyledSelectedItemCount>
-
-              <DvtButton
-                label={t('Deselect All')}
-                bold
-                colour="primary"
-                typeColour="outline"
-                size="medium"
-                onClick={handleDeselectAll}
-              />
-            </StyledSelectedItem>
-          </StyledDvtSelectButtons>
-          <StyledDashboardButtons>
-            <DvtButton
-              label={t('Delete')}
-              icon="dvt-delete"
-              iconToRight
-              colour="error"
-              size="small"
-              onClick={() => {
-                handleBulkDelete('dashboard', selectedRows);
-              }}
-            />
-            <DvtButton
-              label={t('Export')}
-              icon="dvt-export"
-              iconToRight
-              colour="primary"
-              bold
-              typeColour="powder"
-              size="small"
-              onClick={handleBulkExport}
-            />
-          </StyledDashboardButtons>
-        </StyledDashboardListButtons>
+        <DvtDeselectDeleteExport
+          count={selectedRows.length}
+          handleDeselectAll={handleDeselectAll}
+          handleDelete={() => handleModalDelete(selectedRows)}
+          handleExport={handleBulkExport}
+        />
       )}
       <StyledDashboardTable>
         {activeTab === 'Table' ? (
@@ -318,32 +273,25 @@ function DvtDashboardList() {
               description: `Modified ${item.created_on_delta_humanized}`,
               isFavorite: item.isFavorite,
               link: item.url,
+              paramUrl: 'dashboard',
             }))}
             title="Data"
-            setFavorites={(id, isFavorite) =>
-              handleSetFavorites(id, isFavorite)
-            }
+            setFavorites={handleSetFavorites}
             dropdown={[
               {
                 label: t('Edit'),
                 icon: 'edit_alt',
-                onClick: (item: any) => {
-                  handleEditDashboards(item);
-                },
+                onClick: (item: any) => handleEditDashboards(item),
               },
               {
                 label: t('Export'),
                 icon: 'share',
-                onClick: (item: any) => {
-                  handleSingleExport(item.id);
-                },
+                onClick: (item: any) => handleSingleExport(item.id),
               },
               {
                 label: t('Delete'),
                 icon: 'trash',
-                onClick: (item: any) => {
-                  handleDelete('dashboard', item);
-                },
+                onClick: (item: any) => handleModalDelete(item),
               },
             ]}
           />
@@ -356,13 +304,13 @@ function DvtDashboardList() {
             colour="grayscale"
             bold
             typeColour="basic"
-            onClick={handleCreateDashboard}
+            onClick={() => history.push('/superset/dashboard')}
           />
         </StyledDashboardCreateDashboard>
         <StyledDashboardPagination>
           <DvtPagination
-            page={currentPage}
-            setPage={setCurrentPage}
+            page={page}
+            setPage={setPage}
             itemSize={count}
             pageItemSize={10}
           />

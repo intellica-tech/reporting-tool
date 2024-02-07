@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
+import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
@@ -17,42 +18,56 @@ import {
 } from './dashboard-edit.module';
 
 const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
-  const [title, setTitle] = useState<string>(meta.result.dashboard_title);
-  const [slugUrl, setSlugUrl] = useState<string>(meta.result.slug);
-  const [changedNyName, setChangedByName] = useState<string>(
-    meta.result.changed_by_name,
-  );
-  const [certifiedBy, setCertifiedBy] = useState<string>(
-    meta.result.certified_by,
-  );
+  const [values, setValues] = useState<any>({
+    title: '',
+    urlSlug: '',
+    owners: [],
+    colorSchema: {},
+    certifiedBy: '',
+    certificationDetails: '',
+  });
   const [dashboardApi, setDashboardApi] = useState<string>('');
-  const [selectedValues, setSelectedValues] = useState<any[]>(
-    meta.result.owners.map((item: any) => item.id),
-  );
-  const [selectedColorValues, setSelectedColorValues] = useState<any | null>(
-    () => {
-      const jsonData = JSON.parse(meta.result.json_metadata || '{}');
-      const colorScheme = (jsonData !== '{}' && jsonData.color_scheme) || null;
-      return colorScheme ? { label: colorScheme } : '{}';
-    },
-  );
   const [jsonValue, setJsonValue] = useState<any | null>('');
+
+  const dashboardItemApi = useFetch({ url: `dashboard/${meta.id}` });
+
+  useEffect(() => {
+    if (dashboardItemApi) {
+      const { result } = dashboardItemApi;
+      const jsonData = JSON.parse(result.json_metadata || '{}');
+      const colorScheme = (jsonData !== '{}' && jsonData?.color_scheme) || null;
+      const findedColorSchema = colorScheme
+        ? DvtSchemeColorData.find(item => item.id === colorScheme)
+        : {};
+
+      const ownersFixed = result.owners.map((item: any) => item.id);
+
+      setValues({
+        title: result.dashboard_title || '',
+        urlSlug: result.slug || '',
+        owners: ownersFixed,
+        colorSchema: findedColorSchema,
+        certifiedBy: result.certified_by || '',
+        certificationDetails: result.certification_details || '',
+      });
+    }
+  }, [dashboardItemApi]);
 
   const updateDashboardData = useFetch({
     url: dashboardApi,
     method: 'PUT',
     body: {
-      certification_details: certifiedBy,
-      certified_by: changedNyName,
-      dashboard_title: title,
-      owners: selectedValues,
-      slug: slugUrl,
-      json_metadata: jsonValue,
+      certification_details: values.certificationDetails,
+      certified_by: values.certifiedBy,
+      dashboard_title: values.title,
+      owners: values.owners,
+      slug: values.urlSlug,
+      json_metadata: JSON.stringify(jsonValue),
     },
   });
 
   const updateDashboardDataFetchResult = useFetch({
-    url: '/api/v1/dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
+    url: 'dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
   const ownersOptions = updateDashboardDataFetchResult
@@ -69,13 +84,18 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   }, [onClose, updateDashboardData]);
 
   const defaultJsonValue = `{
+    "color_scheme": "${values.colorSchema?.label || ''}",
+    "label_colors": {},
     "timed_refresh_immune_slices": [],
     "expanded_slices": {},
     "refresh_frequency": 0,
-    "color_scheme": "${selectedColorValues?.label || ''}",
-    "label_colors": {},
-    "cross_filters_enabled": true
+    "cross_filters_enabled": true,
+    "shared_label_colors": {},
   }`;
+
+  const handleOnChange = (key: string, value: any) => {
+    setValues((state: any) => ({ ...state, [key]: value }));
+  };
 
   return (
     <StyledDashboardEdit>
@@ -84,7 +104,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
           colour="primary"
           label={t('SAVE')}
           typeColour="powder"
-          onClick={() => setDashboardApi(`dashboard/${meta.result.id}`)}
+          onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
           size="small"
         />
       </StyledDashboardEditHeader>
@@ -92,42 +112,42 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
         <StyledDashboardEditGroup>
           <StyledDashboardEditInput>
             <DvtInput
-              value={title}
+              value={values.title}
               label={t('Title')}
-              onChange={setTitle}
+              onChange={v => handleOnChange('title', v)}
               typeDesign="form"
             />
             <DvtInput
-              value={changedNyName}
+              value={values.certifiedBy}
               label={t('CERTIFIED BY')}
-              onChange={setChangedByName}
+              onChange={v => handleOnChange('certifiedBy', v)}
               typeDesign="form"
             />
             <DvtInputSelect
               label={t('Owners')}
               data={ownersOptions}
-              selectedValues={selectedValues}
-              setSelectedValues={setSelectedValues}
+              selectedValues={values.owners}
+              setSelectedValues={v => handleOnChange('owners', v)}
               typeDesign="form"
             />
           </StyledDashboardEditInput>
           <StyledDashboardEditInput>
             <DvtInput
-              value={slugUrl}
+              value={values.urlSlug}
               label={t('Url Slug')}
-              onChange={setSlugUrl}
+              onChange={v => handleOnChange('urlSlug', v)}
               typeDesign="form"
             />
             <DvtSelectColorScheme
               label={t('Color Scheme')}
-              selectedValue={selectedColorValues}
-              setSelectedValue={setSelectedColorValues}
+              selectedValue={values.colorSchema}
+              setSelectedValue={v => handleOnChange('colorSchema', v)}
               typeDesign="form"
             />
             <DvtInput
-              value={certifiedBy}
+              value={values.certificationDetails}
               label={t('Certification Details')}
-              onChange={setCertifiedBy}
+              onChange={v => handleOnChange('certificationDetails', v)}
               typeDesign="form"
             />
           </StyledDashboardEditInput>
