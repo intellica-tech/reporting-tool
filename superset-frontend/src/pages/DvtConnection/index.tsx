@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,48 +44,41 @@ function DvtConnection() {
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const deleteSuccessStatus = useAppSelector(
-    state => state.dvtHome.deleteSuccessStatus,
-  );
+  const searchApiUrls = (gPage: number) =>
+    `database/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'expose_in_sqllab',
+          opr: 'eq',
+          value: connectionSelector.expose_in_sqllab?.value,
+        },
+        {
+          col: 'allow_run_async',
+          opr: 'eq',
+          value: connectionSelector.allow_run_async?.value,
+        },
+        {
+          col: 'database_name',
+          opr: 'ct',
+          value: connectionSelector.search,
+        },
+      ],
+      page: gPage,
+    })}`;
 
-  const searchApiUrls = fetchQueryParamsSearch({
-    filters: [
-      {
-        col: 'expose_in_sqllab',
-        opr: 'eq',
-        value: connectionSelector.expose_in_sqllab?.value,
-      },
-      {
-        col: 'allow_run_async',
-        opr: 'eq',
-        value: connectionSelector.allow_run_async?.value,
-      },
-      {
-        col: 'database_name',
-        opr: 'ct',
-        value: connectionSelector.search,
-      },
-    ],
-    page,
-  });
-
-  const connectionPromiseUrl = `database/${searchApiUrls}`;
-
-  const [connectionApiUrl, setConnectionApiUrl] = useState('');
+  const [connectionApiUrl, setConnectionApiUrl] = useState<string>('');
 
   const connectionApi = useFetch({
     url: connectionApiUrl,
   });
-
-  useEffect(() => {
-    dispatch(dvtHomeDeleteSuccessStatus(''));
-    setConnectionApiUrl(connectionPromiseUrl);
-  }, [deleteSuccessStatus, connectionSelector]);
 
   useEffect(() => {
     if (connectionApi) {
@@ -96,9 +90,23 @@ function DvtConnection() {
         })),
       );
       setCount(connectionApi.count);
-      setConnectionApiUrl('');
+      setSelectedRows([]);
     }
   }, [connectionApi]);
+
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setConnectionApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setConnectionApiUrl(searchApiUrls(page));
+    }
+  }, [connectionSelector]);
 
   const clearConnection = () => {
     dispatch(
@@ -117,6 +125,16 @@ function DvtConnection() {
     setSelectedRows([]);
   };
 
+  const handleModalDelete = (item: any) => {
+    dispatch(
+      openModal({
+        component: 'delete-modal',
+        meta: { item, type: 'database', title: 'database' },
+      }),
+    );
+    setConnectionApiUrl('');
+  };
+
   const handleSingleExport = (id: number) => {
     handleResourceExport('database', [id], () => {});
   };
@@ -124,24 +142,6 @@ function DvtConnection() {
   const handleBulkExport = () => {
     const selectedIds = selectedRows.map(item => item.id);
     handleResourceExport('database', selectedIds, () => {});
-  };
-
-  const handleDelete = async (type: string, item: any) => {
-    dispatch(
-      openModal({
-        component: 'delete-modal',
-        meta: { item, type, title: 'database' },
-      }),
-    );
-  };
-
-  const handleBulkDelete = async (type: string, item: any) => {
-    dispatch(
-      openModal({
-        component: 'delete-modal',
-        meta: { item, type, title: 'database' },
-      }),
-    );
   };
 
   const modifiedData = {
@@ -166,16 +166,12 @@ function DvtConnection() {
           },
           {
             icon: 'share',
-            click: (item: any) => {
-              handleSingleExport(item.id);
-            },
+            click: (item: any) => handleSingleExport(item.id),
             popperLabel: t('Export'),
           },
           {
             icon: 'trash',
-            click: (item: any) => {
-              handleDelete('database', item);
-            },
+            click: (item: any) => handleModalDelete(item),
             popperLabel: t('Delete'),
           },
         ],
@@ -188,7 +184,7 @@ function DvtConnection() {
       <DvtDeselectDeleteExport
         count={selectedRows.length}
         handleDeselectAll={handleDeselectAll}
-        handleDelete={() => handleBulkDelete('database', selectedRows)}
+        handleDelete={() => handleModalDelete(selectedRows)}
         handleExport={handleBulkExport}
       />
       <DvtTable

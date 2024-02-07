@@ -47,41 +47,42 @@ function DvtDatasets() {
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-  const searchApiUrls = fetchQueryParamsSearch({
-    filters: [
-      {
-        col: 'owners',
-        opr: 'rel_m_m',
-        value: datasetsSelector.owner?.value,
-      },
-      {
-        col: 'database',
-        opr: 'rel_o_m',
-        value: datasetsSelector.database?.value,
-      },
-      {
-        col: 'schema',
-        opr: 'eq',
-        value: datasetsSelector.schema?.value,
-      },
-      {
-        col: 'sql',
-        opr: 'dataset_is_null_or_empty',
-        value: datasetsSelector.type?.value,
-      },
-      {
-        col: 'id',
-        opr: 'dataset_is_certified',
-        value: datasetsSelector.certified?.value,
-      },
-      {
-        col: 'table_name',
-        opr: 'ct',
-        value: datasetsSelector.search,
-      },
-    ],
-    page,
-  });
+  const searchApiUrls = (gPage: number) =>
+    `dataset/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'owners',
+          opr: 'rel_m_m',
+          value: datasetsSelector.owner?.value,
+        },
+        {
+          col: 'database',
+          opr: 'rel_o_m',
+          value: datasetsSelector.database?.value,
+        },
+        {
+          col: 'schema',
+          opr: 'eq',
+          value: datasetsSelector.schema?.value,
+        },
+        {
+          col: 'sql',
+          opr: 'dataset_is_null_or_empty',
+          value: datasetsSelector.type?.value,
+        },
+        {
+          col: 'id',
+          opr: 'dataset_is_certified',
+          value: datasetsSelector.certified?.value,
+        },
+        {
+          col: 'table_name',
+          opr: 'ct',
+          value: datasetsSelector.search,
+        },
+      ],
+      page: gPage,
+    })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
 
@@ -115,8 +116,15 @@ function DvtDatasets() {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
-    setDatasetApiUrl(`dataset/${searchApiUrls}`);
-  }, [deleteSuccessStatus, datasetsSelector]);
+    setDatasetApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setDatasetApiUrl(searchApiUrls(page));
+    }
+  }, [datasetsSelector]);
 
   const handleDeselectAll = () => {
     setSelectedRows([]);
