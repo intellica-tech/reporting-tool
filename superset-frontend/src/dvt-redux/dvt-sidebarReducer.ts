@@ -146,13 +146,13 @@ interface DvtSidebarState {
 
 const initialState: DvtSidebarState = {
   reports: {
-    owner: {},
-    createdBy: {},
-    chartType: {},
-    dataset: {},
-    dashboards: {},
-    favorite: {},
-    certified: {},
+    owner: '',
+    createdBy: '',
+    chartType: '',
+    dataset: '',
+    dashboards: '',
+    favorite: '',
+    certified: '',
     search: '',
   },
   alerts: {
@@ -162,22 +162,22 @@ const initialState: DvtSidebarState = {
     search: '',
   },
   connection: {
-    expose_in_sqllab: {},
-    allow_run_async: {},
+    expose_in_sqllab: '',
+    allow_run_async: '',
     search: '',
   },
   datasets: {
-    owner: {},
-    database: {},
-    schema: {},
-    type: {},
-    certified: {},
+    owner: '',
+    database: '',
+    schema: '',
+    type: '',
+    certified: '',
     search: '',
   },
   datasetAdd: {
-    database: {},
-    schema: {},
-    selectDatabase: {},
+    database: '',
+    schema: '',
+    selectDatabase: '',
   },
   chartAdd: {
     dataset: '',
@@ -186,20 +186,20 @@ const initialState: DvtSidebarState = {
     tags: '',
   },
   dashboard: {
-    owner: {},
-    createdBy: {},
-    status: {},
-    favorite: {},
-    certified: {},
+    owner: '',
+    createdBy: '',
+    status: '',
+    favorite: '',
+    certified: '',
   },
   annotationlayer: {
     createdBy: '',
     search: '',
   },
   sqllab: {
-    database: {},
-    schema: {},
-    see_table_schema: {},
+    database: '',
+    schema: '',
+    see_table_schema: '',
   },
   data: {
     fetched: {

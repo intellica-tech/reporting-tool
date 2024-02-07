@@ -759,6 +759,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                           }
                         }}
                         maxWidth
+                        onShowClear
                       />
                     )}
                     {data.status === 'input' && (
@@ -794,6 +795,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             );
                           }
                         }}
+                        onShowClear
                       />
                     )}
                     {data.valuesList && (
