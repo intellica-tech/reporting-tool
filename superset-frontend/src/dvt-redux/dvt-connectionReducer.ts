@@ -16,33 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
-import { SupersetTheme } from '@superset-ui/core';
-import DvtCollapse, { DvtCollapseProps } from '.';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export default {
-  title: 'Dvt-Components/DvtCollapse',
-  component: DvtCollapse,
+interface DvtAppState {
+  editSuccessStatus: string;
+}
+
+const initialState: DvtAppState = {
+  editSuccessStatus: '',
 };
 
-export const Default = (args: DvtCollapseProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  return (
-    <div
-      css={(theme: SupersetTheme) => ({
-        backgroundColor: theme.colors.dvt.grayscale.light2,
-        width: '584px',
-        padding: '50px',
-      })}
-    >
-      <DvtCollapse {...args} isOpen={isOpen} setIsOpen={setIsOpen}>
-        Default Collapse
-      </DvtCollapse>
-    </div>
-  );
-};
+const dvtConnectionSlice = createSlice({
+  name: 'dvt-connection',
+  initialState,
+  reducers: {
+    dvtConnectionEditSuccessStatus: (state, action: PayloadAction<string>) => ({
+      ...state,
+      editSuccessStatus: action.payload,
+    }),
+  },
+});
 
-Default.args = {
-  label: 'Time',
-  popoverLabel: 'Default',
-};
+export const { dvtConnectionEditSuccessStatus } = dvtConnectionSlice.actions;
+
+export default dvtConnectionSlice.reducer;

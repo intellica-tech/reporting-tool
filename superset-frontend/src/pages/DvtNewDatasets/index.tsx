@@ -93,7 +93,10 @@ function DvtNewDatasets() {
           dvtSidebarSetDataProperty({
             pageKey: 'datasetAdd',
             key: 'selectDatabase',
-            value: getSchemaData.result,
+            value: getSchemaData.result.map((item: any) => ({
+              ...item,
+              already: false,
+            })),
           }),
         );
       }

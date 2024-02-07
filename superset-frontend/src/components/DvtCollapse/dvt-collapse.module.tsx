@@ -40,6 +40,7 @@ const StyledCollapseGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const StyledCollapseLabel = styled.div`

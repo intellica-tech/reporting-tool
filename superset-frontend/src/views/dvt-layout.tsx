@@ -36,11 +36,11 @@ interface StyledLayoutProps {
 
 interface StyledLayoutWidthProps {
   navbarInHeight: boolean;
-  active: boolean;
+  marginLeft: number;
 }
 
 const StyledApp = styled.div<StyledLayoutWidthProps>`
-  margin-left: ${({ active }) => (active ? '300px' : '250px')};
+  margin-left: ${({ marginLeft }) => marginLeft}px;
   padding-top: ${({ navbarInHeight }) => (navbarInHeight ? 160 : 80)}px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   height: 100vh;
@@ -69,13 +69,27 @@ const DvtLayout = () => {
   const location = useLocation();
   const { pathname } = location;
 
+  const mainAppSidebarWidth = (pathName: string) => {
+    switch (pathName) {
+      case '/superset/welcome/':
+        return 250;
+      case '/dataset/add/':
+        return 380;
+      default:
+        return 300;
+    }
+  };
+
   return (
     <StyledApp
       navbarInHeight={WithNavbarBottom.includes(pathname)}
-      active={pathname !== '/superset/welcome/'}
+      marginLeft={mainAppSidebarWidth(pathname)}
     >
       <GlobalStyles />
-      <DvtSidebar pathName={pathname} />
+      <DvtSidebar
+        pathName={pathname}
+        minWidth={mainAppSidebarWidth(pathname)}
+      />
       <DvtNavbar pathName={pathname} data={bootstrapData.common.menu_data} />
       <DvtModal />
       <Main navbarInHeight={WithNavbarBottom.includes(pathname)}>

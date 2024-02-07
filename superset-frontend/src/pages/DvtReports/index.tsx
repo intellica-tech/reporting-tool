@@ -34,14 +34,8 @@ import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
-import {
-  StyledReports,
-  StyledReportsButton,
-  StyledReportsButtons,
-  StyledReportsListButtons,
-  StyledSelectedItem,
-  StyledSelectedItemCount,
-} from './dvt-reports.module';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
+import { StyledReports, StyledReportsButton } from './dvt-reports.module';
 
 function ReportList() {
   const dispatch = useDispatch();
@@ -50,77 +44,69 @@ function ReportList() {
     state => state.dvtNavbar.viewlist.reports.value,
   );
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
+  );
   const [page, setPage] = useState<number>(1);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [count, setCount] = useState(0);
   const [data, setData] = useState<any[]>([]);
   const [dataOnReady, setDataOnReady] = useState<boolean>(false);
 
-  const [favoriteApiUrl, setFavoriteApiUrl] = useState('');
+  const searchApiUrls = (gPage: number) =>
+    `chart/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'owners',
+          opr: 'rel_m_m',
+          value: reportsSelector.owner?.value,
+        },
+        {
+          col: 'created_by',
+          opr: 'rel_o_m',
+          value: reportsSelector.createdBy?.value,
+        },
+        {
+          col: 'viz_type',
+          opr: 'eq',
+          value: reportsSelector.chartType?.value,
+        },
+        {
+          col: 'datasource_id',
+          opr: 'eq',
+          value: reportsSelector.dataset?.value,
+        },
+        {
+          col: 'dashboards',
+          opr: 'rel_m_m',
+          value: reportsSelector.dashboards?.value,
+        },
+        {
+          col: 'id',
+          opr: 'chart_is_favorite',
+          value: reportsSelector.favorite?.value,
+        },
+        {
+          col: 'id',
+          opr: 'chart_is_certified',
+          value: reportsSelector.certified?.value,
+        },
+        {
+          col: 'slice_name',
+          opr: 'chart_all_text',
+          value: reportsSelector.search,
+        },
+      ],
+      page: gPage,
+    })}`;
 
-  const reportFilters = [
-    {
-      col: 'owners',
-      opr: 'rel_m_m',
-      value: reportsSelector.owner?.value,
-    },
-    {
-      col: 'created_by',
-      opr: 'rel_o_m',
-      value: reportsSelector.createdBy?.value,
-    },
-    {
-      col: 'viz_type',
-      opr: 'eq',
-      value: reportsSelector.chartType?.value,
-    },
-    {
-      col: 'datasource_id',
-      opr: 'eq',
-      value: reportsSelector.dataset?.value,
-    },
-    {
-      col: 'dashboards',
-      opr: 'rel_m_m',
-      value: reportsSelector.dashboards?.value,
-    },
-    {
-      col: 'id',
-      opr: 'chart_is_favorite',
-      value: reportsSelector.favorite?.value,
-    },
-    {
-      col: 'id',
-      opr: 'chart_is_certified',
-      value: reportsSelector.certified?.value,
-    },
-    {
-      col: 'slice_name',
-      opr: 'chart_all_text',
-      value: reportsSelector.search,
-    },
-  ];
-  const reportPromiseUrl = `chart/${fetchQueryParamsSearch({
-    filters: reportFilters,
-    page,
-  })}`;
-  const [reportApiUrl, setReportApiUrl] = useState('');
+  const [reportApiUrl, setReportApiUrl] = useState<string>('');
+  const [favoriteApiUrl, setFavoriteApiUrl] = useState<string>('');
 
   const reportData = useFetch({
     url: reportApiUrl,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
-
-  const deleteSuccessStatus = useAppSelector(
-    state => state.dvtHome.deleteSuccessStatus,
-  );
-
-  useEffect(() => {
-    setReportApiUrl(reportPromiseUrl);
-    if (deleteSuccessStatus) {
-      dispatch(dvtHomeDeleteSuccessStatus(''));
-    }
-  }, [deleteSuccessStatus, reportsSelector]);
 
   useEffect(() => {
     if (reportData) {
@@ -129,13 +115,18 @@ function ReportList() {
         date: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
         created_by: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
         changed_by: `${item.changed_by?.first_name} ${item.changed_by?.last_name}`,
-        owner: `${item.owners[0]?.first_name} ${item.owners[0]?.last_name}`,
-        dashboards: item.dashboards[0]?.dashboard_title,
+        owner: item.owners.length
+          ? `${item.owners[0]?.first_name} ${item.owners[0]?.last_name}`
+          : '',
+        dashboards: item.dashboards.length
+          ? item.dashboards[0]?.dashboard_title
+          : '',
       }));
       setData(editedDatas);
       setCount(reportData.count);
+      setFavoriteApiUrl('');
       setDataOnReady(true);
-      setReportApiUrl('');
+      setSelectedRows([]);
     }
   }, [reportData]);
 
@@ -145,7 +136,7 @@ function ReportList() {
       setFavoriteApiUrl(`chart/favorite_status/?q=!(${idGetData.join()})`);
       setDataOnReady(false);
     }
-  }, [dataOnReady]);
+  }, [dataOnReady, data]);
 
   useEffect(() => {
     if (favoriteData?.result.length > 0) {
@@ -166,6 +157,20 @@ function ReportList() {
       setData(addedFavoriteData);
     }
   }, [favoriteData]);
+
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setReportApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setReportApiUrl(searchApiUrls(page));
+    }
+  }, [reportsSelector]);
 
   const clearReports = () => {
     dispatch(
@@ -254,23 +259,15 @@ function ReportList() {
     handleResourceExport('chart', selectedIds, () => {});
   };
 
-  const handleDelete = async (type: string, item: any) => {
+  const handleModalDelete = (item: any) => {
     dispatch(
       openModal({
         component: 'delete-modal',
-        meta: { item, type, title: 'chart' },
+        meta: { item, type: 'chart', title: 'chart' },
       }),
     );
-  };
-
-  const handleBulkDelete = async (type: string, item: any) => {
-    dispatch(
-      openModal({
-        component: 'delete-modal',
-        meta: { item, type, title: 'chart' },
-      }),
-    );
-    setSelectedRows([]);
+    setReportApiUrl('');
+    setFavoriteApiUrl('');
   };
 
   const modifiedData = {
@@ -303,16 +300,12 @@ function ReportList() {
           },
           {
             icon: 'share',
-            click: (item: any) => {
-              handleSingleExport(item.id);
-            },
+            click: (item: any) => handleSingleExport(item.id),
             popperLabel: t('Export'),
           },
           {
             icon: 'trash',
-            click: (item: any) => {
-              handleDelete('chart', item);
-            },
+            click: (item: any) => handleModalDelete(item),
             popperLabel: t('Delete'),
           },
         ],
@@ -324,45 +317,12 @@ function ReportList() {
     <StyledReports>
       {activeTab === 'Table' ? (
         <>
-          <StyledReportsListButtons>
-            <StyledReportsButtons>
-              <StyledSelectedItem>
-                <StyledSelectedItemCount>
-                  <span>{`${selectedRows.length} Selected`}</span>
-                </StyledSelectedItemCount>
-                <DvtButton
-                  label={t('Deselect All')}
-                  bold
-                  colour="primary"
-                  typeColour="outline"
-                  size="medium"
-                  onClick={handleDeselectAll}
-                />
-              </StyledSelectedItem>
-            </StyledReportsButtons>
-            <StyledReportsButtons>
-              <DvtButton
-                label={t('Delete')}
-                icon="dvt-delete"
-                iconToRight
-                colour="error"
-                size="small"
-                onClick={() => {
-                  handleBulkDelete('chart', selectedRows);
-                }}
-              />
-              <DvtButton
-                label={t('Export')}
-                icon="dvt-export"
-                iconToRight
-                colour="primary"
-                bold
-                typeColour="powder"
-                size="small"
-                onClick={handleBulkExport}
-              />
-            </StyledReportsButtons>
-          </StyledReportsListButtons>
+          <DvtDeselectDeleteExport
+            count={selectedRows.length}
+            handleDeselectAll={handleDeselectAll}
+            handleDelete={() => handleModalDelete(selectedRows)}
+            handleExport={handleBulkExport}
+          />
           <DvtTable
             data={data}
             header={modifiedData.header}
@@ -388,23 +348,17 @@ function ReportList() {
             {
               label: t('Edit'),
               icon: 'edit_alt',
-              onClick: (item: any) => {
-                handleEditCharts(item);
-              },
+              onClick: (item: any) => handleEditCharts(item),
             },
             {
               label: t('Export'),
               icon: 'share',
-              onClick: (item: any) => {
-                handleSingleExport(item.id);
-              },
+              onClick: (item: any) => handleSingleExport(item.id),
             },
             {
               label: t('Delete'),
               icon: 'trash',
-              onClick: (item: any) => {
-                handleDelete('chart', item);
-              },
+              onClick: (item: any) => handleModalDelete(item),
             },
           ]}
         />

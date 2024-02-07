@@ -44,6 +44,7 @@ import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 
 interface DvtSidebarProps {
   pathName: string;
+  minWidth: number;
 }
 
 type VizEntry = {
@@ -51,7 +52,7 @@ type VizEntry = {
   value: ChartMetadata;
 };
 
-const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
+const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const dispatch = useDispatch();
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const alertsSelector = useAppSelector(state => state.dvtSidebar.alerts);
@@ -620,7 +621,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
   ];
 
   return (
-    <StyledDvtSidebar pathName={pathName}>
+    <StyledDvtSidebar minWidth={minWidth}>
       <StyledDvtSidebarHeader>
         <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>
@@ -759,6 +760,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                           }
                         }}
                         maxWidth
+                        onShowClear
                       />
                     )}
                     {data.status === 'input' && (
@@ -794,6 +796,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName }) => {
                             );
                           }
                         }}
+                        onShowClear
                       />
                     )}
                     {data.valuesList && (

@@ -152,6 +152,44 @@ const StyledSelectIcon = styled.div<StyledSelectIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
+const StyledSelectClear = styled.div`
+  z-index: 900;
+  cursor: pointer;
+  border-radius: 100%;
+  position: absolute;
+  right: 18px;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(135deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+`;
+
 const StyledSelectPopover = styled.div`
   display: flex;
   gap: 8px;
@@ -164,5 +202,6 @@ export {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectOptions,
+  StyledSelectClear,
   StyledSelectPopover,
 };

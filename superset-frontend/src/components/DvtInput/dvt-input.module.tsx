@@ -85,6 +85,43 @@ const StyledInput = styled.div`
   gap: 12px;
 `;
 
+const StyledInputClear = styled.div`
+  cursor: pointer;
+  border-radius: 100%;
+  height: 14px;
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  transition: all 300ms;
+  position: relative;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 7px;
+    position: absolute;
+    background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(135deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+`;
+
 const StyledInputLabel = styled.div`
   color: ${({ theme }) => theme.colors.dvt.text.label};
   font-size: 12px;
@@ -100,6 +137,7 @@ export {
   StyledInput,
   StyledInputField,
   StyledInputIcon,
+  StyledInputClear,
   StyledInputLabel,
   StyledInputInput,
   StyledInputPopover,
