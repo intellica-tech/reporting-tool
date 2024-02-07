@@ -179,10 +179,6 @@ const StyledSelectClear = styled.div<{ disabled?: boolean }>`
   border: ${props =>
     props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
 
-  text-align: 'center';
-  color: ${props => `${props.theme.colors.dvt.text.label}`};
-  font-weight: 1000;
-
   &::before {
     content: '';
     width: 1px;

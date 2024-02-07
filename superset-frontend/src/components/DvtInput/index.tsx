@@ -100,7 +100,7 @@ const DvtInput = ({
           </DvtPopper>
         )}
       </StyledInputPopover>
-      <StyledInputInput $size={size} typeDesign={typeDesign}>
+      <StyledInputInput $size={size} typeDesign={typeDesign} value={value}>
         {type === 'email' && (
           <Icon
             fileName="email"

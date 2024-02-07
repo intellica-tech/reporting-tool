@@ -21,6 +21,7 @@ import { styled } from '@superset-ui/core';
 interface StyledInputProps {
   $size: string;
   typeDesign: string;
+  value: string;
 }
 
 const sizes = {
@@ -33,9 +34,11 @@ const StyledInputInput = styled.div<StyledInputProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: ${({ theme, typeDesign }) =>
-    typeDesign === 'chartsForm'
-      ? 'none'
+  border: ${({ theme, typeDesign, value }) =>
+    value !== ''
+      ? `1px solid ${theme.colors.dvt.primary.base}`
+      : typeDesign === 'chartsForm'
+      ? `1px solid ${theme.colors.dvt.primary.light2}`
       : `1px solid ${theme.colors.dvt.primary.light2}`};
   padding: 8px 16px;
   border-radius: ${({ typeDesign }) =>
@@ -48,20 +51,22 @@ const StyledInputInput = styled.div<StyledInputProps>`
   height: ${({ $size }) => sizes[$size]}px;
   background-color: ${({ typeDesign, theme }) =>
     typeDesign === 'chartsForm'
-      ? theme.colors.dvt.grayscale.light2
+      ? theme.colors.grayscale.light5
       : theme.colors.grayscale.light5};
 
   &:hover {
-    border: ${({ theme, typeDesign }) =>
-      typeDesign === 'chartsForm'
-        ? 'none'
+    border: ${({ theme, typeDesign, value }) =>
+      value !== ''
+        ? `1px solid ${theme.colors.dvt.primary.base}`
+        : typeDesign === 'chartsForm'
+        ? `1px solid ${theme.colors.dvt.primary.light1}`
         : `1px solid ${theme.colors.dvt.primary.light1}`};
   }
 
   &:focus-within {
     border: ${({ theme, typeDesign }) =>
       typeDesign === 'chartsForm'
-        ? 'none'
+        ? `1px solid ${theme.colors.dvt.primary.base}`
         : `1px solid ${theme.colors.dvt.primary.base}`};
   }
 
@@ -75,14 +80,17 @@ const StyledInputField = styled.input<StyledInputProps>`
   color: ${({ theme }) => theme.colors.dvt.text.bold};
   background-color: ${({ typeDesign, theme }) =>
     typeDesign === 'chartsForm'
-      ? theme.colors.dvt.grayscale.light2
+      ? theme.colors.grayscale.light5
       : theme.colors.grayscale.light5};
   &:focus {
     outline: none;
   }
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.dvt.text.help};
+    color: ${({ theme, value }) =>
+      value !== ''
+        ? theme.colors.grayscale.dark2
+        : theme.colors.grayscale.base};
   }
 
   ::-ms-reveal,
@@ -111,11 +119,7 @@ const StyledInputClear = styled.div<{ disabled?: boolean }>`
   justify-content: center;
   aspect-ratio: 1;
   border: ${props =>
-    props.disabled ? 'none' : `2px solid ${props.theme.colors.dvt.text.label}`};
-
-  text-align: 'center';
-  color: ${props => `${props.theme.colors.dvt.text.label}`};
-  font-weight: 1000;
+    props.disabled ? 'none' : `2px solid ${props.theme.colors.grayscale.base}`};
 
   &::before {
     content: '';
@@ -126,9 +130,11 @@ const StyledInputClear = styled.div<{ disabled?: boolean }>`
     border: ${props =>
       props.disabled
         ? 'none'
-        : `1px solid ${props.theme.colors.dvt.text.label}`};
+        : `1px solid ${props.theme.colors.grayscale.base}`};
     background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+      props.disabled
+        ? 'transparent'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
   }
 
   &::after {
@@ -140,9 +146,11 @@ const StyledInputClear = styled.div<{ disabled?: boolean }>`
     border: ${props =>
       props.disabled
         ? 'none'
-        : `1px solid ${props.theme.colors.dvt.text.label}`};
+        : `1px solid ${props.theme.colors.grayscale.base}`};
     background-color: ${props =>
-      props.disabled ? 'transparent' : `${props.theme.colors.dvt.text.label}`};
+      props.disabled
+        ? 'transparent'
+        : `1px solid ${props.theme.colors.grayscale.base}`};
   }
 `;
 
