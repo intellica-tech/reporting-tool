@@ -27,6 +27,7 @@ import {
   StyledInputIcon,
   StyledInputLabel,
   StyledInputPopover,
+  StyledInputClear,
 } from './dvt-input.module';
 
 export interface DvtInputProps {
@@ -42,6 +43,7 @@ export interface DvtInputProps {
   importantLabel?: string;
   popoverLabel?: string;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
+  onShowClear?: boolean;
 }
 
 const DvtInput = ({
@@ -57,48 +59,52 @@ const DvtInput = ({
   popoverDirection,
   disabled,
   popoverLabel,
+  onShowClear = false,
 }: DvtInputProps) => {
   const [show, setShow] = useState<boolean>(false);
+  const [onHover, setOnHover] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
 
   return (
-    <StyledInput>
-      <StyledInputPopover>
-        <StyledInputLabel>{label}</StyledInputLabel>
-        {importantLabel && (
-          <DvtPopper
-            label={importantLabel}
-            direction={popoverDirection}
-            size="small"
-          >
-            <Icon
-              fileName="warning"
-              css={(theme: SupersetTheme) => ({
-                color: theme.colors.alert.base,
-              })}
-              iconSize="l"
-            />
-          </DvtPopper>
-        )}
-        {popoverLabel && (
-          <DvtPopper
-            size="small"
-            label={popoverLabel}
-            direction={popoverDirection}
-          >
-            <Icon
-              fileName="warning"
-              css={(theme: SupersetTheme) => ({
-                color: theme.colors.dvt.primary.base,
-              })}
-              iconSize="l"
-            />
-          </DvtPopper>
-        )}
-      </StyledInputPopover>
+    <StyledInput onMouseLeave={() => setOnHover(false)}>
+      {label && (
+        <StyledInputPopover>
+          <StyledInputLabel>{label}</StyledInputLabel>
+          {importantLabel && (
+            <DvtPopper
+              label={importantLabel}
+              direction={popoverDirection}
+              size="small"
+            >
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color: theme.colors.alert.base,
+                })}
+                iconSize="l"
+              />
+            </DvtPopper>
+          )}
+          {popoverLabel && (
+            <DvtPopper
+              size="small"
+              label={popoverLabel}
+              direction={popoverDirection}
+            >
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color: theme.colors.dvt.primary.base,
+                })}
+                iconSize="l"
+              />
+            </DvtPopper>
+          )}
+        </StyledInputPopover>
+      )}
       <StyledInputInput $size={size} typeDesign={typeDesign}>
         {type === 'email' && (
           <Icon
@@ -124,7 +130,17 @@ const DvtInput = ({
           value={value}
           onChange={handleChange}
           disabled={disabled}
+          onMouseOver={() => setOnHover(true)}
         />
+        {onShowClear && value && onHover && (
+          <StyledInputClear
+            onClick={() => {
+              if (value !== '') {
+                onChange('');
+              }
+            }}
+          />
+        )}
         {type === 'password' && (
           <StyledInputIcon onClick={() => setShow(!show)}>
             <Icon

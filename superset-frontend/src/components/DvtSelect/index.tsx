@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
@@ -29,6 +29,7 @@ import {
   StyledSelectSelect,
   StyledSelectIcon,
   StyledSelectPopover,
+  StyledSelectClear,
 } from './dvt-select.module';
 
 export interface DvtSelectProps {
@@ -45,6 +46,7 @@ export interface DvtSelectProps {
   important?: boolean;
   importantLabel?: string;
   objectName?: string;
+  onShowClear?: boolean;
 }
 
 const DvtSelect: React.FC<DvtSelectProps> = ({
@@ -61,14 +63,26 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
   important,
   importantLabel = 'Cannot be empty',
   objectName = 'label',
+  onShowClear = false,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [clearTrigger, setClearTrigger] = useState(false);
+  const [onHover, setOnHover] = useState(false);
   useOnClickOutside(ref, () => setIsOpen(false));
 
   const handleSelectClick = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleClearClick = () => {
+    setClearTrigger(!clearTrigger);
+  };
+
+  useEffect(() => {
+    setSelectedValue('');
+    setIsOpen(false);
+  }, [clearTrigger]);
 
   const handleOptionClick = (value: any) => {
     setSelectedValue(value);
@@ -80,6 +94,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
       ref={ref}
       typeDesign={typeDesign}
       style={{ minWidth: maxWidth ? '100%' : width }}
+      onMouseLeave={() => setOnHover(false)}
     >
       <StyledSelectPopover>
         {label && (
@@ -121,20 +136,26 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
         onClick={handleSelectClick}
         typeDesign={typeDesign}
         selectedValue={selectedValue[objectName]}
+        onMouseOver={() => setOnHover(true)}
       >
         {selectedValue[objectName] || placeholder}
-        <StyledSelectIcon isOpen={isOpen}>
-          <Icon
-            fileName="caret_right"
-            iconSize="xxl"
-            css={(theme: SupersetTheme) => ({
-              color:
-                typeDesign === 'form' || typeDesign === 'navbar'
-                  ? theme.colors.dvt.text.label
-                  : theme.colors.grayscale.dark2,
-            })}
-          />
-        </StyledSelectIcon>
+        {onShowClear && selectedValue !== '' && onHover && (
+          <StyledSelectClear onClick={handleClearClick} />
+        )}
+        {!(onShowClear && selectedValue !== '' && onHover) && (
+          <StyledSelectIcon isOpen={isOpen}>
+            <Icon
+              fileName="caret_right"
+              iconSize="xxl"
+              css={(theme: SupersetTheme) => ({
+                color:
+                  typeDesign === 'form' || typeDesign === 'navbar'
+                    ? theme.colors.dvt.text.label
+                    : theme.colors.grayscale.dark2,
+              })}
+            />
+          </StyledSelectIcon>
+        )}
       </StyledSelectSelect>
       {isOpen && (
         <StyledSelectOptions
