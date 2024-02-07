@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
-import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
-import DvtJsonEditor from 'src/components/DvtJsonEditor';
-import DvtCollapse from 'src/components/DvtCollapse';
 import {
   StyledChartEdit,
   StyledChartEditBody,
@@ -27,19 +23,12 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
     certificationDetails: '',
   });
   const [chartApi, setChartApi] = useState<string>('');
-  const [jsonValue, setJsonValue] = useState<any | null>('');
 
   const chartItemApi = useFetch({ url: `chart/${meta.id}` });
 
   useEffect(() => {
     if (chartItemApi) {
       const { result } = chartItemApi;
-      const jsonData = JSON.parse(result.json_metadata || '{}');
-      const colorScheme = (jsonData !== '{}' && jsonData?.color_scheme) || null;
-      const findedColorSchema = colorScheme
-        ? DvtSchemeColorData.find(item => item.id === colorScheme)
-        : {};
-
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
