@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import rison from 'rison';
 import querystring from 'query-string';
 import { JsonResponse, SupersetClient, t } from '@superset-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { findPermission } from 'src/utils/findPermission';
 import { UserWithPermissionsAndRoles } from 'src/types/bootstrapTypes';
@@ -30,6 +33,7 @@ const DvtChartAdd: React.FC<ChartCreationProps> = ({
   user,
   addSuccessToast,
 }) => {
+  const dispatch = useDispatch();
   const [chart, setChart] = useState<ChartCreationState>({
     vizType: null,
     canCreateDataset: findPermission('can_write', 'Dataset', user.roles),
@@ -49,6 +53,7 @@ const DvtChartAdd: React.FC<ChartCreationProps> = ({
 
   const changeVizType = (vizType: string | null) => {
     setChart(prevState => ({ ...prevState, vizType }));
+    console.log(vizType);
   };
 
   const loadDatasources = (search: string, page: number, pageSize: number) => {
@@ -86,6 +91,12 @@ const DvtChartAdd: React.FC<ChartCreationProps> = ({
       };
     });
   };
+
+  useEffect(() => {
+    if (chart.vizType) {
+      dispatch(dvtNavbarChartAddSetVizType(chart.vizType));
+    }
+  }, [chart.vizType]);
 
   return (
     <DvtVizTypeGallery

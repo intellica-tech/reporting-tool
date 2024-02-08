@@ -21,6 +21,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useHistory } from 'react-router-dom';
+import useFetch from 'src/hooks/useFetch';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
 import {
@@ -29,6 +30,7 @@ import {
   dvtNavbarSqlSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
+import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
 import { DvtNavbarTabsData, WithNavbarBottom } from './dvt-navbar-tabs-data';
 import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
@@ -70,6 +72,10 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   const alertSelector = useAppSelector(state => state.dvtNavbar.alert);
   const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const chartsSelector = useAppSelector(state => state.dvtNavbar.charts);
+  const chartAddSelector = useAppSelector(state => state.dvtNavbar.chartAdd);
+  const chartAddSidebarSelector = useAppSelector(
+    state => state.dvtSidebar.chartAdd,
+  );
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
@@ -107,6 +113,10 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
     }
   };
 
+  const [getExploreApiUrl, setGetExploreApiUrl] = useState('');
+
+  const getExploreApi = useFetch({ url: getExploreApiUrl });
+
   useEffect(() => {
     const tabsDataFindPathname = DvtNavbarTabsData.find(
       (item: { pathname: string }) => item.pathname === pathName,
@@ -131,6 +141,21 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   }, [data?.navbar_right?.show_language_picker]);
 
   // const [searchText, setSearchText] = useState<string>('');
+
+  const handleOpenExplore = () => {
+    if (chartAddSelector.vizType && chartAddSidebarSelector.dataset?.id) {
+      setGetExploreApiUrl(
+        `explore/?viz_type=${chartAddSelector.vizType}&datasource_id=${chartAddSidebarSelector.dataset.id}&datasource_type=table`,
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (getExploreApi) {
+      dispatch(dvtChartSetSelectedChart(getExploreApi.result));
+      history.push('/explore/');
+    }
+  }, [getExploreApi]);
 
   return (
     <StyledDvtNavbar active={pathName !== '/superset/welcome/'}>
@@ -211,8 +236,18 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
               <NavbarBottomRight>
                 <DvtButton
                   typeColour="powder"
+                  colour={
+                    chartAddSelector.vizType &&
+                    chartAddSidebarSelector.dataset?.id
+                      ? 'primary'
+                      : 'grayscale'
+                  }
                   label="Create New Chart"
-                  onClick={() => history.push('/explore/')}
+                  onClick={() =>
+                    chartAddSelector.vizType &&
+                    chartAddSidebarSelector.dataset?.id &&
+                    handleOpenExplore()
+                  }
                   bold
                 />
               </NavbarBottomRight>
