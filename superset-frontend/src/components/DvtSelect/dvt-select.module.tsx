@@ -63,7 +63,10 @@ const StyledSelectSelect = styled.div<StyledSelectProps>`
   position: relative;
   display: flex;
   align-items: center;
-  padding: ${({ typeDesign }) => (typeDesign === 'form' ? '12px 8px' : '12px')};
+  padding: ${({ typeDesign }) =>
+    typeDesign === 'form' ? '2px 8px' : '2px 12px'};
+  padding-right: 40px;
+  word-break: break-all;
   width: 100%;
   height: 48px;
   border-radius: ${({ typeDesign }) =>
@@ -97,7 +100,11 @@ const StyledSelectLabel = styled.label<StyledSelectLabelProps>`
 `;
 
 const StyledSelectOption = styled.div<StyledSelectOptionProps>`
-  padding: 13px;
+  padding: 2px 13px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  word-break: break-all;
   cursor: pointer;
   ${({ theme, selectedValue, typeDesign }) =>
     selectedValue
