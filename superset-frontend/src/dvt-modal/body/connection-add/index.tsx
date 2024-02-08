@@ -143,15 +143,19 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
   };
 
   const handleConnectionTypeClick = (connectionType: string) => {
-    setSelectedConnectionType(connectionType);
-    setStep(2);
+    if (connectionType) {
+      setSelectedConnectionType(connectionType);
+      setStep(2);
+    }
   };
 
   const handleSupportedDatabaseSelect = (selectedValue: string) => {
-    setSupporedDatabase(selectedValue);
-    setTimeout(() => {
-      setStep(2);
-    }, 800);
+    if (selectedValue) {
+      setSupporedDatabase(selectedValue);
+      setTimeout(() => {
+        setStep(2);
+      }, 800);
+    }
   };
 
   const handleBackButton = () => {
