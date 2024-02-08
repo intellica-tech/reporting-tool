@@ -184,6 +184,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           url: 'dashboard/related/created_by',
         });
       }
+    } else if (pathTitles(pathName) === 'Alerts') {
+      if (!fetchedSelector.alerts.owner) {
+        setGetDataApiUrl({
+          name: 'alerts-owner',
+          url: 'report/related/owners?q=(filter:%27%27,page:0,page_size:100)',
+        });
+      } else if (!fetchedSelector.alerts.createdBy) {
+        setGetDataApiUrl({
+          name: 'alerts-createdBy',
+          url: 'report/related/created_by?q=(filter:%27%27,page:0,page_size:100)',
+        });
+      }
     } else if (pathTitles(pathName) === 'Annotation Layers') {
       if (!fetchedSelector.annotationlayer.createdBy) {
         setGetDataApiUrl({
@@ -268,6 +280,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.datasets,
     fetchedSelector.chartAdd,
     fetchedSelector.reports,
+    fetchedSelector.alerts,
     pathName,
   ]);
 
@@ -295,6 +308,32 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'dashboard',
+            key: 'createdBy',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'alerts-owner') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'alerts',
+            key: 'owner',
+            value: editedData,
+          }),
+        );
+      }
+      if (getDataApiUrl.name === 'alerts-createdBy') {
+        const editedData = data.map((item: any) => ({
+          value: item.value,
+          label: item.text,
+        }));
+        dispatch(
+          dvtSidebarSetDataProperty({
+            pageKey: 'alerts',
             key: 'createdBy',
             value: editedData,
           }),
@@ -549,6 +588,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     let dValue = [];
 
     const selectionObjectKeys: any[] = [
+      {
+        title: 'Alerts',
+        key: 'alerts',
+        keyNames: ['owner', 'createdBy'],
+      },
       {
         title: 'Reports',
         key: 'reports',

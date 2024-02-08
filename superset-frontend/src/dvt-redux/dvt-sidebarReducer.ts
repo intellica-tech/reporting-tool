@@ -30,8 +30,8 @@ interface DvtSidebarState {
     search: string;
   };
   alerts: {
-    createdBy: string;
-    owner: string;
+    createdBy: any;
+    owner: any;
     status: string;
     search: string;
   };
@@ -54,10 +54,10 @@ interface DvtSidebarState {
     selectDatabase: any;
   };
   chartAdd: {
-    dataset: string;
-    recommended_tags: string;
-    category: string;
-    tags: string;
+    dataset: any;
+    recommended_tags: any;
+    category: any;
+    tags: any;
   };
   dashboard: {
     owner: any;
@@ -77,6 +77,10 @@ interface DvtSidebarState {
   };
   data: {
     fetched: {
+      alerts: {
+        createdBy: boolean;
+        owner: boolean;
+      };
       reports: {
         owner: boolean;
         createdBy: boolean;
@@ -108,6 +112,10 @@ interface DvtSidebarState {
         schema: boolean;
         see_table_schema: boolean;
       };
+    };
+    alerts: {
+      createdBy: any[];
+      owner: any[];
     };
     reports: {
       owner: any[];
@@ -181,7 +189,7 @@ const initialState: DvtSidebarState = {
   },
   chartAdd: {
     dataset: '',
-    recommended_tags: '',
+    recommended_tags: { label: 'Popular', value: 'popular' },
     category: '',
     tags: '',
   },
@@ -203,6 +211,10 @@ const initialState: DvtSidebarState = {
   },
   data: {
     fetched: {
+      alerts: {
+        createdBy: false,
+        owner: false,
+      },
       reports: {
         owner: false,
         createdBy: false,
@@ -234,6 +246,10 @@ const initialState: DvtSidebarState = {
         schema: false,
         see_table_schema: false,
       },
+    },
+    alerts: {
+      createdBy: [],
+      owner: [],
     },
     reports: {
       owner: [],
