@@ -326,7 +326,7 @@ const dvtSidebarSlice = createSlice({
     }),
     dvtSidebarSetDataProperty: (
       state,
-      action: PayloadAction<{ pageKey: string; key: string; value: string }>,
+      action: PayloadAction<{ pageKey: string; key: string; value: any[] }>,
     ) => ({
       ...state,
       data: {

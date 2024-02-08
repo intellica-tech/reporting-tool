@@ -32,7 +32,7 @@ interface CardProps {
   extra: string;
   type: string;
   value: string;
-  already: boolean;
+  explore_url: string;
 }
 
 export interface DvtSelectDatabaseListProps {
@@ -76,7 +76,7 @@ const DvtSelectDatabaseList = ({
             >
               {item.value}
             </StyledDvtSelectDatabaseListItemLabel>
-            {item.already && (
+            {item.explore_url && (
               <Icon
                 fileName="warning"
                 css={(theme: SupersetTheme) => ({

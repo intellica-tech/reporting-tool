@@ -16,6 +16,8 @@ import {
   StyledDatasetsIconLabel,
   StyledDvtNewDatasets,
   StyledNewDatasetsButtons,
+  StyledAlertInfo,
+  StyledAlertInfoLink,
 } from './dvt-new-datasets.module';
 
 const header = [
@@ -38,11 +40,18 @@ function DvtNewDatasets() {
     url: '',
     key: '',
   });
+  const [getSchemaDataApiAlreadyUrl, setGetSchemaDataApiAlreadyUrl] =
+    useState('');
   const [getTableDataApiUrl, setGetTableDataApiUrl] = useState('');
   const [postDataSetUrl, setPostDataSetUrl] = useState('');
   const [data, setData] = useState([]);
+  const [dataSchema, setDataSchema] = useState<any[]>([]);
+
+  const getSchemaAlreadyFiltersUrl = (page: number) =>
+    `dataset/?q=(filters:!((col:database,opr:rel_o_m,value:${datasetAddSelector.database.value}),(col:schema,opr:eq,value:${datasetAddSelector.schema.value}),(col:sql,opr:dataset_is_null_or_empty,value:!t)),page:${page})`;
 
   const getSchemaData = useFetch({ url: getSchemaDataApiUrl.url });
+  const getSchemaDataAlready = useFetch({ url: getSchemaDataApiAlreadyUrl });
   const getTableData = useFetch({
     url: getTableDataApiUrl,
   });
@@ -89,19 +98,35 @@ function DvtNewDatasets() {
         );
       }
       if (getSchemaDataApiUrl.key === 'schema') {
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'datasetAdd',
-            key: 'selectDatabase',
-            value: getSchemaData.result.map((item: any) => ({
-              ...item,
-              already: false,
-            })),
-          }),
-        );
+        setDataSchema(getSchemaData.result);
+        setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(0));
       }
     }
   }, [getSchemaData]);
+
+  useEffect(() => {
+    if (getSchemaDataAlready) {
+      // if (getSchemaDataAlready.count > 20) {
+      //   setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(1));
+      // }
+
+      dispatch(
+        dvtSidebarSetDataProperty({
+          pageKey: 'datasetAdd',
+          key: 'selectDatabase',
+          value: dataSchema.map((item: any) => {
+            const findItem = getSchemaDataAlready.result.find(
+              (ar: { table_name: string }) => ar.table_name === item.value,
+            );
+            return {
+              ...item,
+              explore_url: findItem ? findItem.explore_url : '',
+            };
+          }),
+        }),
+      );
+    }
+  }, [getSchemaDataAlready]);
 
   useEffect(() => {
     if (datasetAddSelector.selectDatabase?.value) {
@@ -144,7 +169,35 @@ function DvtNewDatasets() {
   return (
     <StyledDvtNewDatasets>
       {data.length > 0 ? (
-        <DvtTable header={header} data={data} />
+        <>
+          {datasetAddSelector.selectDatabase?.explore_url && (
+            <StyledAlertInfo
+              closable={false}
+              type="warning"
+              showIcon
+              message={t('This table already has a dataset')}
+              description={
+                <>
+                  {t(
+                    'This table already has a dataset associated with it. You can only associate one dataset with a table.',
+                  )}
+                  <StyledAlertInfoLink
+                    role="button"
+                    onClick={() =>
+                      history.push(
+                        datasetAddSelector.selectDatabase.explore_url,
+                      )
+                    }
+                    tabIndex={0}
+                  >
+                    {t('View Dataset')}
+                  </StyledAlertInfoLink>
+                </>
+              }
+            />
+          )}
+          <DvtTable header={header} data={data} />
+        </>
       ) : (
         <StyledDatasetsIconLabel>
           <DvtIconDataLabel
@@ -168,10 +221,15 @@ function DvtNewDatasets() {
           size="small"
           colour="grayscale"
           typeColour={
-            datasetAddSelector.selectDatabase?.value ? 'basic' : 'powder'
+            datasetAddSelector.selectDatabase?.value &&
+            !datasetAddSelector.selectDatabase?.explore_url
+              ? 'basic'
+              : 'powder'
           }
           onClick={() =>
-            datasetAddSelector.selectDatabase?.value && handleCreateDataset()
+            datasetAddSelector.selectDatabase?.value &&
+            !datasetAddSelector.selectDatabase?.explore_url &&
+            handleCreateDataset()
           }
         />
       </StyledNewDatasetsButtons>
