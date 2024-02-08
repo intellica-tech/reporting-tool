@@ -573,33 +573,33 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         label: t('Owner'),
-        values: [{ label: t('Superset Admin'), value: 'Superset Admin' }],
+        values: [],
         placeholder: t('Select or type a value'),
         name: 'owner',
       },
       {
         label: t('Created by'),
-        values: [{ label: t('Superset Admin'), value: 'Superset Admin' }],
+        values: [],
         placeholder: t('Select or type a value'),
         name: 'createdBy',
       },
       {
         label: t('Status'),
         values: [
-          { label: t('Error'), value: 'Error' },
           { label: t('Success'), value: 'Success' },
+          { label: t('Working'), value: 'Error' },
+          { label: t('Error'), value: 'Error' },
+          { label: t('Not triggered'), value: 'Not triggered' },
+          { label: t('On Grace'), value: 'On Grace' },
         ],
         placeholder: t('Select or type a value'),
         name: 'status',
       },
       {
         label: t('Search'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
         placeholder: t('Type a value'),
         name: 'search',
+        status: 'input',
       },
     ],
   },
