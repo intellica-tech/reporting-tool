@@ -54,10 +54,10 @@ interface DvtSidebarState {
     selectDatabase: any;
   };
   chartAdd: {
-    dataset: string;
-    recommended_tags: string;
-    category: string;
-    tags: string;
+    dataset: any;
+    recommended_tags: any;
+    category: any;
+    tags: any;
   };
   dashboard: {
     owner: any;
@@ -189,7 +189,7 @@ const initialState: DvtSidebarState = {
   },
   chartAdd: {
     dataset: '',
-    recommended_tags: '',
+    recommended_tags: { label: 'Popular', value: 'popular' },
     category: '',
     tags: '',
   },

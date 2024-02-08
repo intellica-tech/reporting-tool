@@ -298,6 +298,8 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
       filteredData = chartsByCategory[chartAddSelector.category.label];
     } else if (chartAddSelector.tags?.label) {
       filteredData = chartsByTags[chartAddSelector.tags.label];
+    } else {
+      filteredData = chartMetadata;
     }
     setEditedData(filteredData);
   }, [chartAddSelector]);
