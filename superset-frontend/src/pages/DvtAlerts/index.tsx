@@ -27,6 +27,7 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
@@ -189,16 +190,11 @@ function AlertList() {
 
   return data.length ? (
     <StyledAlerts>
-      <div>
-        <DvtButton
-          label={t('Deselect All')}
-          bold
-          colour="primary"
-          typeColour="outline"
-          size="medium"
-          onClick={handleDeselectAll}
-        />
-      </div>
+      <DvtDeselectDeleteExport
+        count={selectedRows.length}
+        handleDeselectAll={handleDeselectAll}
+        handleDelete={() => handleModalDelete(selectedRows)}
+      />
       <DvtTable
         data={data}
         header={headerData}

@@ -30,7 +30,7 @@ export interface DvtDotTitleProps {
   count: number;
   handleDeselectAll: () => void;
   handleDelete: () => void;
-  handleExport: () => void;
+  handleExport?: () => void;
 }
 
 const DvtDeselectDeleteExport = ({
@@ -60,16 +60,18 @@ const DvtDeselectDeleteExport = ({
         size="small"
         onClick={() => !!count && handleDelete()}
       />
-      <DvtButton
-        label={t('Export')}
-        icon="dvt-export"
-        iconToRight
-        colour="primary"
-        bold
-        typeColour="powder"
-        size="small"
-        onClick={() => !!count && handleExport()}
-      />
+      {handleExport && (
+        <DvtButton
+          label={t('Export')}
+          icon="dvt-export"
+          iconToRight
+          colour="primary"
+          bold
+          typeColour="powder"
+          size="small"
+          onClick={() => !!count && handleExport()}
+        />
+      )}
     </ButtonContainer>
   </StyledDvtDeselectDeleteExport>
 );
