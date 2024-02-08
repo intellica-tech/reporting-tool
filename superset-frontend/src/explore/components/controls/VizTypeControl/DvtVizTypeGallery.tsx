@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +25,7 @@ import {
   ChartMetadata,
   SupersetTheme,
   useTheme,
+  t,
 } from '@superset-ui/core';
 import { usePluginContext } from 'src/components/DynamicPlugins';
 import { nativeFilterGate } from 'src/dashboard/components/nativeFilters/utils';
@@ -260,16 +262,43 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
       }),
     );
   };
+
+  const chartsByTags = useMemo(() => {
+    const result: Record<string, VizEntry[]> = {};
+    chartMetadata.forEach(entry => {
+      const tags = entry.value.tags || [];
+      tags.forEach(tag => {
+        if (!result[tag]) {
+          result[tag] = [];
+        }
+        result[tag].push(entry);
+      });
+    });
+    return result;
+  }, [chartMetadata]);
+
+  const chartsByCategory = useMemo(() => {
+    const result: Record<string, VizEntry[]> = {};
+    chartMetadata.forEach(entry => {
+      const category = entry.value.category || t('Other');
+      if (!result[category]) {
+        result[category] = [];
+      }
+      result[category].push(entry);
+    });
+    return result;
+  }, [chartMetadata]);
+
   useEffect(() => {
-    const filteredData = chartMetadata.filter(
-      (item: any) =>
-        (chartAddSelector.category
-          ? item.value.category === chartAddSelector.category
-          : true) &&
-        (chartAddSelector.tags
-          ? item.value.tags.includes(chartAddSelector.tags)
-          : true),
-    );
+    let filteredData: React.SetStateAction<any[]> = [];
+
+    if (chartAddSelector.recommended_tags?.label) {
+      filteredData = chartsByTags[chartAddSelector.recommended_tags.label];
+    } else if (chartAddSelector.category?.label) {
+      filteredData = chartsByCategory[chartAddSelector.category.label];
+    } else if (chartAddSelector.tags?.label) {
+      filteredData = chartsByTags[chartAddSelector.tags.label];
+    }
     setEditedData(filteredData);
   }, [chartAddSelector]);
 
