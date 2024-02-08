@@ -57,6 +57,7 @@ import DvtDropdown from '../DvtDropdown';
 export interface DvtNavbarProps {
   pathName: string;
   data?: any;
+  leftMove: number;
 }
 
 interface LanguagesProps {
@@ -65,7 +66,7 @@ interface LanguagesProps {
   url: string;
 }
 
-const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
+const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   // const sort = useAppSelector(state => state.dvtApp.sort);
@@ -158,7 +159,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data }) => {
   }, [getExploreApi]);
 
   return (
-    <StyledDvtNavbar active={pathName !== '/superset/welcome/'}>
+    <StyledDvtNavbar leftMove={leftMove}>
       <NavbarTop>
         {pathName !== '/superset/profile/admin/' ? (
           <>

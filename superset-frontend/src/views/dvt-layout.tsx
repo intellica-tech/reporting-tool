@@ -76,7 +76,7 @@ const DvtLayout = () => {
       case '/dataset/add/':
         return 380;
       case '/sqlhub/':
-        return 460;
+        return 480;
       default:
         return 300;
     }
@@ -92,7 +92,11 @@ const DvtLayout = () => {
         pathName={pathname}
         minWidth={mainAppSidebarWidth(pathname)}
       />
-      <DvtNavbar pathName={pathname} data={bootstrapData.common.menu_data} />
+      <DvtNavbar
+        pathName={pathname}
+        data={bootstrapData.common.menu_data}
+        leftMove={mainAppSidebarWidth(pathname)}
+      />
       <DvtModal />
       <Main navbarInHeight={WithNavbarBottom.includes(pathname)}>
         <Switch>

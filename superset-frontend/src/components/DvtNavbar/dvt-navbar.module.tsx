@@ -19,7 +19,7 @@
 import { styled } from '@superset-ui/core';
 
 interface SidebarIcon {
-  active: boolean;
+  leftMove: number;
 }
 
 const StyledDvtNavbar = styled.div<SidebarIcon>`
@@ -28,7 +28,7 @@ const StyledDvtNavbar = styled.div<SidebarIcon>`
   position: fixed;
   top: 0;
   right: 0;
-  left: ${({ active }) => (active ? '300px' : '250px')};
+  left: ${({ leftMove }) => leftMove}px;
   z-index: 1000;
 `;
 
