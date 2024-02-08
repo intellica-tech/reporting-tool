@@ -71,6 +71,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const sqllabSelector = useAppSelector(state => state.dvtSidebar.sqllab);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
+  const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
@@ -228,10 +229,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
         });
       } else if (!fetchedSelector.sqllab.schema) {
-        setGetDataApiUrl({
-          name: 'sqllab-schema',
-          url: 'database/1/schemas/?q=(force:!f)',
-        });
+        // setGetDataApiUrl({
+        //   name: 'sqllab-schema',
+        //   url: `database/${sqllabSelector.database?.value}/schemas/?q=(force:!f)`,
+        // });
       } else if (!fetchedSelector.sqllab.see_table_schema) {
         // setGetDataApiUrl({
         //   name: 'sqllab-see_table_schema',
@@ -558,6 +559,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'datasetAdd',
         keyNames: ['database', 'schema'],
       },
+      {
+        title: 'SQL Lab',
+        key: 'sqllab',
+        keyNames: ['database', 'schema', 'see_table_schema'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.title === pathTitles(pathName),
@@ -840,6 +846,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       }),
                     )
                   }
+                />
+              )}
+            {pathTitles(pathName) === 'SQL Lab' &&
+              pageSqlhubSelector.selectedTables?.name && (
+                <DvtList
+                  title={pageSqlhubSelector.selectedTables.name}
+                  data={pageSqlhubSelector.selectedTables.columns.map(
+                    (v: any, index: number) => ({
+                      id: index,
+                      title: v.name,
+                      subtitle: v.type,
+                    }),
+                  )}
                 />
               )}
           </StyledDvtSidebarBody>

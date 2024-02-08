@@ -126,7 +126,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/superset/sqllab/history/',
-    key: 'sqllab',
+    key: 'sqllab_history',
     data: [
       {
         label: t('Database'),
@@ -689,7 +689,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/sqlhub/',
-    key: 'sqlhub',
+    key: 'sqllab',
     data: [
       {
         placeholder: t('Database'),

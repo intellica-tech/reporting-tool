@@ -24,7 +24,7 @@ const StyledDvtList = styled.div`
   gap: 11px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  height: 734px;
+  height: 560px;
   padding: 16px 20px;
 `;
 

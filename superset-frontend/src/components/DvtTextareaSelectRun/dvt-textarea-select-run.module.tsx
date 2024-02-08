@@ -38,7 +38,7 @@ interface StyledDvtTextareaItemProps {
 
 const StyledDvtTextareaSelectRun = styled.div`
   position: relative;
-  width: 1126px;
+  width: 100%;
   height: 281px;
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.grayscale.light5};
