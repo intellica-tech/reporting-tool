@@ -28,6 +28,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   });
   const [dashboardApi, setDashboardApi] = useState<string>('');
   const [jsonValue, setJsonValue] = useState<any | null>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const dashboardItemApi = useFetch({ url: `dashboard/${meta.id}` });
 
@@ -152,7 +153,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
             />
           </StyledDashboardEditInput>
         </StyledDashboardEditGroup>
-        <DvtCollapse label="ADVANCED">
+        <DvtCollapse label="ADVANCED" isOpen={isOpen} setIsOpen={setIsOpen}>
           <DvtJsonEditor value={defaultJsonValue} onChange={setJsonValue} />
         </DvtCollapse>
       </StyledDashboardEditBody>
