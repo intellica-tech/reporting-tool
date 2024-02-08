@@ -53,7 +53,6 @@ const DvtChartAdd: React.FC<ChartCreationProps> = ({
 
   const changeVizType = (vizType: string | null) => {
     setChart(prevState => ({ ...prevState, vizType }));
-    console.log(vizType);
   };
 
   const loadDatasources = (search: string, page: number, pageSize: number) => {
