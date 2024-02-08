@@ -22,6 +22,7 @@ import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { dvtSidebarAlertsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
@@ -121,6 +122,14 @@ function AlertList() {
     setSelectedRows([]);
   };
 
+  const handleAlertAdd = () => {
+    dispatch(
+      openModal({
+        component: 'alert-add-modal',
+      }),
+    );
+  };
+
   return data.length ? (
     <StyledAlerts>
       <div>
@@ -143,7 +152,7 @@ function AlertList() {
       <StyledAlertsButton>
         <DvtButton
           label={t('Create a New Alert')}
-          onClick={() => {}}
+          onClick={handleAlertAdd}
           colour="grayscale"
         />
         <DvtPagination
@@ -162,10 +171,14 @@ function AlertList() {
             ? 'No Alerts Yet'
             : 'No results match your filter criteria'
         }
-        buttonLabel={data.length === 0 ? 'Alert' : 'Clear All Filter'}
+        buttonLabel={
+          data.length === 0 ? t('Create a New Alert') : t('Clear All Filter')
+        }
         buttonClick={() => {
           if (data.length > 0) {
             clearAlerts();
+          } else {
+            handleAlertAdd();
           }
         }}
       />
