@@ -38,8 +38,8 @@ const DvtList: React.FC<DvtListProps> = ({ data, title }) => (
   <StyledDvtList>
     <StyledDvtListLabel>{title}</StyledDvtListLabel>
     <StyledDvtListScroll>
-      {data.map(item => (
-        <StyledDvtListItem>
+      {data.map((item, index) => (
+        <StyledDvtListItem key={index}>
           <p>{item.title}</p>
           <p>{item.subtitle}</p>
         </StyledDvtListItem>
