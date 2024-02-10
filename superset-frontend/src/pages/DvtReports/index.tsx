@@ -24,7 +24,7 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import handleResourceExport from 'src/utils/export';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
-import { dvtSidebarReportsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
@@ -47,10 +47,10 @@ function ReportList() {
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
   );
-  const [page, setPage] = useState<number>(1);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [count, setCount] = useState(0);
   const [data, setData] = useState<any[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [count, setCount] = useState(0);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [dataOnReady, setDataOnReady] = useState<boolean>(false);
 
   const searchApiUrls = (gPage: number) =>
@@ -173,20 +173,7 @@ function ReportList() {
   }, [reportsSelector]);
 
   const clearReports = () => {
-    dispatch(
-      dvtSidebarReportsSetProperty({
-        reports: {
-          ...reportsSelector,
-          owner: '',
-          createdBy: '',
-          chartType: '',
-          dataset: '',
-          dashboards: '',
-          favorite: '',
-          certified: '',
-        },
-      }),
-    );
+    dispatch(dvtSidebarSetPropertyClear('reports'));
   };
 
   const [favoriteUrl, setFavoriteUrl] = useState<{
@@ -312,6 +299,15 @@ function ReportList() {
       },
     ],
   };
+
+  useEffect(
+    () => () => {
+      clearReports();
+      setData([]);
+      setSelectedRows([]);
+    },
+    [],
+  );
 
   return data.length > 0 ? (
     <StyledReports>

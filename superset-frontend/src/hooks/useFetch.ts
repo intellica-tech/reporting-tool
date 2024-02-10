@@ -22,6 +22,8 @@ const useFetch = ({
   const csrf_token = document.querySelector<HTMLInputElement>('#csrf_token');
 
   useEffect(() => {
+    let isMounted = true;
+
     if (url) {
       const fetchData = async () => {
         try {
@@ -40,7 +42,9 @@ const useFetch = ({
           }
 
           const result = await response.json();
-          setData(result);
+          if (isMounted) {
+            setData(result);
+          }
         } catch (error) {
           addDangerToast(error.message);
         }
@@ -48,6 +52,10 @@ const useFetch = ({
 
       fetchData();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [url]);
 
   return data;

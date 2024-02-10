@@ -32,7 +32,7 @@ interface DvtSidebarState {
   alerts: {
     createdBy: any;
     owner: any;
-    status: string;
+    status: any;
     search: string;
   };
   connection: {
@@ -67,7 +67,7 @@ interface DvtSidebarState {
     certified: any;
   };
   annotationlayer: {
-    createdBy: string;
+    createdBy: any;
     search: string;
   };
   sqllab: {
@@ -152,7 +152,7 @@ interface DvtSidebarState {
   };
 }
 
-const initialState: DvtSidebarState = {
+const INITIAL_STATE = {
   reports: {
     owner: '',
     createdBy: '',
@@ -209,6 +209,10 @@ const initialState: DvtSidebarState = {
     schema: '',
     see_table_schema: '',
   },
+};
+
+const initialState: DvtSidebarState = {
+  ...INITIAL_STATE,
   data: {
     fetched: {
       alerts: {
@@ -290,43 +294,13 @@ const dvtSidebarSlice = createSlice({
   name: 'dvt-sidebar',
   initialState,
   reducers: {
-    dvtSidebarReportsSetProperty: (
-      state,
-      action: PayloadAction<{ reports: DvtSidebarState['reports'] }>,
-    ) => ({
-      ...state,
-      reports: {
-        ...state.reports,
-        ...action.payload.reports,
-      },
-    }),
-    dvtSidebarAlertsSetProperty: (
-      state,
-      action: PayloadAction<{ alerts: DvtSidebarState['alerts'] }>,
-    ) => ({
-      ...state,
-      alerts: {
-        ...state.alerts,
-        ...action.payload.alerts,
-      },
-    }),
-    dvtSidebarConnectionSetProperty: (
-      state,
-      action: PayloadAction<{ connection: DvtSidebarState['connection'] }>,
-    ) => ({
-      ...state,
-      connection: {
-        ...state.connection,
-        ...action.payload.connection,
-      },
-    }),
     dvtSidebarChartAddSetProperty: (
       state,
       action: PayloadAction<{ chartAdd: DvtSidebarState['chartAdd'] }>,
     ) => ({
       ...state,
       chartAdd: {
-        ...state.connection,
+        ...state.chartAdd,
         ...action.payload.chartAdd,
       },
     }),
@@ -340,6 +314,42 @@ const dvtSidebarSlice = createSlice({
         [action.payload.key]: action.payload.value,
       },
     }),
+    dvtSidebarSetPropertyClear: (state, action: PayloadAction<string>) => {
+      const keyNames = action.payload;
+      const autoDataClear = (key: string) => {
+        switch (key) {
+          case 'datasetAdd':
+            return {
+              data: {
+                ...state.data,
+                datasetAdd: {
+                  ...state.data.datasetAdd,
+                  schema: [],
+                  selectDatabase: [],
+                },
+              },
+            };
+          case 'sqllab':
+            return {
+              data: {
+                ...state.data,
+                sqllab: {
+                  ...state.data.sqllab,
+                  schema: [],
+                  see_table_schema: [],
+                },
+              },
+            };
+          default:
+            return {};
+        }
+      };
+      return {
+        ...state,
+        [action.payload]: INITIAL_STATE[action.payload],
+        ...autoDataClear(keyNames),
+      };
+    },
     dvtSidebarSetDataProperty: (
       state,
       action: PayloadAction<{ pageKey: string; key: string; value: any[] }>,
@@ -364,11 +374,9 @@ const dvtSidebarSlice = createSlice({
 });
 
 export const {
-  dvtSidebarReportsSetProperty,
-  dvtSidebarAlertsSetProperty,
-  dvtSidebarConnectionSetProperty,
   dvtSidebarChartAddSetProperty,
   dvtSidebarSetProperty,
+  dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
 } = dvtSidebarSlice.actions;
 

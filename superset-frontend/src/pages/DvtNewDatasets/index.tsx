@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetProperty,
+  dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
@@ -165,6 +166,15 @@ function DvtNewDatasets() {
       history.push('/chart/add');
     }
   }, [postDataset]);
+
+  useEffect(
+    () => () => {
+      dispatch(dvtSidebarSetPropertyClear('datasetAdd'));
+      setData([]);
+      setDataSchema([]);
+    },
+    [],
+  );
 
   return (
     <StyledDvtNewDatasets>

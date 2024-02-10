@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { dvtSidebarSetDataProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import {
+  dvtSidebarSetDataProperty,
+  dvtSidebarSetPropertyClear,
+} from 'src/dvt-redux/dvt-sidebarReducer';
 import { dvtSqlhubSetSelectedTables } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
@@ -96,6 +99,14 @@ function DvtSqllab() {
       setSelectedSeeTableSchemaApiUrl('');
     }
   }, [selectedSeeTableSchemaApi]);
+
+  useEffect(
+    () => () => {
+      dispatch(dvtSidebarSetPropertyClear('sqllab'));
+      setValue('');
+    },
+    [],
+  );
 
   return (
     <StyledSqlhub>

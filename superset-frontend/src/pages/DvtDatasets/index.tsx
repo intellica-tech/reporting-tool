@@ -27,6 +27,7 @@ import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import handleResourceExport from 'src/utils/export';
 import moment from 'moment';
 import DvtButton from 'src/components/DvtButton';
@@ -187,6 +188,15 @@ function DvtDatasets() {
       ],
     },
   ];
+
+  useEffect(
+    () => () => {
+      dispatch(dvtSidebarSetPropertyClear('datasets'));
+      setData([]);
+      setSelectedRows([]);
+    },
+    [],
+  );
 
   return (
     <StyledDvtDatasets>

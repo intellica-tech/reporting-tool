@@ -253,7 +253,6 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
     dispatch(
       dvtSidebarChartAddSetProperty({
         chartAdd: {
-          ...chartAddSelector,
           dataset: '',
           recommended_tags: '',
           category: '',

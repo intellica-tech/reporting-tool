@@ -6,6 +6,7 @@ import { JsonResponse, SupersetClient, t } from '@superset-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { findPermission } from 'src/utils/findPermission';
 import { UserWithPermissionsAndRoles } from 'src/types/bootstrapTypes';
@@ -96,6 +97,13 @@ const DvtChartAdd: React.FC<ChartCreationProps> = ({
       dispatch(dvtNavbarChartAddSetVizType(chart.vizType));
     }
   }, [chart.vizType]);
+
+  useEffect(
+    () => () => {
+      dispatch(dvtSidebarSetPropertyClear('chartAdd'));
+    },
+    [],
+  );
 
   return (
     <DvtVizTypeGallery

@@ -21,7 +21,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
-import { dvtSidebarAlertsSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import useFetch from 'src/hooks/useFetch';
@@ -135,17 +135,7 @@ function AlertList() {
   };
 
   const clearAlerts = () => {
-    dispatch(
-      dvtSidebarAlertsSetProperty({
-        alerts: {
-          ...alertsSelector,
-          createdBy: '',
-          owner: '',
-          status: '',
-          search: '',
-        },
-      }),
-    );
+    dispatch(dvtSidebarSetPropertyClear('alerts'));
   };
 
   const handleAlertAdd = () => {
@@ -187,6 +177,15 @@ function AlertList() {
       ],
     },
   ];
+
+  useEffect(
+    () => () => {
+      clearAlerts();
+      setData([]);
+      setSelectedRows([]);
+    },
+    [],
+  );
 
   return data.length ? (
     <StyledAlerts>

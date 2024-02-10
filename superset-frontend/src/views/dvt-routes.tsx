@@ -23,7 +23,7 @@ import React, { lazy } from 'react';
 import DvtHome from 'src/pages/DvtHome';
 
 const ChartCreation = lazy(
-  () =>   import(/* webpackChunkName: "ChartCreation" */ 'src/pages/ChartCreation'),
+  () => import(/* webpackChunkName: "ChartCreation" */ 'src/pages/DvtChartAdd'),
 );
 
 const AnnotationLayerList = lazy(
@@ -47,9 +47,9 @@ const AnnotationList = lazy(
     import(/* webpackChunkName: "AnnotationList" */ 'src/pages/AnnotationList'),
 );
 
-const ChartList = lazy(
-  () => import(/* webpackChunkName: "ChartList" */ 'src/pages/ChartList'),
-);
+// const ChartList = lazy(
+//   () => import(/* webpackChunkName: "ChartList" */ 'src/pages/ChartList'),
+// );
 
 const CssTemplateList = lazy(
   () =>
@@ -93,7 +93,7 @@ const ExecutionLogList = lazy(
 );
 
 const Chart = lazy(
-  () => import(/* webpackChunkName: "Chart" */ 'src/pages/Chart'),
+  () => import(/* webpackChunkName: "Chart" */ 'src/pages/DvtChart'),
 );
 
 const QueryHistoryList = lazy(
@@ -148,10 +148,10 @@ export const routes: Routes = [
     path: '/chart/add',
     Component: ChartCreation,
   },
-  {
-    path: '/chart/list/',
-    Component: ChartList,
-  },
+  // {
+  //   path: '/chart/list/',
+  //   Component: ChartList,
+  // },
   {
     path: '/tablemodelview/list/',
     Component: DatasetList,

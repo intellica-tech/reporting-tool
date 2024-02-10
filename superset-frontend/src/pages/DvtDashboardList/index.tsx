@@ -23,6 +23,7 @@ import { t } from '@superset-ui/core';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { useDispatch } from 'react-redux';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useHistory } from 'react-router-dom';
 import handleResourceExport from 'src/utils/export';
 import { useAppSelector } from 'src/hooks/useAppSelector';
@@ -244,6 +245,15 @@ function DvtDashboardList() {
       ],
     },
   ];
+
+  useEffect(
+    () => () => {
+      dispatch(dvtSidebarSetPropertyClear('dashboard'));
+      setData([]);
+      setSelectedRows([]);
+    },
+    [],
+  );
 
   return (
     <StyledDashboardList>

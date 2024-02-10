@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux';
 import handleResourceExport from 'src/utils/export';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
-import { dvtSidebarConnectionSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
@@ -51,7 +51,7 @@ function DvtConnection() {
   const editSuccessStatus = useAppSelector(
     state => state.dvtConnection.editSuccessStatus,
   );
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -125,16 +125,7 @@ function DvtConnection() {
   }, [connectionSelector]);
 
   const clearConnection = () => {
-    dispatch(
-      dvtSidebarConnectionSetProperty({
-        connection: {
-          ...connectionSelector,
-          expose_in_sqllab: '',
-          allow_run_async: '',
-          search: '',
-        },
-      }),
-    );
+    dispatch(dvtSidebarSetPropertyClear('connection'));
   };
 
   const handleConnectionAdd = () => {
@@ -202,6 +193,15 @@ function DvtConnection() {
       },
     ],
   };
+
+  useEffect(
+    () => () => {
+      clearConnection();
+      setData([]);
+      setSelectedRows([]);
+    },
+    [],
+  );
 
   return data.length > 0 ? (
     <StyledConnection>
