@@ -126,6 +126,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
 
   const updateProperty = (pageKey: string, key: string, value: string) => {
+    console.log('hey');
     dispatch(
       dvtSidebarSetProperty({
         pageKey,
@@ -573,7 +574,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         setSelectedValue={value => {
                           if (pathTitles(pathName) === 'chartAdd') {
                             updateChartAddProperty(value, data.name);
-                          } else if (sidebarDataFindPathname.key) {
+                          } else if (value && sidebarDataFindPathname.key) {
                             updateProperty(
                               sidebarDataFindPathname.key,
                               data.name,
