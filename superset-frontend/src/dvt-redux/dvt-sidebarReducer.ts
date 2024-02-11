@@ -59,6 +59,9 @@ interface DvtSidebarState {
     category: any;
     tags: any;
   };
+  chart: {
+    search: string;
+  };
   dashboard: {
     owner: any;
     createdBy: any;
@@ -66,11 +69,11 @@ interface DvtSidebarState {
     favorite: any;
     certified: any;
   };
-  annotationlayer: {
+  annotationLayer: {
     createdBy: any;
     search: string;
   };
-  sqllab: {
+  sqlhub: {
     database: any;
     schema: any;
     see_table_schema: any;
@@ -91,9 +94,8 @@ interface DvtSidebarState {
         owner: boolean;
         createdBy: boolean;
       };
-      annotationlayer: {
+      annotationLayer: {
         createdBy: boolean;
-        search: boolean;
       };
       datasets: {
         owner: boolean;
@@ -102,15 +104,12 @@ interface DvtSidebarState {
       };
       datasetAdd: {
         database: boolean;
-        schema: boolean;
       };
       chartAdd: {
         dataset: boolean;
       };
-      sqllab: {
+      sqlhub: {
         database: boolean;
-        schema: boolean;
-        see_table_schema: boolean;
       };
     };
     alerts: {
@@ -127,9 +126,8 @@ interface DvtSidebarState {
       owner: any[];
       createdBy: any[];
     };
-    annotationlayer: {
+    annotationLayer: {
       createdBy: any[];
-      search: any[];
     };
     datasets: {
       owner: any[];
@@ -144,7 +142,7 @@ interface DvtSidebarState {
     chartAdd: {
       dataset: any[];
     };
-    sqllab: {
+    sqlhub: {
       database: any[];
       schema: any[];
       see_table_schema: any[];
@@ -193,6 +191,9 @@ const INITIAL_STATE = {
     category: '',
     tags: '',
   },
+  chart: {
+    search: '',
+  },
   dashboard: {
     owner: '',
     createdBy: '',
@@ -200,11 +201,11 @@ const INITIAL_STATE = {
     favorite: '',
     certified: '',
   },
-  annotationlayer: {
+  annotationLayer: {
     createdBy: '',
     search: '',
   },
-  sqllab: {
+  sqlhub: {
     database: '',
     schema: '',
     see_table_schema: '',
@@ -229,9 +230,8 @@ const initialState: DvtSidebarState = {
         owner: false,
         createdBy: false,
       },
-      annotationlayer: {
+      annotationLayer: {
         createdBy: false,
-        search: false,
       },
       datasets: {
         owner: false,
@@ -240,15 +240,12 @@ const initialState: DvtSidebarState = {
       },
       datasetAdd: {
         database: false,
-        schema: false,
       },
       chartAdd: {
         dataset: false,
       },
-      sqllab: {
+      sqlhub: {
         database: false,
-        schema: false,
-        see_table_schema: false,
       },
     },
     alerts: {
@@ -265,9 +262,8 @@ const initialState: DvtSidebarState = {
       owner: [],
       createdBy: [],
     },
-    annotationlayer: {
+    annotationLayer: {
       createdBy: [],
-      search: [],
     },
     datasets: {
       owner: [],
@@ -282,7 +278,7 @@ const initialState: DvtSidebarState = {
     chartAdd: {
       dataset: [],
     },
-    sqllab: {
+    sqlhub: {
       database: [],
       schema: [],
       see_table_schema: [],
@@ -329,12 +325,12 @@ const dvtSidebarSlice = createSlice({
                 },
               },
             };
-          case 'sqllab':
+          case 'sqlhub':
             return {
               data: {
                 ...state.data,
-                sqllab: {
-                  ...state.data.sqllab,
+                sqlhub: {
+                  ...state.data.sqlhub,
                   schema: [],
                   see_table_schema: [],
                 },
@@ -352,24 +348,37 @@ const dvtSidebarSlice = createSlice({
     },
     dvtSidebarSetDataProperty: (
       state,
-      action: PayloadAction<{ pageKey: string; key: string; value: any[] }>,
-    ) => ({
-      ...state,
-      data: {
-        ...state.data,
-        fetched: {
-          ...state.data.fetched,
+      action: PayloadAction<{
+        pageKey: string;
+        key: string;
+        value: any[];
+        fetched?: boolean;
+      }>,
+    ) => {
+      const withOrWithoutFetch = action.payload.fetched
+        ? {
+            fetched: {
+              ...state.data.fetched,
+              [action.payload.pageKey]: {
+                ...state.data.fetched[action.payload.pageKey],
+                [action.payload.key]: true,
+              },
+            },
+          }
+        : {};
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          ...withOrWithoutFetch,
           [action.payload.pageKey]: {
-            ...state.data.fetched[action.payload.pageKey],
-            [action.payload.key]: true,
+            ...state.data[action.payload.pageKey],
+            [action.payload.key]: action.payload.value,
           },
         },
-        [action.payload.pageKey]: {
-          ...state.data[action.payload.pageKey],
-          [action.payload.key]: action.payload.value,
-        },
-      },
-    }),
+      };
+    },
   },
 });
 

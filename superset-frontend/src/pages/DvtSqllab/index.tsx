@@ -13,8 +13,8 @@ import { StyledSqlhub } from './dvt-sqlhub.module';
 
 function DvtSqllab() {
   const dispatch = useDispatch();
-  const sqllabSidebarSelector = useAppSelector(
-    state => state.dvtSidebar.sqllab,
+  const sqlhubSidebarSelector = useAppSelector(
+    state => state.dvtSidebar.sqlhub,
   );
   const [limit, setLimit] = useState(1000);
   const [value, setValue] = useState('');
@@ -31,41 +31,41 @@ function DvtSqllab() {
   });
 
   useEffect(() => {
-    if (sqllabSidebarSelector.database?.value) {
+    if (sqlhubSidebarSelector.database?.value) {
       setGetSchemaApiUrl(
-        `database/${sqllabSidebarSelector.database.value}/schemas/?q=(force:!f)`,
+        `database/${sqlhubSidebarSelector.database.value}/schemas/?q=(force:!f)`,
       );
     }
-  }, [sqllabSidebarSelector.database]);
+  }, [sqlhubSidebarSelector.database]);
 
   useEffect(() => {
     if (
-      sqllabSidebarSelector.database?.value &&
-      sqllabSidebarSelector.schema?.value
+      sqlhubSidebarSelector.database?.value &&
+      sqlhubSidebarSelector.schema?.value
     ) {
       setGetSeeTableSchemaApiUrl(
-        `database/${sqllabSidebarSelector.database.value}/tables/?q=(force:!f,schema_name:${sqllabSidebarSelector.schema.value})`,
+        `database/${sqlhubSidebarSelector.database.value}/tables/?q=(force:!f,schema_name:${sqlhubSidebarSelector.schema.value})`,
       );
     }
-  }, [sqllabSidebarSelector.database, sqllabSidebarSelector.schema]);
+  }, [sqlhubSidebarSelector.database, sqlhubSidebarSelector.schema]);
 
   useEffect(() => {
     if (
-      sqllabSidebarSelector.database?.value &&
-      sqllabSidebarSelector.schema?.value &&
-      sqllabSidebarSelector.see_table_schema?.value
+      sqlhubSidebarSelector.database?.value &&
+      sqlhubSidebarSelector.schema?.value &&
+      sqlhubSidebarSelector.see_table_schema?.value
     ) {
       setSelectedSeeTableSchemaApiUrl(
-        `database/${sqllabSidebarSelector.database.value}/table/${sqllabSidebarSelector.see_table_schema.value}/${sqllabSidebarSelector.schema.value}/`,
+        `database/${sqlhubSidebarSelector.database.value}/table/${sqlhubSidebarSelector.see_table_schema.value}/${sqlhubSidebarSelector.schema.value}/`,
       );
     }
-  }, [sqllabSidebarSelector]);
+  }, [sqlhubSidebarSelector]);
 
   useEffect(() => {
     if (getSchemaApi) {
       dispatch(
         dvtSidebarSetDataProperty({
-          pageKey: 'sqllab',
+          pageKey: 'sqlhub',
           key: 'schema',
           value: getSchemaApi.result.map((v: string) => ({
             label: v,
@@ -81,7 +81,7 @@ function DvtSqllab() {
     if (getSeeTableSchemaApi) {
       dispatch(
         dvtSidebarSetDataProperty({
-          pageKey: 'sqllab',
+          pageKey: 'sqlhub',
           key: 'see_table_schema',
           value: getSeeTableSchemaApi.result.map((v: any) => ({
             ...v,
@@ -102,7 +102,8 @@ function DvtSqllab() {
 
   useEffect(
     () => () => {
-      dispatch(dvtSidebarSetPropertyClear('sqllab'));
+      dispatch(dvtSidebarSetPropertyClear('sqlhub'));
+      dispatch(dvtSqlhubSetSelectedTables([]));
       setValue('');
     },
     [],

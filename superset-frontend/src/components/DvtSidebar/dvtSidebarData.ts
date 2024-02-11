@@ -1,9 +1,15 @@
 import { t } from '@superset-ui/core';
 
+interface apiUrlsProps {
+  name: string;
+  url: string;
+}
+
 interface SidebarDataProps {
   pathname: string;
-  key?: string;
+  key: string;
   data: any[];
+  apiUrls?: apiUrlsProps[];
 }
 
 const dataYesOrNo = [
@@ -14,6 +20,7 @@ const dataYesOrNo = [
 const DvtSidebarData: SidebarDataProps[] = [
   {
     pathname: '/superset/welcome/',
+    key: 'welcome',
     data: [
       {
         titleMenu: 'folder navigation',
@@ -126,78 +133,67 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/superset/sqllab/history/',
-    key: 'sqllab_history',
+    key: 'sqlhubHistory',
     data: [
       {
         label: t('Database'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: [],
         placeholder: t('Select or type a value'),
+        name: 'databse',
       },
       {
         label: t('State'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: [],
         placeholder: t('Select or type a value'),
+        name: 'state',
       },
       {
         label: t('User'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: [],
         placeholder: t('Type a value'),
+        name: 'user',
       },
       {
         label: t('Time Range'),
-        values: [],
         placeholder: t('Type a value'),
+        name: 'time-range',
         datePicker: true,
       },
       {
         label: t('Search by Query Text'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
         placeholder: t('Type a value'),
+        name: 'search',
+        status: 'input',
       },
     ],
   },
   {
     pathname: '/superset/sqllab/saved_queries/',
+    key: 'savedQueries',
     data: [
       {
         label: t('Database'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: [],
         placeholder: t('Select or type a value'),
+        name: 'database',
       },
       {
         label: t('Schema'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
+        values: [],
         placeholder: t('Select or type a value'),
+        name: 'schema',
       },
       {
         label: t('Tags'),
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
         placeholder: t('Type a value'),
+        name: 'search',
+        status: 'tags',
       },
       {
         label: t('Search'),
-        values: [],
+        placeholder: t('Type a value'),
+        name: 'search',
+        status: 'input',
       },
     ],
   },
@@ -206,28 +202,14 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'datasets',
     data: [
       {
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
         placeholder: t('Owner'),
         name: 'owner',
       },
       {
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
         placeholder: t('Database'),
         name: 'database',
       },
       {
-        values: [
-          { label: t('Lorem ıpsum'), value: 'failed' },
-          { label: t('Dolor Sit Amet'), value: 'success' },
-          { label: t('Lorem ıpsum'), value: 'failed1' },
-          { label: t('Dolor Sit Amet'), value: 'success1' },
-        ],
         placeholder: t('Schema'),
         name: 'schema',
       },
@@ -251,190 +233,18 @@ const DvtSidebarData: SidebarDataProps[] = [
         status: 'input',
       },
     ],
-  },
-  {
-    pathname: '/chart/list/',
-    data: [
+    apiUrls: [
       {
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
-        placeholder: t('Sqlite'),
+        name: 'owner',
+        url: 'dataset/related/owners',
       },
       {
-        values: [
-          { label: t('Failed'), value: 'failed' },
-          { label: t('Success'), value: 'success' },
-        ],
-        placeholder: t('Main'),
+        name: 'database',
+        url: 'dataset/related/database',
       },
       {
-        values: [],
-        valuesList: [
-          {
-            id: 1,
-            subtitle: 'integer',
-            title: 'table_schema_id',
-          },
-          {
-            id: 2,
-            subtitle: 'string',
-            title: 'table_schema_title',
-          },
-          {
-            id: 3,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 4,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 5,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 6,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 7,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 8,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 9,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 10,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 11,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 12,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 13,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 14,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 15,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 16,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 17,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 18,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 19,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 20,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 21,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 22,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 23,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 24,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 25,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 26,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 27,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 28,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 29,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 30,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 31,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-          {
-            id: 32,
-            subtitle: 'string',
-            title: 'table_schema_subtitle',
-          },
-        ],
-        placeholder: t('See Table Schema'),
-        title: 'FFC 2019 Survey',
+        name: 'schema',
+        url: 'dataset/distinct/schema',
       },
     ],
   },
@@ -443,14 +253,18 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'datasetAdd',
     data: [
       {
-        values: [],
         placeholder: t('DATABASE'),
         name: 'database',
       },
       {
-        values: [],
         placeholder: t('SCHEMA'),
         name: 'schema',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
       },
     ],
   },
@@ -459,12 +273,10 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'dashboard',
     data: [
       {
-        values: [],
         placeholder: t('Owner'),
         name: 'owner',
       },
       {
-        values: [],
         placeholder: t('Created by'),
         name: 'createdBy',
       },
@@ -487,18 +299,26 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'certified',
       },
     ],
+    apiUrls: [
+      {
+        name: 'owner',
+        url: 'dashboard/related/owners',
+      },
+      {
+        name: 'createdBy',
+        url: 'dashboard/related/created_by',
+      },
+    ],
   },
   {
     pathname: '/report/list/',
     key: 'reports',
     data: [
       {
-        values: [],
         placeholder: t('Owner'),
         name: 'owner',
       },
       {
-        values: [],
         placeholder: t('Created by'),
         name: 'createdBy',
       },
@@ -523,12 +343,10 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'chartType',
       },
       {
-        values: [],
         placeholder: t('Dataset'),
         name: 'dataset',
       },
       {
-        values: [],
         placeholder: t('Dashboards'),
         name: 'dashboards',
       },
@@ -566,6 +384,24 @@ const DvtSidebarData: SidebarDataProps[] = [
       //   name: 'sort',
       // },
     ],
+    apiUrls: [
+      {
+        name: 'owner',
+        url: 'chart/related/owners',
+      },
+      {
+        name: 'createdBy',
+        url: 'chart/related/created_by',
+      },
+      {
+        name: 'dataset',
+        url: 'dataset/?q=(columns:!(datasource_name,datasource_id),keys:!(none),order_column:table_name,order_direction:asc,page:0,page_size:100)',
+      },
+      {
+        name: 'dashboards',
+        url: 'dashboard/?q=(columns:!(dashboard_title,id),keys:!(none),order_column:dashboard_title,order_direction:asc,page:0,page_size:100)',
+      },
+    ],
   },
   {
     pathname: '/alert/list/',
@@ -573,13 +409,11 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         label: t('Owner'),
-        values: [],
         placeholder: t('Select or type a value'),
         name: 'owner',
       },
       {
         label: t('Created by'),
-        values: [],
         placeholder: t('Select or type a value'),
         name: 'createdBy',
       },
@@ -602,9 +436,20 @@ const DvtSidebarData: SidebarDataProps[] = [
         status: 'input',
       },
     ],
+    apiUrls: [
+      {
+        name: 'owner',
+        url: 'report/related/owners',
+      },
+      {
+        name: 'createdBy',
+        url: 'report/related/created_by',
+      },
+    ],
   },
   {
     pathname: '/superset/profile/admin/',
+    key: 'profile',
     data: [
       {
         items: [
@@ -674,10 +519,16 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'tags',
       },
     ],
+    apiUrls: [
+      {
+        name: 'dataset',
+        url: 'dataset/',
+      },
+    ],
   },
   {
     pathname: '/explore/',
-    key: 'chartAdd',
+    key: 'chart',
     data: [
       {
         label: t('Chart Source'),
@@ -689,7 +540,7 @@ const DvtSidebarData: SidebarDataProps[] = [
   },
   {
     pathname: '/sqlhub/',
-    key: 'sqllab',
+    key: 'sqlhub',
     data: [
       {
         placeholder: t('Database'),
@@ -704,21 +555,31 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'see_table_schema',
       },
     ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
+      },
+    ],
   },
   {
     pathname: '/annotationlayer/list/',
-    key: 'annotationlayer',
+    key: 'annotationLayer',
     data: [
       {
-        values: [],
         placeholder: t('Created By'),
         name: 'createdBy',
       },
       {
-        status: 'input',
-        values: '',
         placeholder: t('Search'),
         name: 'search',
+        status: 'input',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'createdBy',
+        url: 'annotation_layer/related/created_by',
       },
     ],
   },

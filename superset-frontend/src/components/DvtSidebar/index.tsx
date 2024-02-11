@@ -67,9 +67,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
   const annotationLayerSelector = useAppSelector(
-    state => state.dvtSidebar.annotationlayer,
+    state => state.dvtSidebar.annotationLayer,
   );
-  const sqllabSelector = useAppSelector(state => state.dvtSidebar.sqllab);
+  const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const fetchedSelector = useAppSelector(
@@ -84,31 +84,31 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const pathTitles = (pathname: string) => {
     switch (pathname) {
       case '/superset/welcome/':
-        return 'Welcome Page';
+        return 'welcome';
       case '/dashboard/list/':
-        return 'Dashboards';
+        return 'dashboard';
       case '/alert/list/':
-        return 'Alerts';
+        return 'alerts';
       case '/report/list/':
-        return 'Reports';
+        return 'reports';
       case '/databaseview/list/':
-        return 'Connection';
+        return 'connection';
       case '/sqlhub/':
-        return 'SQL Lab';
+        return 'sqlhub';
       case '/tablemodelview/list/':
-        return 'Datasets';
+        return 'datasets';
       case '/superset/sqllab/history/':
-        return 'SQL History';
+        return 'sqlhubHistory';
       case '/superset/profile/admin/':
-        return 'Profile';
+        return 'profile';
       case '/chart/add':
-        return 'Chart Add';
+        return 'chartAdd';
       case '/explore/':
-        return 'Charts';
+        return 'chart';
       case '/dataset/add/':
-        return 'New Dataset';
+        return 'datasetAdd';
       case '/annotationlayer/list/':
-        return 'Annotation Layers';
+        return 'annotationLayer';
       default:
         return '';
     }
@@ -172,332 +172,120 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const getApiData = useFetch({ url: getDataApiUrl.url });
 
   useEffect(() => {
-    if (pathTitles(pathName) === 'Dashboards') {
-      if (!fetchedSelector.dashboard.owner) {
-        setGetDataApiUrl({
-          name: 'dashboard-owner',
-          url: 'dashboard/related/owners',
-        });
-      } else if (!fetchedSelector.dashboard.createdBy) {
-        setGetDataApiUrl({
-          name: 'dashboard-createdBy',
-          url: 'dashboard/related/created_by',
-        });
-      }
-    } else if (pathTitles(pathName) === 'Alerts') {
-      if (!fetchedSelector.alerts.owner) {
-        setGetDataApiUrl({
-          name: 'alerts-owner',
-          url: 'report/related/owners?q=(filter:%27%27,page:0,page_size:100)',
-        });
-      } else if (!fetchedSelector.alerts.createdBy) {
-        setGetDataApiUrl({
-          name: 'alerts-createdBy',
-          url: 'report/related/created_by?q=(filter:%27%27,page:0,page_size:100)',
-        });
-      }
-    } else if (pathTitles(pathName) === 'Annotation Layers') {
-      if (!fetchedSelector.annotationlayer.createdBy) {
-        setGetDataApiUrl({
-          name: 'annotationlayer-created-by',
-          url: 'annotation_layer/related/created_by',
-        });
-      }
-    } else if (pathTitles(pathName) === 'Datasets') {
-      if (!fetchedSelector.datasets.owner) {
-        setGetDataApiUrl({
-          name: 'datasets-owner',
-          url: 'dataset/related/owners',
-        });
-      } else if (!fetchedSelector.datasets.database) {
-        setGetDataApiUrl({
-          name: 'datasets-database',
-          url: 'dataset/related/database',
-        });
-      } else if (!fetchedSelector.datasets.schema) {
-        setGetDataApiUrl({
-          name: 'datasets-schema',
-          url: 'dataset/distinct/schema',
-        });
-      }
-    } else if (pathTitles(pathName) === 'New Dataset') {
-      if (!fetchedSelector.datasetAdd.database) {
-        setGetDataApiUrl({
-          name: 'datasetAdd-database',
-          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
-        });
-      }
-    } else if (pathTitles(pathName) === 'Chart Add') {
-      if (!fetchedSelector.chartAdd.dataset) {
-        setGetDataApiUrl({
-          name: 'chartAdd-dataset',
-          url: 'dataset/',
-        });
-      }
-    } else if (pathTitles(pathName) === 'SQL Lab') {
-      if (!fetchedSelector.sqllab.database) {
-        setGetDataApiUrl({
-          name: 'sqllab-database',
-          url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27),(col:expose_in_sqllab,opr:eq,value:!t)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
-        });
-      } else if (!fetchedSelector.sqllab.schema) {
-        // setGetDataApiUrl({
-        //   name: 'sqllab-schema',
-        //   url: `database/${sqllabSelector.database?.value}/schemas/?q=(force:!f)`,
-        // });
-      } else if (!fetchedSelector.sqllab.see_table_schema) {
-        // setGetDataApiUrl({
-        //   name: 'sqllab-see_table_schema',
-        //   url: 'dataset/distinct/schema',
-        // });
-      }
-    } else if (pathTitles(pathName) === 'Reports') {
-      if (!fetchedSelector.reports.owner) {
-        setGetDataApiUrl({
-          name: 'reports-owner',
-          url: 'chart/related/owners',
-        });
-      } else if (!fetchedSelector.reports.createdBy) {
-        setGetDataApiUrl({
-          name: 'reports-createdBy',
-          url: 'chart/related/created_by',
-        });
-      } else if (!fetchedSelector.reports.dataset) {
-        setGetDataApiUrl({
-          name: 'reports-dataset',
-          url: 'dataset/?q=(columns:!(datasource_name,datasource_id),keys:!(none),order_column:table_name,order_direction:asc,page:0,page_size:100)',
-        });
-      } else if (!fetchedSelector.reports.dashboards) {
-        setGetDataApiUrl({
-          name: 'reports-dashboards',
-          url: 'dashboard/?q=(columns:!(dashboard_title,id),keys:!(none),order_column:dashboard_title,order_direction:asc,page:0,page_size:100)',
+    const findedPathName = DvtSidebarData.find(p => p.pathname === pathName);
+    if (findedPathName) {
+      const { apiUrls } = findedPathName;
+      if (apiUrls?.length) {
+        apiUrls.forEach(item => {
+          if (!fetchedSelector[findedPathName.key][item.name]) {
+            setGetDataApiUrl({
+              name: `${findedPathName.key}-${item.name}`,
+              url: item.url,
+            });
+          }
         });
       }
     }
   }, [
     fetchedSelector.dashboard,
-    fetchedSelector.annotationlayer,
     fetchedSelector.datasets,
-    fetchedSelector.chartAdd,
     fetchedSelector.reports,
     fetchedSelector.alerts,
+    // fetchedSelector.chartAdd,
+    // fetchedSelector.annotationLayer,
+    // sqlhub, datasetAdd
     pathName,
   ]);
 
   useEffect(() => {
     if (getApiData) {
       const data = getApiData?.result;
-      if (getDataApiUrl.name === 'dashboard-owner') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'dashboard',
-            key: 'owner',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'dashboard-createdBy') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'dashboard',
-            key: 'createdBy',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'alerts-owner') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'alerts',
-            key: 'owner',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'alerts-createdBy') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'alerts',
-            key: 'createdBy',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'annotationlayer-created-by') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'annotationlayer',
-            key: 'createdBy',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'datasets-owner') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'datasets',
-            key: 'owner',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'datasets-database') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'datasets',
-            key: 'database',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'datasets-schema') {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'datasets',
-            key: 'schema',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'chartAdd-dataset') {
-        const editedData = data.map((item: any) => ({
-          id: item.id,
-          value: item.table_name,
-          label: item.table_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'chartAdd',
-            key: 'dataset',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'sqllab-database') {
-        const editedData = data.map((item: any) => ({
-          value: item.explore_database_id,
-          label: item.database_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'sqllab',
-            key: 'database',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'sqllab-schema') {
-        const editedData = data.map((item: any) => ({
-          value: item.table_name,
-          label: item.table_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'sqllab',
-            key: 'schema',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'sqllab-see_table_schema') {
-        const editedData = data.map((item: any) => ({
-          value: item.table_name,
-          label: item.table_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'sqllab',
-            key: 'see_table_schema',
-            value: editedData,
-          }),
-        );
-      }
-      const getDataApiUrlKeys = getDataApiUrl.name.split('-');
-      const apiDataValueAndText = ['reports-owner', 'reports-createdBy'];
-      if (apiDataValueAndText.includes(getDataApiUrl.name)) {
-        const editedData = data.map((item: any) => ({
-          value: item.value,
-          label: item.text,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: getDataApiUrlKeys[0],
-            key: getDataApiUrlKeys[1],
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'reports-dataset') {
-        const editedData = data.map((item: any) => ({
-          value: item.id,
-          label: item.table_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'reports',
-            key: 'dataset',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'reports-dashboards') {
-        const editedData = data.map((item: any) => ({
-          value: item.id,
-          label: item.dashboard_title,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'reports',
-            key: 'dashboards',
-            value: editedData,
-          }),
-        );
-      }
-      if (getDataApiUrl.name === 'datasetAdd-database') {
-        const editedData = data.map((item: any) => ({
-          value: item.explore_database_id,
-          label: item.database_name,
-        }));
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'datasetAdd',
-            key: 'database',
-            value: editedData,
-          }),
-        );
-      }
+      const dataObjectKeys: any[] = [
+        {
+          key: 'dashboard',
+          keyNames: ['owner', 'createdBy'],
+        },
+        {
+          key: 'alerts',
+          keyNames: ['owner', 'createdBy'],
+        },
+        {
+          key: 'annotationLayer',
+          keyNames: ['createdBy'],
+        },
+        {
+          key: 'datasets',
+          keyNames: ['owner', 'database', 'schema'],
+        },
+        {
+          key: 'chartAdd',
+          keyNames: ['dataset'],
+        },
+        {
+          key: 'sqlhub',
+          keyNames: ['database'],
+        },
+        {
+          key: 'reports',
+          keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
+        },
+        {
+          key: 'datasetAdd',
+          keyNames: ['database'],
+        },
+      ];
+      dataObjectKeys.forEach(item => {
+        const getDataApiUrlKeys = getDataApiUrl.name.split('-');
+        if (getDataApiUrlKeys[0] === item.key) {
+          item.keyNames.forEach((twoItem: string) => {
+            if (getDataApiUrlKeys[1] === twoItem) {
+              const editedData = data.map((item: any) => {
+                switch (getDataApiUrl.name) {
+                  case 'chartAdd-dataset':
+                    return {
+                      id: item.id,
+                      value: item.table_name,
+                      label: item.table_name,
+                    };
+                  case 'sqlhub-database':
+                    return {
+                      value: item.explore_database_id,
+                      label: item.database_name,
+                    };
+                  case 'reports-dataset':
+                    return {
+                      value: item.id,
+                      label: item.table_name,
+                    };
+                  case 'reports-dashboards':
+                    return {
+                      value: item.id,
+                      label: item.dashboard_title,
+                    };
+                  case 'datasetAdd-database':
+                    return {
+                      value: item.explore_database_id,
+                      label: item.database_name,
+                    };
+                  default:
+                    return {
+                      value: item.value,
+                      label: item.text,
+                    };
+                }
+              });
+              dispatch(
+                dvtSidebarSetDataProperty({
+                  pageKey: item.key,
+                  key: twoItem,
+                  value: editedData,
+                  fetched: true,
+                }),
+              );
+            }
+          });
+        }
+      });
     }
   }, [getApiData]);
 
@@ -589,64 +377,48 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
 
     const selectionObjectKeys: any[] = [
       {
-        title: 'Alerts',
         key: 'alerts',
         keyNames: ['owner', 'createdBy'],
       },
       {
-        title: 'Reports',
         key: 'reports',
         keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
       },
       {
-        title: 'New Dataset',
         key: 'datasetAdd',
         keyNames: ['database', 'schema'],
       },
       {
-        title: 'SQL Lab',
-        key: 'sqllab',
+        key: 'sqlhub',
         keyNames: ['database', 'schema', 'see_table_schema'],
+      },
+      {
+        key: 'dashboard',
+        keyNames: ['owner', 'createdBy'],
+      },
+      {
+        key: 'datasets',
+        keyNames: ['owner', 'database', 'schema'],
+      },
+      {
+        key: 'annotationLayer',
+        keyNames: ['createdBy'],
       },
     ];
     const findPathTitle = selectionObjectKeys.find(
-      item => item.title === pathTitles(pathName),
+      item => item.key === pathTitles(pathName),
     );
     const onlyKeyNames = findPathTitle?.keyNames;
 
-    if (pathTitles(pathName) === 'Chart Add' && sData.name === 'dataset') {
+    if (pathTitles(pathName) === 'chartAdd' && sData.name === 'dataset') {
       dValue = dataSelector.chartAdd.dataset;
-    } else if (pathTitles(pathName) === 'Chart Add' && sData.name === 'tags') {
+    } else if (pathTitles(pathName) === 'chartAdd' && sData.name === 'tags') {
       dValue = tag;
     } else if (
-      pathTitles(pathName) === 'Chart Add' &&
+      pathTitles(pathName) === 'chartAdd' &&
       sData.name === 'category'
     ) {
       dValue = category;
-    } else if (
-      pathTitles(pathName) === 'Dashboards' &&
-      sData.name === 'owner'
-    ) {
-      dValue = dataSelector.dashboard.owner;
-    } else if (
-      pathTitles(pathName) === 'Dashboards' &&
-      sData.name === 'createdBy'
-    ) {
-      dValue = dataSelector.dashboard.createdBy;
-    } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'owner') {
-      dValue = dataSelector.datasets.owner;
-    } else if (
-      pathTitles(pathName) === 'Datasets' &&
-      sData.name === 'database'
-    ) {
-      dValue = dataSelector.datasets.database;
-    } else if (pathTitles(pathName) === 'Datasets' && sData.name === 'schema') {
-      dValue = dataSelector.datasets.schema;
-    } else if (
-      pathTitles(pathName) === 'Annotation Layers' &&
-      sData.name === 'createdBy'
-    ) {
-      dValue = dataSelector.annotationlayer.createdBy;
     } else if (findPathTitle && onlyKeyNames.includes(sData.name)) {
       dValue = dataSelector[findPathTitle.key][sData.name];
     } else {
@@ -657,17 +429,17 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   };
 
   const withForms = [
-    'Datasets',
-    'New Dataset',
-    'Dashboards',
-    'Annotation Layers',
-    'Alerts',
-    'Reports',
-    'Connection',
-    'SQL Lab',
-    'Chart Add',
-    'SQL History',
-    'Charts',
+    'datasets',
+    'datasetAdd',
+    'dashboard',
+    'annotationLayer',
+    'alerts',
+    'reports',
+    'connection',
+    'sqlhub',
+    'chartAdd',
+    'sqlhubHistory',
+    'chart',
   ];
 
   return (
@@ -675,7 +447,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       <StyledDvtSidebarHeader>
         <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>
-      {pathTitles(pathName) === 'Welcome Page' && (
+      {pathTitles(pathName) === 'welcome' && (
         <StyledDvtSidebarBody pathName={pathName}>
           {sidebarDataFindPathname?.data.map((data: any, index: number) => (
             <StyledDvtSidebarBodyItem key={index}>
@@ -778,28 +550,28 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         label={data.label}
                         placeholder={data.placeholder}
                         selectedValue={
-                          pathTitles(pathName) === 'Reports'
+                          pathTitles(pathName) === 'reports'
                             ? reportsSelector[data.name]
-                            : pathTitles(pathName) === 'Alerts'
+                            : pathTitles(pathName) === 'alerts'
                             ? alertsSelector[data.name]
-                            : pathTitles(pathName) === 'Connection'
+                            : pathTitles(pathName) === 'connection'
                             ? connectionSelector[data.name]
-                            : pathTitles(pathName) === 'Datasets'
+                            : pathTitles(pathName) === 'datasets'
                             ? datasetsSelector[data.name]
-                            : pathTitles(pathName) === 'Chart Add'
+                            : pathTitles(pathName) === 'chartAdd'
                             ? chartAddSelector[data.name]
-                            : pathTitles(pathName) === 'Dashboards'
+                            : pathTitles(pathName) === 'dashboard'
                             ? dashboardSelector[data.name]
-                            : pathTitles(pathName) === 'Annotation Layers'
+                            : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
-                            : pathTitles(pathName) === 'SQL Lab'
-                            ? sqllabSelector[data.name]
-                            : pathTitles(pathName) === 'New Dataset'
+                            : pathTitles(pathName) === 'sqlhub'
+                            ? sqlhubSelector[data.name]
+                            : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
-                          if (pathTitles(pathName) === 'Chart Add') {
+                          if (pathTitles(pathName) === 'chartAdd') {
                             updateChartAddProperty(value, data.name);
                           } else if (sidebarDataFindPathname.key) {
                             updateProperty(
@@ -819,24 +591,24 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         label={data.label}
                         placeholder={data.placeholder}
                         value={
-                          pathTitles(pathName) === 'Reports'
+                          pathTitles(pathName) === 'reports'
                             ? reportsSelector[data.name]
-                            : pathTitles(pathName) === 'Alerts'
+                            : pathTitles(pathName) === 'alerts'
                             ? alertsSelector[data.name]
-                            : pathTitles(pathName) === 'Connection'
+                            : pathTitles(pathName) === 'connection'
                             ? connectionSelector[data.name]
-                            : pathTitles(pathName) === 'Datasets'
+                            : pathTitles(pathName) === 'datasets'
                             ? datasetsSelector[data.name]
-                            : pathTitles(pathName) === 'Chart Add'
+                            : pathTitles(pathName) === 'chartAdd'
                             ? chartAddSelector[data.name]
-                            : pathTitles(pathName) === 'Dashboards'
+                            : pathTitles(pathName) === 'dashboard'
                             ? dashboardSelector[data.name]
-                            : pathTitles(pathName) === 'Annotation Layers'
+                            : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
                             : undefined
                         }
                         onChange={value => {
-                          if (pathTitles(pathName) === 'Chart Add') {
+                          if (pathTitles(pathName) === 'chartAdd') {
                             updateChartAddProperty(value, data.name);
                           } else if (sidebarDataFindPathname.key) {
                             updateProperty(
@@ -876,7 +648,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   </StyledDvtSidebarBodySelect>
                 ),
               )}
-            {pathTitles(pathName) === 'New Dataset' &&
+            {pathTitles(pathName) === 'datasetAdd' &&
               dataSelector.datasetAdd.selectDatabase.length > 0 && (
                 <DvtSelectDatabaseList
                   data={dataSelector.datasetAdd.selectDatabase}
@@ -892,7 +664,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   }
                 />
               )}
-            {pathTitles(pathName) === 'SQL Lab' &&
+            {pathTitles(pathName) === 'sqlhub' &&
               pageSqlhubSelector.selectedTables?.name && (
                 <DvtList
                   title={pageSqlhubSelector.selectedTables.name}
@@ -908,7 +680,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
-      {pathTitles(pathName) === 'Profile' && (
+      {pathTitles(pathName) === 'profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
           {sidebarDataFindPathname?.data.map((data: any, index: number) => (
             <StyledDvtSidebarBodyItem key={index}>
@@ -924,7 +696,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           ))}
         </StyledDvtSidebarBody>
       )}
-      {/* {pathTitles(pathName) === 'Welcome Page' && (
+      {/* {pathTitles(pathName) === 'welcome' && (
         <StyledDvtSidebarFooter>
           <DvtDarkMode
             title={t('Dark Mode')}

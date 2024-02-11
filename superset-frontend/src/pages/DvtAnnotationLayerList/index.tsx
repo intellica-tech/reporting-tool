@@ -80,7 +80,7 @@ const headerData = [
 function DvtAnnotationLayerList() {
   const history = useHistory<{ from: string }>();
   const annotationSelector = useAppSelector(
-    state => state.dvtSidebar.annotationlayer,
+    state => state.dvtSidebar.annotationLayer,
   );
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
