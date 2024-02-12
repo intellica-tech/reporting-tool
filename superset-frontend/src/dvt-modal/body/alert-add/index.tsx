@@ -9,9 +9,8 @@ import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import Icon from 'src/components/Icons/Icon';
-import DvtTextarea from 'src/components/DvtTextarea';
-import { DvtTimezoneData } from './timezoneData';
 import { RadioChangeEvent } from 'antd/lib/radio';
+import { DvtTimezoneData } from './timezoneData';
 import {
   StyledAlertAdd,
   StyledAlertAddHeader,
