@@ -17,11 +17,11 @@
  * under the License.
  */
 import React from 'react';
-import DvtRadio from '.';
+import DvtRadioList, { DvtRadioListProps } from '.';
 
 export default {
-  title: 'Dvt-Components/DvtRadio',
-  component: DvtRadio,
+  title: 'Dvt-Components/DvtRadioList',
+  component: DvtRadioList,
 };
 
 const data = [
@@ -33,14 +33,14 @@ const data = [
   { label: 'Radio 6', value: 'radio6' },
 ];
 
-export const Default = () => (
+export const Default = (args: DvtRadioListProps) => (
   <div style={{ width: '300px' }}>
-    <DvtRadio data={data} />
+    <DvtRadioList {...args} data={data} />
   </div>
 );
 
-export const VerticalExample = () => (
+export const VerticalExample = (args: DvtRadioListProps) => (
   <div style={{ width: '300px' }}>
-    <DvtRadio data={data} direction="vertical" />
+    <DvtRadioList {...args} data={data} direction="vertical" />
   </div>
 );

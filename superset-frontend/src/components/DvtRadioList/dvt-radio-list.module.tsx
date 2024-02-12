@@ -25,9 +25,8 @@ interface StyledRadioListProps {
 const StyledRadioList = styled.div<StyledRadioListProps>`
   display: flex;
   flex-direction: ${({ direction }) =>
-    direction === 'vertical' ? 'column' : ''};
-  justify-content: space-between;
-  gap: 8px;
+    direction === 'vertical' ? 'column' : 'row'};
+  gap: 8px 27px;
   flex-wrap: wrap;
 `;
 
