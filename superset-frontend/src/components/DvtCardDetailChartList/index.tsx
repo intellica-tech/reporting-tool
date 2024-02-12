@@ -18,10 +18,7 @@
  */
 import React from 'react';
 import DvtCardDetailChart from '../DvtCardDetailChart';
-import {
-  StyledDvtCardDetailChartList,
-  StyledDvtCardDetailChartListScroll,
-} from './dvt-card-detail-chart-list.module';
+import { StyledDvtCardDetailChartList } from './dvt-card-detail-chart-list.module';
 
 export interface CardDetailChartDataProps {
   labelTitle: string;
@@ -39,19 +36,15 @@ const DvtCardDetailChartList: React.FC<DvtCardDetailChartListProps> = ({
   data,
 }) => (
   <StyledDvtCardDetailChartList>
-    <StyledDvtCardDetailChartListScroll>
-      {data.map((item, index) => (
-        <div style={{ width: '400px' }}>
-          <DvtCardDetailChart
-            key={index}
-            datasetLabel={item.datasetLabel}
-            labelTitle={item.labelTitle}
-            modified={item.modified}
-            vizTypeLabel={item.vizTypeLabel}
-          />
-        </div>
-      ))}
-    </StyledDvtCardDetailChartListScroll>
+    {data.map((item, index) => (
+      <DvtCardDetailChart
+        key={index}
+        datasetLabel={item.datasetLabel}
+        labelTitle={item.labelTitle}
+        modified={item.modified}
+        vizTypeLabel={item.vizTypeLabel}
+      />
+    ))}
   </StyledDvtCardDetailChartList>
 );
 

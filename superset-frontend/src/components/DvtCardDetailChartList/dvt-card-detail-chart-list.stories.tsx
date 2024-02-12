@@ -59,7 +59,7 @@ const dummyData: DvtCardDetailChartListProps = {
 const Template: Story<DvtCardDetailChartListProps> = (
   args: DvtCardDetailChartListProps,
 ) => (
-  <div style={{ width: '400px', height: '172px' }}>
+  <div style={{ width: '400px' }}>
     <DvtCardDetailChartList {...args} />
   </div>
 );

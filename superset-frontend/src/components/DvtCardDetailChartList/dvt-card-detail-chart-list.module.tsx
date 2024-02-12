@@ -21,15 +21,10 @@ import { styled } from '@superset-ui/core';
 const StyledDvtCardDetailChartList = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   max-height: 600px;
-`;
-
-const StyledDvtCardDetailChartListScroll = styled.div`
-  display: flex;
   gap: 20px;
   overflow-y: auto;
-  flex-direction: column;
+  padding-right: 20px;
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
@@ -44,4 +39,4 @@ const StyledDvtCardDetailChartListScroll = styled.div`
   }
 `;
 
-export { StyledDvtCardDetailChartList, StyledDvtCardDetailChartListScroll };
+export { StyledDvtCardDetailChartList };
