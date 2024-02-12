@@ -56,7 +56,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const dispatch = useDispatch();
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const alertsSelector = useAppSelector(state => state.dvtSidebar.alerts);
-  const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const datasetsSelector = useAppSelector(state => state.dvtSidebar.datasets);
   const datasetAddSelector = useAppSelector(
     state => state.dvtSidebar.datasetAdd,
@@ -97,8 +96,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'sqlhub';
       case '/tablemodelview/list/':
         return 'datasets';
-      case '/superset/sqllab/history/':
-        return 'sqlhubHistory';
+      case '/sqlhub/history/':
+        return 'queryHistory';
+      case '/savedqueryview/list/':
+        return 'savedQuery';
       case '/superset/profile/admin/':
         return 'profile';
       case '/chart/add':
@@ -115,14 +116,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   };
 
   const sidebarDataFindPathname = DvtSidebarData.find(
-    (item: { pathname: string }) => {
-      if (pathName === '/superset/sqllab/history/') {
-        return sqlSelector.tabs === 'Query History'
-          ? item.pathname === pathName
-          : item.pathname === '/superset/sqllab/saved_queries/';
-      }
-      return item.pathname === pathName;
-    },
+    (item: { pathname: string }) => item.pathname === pathName,
   );
 
   const updateProperty = (pageKey: string, key: string, value: string) => {

@@ -24,9 +24,6 @@ interface DvtNavbarState {
   alert: {
     tabs: ButtonTabsDataProps;
   };
-  sql: {
-    tabs: ButtonTabsDataProps;
-  };
   charts: {
     tabs: ButtonTabsDataProps;
   };
@@ -44,12 +41,6 @@ const initialState: DvtNavbarState = {
     tabs: {
       label: t('Alerts'),
       value: 'Alert',
-    },
-  },
-  sql: {
-    tabs: {
-      label: t('Query History'),
-      value: 'Query History',
     },
   },
   charts: {
@@ -87,16 +78,6 @@ const dvtNavbarSlice = createSlice({
         tabs: action.payload,
       },
     }),
-    dvtNavbarSqlSetTabs: (
-      state,
-      action: PayloadAction<ButtonTabsDataProps>,
-    ) => ({
-      ...state,
-      sql: {
-        ...state.sql,
-        tabs: action.payload,
-      },
-    }),
     dvtNavbarChartsSetTabs: (
       state,
       action: PayloadAction<ButtonTabsDataProps>,
@@ -129,7 +110,6 @@ const dvtNavbarSlice = createSlice({
 
 export const {
   dvtNavbarAlertSetTabs,
-  dvtNavbarSqlSetTabs,
   dvtNavbarChartsSetTabs,
   dvtNavbarChartAddSetVizType,
   dvtNavbarViewlistTabs,

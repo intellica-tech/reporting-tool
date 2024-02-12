@@ -15,6 +15,17 @@ export const UserData: UserDataProps = {
     'https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png',
 };
 
+export const sqlTabsData = [
+  {
+    label: t('Saved Queries'),
+    value: '/savedqueryview/list/',
+  },
+  {
+    label: t('Query History'),
+    value: '/sqlhub/history/',
+  },
+];
+
 export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
   {
     pathname: '/alert/list/',
@@ -30,20 +41,7 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
     ],
   },
   {
-    pathname: '/superset/sqllab/history/',
-    data: [
-      {
-        label: t('Saved Queries'),
-        value: 'Saved Queries',
-      },
-      {
-        label: t('Query History'),
-        value: 'Query History',
-      },
-    ],
-  },
-  {
-    pathname: '/superset/sqllab/',
+    pathname: '/sqlhub/',
     data: [
       {
         label: t('Saved'),
@@ -105,8 +103,9 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
 export const WithNavbarBottom: string[] = [
   // '/superset/welcome/',
   '/alert/list/',
-  '/superset/sqllab/history/',
-  '/superset/sqllab/',
+  '/sqlhub/history/',
+  '/savedqueryview/list/',
+  '/sqlhub/',
   '/chart/add',
   '/dashboard/list/',
   '/report/list/',

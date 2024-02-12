@@ -97,12 +97,15 @@ const Chart = lazy(
 );
 
 const QueryHistoryList = lazy(
-  () => import(/* webpackChunkName: "QueryHistoryList" */ 'src/pages/DvtSql'),
+  () =>
+    import(
+      /* webpackChunkName: "QueryHistoryList" */ 'src/pages/DvtQueryHistory'
+    ),
 );
 
 const SavedQueryList = lazy(
   () =>
-    import(/* webpackChunkName: "SavedQueryList" */ 'src/pages/SavedQueryList'),
+    import(/* webpackChunkName: "SavedQueryList" */ 'src/pages/DvtSavedQuery'),
 );
 
 const SqlLab = lazy(
@@ -177,7 +180,7 @@ export const routes: Routes = [
     Component: AnnotationList,
   },
   {
-    path: '/superset/sqllab/history/',
+    path: '/sqlhub/history/',
     Component: QueryHistoryList,
   },
   {

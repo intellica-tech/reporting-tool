@@ -27,12 +27,15 @@ import { BellOutlined } from '@ant-design/icons';
 import {
   dvtNavbarAlertSetTabs,
   dvtNavbarChartsSetTabs,
-  dvtNavbarSqlSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
-import { DvtNavbarTabsData, WithNavbarBottom } from './dvt-navbar-tabs-data';
+import {
+  sqlTabsData,
+  DvtNavbarTabsData,
+  WithNavbarBottom,
+} from './dvt-navbar-tabs-data';
 import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
 import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
@@ -71,7 +74,6 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const history = useHistory();
   // const sort = useAppSelector(state => state.dvtApp.sort);
   const alertSelector = useAppSelector(state => state.dvtNavbar.alert);
-  const sqlSelector = useAppSelector(state => state.dvtNavbar.sql);
   const chartsSelector = useAppSelector(state => state.dvtNavbar.charts);
   const chartAddSelector = useAppSelector(state => state.dvtNavbar.chartAdd);
   const chartAddSidebarSelector = useAppSelector(
@@ -80,6 +82,9 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
+  const [sqlTab, setSqlTab] = useState<any>(
+    sqlTabsData.find(item => item.value === pathName),
+  );
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -97,7 +102,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('SQLHub');
       case '/tablemodelview/list/':
         return t('Datasets');
-      case '/superset/sqllab/history/':
+      case '/sqlhub/history/':
+      case '/savedqueryview/list/':
         return t('SQL');
       case '/superset/profile/admin/':
         return t('Profile');
@@ -158,6 +164,14 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       setGetExploreApiUrl('');
     }
   }, [getExploreApi]);
+
+  const sqlPathname = ['/sqlhub/history/', '/savedqueryview/list/'];
+
+  useEffect(() => {
+    if (sqlPathname.includes(pathName) && pathName !== sqlTab.value) {
+      history.push(sqlTab.value);
+    }
+  }, [pathName, sqlTab]);
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
@@ -255,11 +269,11 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               </NavbarBottomRight>
             </>
           )}
-          {pathName === '/superset/sqllab/history/' && (
+          {sqlPathname.includes(pathName) && (
             <DvtButtonTabs
-              active={sqlSelector.tabs}
-              data={activeData}
-              setActive={value => dispatch(dvtNavbarSqlSetTabs(value))}
+              active={sqlTab}
+              data={sqlTabsData}
+              setActive={value => setSqlTab(value)}
             />
           )}
           {pathName === '/dashboard/list/' && (
