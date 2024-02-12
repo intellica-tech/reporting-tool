@@ -8,6 +8,7 @@ type UseFetchProps = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
   body?: any;
+  withoutJson?: boolean;
 };
 
 const useFetch = ({
@@ -16,6 +17,7 @@ const useFetch = ({
   method = 'GET',
   body,
   headers = {},
+  withoutJson = false,
 }: UseFetchProps) => {
   const { addDangerToast } = useToasts();
   const [data, setData] = useState<any | null>(null);
@@ -26,11 +28,14 @@ const useFetch = ({
 
     if (url) {
       const fetchData = async () => {
+        const contentType = withoutJson
+          ? ''
+          : { 'Content-Type': 'application/json' };
         try {
           const response = await fetch(`${defaultParam}${url}`, {
             method,
             headers: {
-              'Content-Type': 'application/json',
+              ...contentType,
               'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
               ...headers,
             },

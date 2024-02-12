@@ -116,7 +116,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
 
   const [getExploreApiUrl, setGetExploreApiUrl] = useState('');
 
-  const getExploreApi = useFetch({ url: getExploreApiUrl });
+  const getExploreApi = useFetch({ url: getExploreApiUrl, withoutJson: true });
 
   useEffect(() => {
     const tabsDataFindPathname = DvtNavbarTabsData.find(
@@ -155,6 +155,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     if (getExploreApi) {
       dispatch(dvtChartSetSelectedChart(getExploreApi.result));
       history.push('/explore/');
+      setGetExploreApiUrl('');
     }
   }, [getExploreApi]);
 
