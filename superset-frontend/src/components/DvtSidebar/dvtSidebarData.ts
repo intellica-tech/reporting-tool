@@ -24,35 +24,35 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         titleMenu: 'folder navigation',
-        title: 'menu',
+        title: t('menu'),
         data: [
           {
-            title: 'Connections',
+            title: t('Connections'),
             url: '/databaseview/list/',
             fileName: 'dvt-activity',
           },
           {
-            title: 'Dataset',
+            title: t('Dataset'),
             url: '/tablemodelview/list/',
             fileName: 'dvt-database',
           },
           {
-            title: 'Dashboard',
+            title: t('Dashboard'),
             url: '/dashboard/list/',
             fileName: 'dvt-box',
           },
           {
-            title: 'Report',
+            title: t('Report'),
             url: '/report/list/',
             fileName: 'dvt-analytic_chart',
           },
           {
-            title: 'Alert',
+            title: t('Alert'),
             url: '/alert/list/',
             fileName: 'dvt-alert',
           },
           {
-            title: 'Sqlhub',
+            title: t('Sqlhub'),
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
@@ -60,7 +60,7 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
       {
         titleMenu: 'folder',
-        title: 'my folder',
+        title: t('my folder'),
         data: [
           {
             name: 'Dnext',
