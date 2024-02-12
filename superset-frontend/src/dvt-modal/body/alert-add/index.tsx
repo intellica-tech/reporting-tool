@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import { Radio, Switch } from 'antd';
+import { RadioChangeEvent } from 'antd/lib/radio';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import useFetch from 'src/hooks/useFetch';
@@ -9,9 +10,7 @@ import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import Icon from 'src/components/Icons/Icon';
-import DvtTextarea from 'src/components/DvtTextarea';
 import { DvtTimezoneData } from './timezoneData';
-import { RadioChangeEvent } from 'antd/lib/radio';
 import {
   StyledAlertAdd,
   StyledAlertAddHeader,
