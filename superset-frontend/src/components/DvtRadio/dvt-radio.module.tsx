@@ -42,7 +42,7 @@ const StyledRadioCheck = styled.div<StyledRadioProps>`
   height: 19px;
   width: 19px;
   border-radius: 50px;
-  border: ${({ active }) => (active ? '7px' : '2px')} solid
+  border: ${({ active }) => (active ? '6px' : '2px')} solid
     ${({ theme }) => theme.colors.dvt.primary.base};
 `;
 

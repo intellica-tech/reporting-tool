@@ -35,17 +35,11 @@ const DvtRadio: React.FC<DvtRadioProps> = ({
   value,
   active,
   setActive,
-}) => {
-  const handleRadioClick = () => {
-    setActive(value);
-  };
-
-  return (
-    <StyledRadio onClick={handleRadioClick}>
-      <StyledRadioCheck active={value === active} />
-      <StyledRadioLabel>{label}</StyledRadioLabel>
-    </StyledRadio>
-  );
-};
+}) => (
+  <StyledRadio onClick={() => setActive(value)}>
+    <StyledRadioCheck active={value === active} />
+    <StyledRadioLabel>{label}</StyledRadioLabel>
+  </StyledRadio>
+);
 
 export default DvtRadio;
