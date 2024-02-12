@@ -51,19 +51,10 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/alert/list/',
             fileName: 'dvt-alert',
           },
-        ],
-      },
-      {
-        titleMenu: 'sql',
-        title: t('SQL'),
-        data: [
           {
-            name: t('SQL Hub'),
+            title: t('Sqlhub'),
             url: '/sqlhub/',
-          },
-          {
-            name: t('Query History'),
-            url: '/superset/sqllab/history/',
+            fileName: 'dvt-box',
           },
         ],
       },
