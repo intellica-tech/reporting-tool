@@ -30,7 +30,7 @@ export interface DvtRadioProps {
   setActive: (active: string) => void;
 }
 
-const DvtSelect: React.FC<DvtRadioProps> = ({
+const DvtRadio: React.FC<DvtRadioProps> = ({
   label,
   value,
   active,
@@ -48,4 +48,4 @@ const DvtSelect: React.FC<DvtRadioProps> = ({
   );
 };
 
-export default DvtSelect;
+export default DvtRadio;
