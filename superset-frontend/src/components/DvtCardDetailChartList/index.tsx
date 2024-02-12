@@ -17,11 +17,11 @@
  * under the License.
  */
 import React from 'react';
+import DvtCardDetailChart from '../DvtCardDetailChart';
 import {
   StyledDvtCardDetailChartList,
   StyledDvtCardDetailChartListScroll,
 } from './dvt-card-detail-chart-list.module';
-import DvtCardDetailChart from '../DvtCardDetailChart';
 
 export interface CardDetailChartDataProps {
   labelTitle: string;
