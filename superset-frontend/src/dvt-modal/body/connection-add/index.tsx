@@ -132,8 +132,8 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const file = event.target.files && event.target.files[0];
-    setSelectedFile(file);
+    const file = event.target.files?.[0];
+    setSelectedFile(file || null);
   };
 
   const handleTextClick = () => {
