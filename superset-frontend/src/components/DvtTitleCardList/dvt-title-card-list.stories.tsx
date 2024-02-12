@@ -68,7 +68,11 @@ const dummyData = [
 
 export const Default = (args: DvtTitleCardListProps) => {
   const [data, setData] = useState<CardDataProps[]>(dummyData);
-  const handleFavorites = (id: number, isFavorite: boolean) => {
+  const handleFavorites = (
+    id: number,
+    paramUrl: string,
+    isFavorite: boolean,
+  ) => {
     const findRemoveCard = data.filter(card => card.id !== id);
     const findCard = data.find(card => card.id === id);
     const updatedData: any = [

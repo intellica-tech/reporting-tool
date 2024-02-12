@@ -21,69 +21,74 @@ const DvtConnectionData: ConnectionDataProps[] = [
     extra: '{"allows_virtual_table_explore":true}',
     data: [
       {
-        title: 'HOST',
+        title: t('HOST'),
         value: 'host',
         type: 'text',
-        importantLabel:
+        importantLabel: t(
           'This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).',
-        placeholder: 'e.g 127.0.01',
-        popoverLabel: 'Cannot be empty',
+        ),
+        placeholder: t('e.g 127.0.01'),
+        popoverLabel: t('Cannot be empty'),
       },
       {
-        title: 'PORT',
+        title: t('PORT'),
         value: 'port',
         type: 'text',
-        placeholder: 'e.g 5432',
-        popoverLabel: 'Cannot be empty',
+        placeholder: t('e.g 5432'),
+        popoverLabel: t('Cannot be empty'),
       },
       {
-        title: 'DATABASE NAME',
+        title: t('DATABASE NAME'),
         value: 'database_name',
         type: 'text',
-        placeholder: 'e.g Analytics',
-        popoverLabel: 'Cannot be empty',
-        importantLabel:
+        placeholder: t('e.g Analytics'),
+        popoverLabel: t('Cannot be empty'),
+        importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
+        ),
       },
       {
-        title: 'USER NAME',
+        title: t('USER NAME'),
         value: 'user_name',
         type: 'text',
-        placeholder: 'e.g Analytics',
-        popoverLabel: 'Cannot be empty',
-        importantLabel:
+        placeholder: t('e.g Analytics'),
+        popoverLabel: t('Cannot be empty'),
+        importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
+        ),
       },
       {
-        title: 'PASSWORD',
+        title: t('PASSWORD'),
         value: 'password',
         type: 'password',
         placeholder: 'e.g *******',
       },
       {
-        title: 'DISPLAY NAME',
+        title: t('DISPLAY NAME'),
         value: 'display_name',
         type: 'text',
-        importantLabel:
+        importantLabel: t(
           'Pick a nickname for how the database will display in Superset.',
+        ),
       },
       {
-        title: 'ADDITIONAL PARAMETERS',
+        title: t('ADDITIONAL PARAMETERS'),
         value: 'addittional_parameters',
         type: 'text',
-        placeholder: 'e.g param1=value1&param2=value2',
-        importantLabel: 'Add additional custom parameterss',
+        placeholder: t('e.g param1=value1&param2=value2'),
+        importantLabel: t('Add additional custom parameterss'),
       },
       {
         type: 'switch',
         value: 'switch',
-        importantLabel: 'SSL Mode "require" will be used.',
+        importantLabel: t('SSL Mode "require" will be used.'),
       },
       {
-        title: 'Connect this database with a SQLAlchemy URI string instead',
+        title: t('Connect this database with a SQLAlchemy URI string instead'),
         type: 'toBasic',
-        importantLabel:
+        importantLabel: t(
           'Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.',
+        ),
       },
     ],
   },
@@ -98,69 +103,74 @@ const DvtConnectionData: ConnectionDataProps[] = [
     extra: '{"allows_virtual_table_explore":true}',
     data: [
       {
-        title: 'HOST',
+        title: t('HOST'),
         value: 'host',
         type: 'text',
-        importantLabel:
+        importantLabel: t(
           'This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).',
-        placeholder: 'e.g 127.0.01',
-        popoverLabel: 'Cannot be empty',
+        ),
+        placeholder: t('e.g 127.0.01'),
+        popoverLabel: t('Cannot be empty'),
       },
       {
-        title: 'PORT',
+        title: t('PORT'),
         value: 'port',
         type: 'text',
-        placeholder: 'e.g 5432',
-        popoverLabel: 'Cannot be empty',
+        placeholder: t('e.g 5432'),
+        popoverLabel: t('Cannot be empty'),
       },
       {
-        title: 'DATABASE NAME',
+        title: t('DATABASE NAME'),
         value: 'database_name',
         type: 'text',
-        placeholder: 'e.g Analytics',
-        popoverLabel: 'Cannot be empty',
-        importantLabel:
+        placeholder: t('e.g Analytics'),
+        popoverLabel: t('Cannot be empty'),
+        importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
+        ),
       },
       {
-        title: 'USER NAME',
+        title: t('USER NAME'),
         value: 'user_name',
         type: 'text',
-        placeholder: 'e.g Analytics',
-        popoverLabel: 'Cannot be empty',
-        importantLabel:
+        placeholder: t('e.g Analytics'),
+        popoverLabel: t('Cannot be empty'),
+        importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
+        ),
       },
       {
-        title: 'PASSWORD',
+        title: t('PASSWORD'),
         value: 'password',
         type: 'password',
         placeholder: 'e.g *******',
       },
       {
-        title: 'DISPLAY NAME',
+        title: t('DISPLAY NAME'),
         value: 'display_name',
         type: 'text',
-        importantLabel:
+        importantLabel: t(
           'Pick a nickname for how the database will display in Superset.',
+        ),
       },
       {
-        title: 'ADDITIONAL PARAMETERS',
+        title: t('ADDITIONAL PARAMETERS'),
         value: 'addittional_parameters',
         type: 'text',
-        placeholder: 'e.g param1=value1&param2=value2',
-        importantLabel: 'Add additional custom parameterss',
+        placeholder: t('e.g param1=value1&param2=value2'),
+        importantLabel: t('Add additional custom parameterss'),
       },
       {
         type: 'switch',
         value: 'switch',
-        importantLabel: 'SSL Mode "require" will be used.',
+        importantLabel: t('SSL Mode "require" will be used.'),
       },
       {
-        title: 'Connect this database with a SQLAlchemy URI string instead',
+        title: t('Connect this database with a SQLAlchemy URI string instead'),
         type: 'toBasic',
-        importantLabel:
+        importantLabel: t(
           'Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.',
+        ),
       },
     ],
   },
