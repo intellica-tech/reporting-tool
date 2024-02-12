@@ -17,6 +17,7 @@
  * under the License.
  */
 import { styled } from '@superset-ui/core';
+
 const StyledDvtCardDetailChartList = styled.div`
   display: flex;
   flex-direction: column;
