@@ -42,17 +42,44 @@ const StyledDvtTextareaSelectRun = styled.div`
   height: 281px;
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.grayscale.light5};
-`;
+  padding: 30px;
+  padding-bottom: 70px;
+  display: flex;
 
-const StyledDvtTextarea = styled.textarea`
-  width: 1066px;
-  height: 221px;
-  border: none;
-  color: ${({ theme }) => theme.colors.dvt.text.help};
-  resize: none;
-  margin: 30px 30px 0 30px;
-  &:focus {
-    outline: none;
+  & .ace_scrollbar-v {
+    &::-webkit-scrollbar {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+      width: 8px;
+      border-radius: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+      width: 8px;
+      border-radius: 12px;
+    }
+  }
+
+  & .ace_scrollbar-h {
+    &::-webkit-scrollbar {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+      height: 8px;
+      border-radius: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+      height: 8px;
+      border-radius: 12px;
+    }
+  }
+
+  & .ace_scroller.ace_scroll-left {
+    box-shadow: none;
+  }
+
+  & .ace_placeholder {
+    font-family: inherit;
+    color: ${({ theme }) => theme.colors.dvt.text.placeholder};
+    font-weight: 600;
   }
 `;
 
@@ -72,14 +99,12 @@ const StyledDvtTextareaButton = styled.div`
 
 const StyledDvtTextareaGroup = styled.div`
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 20px;
+  right: 30px;
   display: flex;
   align-items: center;
   font-size: 16px;
   font-weight: 500;
-  margin-right: 20px;
-  margin-bottom: 20px;
 `;
 
 const StyledDvtTextareaDropdown = styled.div`
@@ -116,7 +141,6 @@ const StyledDvtTextareaIcon = styled.div<StyledDvtTextareaIconProps>`
 `;
 
 export {
-  StyledDvtTextarea,
   StyledDvtTextareaSelectRun,
   StyledDvtTextareaLimit,
   StyledDvtTextareaButton,

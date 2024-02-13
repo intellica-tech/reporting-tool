@@ -17,10 +17,11 @@
  * under the License.
  */
 import React, { useState } from 'react';
+import AceEditor from 'react-ace';
+import { t } from '@superset-ui/core';
 import DvtButton from '../DvtButton';
 import Icon from '../Icons/Icon';
 import {
-  StyledDvtTextarea,
   StyledDvtTextareaSelectRun,
   StyledDvtTextareaLimit,
   StyledDvtTextareaButton,
@@ -29,6 +30,10 @@ import {
   StyledDvtTextareaDropdownItem,
   StyledDvtTextareaIcon,
 } from './dvt-textarea-select-run.module';
+
+import 'ace-builds/src-noconflict/mode-sql';
+import 'ace-builds/src-noconflict/theme-xcode';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 export interface DvtTextareaSelectRunProps {
   limit: number;
@@ -54,15 +59,31 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
     setLimit(value);
     setIsOpen(false);
   };
+
   const handleIsOpen = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <StyledDvtTextareaSelectRun>
-      <StyledDvtTextarea
+      <AceEditor
+        mode="sql"
+        theme="xcode"
+        style={{
+          flex: 1,
+          fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
+        }}
         placeholder={placeholder}
         value={value}
-        onChange={event => setValue(event.target.value)}
+        onChange={setValue}
+        fontSize={16}
+        tabSize={2}
+        showGutter={false}
+        width="100%"
+        height="auto"
+        highlightActiveLine
+        showPrintMargin={false}
+        enableLiveAutocompletion
       />
       <StyledDvtTextareaGroup>
         <StyledDvtTextareaLimit onClick={handleIsOpen}>
@@ -91,7 +112,7 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
           )}
         </StyledDvtTextareaLimit>
         <StyledDvtTextareaButton>
-          <DvtButton label="Run" onClick={clickRun} maxWidth />
+          <DvtButton label={t('Run')} onClick={clickRun} maxWidth />
         </StyledDvtTextareaButton>
       </StyledDvtTextareaGroup>
     </StyledDvtTextareaSelectRun>
