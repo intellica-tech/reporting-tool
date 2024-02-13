@@ -454,40 +454,24 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         items: [
           {
-            icon: 'dvt-briefcase',
-            label: t('Created Content'),
-            url: 'test',
+            icon: 'dvt-star',
+            label: t('Favorites'),
+            url: 'favorites',
           },
           {
-            icon: 'dvt-calendar',
-            label: t('Schedule'),
-            url: 'test1',
+            icon: 'dvt-briefcase',
+            label: t('Created Content'),
+            url: 'createContent',
           },
           {
             icon: 'dvt-history',
             label: t('Recent Activity'),
-            url: 'test2',
+            url: 'recentActivity',
           },
           {
-            icon: 'dvt-star',
-            label: t('Favorites'),
-            url: 'test3',
-          },
-          {
-            icon: 'dvt-users',
-            label: t('Groups and Roles'),
-            url: 'test4',
-          },
-          {
-            icon: 'dvt-arrow_forwardup',
-            label: t('Query History'),
-            url: 'test5',
-          },
-        ],
-        itemsLogout: [
-          {
-            icon: 'dvt-logout',
-            label: t('Log Out'),
+            icon: 'dvt-calendar',
+            label: t('Security and Access'),
+            url: 'securityAndAccess',
           },
         ],
       },

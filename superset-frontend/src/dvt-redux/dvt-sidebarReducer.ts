@@ -78,6 +78,12 @@ interface DvtSidebarState {
     schema: any;
     see_table_schema: any;
   };
+  profile: {
+    favorites: any;
+    createdContent: any;
+    recentActivity: any;
+    securityAndAccess: any;
+  }
   data: {
     fetched: {
       alerts: {
@@ -147,6 +153,12 @@ interface DvtSidebarState {
       schema: any[];
       see_table_schema: any[];
     };
+    profile: {
+      favorites: any[];
+      createdContent: any[];
+      recentActivity: any[];
+      securityAndAccess: any[];
+    }
   };
 }
 
@@ -210,6 +222,12 @@ const INITIAL_STATE = {
     schema: '',
     see_table_schema: '',
   },
+  profile: {
+    favorites: [],
+    createdContent: '',
+    recentActivity: '',
+    securityAndAccess: '',
+  }
 };
 
 const initialState: DvtSidebarState = {
@@ -283,6 +301,12 @@ const initialState: DvtSidebarState = {
       schema: [],
       see_table_schema: [],
     },
+    profile: {
+      favorites: [],
+      createdContent: [],
+      recentActivity: [],
+      securityAndAccess: [],
+    }
   },
 };
 

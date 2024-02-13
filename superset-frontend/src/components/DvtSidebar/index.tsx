@@ -65,6 +65,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
   const dashboardSelector = useAppSelector(state => state.dvtSidebar.dashboard);
+  // const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const annotationLayerSelector = useAppSelector(
     state => state.dvtSidebar.annotationLayer,
   );
@@ -100,7 +101,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'queryHistory';
       case '/savedqueryview/list/':
         return 'savedQuery';
-      case '/superset/profile/admin/':
+      case '/superset/profile/admin':
         return 'profile';
       case '/chart/add':
         return 'chartAdd';
@@ -441,6 +442,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       <StyledDvtSidebarHeader>
         <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>
+      {pathTitles(pathName) === 'profile' && (
+        <StyledDvtSidebarBody pathName={pathName}>
+            <StyledDvtSidebarBodyItem>
+              <DvtNavigationBar
+                active={active}
+                data={sidebarDataFindPathname?.data[0]?.items || []}
+                setActive={setActive}
+              />
+            </StyledDvtSidebarBodyItem>
+        </StyledDvtSidebarBody>
+      )}
+
       {pathTitles(pathName) === 'welcome' && (
         <StyledDvtSidebarBody pathName={pathName}>
           {sidebarDataFindPathname?.data.map((data: any, index: number) => (
