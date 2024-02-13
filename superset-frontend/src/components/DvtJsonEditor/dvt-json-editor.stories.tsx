@@ -26,7 +26,7 @@ export default {
 };
 
 export const Default = (args: DvtJsonEditorProps) => {
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>(`{}`);
 
   return (
     <div
