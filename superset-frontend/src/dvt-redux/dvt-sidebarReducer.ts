@@ -83,7 +83,7 @@ interface DvtSidebarState {
     createdContent: any;
     recentActivity: any;
     securityAndAccess: any;
-  }
+  };
   data: {
     fetched: {
       alerts: {
@@ -158,7 +158,7 @@ interface DvtSidebarState {
       createdContent: any[];
       recentActivity: any[];
       securityAndAccess: any[];
-    }
+    };
   };
 }
 
@@ -227,7 +227,7 @@ const INITIAL_STATE = {
     createdContent: '',
     recentActivity: '',
     securityAndAccess: '',
-  }
+  },
 };
 
 const initialState: DvtSidebarState = {
@@ -306,7 +306,7 @@ const initialState: DvtSidebarState = {
       createdContent: [],
       recentActivity: [],
       securityAndAccess: [],
-    }
+    },
   },
 };
 
