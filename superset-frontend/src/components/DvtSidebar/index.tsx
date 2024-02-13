@@ -444,13 +444,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       </StyledDvtSidebarHeader>
       {pathTitles(pathName) === 'profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
-            <StyledDvtSidebarBodyItem>
-              <DvtNavigationBar
-                active={active}
-                data={sidebarDataFindPathname?.data[0]?.items || []}
-                setActive={setActive}
-              />
-            </StyledDvtSidebarBodyItem>
+          <StyledDvtSidebarBodyItem>
+            <DvtNavigationBar
+              active={active}
+              data={sidebarDataFindPathname?.data[0]?.items || []}
+              setActive={setActive}
+            />
+          </StyledDvtSidebarBodyItem>
         </StyledDvtSidebarBody>
       )}
 
