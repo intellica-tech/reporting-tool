@@ -17,6 +17,7 @@
  * under the License.
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { t } from '@superset-ui/core';
 
 interface DvtSidebarState {
   reports: {
@@ -79,10 +80,7 @@ interface DvtSidebarState {
     see_table_schema: any;
   };
   profile: {
-    favorites: any;
-    createdContent: any;
-    recentActivity: any;
-    securityAndAccess: any;
+    tabs: any;
   };
   data: {
     fetched: {
@@ -153,12 +151,6 @@ interface DvtSidebarState {
       schema: any[];
       see_table_schema: any[];
     };
-    profile: {
-      favorites: any[];
-      createdContent: any[];
-      recentActivity: any[];
-      securityAndAccess: any[];
-    };
   };
 }
 
@@ -223,10 +215,7 @@ const INITIAL_STATE = {
     see_table_schema: '',
   },
   profile: {
-    favorites: [],
-    createdContent: '',
-    recentActivity: '',
-    securityAndAccess: '',
+    tabs: { label: t('Favorites'), url: 'favorites' },
   },
 };
 
@@ -300,12 +289,6 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       see_table_schema: [],
-    },
-    profile: {
-      favorites: [],
-      createdContent: [],
-      recentActivity: [],
-      securityAndAccess: [],
     },
   },
 };
@@ -403,6 +386,15 @@ const dvtSidebarSlice = createSlice({
         },
       };
     },
+    dvtSidebarProfileSetTabs: (
+      state,
+      action: PayloadAction<{ label: string; url: string }>,
+    ) => ({
+      ...state,
+      profile: {
+        tabs: action.payload,
+      },
+    }),
   },
 });
 
@@ -411,6 +403,7 @@ export const {
   dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
+  dvtSidebarProfileSetTabs,
 } = dvtSidebarSlice.actions;
 
 export default dvtSidebarSlice.reducer;
