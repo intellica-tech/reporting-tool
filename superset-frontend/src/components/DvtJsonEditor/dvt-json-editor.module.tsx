@@ -17,12 +17,47 @@
  * under the License.
  */
 import { styled } from '@superset-ui/core';
-import { JsonEditor } from 'src/components/AsyncAceEditor';
 
 const StyledJsonEditor = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  & .ace_scrollbar-v {
+    &::-webkit-scrollbar {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+      width: 6px;
+      border-radius: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+      width: 6px;
+      border-radius: 12px;
+    }
+  }
+
+  & .ace_scrollbar-h {
+    &::-webkit-scrollbar {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+      height: 6px;
+      border-radius: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+      height: 6px;
+      border-radius: 12px;
+    }
+  }
+
+  & .ace_scroller.ace_scroll-left {
+    box-shadow: none;
+  }
+
+  & .ace_placeholder {
+    font-family: inherit;
+    color: ${({ theme }) => theme.colors.dvt.text.placeholder};
+    font-weight: 600;
+  }
 `;
 
 const StyledJsonEditorLabel = styled.div`
@@ -31,13 +66,4 @@ const StyledJsonEditorLabel = styled.div`
   font-weight: 500;
 `;
 
-const StyledJsonEditorInput = styled(JsonEditor)`
-  flex: 1 1 auto;
-  border-radius: 4px;
-
-  &.ace-github .ace_gutter {
-    background-color: ${({ theme }) => theme.colors.grayscale.light5};
-  }
-`;
-
-export { StyledJsonEditor, StyledJsonEditorLabel, StyledJsonEditorInput };
+export { StyledJsonEditor, StyledJsonEditorLabel };

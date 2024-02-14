@@ -17,11 +17,14 @@
  * under the License.
  */
 import React from 'react';
+import AceEditor from 'react-ace';
 import {
   StyledJsonEditor,
   StyledJsonEditorLabel,
-  StyledJsonEditorInput,
 } from './dvt-json-editor.module';
+
+import 'brace/mode/json';
+import 'ace-builds/src-noconflict/theme-xcode';
 
 export interface DvtJsonEditorProps {
   label?: string;
@@ -42,15 +45,25 @@ const DvtJsonEditor = ({
 }: DvtJsonEditorProps) => (
   <StyledJsonEditor>
     {label && <StyledJsonEditorLabel>{label}</StyledJsonEditorLabel>}
-    <StyledJsonEditorInput
-      showLoadingForImport
+    <AceEditor
+      mode="json"
+      theme="xcode"
+      style={{
+        borderRadius: 4,
+        fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
+      }}
       name={name}
+      placeholder={placeholder}
       value={value}
       onChange={onChange}
+      fontSize={12}
       tabSize={2}
+      showGutter={false}
       width="100%"
       height={height}
-      placeholder={placeholder}
+      enableLiveAutocompletion
+      highlightActiveLine
+      showPrintMargin={false}
     />
   </StyledJsonEditor>
 );

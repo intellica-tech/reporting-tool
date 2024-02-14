@@ -18,14 +18,14 @@
  */
 import React, { useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
-import DvtTextareaSelectRun, { DvtTextareaSelectRunProps } from '.';
+import DvtTextareaSelectRun from '.';
 
 export default {
   title: 'Dvt-Components/DvtTextareaSelectRun',
   component: DvtTextareaSelectRun,
 };
 
-export const Default = (args: DvtTextareaSelectRunProps) => {
+export const Default = () => {
   const [limit, setLimit] = useState<number>(100);
   const [value, setValue] = useState<string>('');
   return (
@@ -33,7 +33,7 @@ export const Default = (args: DvtTextareaSelectRunProps) => {
       css={(theme: SupersetTheme) => ({
         backgroundColor: theme.colors.dvt.grayscale.light2,
         height: '600px',
-        width: '1440px',
+        width: '800px',
         padding: '50px',
       })}
     >

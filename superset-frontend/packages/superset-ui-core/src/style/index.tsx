@@ -130,6 +130,7 @@ const defaultTheme = {
         label: '#64748B',
         help: '#94A3B8',
         bold: '#0F172A',
+        placeholder: '#B9B9B9',
       },
       primary: {
         base: '#2563EB',
