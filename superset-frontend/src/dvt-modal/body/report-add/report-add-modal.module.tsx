@@ -131,17 +131,6 @@ const StyledAlertAddMessageContent = styled.div`
   gap: 15px;
 `;
 
-const StyledAlertAddIconGroup = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.dvt.primary.base};
-  gap: 8px;
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 160%; /* 14.4px */
-  cursor: pointer;
-`;
-
 const StyledAlertAddButtonGroup = styled.div`
   display: flex;
   height: 100%;
@@ -165,7 +154,6 @@ export {
   StyledAlertAddReportSchedule,
   StyledAlertAddSelectFlex,
   StyledAlertAddMessageContent,
-  StyledAlertAddIconGroup,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
 };

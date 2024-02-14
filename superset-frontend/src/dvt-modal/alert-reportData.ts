@@ -5,6 +5,11 @@ interface TimezoneDataProps {
   value: string;
 }
 
+interface Data {
+  name: string;
+  data: any[];
+}
+
 const DvtTimezoneData: TimezoneDataProps[] = [
   {
     label: t('GMT +01:00 (Central European Time)'),
@@ -118,4 +123,179 @@ const DvtTimezoneData: TimezoneDataProps[] = [
   { label: t('GMT +13:00 (Pacific/Apia)'), value: t('Pacific/Apia') },
 ];
 
-export { DvtTimezoneData };
+const DvtAlertReportData: Data[] = [
+  {
+    name: 'condition',
+    data: [
+      {
+        label: t('< (Smaller than)'),
+        value: '<',
+      },
+      {
+        label: t('> (Larger than)'),
+        value: '>',
+      },
+      {
+        label: t('<= (Smaller or equal)'),
+        value: '<=',
+      },
+      {
+        label: t('>= (Larger or equal)'),
+        value: '>=',
+      },
+      {
+        label: t('== (Is equal)'),
+        value: '==',
+      },
+      {
+        label: t('!= (Is not equal)'),
+        value: '!=',
+      },
+      {
+        label: t('Not null'),
+        value: 'not null',
+      },
+    ],
+  },
+  {
+    name: 'time',
+    data: [
+      { value: 'year', label: 'Year' },
+      { value: 'month', label: 'Month' },
+      { value: 'week', label: 'Week' },
+      { value: 'day', label: 'Day' },
+      { value: 'hour', label: 'Hour' },
+      { value: 'minute', label: 'Minute' },
+    ],
+  },
+  {
+    name: 'month',
+    data: [
+      {
+        label: t('January'),
+        value: 'january',
+      },
+      {
+        label: t('February'),
+        value: 'February',
+      },
+      {
+        label: t('March'),
+        value: 'March',
+      },
+      {
+        label: t('April'),
+        value: 'April',
+      },
+      {
+        label: t('May'),
+        value: 'May',
+      },
+      {
+        label: t('June'),
+        value: 'June',
+      },
+      {
+        label: t('July'),
+        value: 'July',
+      },
+      {
+        label: t('August'),
+        value: 'August',
+      },
+      {
+        label: t('September'),
+        value: 'September',
+      },
+      {
+        label: t('October'),
+        value: 'October',
+      },
+      {
+        label: t('November'),
+        value: 'November',
+      },
+      {
+        label: t('December'),
+        value: 'December',
+      },
+    ],
+  },
+  {
+    name: 'day',
+    data: [
+      {
+        label: t('Sunday'),
+        value: 'Sunday',
+      },
+      {
+        label: t('Monday'),
+        value: 'Monday',
+      },
+      {
+        label: t('Tuesday'),
+        value: 'Tuesday',
+      },
+      {
+        label: t('Wednesday'),
+        value: 'Wednesday',
+      },
+      {
+        label: t('Thursday'),
+        value: 'Thursday',
+      },
+      {
+        label: t('Friday'),
+        value: 'Friday',
+      },
+      {
+        label: t('Saturday'),
+        value: 'Saturday',
+      },
+    ],
+  },
+  {
+    name: 'scheduleSettings',
+    data: [
+      {
+        label: t('None'),
+        value: 1,
+      },
+      {
+        label: t('30 days'),
+        value: 30,
+      },
+      {
+        label: t('60 days'),
+        value: 60,
+      },
+      {
+        label: t('90 days'),
+        value: 90,
+      },
+    ],
+  },
+  {
+    name: 'pngOrSvg',
+    data: [
+      { label: t('Send as PNG'), value: 'PNG' },
+      { label: t('Send as SVG'), value: 'SVG' },
+    ],
+  },
+  {
+    name: 'everyOrCron',
+    data: [
+      { label: t('Every'), value: 'Every' },
+      { label: t('Cron'), value: 'Cron' },
+    ],
+  },
+  {
+    name: 'chartOrDashboard',
+    data: [
+      { label: t('Chart'), value: 'Chart' },
+      { label: t('Dashboard'), value: 'Dashboard' },
+    ],
+  },
+];
+
+export { DvtTimezoneData, DvtAlertReportData };

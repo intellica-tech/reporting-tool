@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import { Switch } from 'antd';
+import { dvtAlertAddStatus } from 'src/dvt-redux/dvt-alertReducer';
 import DvtSelect from 'src/components/DvtSelect';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
 import DvtCheckbox from 'src/components/DvtCheckbox';
-import Icon from 'src/components/Icons/Icon';
-import { DvtTimezoneData } from '../../timezoneData';
+import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
   StyledAlertAddHeader,
@@ -25,13 +26,11 @@ import {
   StyledAlertAddReportSchedule,
   StyledAlertAddSelectFlex,
   StyledAlertAddMessageContent,
-  StyledAlertAddIconGroup,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
 } from './report-add-modal.module';
 
 const DvtReportAdd = ({ onClose }: ModalProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [input, setInput] = useState<{
     hour: { label: string; value: string };
     minute: { label: string; value: string };
@@ -39,7 +38,6 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
     logRetention: { label: string; value: string };
     workingTimeout: string;
     messageContent: { label: string; value: string };
-    selectedMethod: { label: string; value: string };
     owners: { label: string; value: number | undefined };
     reportName: string;
     description: string;
@@ -59,7 +57,6 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
     logRetention: { label: '', value: '' },
     workingTimeout: '',
     messageContent: { label: '', value: '' },
-    selectedMethod: { label: '', value: '' },
     owners: { label: '', value: undefined },
     reportName: '',
     description: '',
@@ -74,6 +71,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
     active: false,
   });
 
+  const dispatch = useDispatch();
   const [value, setValue] = useState('Dashboard');
   const [chartType, setChartType] = useState('PNG');
   const [timeSchedule, setTimeSchedule] = useState('Every');
@@ -121,6 +119,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
   useEffect(() => {
     if (alertAddData?.id) {
       onClose();
+      dispatch(dvtAlertAddStatus('Success'));
     }
   }, [onClose, alertAddData]);
 
@@ -187,6 +186,14 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
     minuteIndex += 1;
   }
 
+  useEffect(() => {
+    if (apiUrl) {
+      setTimeout(() => {
+        setApiUrl('');
+      }, 2000);
+    }
+  }, [apiUrl]);
+
   return (
     <StyledAlertAdd>
       <StyledAlertAddHeader>
@@ -217,8 +224,8 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
           <StyledAlertAddLine />
           <StyledAlertAddSelectGroup>
             <DvtInput
-              label="Report Name"
-              placeholder="Report Name"
+              label={t('Report Name')}
+              placeholder={t('Report Name')}
               value={input.reportName}
               onChange={selected => {
                 setInput({ ...input, reportName: selected });
@@ -227,16 +234,16 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
             />
             <DvtSelect
               data={ownersOptions}
-              label="Owners"
-              placeholder="Select..."
+              label={t('Owners')}
+              placeholder={t('Select...')}
               selectedValue={input.owners}
               setSelectedValue={selected => {
                 setInput({ ...input, owners: selected });
               }}
             />
             <DvtInput
-              label="Description"
-              placeholder="Description"
+              label={t('Description')}
+              placeholder={t('Description')}
               value={input.description}
               onChange={selected => {
                 setInput({ ...input, description: selected });
@@ -249,10 +256,10 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
           <StyledAlertAddReportSchedule>
             <StyledAlertAddTitle>{t('Report Schedule')}</StyledAlertAddTitle>
             <DvtRadioList
-              data={[
-                { label: 'Every', value: 'Every' },
-                { label: 'Cron', value: 'Cron' },
-              ]}
+              data={
+                DvtAlertReportData.find(item => item.name === 'everyOrCron')
+                  ?.data || []
+              }
               active={timeSchedule}
               setActive={setTimeSchedule}
             />
@@ -260,14 +267,10 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
               <>
                 <StyledAlertAddSelectFlex>
                   <DvtSelect
-                    data={[
-                      { value: 'year', label: 'Year' },
-                      { value: 'month', label: 'Month' },
-                      { value: 'week', label: 'Week' },
-                      { value: 'day', label: 'Day' },
-                      { value: 'hour', label: 'Hour' },
-                      { value: 'minute', label: 'Minute' },
-                    ]}
+                    data={
+                      DvtAlertReportData.find(item => item.name === 'time')
+                        ?.data || []
+                    }
                     selectedValue={input.timeSelected}
                     setSelectedValue={selected => {
                       setInput({ ...input, timeSelected: selected });
@@ -277,58 +280,12 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                   />
                   {input.timeSelected.value === 'year' && (
                     <DvtSelect
-                      data={[
-                        {
-                          label: t('January'),
-                          value: 'january',
-                        },
-                        {
-                          label: t('February'),
-                          value: 'February',
-                        },
-                        {
-                          label: t('March'),
-                          value: 'March',
-                        },
-                        {
-                          label: t('April'),
-                          value: 'April',
-                        },
-                        {
-                          label: t('May'),
-                          value: 'May',
-                        },
-                        {
-                          label: t('June'),
-                          value: 'June',
-                        },
-                        {
-                          label: t('July'),
-                          value: 'July',
-                        },
-                        {
-                          label: t('August'),
-                          value: 'August',
-                        },
-                        {
-                          label: t('September'),
-                          value: 'September',
-                        },
-                        {
-                          label: t('October'),
-                          value: 'October',
-                        },
-                        {
-                          label: t('November'),
-                          value: 'November',
-                        },
-                        {
-                          label: t('December'),
-                          value: 'December',
-                        },
-                      ]}
+                      data={
+                        DvtAlertReportData.find(item => item.name === 'month')
+                          ?.data || []
+                      }
                       selectedValue={input.month}
-                      placeholder="month"
+                      placeholder={t('month')}
                       setSelectedValue={selected => {
                         setInput({ ...input, month: selected });
                       }}
@@ -339,7 +296,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                   {['year', 'month'].includes(input.timeSelected.value) && (
                     <DvtSelect
                       data={dayOptions}
-                      placeholder="day"
+                      placeholder={t('day')}
                       selectedValue={input.day}
                       setSelectedValue={selected => {
                         setInput({ ...input, day: selected });
@@ -352,37 +309,11 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                     input.timeSelected.value,
                   ) && (
                     <DvtSelect
-                      data={[
-                        {
-                          label: t('Sunday'),
-                          value: 'Sunday',
-                        },
-                        {
-                          label: t('Monday'),
-                          value: 'Monday',
-                        },
-                        {
-                          label: t('Tuesday'),
-                          value: 'Tuesday',
-                        },
-                        {
-                          label: t('Wednesday'),
-                          value: 'Wednesday',
-                        },
-                        {
-                          label: t('Thursday'),
-                          value: 'Thursday',
-                        },
-                        {
-                          label: t('Friday'),
-                          value: 'Friday',
-                        },
-                        {
-                          label: t('Saturday'),
-                          value: 'Saturday',
-                        },
-                      ]}
-                      placeholder="week"
+                      data={
+                        DvtAlertReportData.find(item => item.name === 'day')
+                          ?.data || []
+                      }
+                      placeholder={t('week')}
                       selectedValue={input.week}
                       setSelectedValue={selected => {
                         setInput({ ...input, week: selected });
@@ -396,7 +327,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                   ) && (
                     <DvtSelect
                       data={hourOptions}
-                      placeholder="hour"
+                      placeholder={t('hour')}
                       selectedValue={input.hour}
                       setSelectedValue={selected => {
                         setInput({ ...input, hour: selected });
@@ -410,7 +341,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                   ) && (
                     <DvtSelect
                       data={minuteOptions}
-                      placeholder="minute"
+                      placeholder={t('minute')}
                       selectedValue={input.minute}
                       setSelectedValue={selected => {
                         setInput({ ...input, minute: selected });
@@ -434,7 +365,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
             )}
             <DvtSelect
               data={DvtTimezoneData}
-              label="Timezone"
+              label={t('Timezone')}
               placeholder="GMT +03:00 (Antarctica)"
               selectedValue={input.timezone}
               setSelectedValue={selected => {
@@ -447,26 +378,13 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
             <StyledAlertAddTitle>{t('Schedule Settings')}</StyledAlertAddTitle>
             <div style={{ display: 'flex' }}>
               <DvtSelect
-                data={[
-                  {
-                    label: t('None'),
-                    value: 1,
-                  },
-                  {
-                    label: t('30 days'),
-                    value: 30,
-                  },
-                  {
-                    label: t('60 days'),
-                    value: 60,
-                  },
-                  {
-                    label: t('90 days'),
-                    value: 90,
-                  },
-                ]}
-                label="Log Retention"
-                placeholder="90 Days"
+                data={
+                  DvtAlertReportData.find(
+                    item => item.name === 'scheduleSettings',
+                  )?.data || []
+                }
+                label={t('Log Retention')}
+                placeholder={t('90 Days')}
                 selectedValue={input.logRetention}
                 setSelectedValue={selected => {
                   setInput({ ...input, logRetention: selected });
@@ -475,7 +393,7 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
               />
               <StyledAlertAddInputFlex>
                 <DvtInput
-                  label="Working Timeout"
+                  label={t('Working Timeout')}
                   placeholder="3600"
                   value={input.workingTimeout}
                   onChange={selected => {
@@ -498,10 +416,11 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                 }}
               >
                 <DvtRadioList
-                  data={[
-                    { label: 'Chart', value: 'Chart' },
-                    { label: 'Dashboard', value: 'Dashboard' },
-                  ]}
+                  data={
+                    DvtAlertReportData.find(
+                      item => item.name === 'chartOrDashboard',
+                    )?.data || []
+                  }
                   active={value}
                   setActive={setValue}
                 />
@@ -521,17 +440,17 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                 />
                 {value === 'Chart' && (
                   <DvtRadioList
-                    data={[
-                      { label: 'Send as PNG', value: 'PNG' },
-                      { label: 'Send as SVG', value: 'SVG' },
-                    ]}
+                    data={
+                      DvtAlertReportData.find(item => item.name === 'pngOrSvg')
+                        ?.data || []
+                    }
                     active={chartType}
                     setActive={setChartType}
                   />
                 )}
                 {value === 'Dashboard' && (
                   <DvtCheckbox
-                    label="Ignore cache when generating screenshot"
+                    label={t('Ignore cache when generating screenshot')}
                     checked={input.ignore}
                     onChange={selected => {
                       setInput({ ...input, ignore: selected });
@@ -541,55 +460,23 @@ const DvtReportAdd = ({ onClose }: ModalProps) => {
                 <StyledAlertAddTitle>
                   {t('Notification Method')}
                 </StyledAlertAddTitle>
-                {!isOpen && (
-                  <StyledAlertAddIconGroup onClick={() => setIsOpen(!isOpen)}>
-                    <Icon
-                      fileName="dvt-add_square"
-                      css={(theme: SupersetTheme) => ({
-                        color: theme.colors.dvt.primary.base,
-                      })}
-                    />
-                    {t('Add notification method')}
-                  </StyledAlertAddIconGroup>
-                )}
-                {isOpen && (
-                  <div>
-                    <DvtSelect
-                      data={[
-                        {
-                          label: 'Email',
-                          value: 'email',
-                        },
-                      ]}
-                      placeholder="Select Delivery Method"
-                      selectedValue={input.selectedMethod}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, selectedMethod: selected });
-                      }}
-                      typeDesign="form"
-                      maxWidth
-                    />
-                    {input.selectedMethod.value === 'email' && (
-                      <DvtInput
-                        label="EMAIL"
-                        value={input.email}
-                        onChange={selected => {
-                          setInput({ ...input, email: selected });
-                        }}
-                        typeDesign="chartsForm"
-                        type="email"
-                      />
-                    )}
-                  </div>
-                )}
+                <DvtInput
+                  label="EMAIL"
+                  value={input.email}
+                  onChange={selected => {
+                    setInput({ ...input, email: selected });
+                  }}
+                  typeDesign="chartsForm"
+                  type="email"
+                />
               </div>
               <div>
                 <StyledAlertAddButtonGroup>
-                  <DvtButton bold label="Cancel" onClick={onClose} />
+                  <DvtButton bold label={t('Cancel')} onClick={onClose} />
                   <DvtButton
                     bold
                     colour="grayscale"
-                    label="Add"
+                    label={t('Add')}
                     onClick={() => setApiUrl('/report/')}
                   />
                 </StyledAlertAddButtonGroup>

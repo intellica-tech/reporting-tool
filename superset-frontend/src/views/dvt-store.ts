@@ -65,6 +65,7 @@ import dvtHomeReducer from 'src/dvt-redux/dvt-homeReducer';
 import dvtConnectionReducer from 'src/dvt-redux/dvt-connectionReducer';
 import dvtChartReducer from 'src/dvt-redux/dvt-chartReducer';
 import dvtSqlhubReducer from 'src/dvt-redux/dvt-sqlhubReducer';
+import dvtAlertReducer from 'src/dvt-redux/dvt-alertReducer';
 
 // Some reducers don't do anything, and redux is just used to reference the initial "state".
 // This may change later, as the client application takes on more responsibilities.
@@ -155,6 +156,7 @@ const reducers = {
   dvtConnection: dvtConnectionReducer,
   dvtChart: dvtChartReducer,
   dvtSqlhub: dvtSqlhubReducer,
+  dvtAlert: dvtAlertReducer,
 };
 
 /* In some cases the jinja template injects two seperate React apps into basic.html
