@@ -176,7 +176,7 @@ function DvtConnection() {
         clicks: [
           {
             icon: 'edit_alt',
-            click: () => {},
+            click: (item: any) => handleEditConnection(item),
             popperLabel: t('Edit'),
           },
           {
@@ -202,6 +202,22 @@ function DvtConnection() {
     },
     [],
   );
+
+  const handleEditConnection = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/database/${item.id}`);
+      const editedConnectionData = await response.json();
+
+      dispatch(
+        openModal({
+          component: 'edit-connection',
+          meta: editedConnectionData,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return data.length > 0 ? (
     <StyledConnection>
