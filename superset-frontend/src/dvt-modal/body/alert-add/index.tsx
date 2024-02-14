@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import { Radio, Switch } from 'antd';
+import { Switch } from 'antd';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import useFetch from 'src/hooks/useFetch';
