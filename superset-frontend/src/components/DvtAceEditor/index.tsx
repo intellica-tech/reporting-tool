@@ -17,42 +17,57 @@
  * under the License.
  */
 import React from 'react';
-import DvtAceEditor from '../DvtAceEditor';
-import {
-  StyledJsonEditor,
-  StyledJsonEditorLabel,
-} from './dvt-json-editor.module';
+import AceEditor from 'react-ace';
+import { StyledDvtAceEditor } from './dvt-ace-editor.module';
 
-export interface DvtJsonEditorProps {
+import 'brace/mode/json';
+import 'brace/mode/sql';
+import 'brace/ext/language_tools';
+import 'ace-builds/src-noconflict/theme-xcode';
+
+export interface DvtAceEditorProps {
   mode?: 'json' | 'sql';
-  label?: string;
   placeholder?: string;
   value: any;
   onChange: (value: any) => void;
   height?: string;
   name?: string;
+  fontSize?: number;
+  borderRadius?: number;
 }
 
-const DvtJsonEditor = ({
+const DvtAceEditor: React.FC<DvtAceEditorProps> = ({
   mode = 'json',
-  label,
   placeholder = '',
   value,
   onChange,
   height = '169px',
   name = '',
-}: DvtJsonEditorProps) => (
-  <StyledJsonEditor>
-    {label && <StyledJsonEditorLabel>{label}</StyledJsonEditorLabel>}
-    <DvtAceEditor
+  fontSize = 12,
+  borderRadius = 4,
+}) => (
+  <StyledDvtAceEditor style={{ height, flex: 'auto' }}>
+    <AceEditor
       mode={mode}
+      theme="xcode"
+      style={{
+        borderRadius,
+        fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
+      }}
+      name={name}
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      height={height}
-      name={name}
+      fontSize={fontSize}
+      tabSize={2}
+      showGutter={false}
+      width="100%"
+      height="100%"
+      enableLiveAutocompletion
+      highlightActiveLine
+      showPrintMargin={false}
     />
-  </StyledJsonEditor>
+  </StyledDvtAceEditor>
 );
 
-export default DvtJsonEditor;
+export default DvtAceEditor;

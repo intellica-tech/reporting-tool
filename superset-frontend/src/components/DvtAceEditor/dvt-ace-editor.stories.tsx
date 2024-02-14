@@ -18,15 +18,15 @@
  */
 import React, { useState } from 'react';
 import { supersetTheme } from '@superset-ui/core';
-import DvtJsonEditor, { DvtJsonEditorProps } from '.';
+import DvtAceEditor, { DvtAceEditorProps } from '.';
 
 export default {
-  title: 'Dvt-Components/DvtJsonEditor',
-  component: DvtJsonEditor,
+  title: 'Dvt-Components/DvtAceEditor',
+  component: DvtAceEditor,
 };
 
-export const Default = (args: DvtJsonEditorProps) => {
-  const [text, setText] = useState<string>(`{}`);
+export const Default = (args: DvtAceEditorProps) => {
+  const [text, setText] = useState<string>(``);
 
   return (
     <div
@@ -38,7 +38,7 @@ export const Default = (args: DvtJsonEditorProps) => {
       }}
     >
       <div style={{ width: 226 }}>
-        <DvtJsonEditor {...args} value={text} onChange={setText} />
+        <DvtAceEditor {...args} value={text} onChange={setText} />
       </div>
     </div>
   );
@@ -49,10 +49,6 @@ Default.argTypes = {
     control: { type: 'radio' },
     defaultValue: 'json',
   },
-  label: {
-    control: { type: 'text' },
-    defaultValue: 'SQL QUERY',
-  },
   height: {
     control: { type: 'text' },
     defaultValue: '169px',
@@ -61,8 +57,8 @@ Default.argTypes = {
     control: { type: 'text' },
     defaultValue: '',
   },
-  name: {
-    control: { type: 'text' },
-    defaultValue: '',
+  fontSize: {
+    control: { type: 'number' },
+    defaultValue: 12,
   },
 };

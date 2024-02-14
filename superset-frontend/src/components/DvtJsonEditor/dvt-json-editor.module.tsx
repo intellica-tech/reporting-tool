@@ -22,42 +22,6 @@ const StyledJsonEditor = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-
-  & .ace_scrollbar-v {
-    &::-webkit-scrollbar {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-      width: 6px;
-      border-radius: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-      width: 6px;
-      border-radius: 12px;
-    }
-  }
-
-  & .ace_scrollbar-h {
-    &::-webkit-scrollbar {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-      height: 6px;
-      border-radius: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-      height: 6px;
-      border-radius: 12px;
-    }
-  }
-
-  & .ace_scroller.ace_scroll-left {
-    box-shadow: none;
-  }
-
-  & .ace_placeholder {
-    font-family: inherit;
-    color: ${({ theme }) => theme.colors.dvt.text.placeholder};
-    font-weight: 600;
-  }
 `;
 
 const StyledJsonEditorLabel = styled.div`

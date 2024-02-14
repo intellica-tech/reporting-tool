@@ -45,42 +45,6 @@ const StyledDvtTextareaSelectRun = styled.div`
   padding: 30px;
   padding-bottom: 70px;
   display: flex;
-
-  & .ace_scrollbar-v {
-    &::-webkit-scrollbar {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-      width: 8px;
-      border-radius: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-      width: 8px;
-      border-radius: 12px;
-    }
-  }
-
-  & .ace_scrollbar-h {
-    &::-webkit-scrollbar {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-      height: 8px;
-      border-radius: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-      height: 8px;
-      border-radius: 12px;
-    }
-  }
-
-  & .ace_scroller.ace_scroll-left {
-    box-shadow: none;
-  }
-
-  & .ace_placeholder {
-    font-family: inherit;
-    color: ${({ theme }) => theme.colors.dvt.text.placeholder};
-    font-weight: 600;
-  }
 `;
 
 const StyledDvtTextareaLimit = styled.div`
