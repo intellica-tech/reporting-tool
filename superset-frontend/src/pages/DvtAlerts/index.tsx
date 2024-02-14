@@ -68,7 +68,7 @@ function AlertList() {
         {
           col: 'last_state',
           opr: 'eq',
-          value: `'${alertsSelector.status?.value}'`,
+          value: alertsSelector.status?.value,
         },
         {
           col: 'name',
@@ -142,6 +142,14 @@ function AlertList() {
     dispatch(
       openModal({
         component: 'alert-add-modal',
+      }),
+    );
+  };
+
+  const handleReportAdd = () => {
+    dispatch(
+      openModal({
+        component: 'report-add-modal',
       }),
     );
   };
@@ -224,13 +232,21 @@ function AlertList() {
             : 'No results match your filter criteria'
         }
         buttonLabel={
-          data.length === 0 ? t('Create a New Alert') : t('Clear All Filter')
+          data.length === 0
+            ? alertTabsSelector.value === 'Alert'
+              ? t('Create a New Alert')
+              : alertTabsSelector.value === 'Report'
+              ? t('Create a New Report')
+              : ''
+            : t('Clear All Filter')
         }
         buttonClick={() => {
           if (data.length > 0) {
             clearAlerts();
-          } else {
+          } else if (alertTabsSelector.value === 'Alert') {
             handleAlertAdd();
+          } else if (alertTabsSelector.value === 'Report') {
+            handleReportAdd();
           }
         }}
       />

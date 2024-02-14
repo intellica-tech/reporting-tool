@@ -8,6 +8,7 @@ import DvtChartEdit from './body/chart-edit';
 import DvtDeleteModal from './body/delete-modal';
 import DvtConnectionAdd from './body/connection-add';
 import DvtAlertAdd from './body/alert-add';
+import DvtReportAdd from './body/report-add';
 import {
   StyledModal,
   StyledModalCard,
@@ -32,6 +33,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtConnectionAdd meta={meta} onClose={onClose} />;
     case 'alert-add-modal':
       return <DvtAlertAdd meta={meta} onClose={onClose} />;
+    case 'report-add-modal':
+      return <DvtReportAdd meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -48,6 +51,8 @@ const DvtModal = () => {
   const size = (() => {
     switch (component) {
       case 'alert-add-modal':
+        return 'medium';
+      case 'report-add-modal':
         return 'medium';
       case 'delete-modal':
         return 'xsmall';

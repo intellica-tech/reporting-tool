@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { StyledRadioList } from './dvt-radio-list.module';
 import DvtRadio from '../DvtRadio';
 
@@ -28,27 +28,27 @@ interface DvtRadioProps {
 export interface DvtRadioListProps {
   data: DvtRadioProps[];
   direction?: 'horizontal' | 'vertical';
+  active: string;
+  setActive: (active: string) => void;
 }
 
 const DvtRadioList: React.FC<DvtRadioListProps> = ({
   data,
   direction = 'horizontal',
-}) => {
-  const [active, setActive] = useState<string>('');
-
-  return (
-    <StyledRadioList direction={direction}>
-      {data.map((radio, index) => (
-        <DvtRadio
-          label={radio.label}
-          value={radio.value}
-          active={active}
-          setActive={setActive}
-          key={index}
-        />
-      ))}
-    </StyledRadioList>
-  );
-};
+  active,
+  setActive,
+}) => (
+  <StyledRadioList direction={direction}>
+    {data.map((radio, index) => (
+      <DvtRadio
+        label={radio.label}
+        value={radio.value}
+        active={active}
+        setActive={setActive}
+        key={index}
+      />
+    ))}
+  </StyledRadioList>
+);
 
 export default DvtRadioList;
