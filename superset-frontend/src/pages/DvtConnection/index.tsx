@@ -205,7 +205,7 @@ function DvtConnection() {
 
   const handleEditConnection = async (item: any) => {
     try {
-      const response = await fetch(`/api/v1/database/${item.id}`);
+      const response = await fetch(`/api/v1/database/${item.id}/connection`);
       const editedConnectionData = await response.json();
 
       dispatch(

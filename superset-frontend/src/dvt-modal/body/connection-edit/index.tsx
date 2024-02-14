@@ -235,7 +235,6 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
         <StyledConnectionAddLabel>Connect a database</StyledConnectionAddLabel>
       </StyledConnectionAddHeader>
       <StyledConnectionAddBody>
-        123456
         {step === 1 && (
           <StyledConnectionAddStep2>
             {ConnectionDataFindType?.data.map(
@@ -247,6 +246,7 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                   importantLabel: string;
                   placeholder: string;
                   popoverLabel: string;
+                  apiValue: string;
                 },
                 index,
               ) => (
@@ -254,7 +254,10 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                   <React.Fragment key={index}>
                     {data.type === 'text' && (
                       <DvtInput
-                        value={input[data.value]}
+                        value={
+                          meta.result.parameters[data.apiValue] ||
+                          meta.result[data.apiValue]
+                        }
                         onChange={text => setInputValue(data.value, text)}
                         label={data.title}
                         importantLabel={data.importantLabel}
@@ -265,7 +268,7 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                     )}
                     {data.type === 'password' && (
                       <DvtInput
-                        value={input[data.value]}
+                        value={meta.result.parameters[data.apiValue]}
                         onChange={text => setInputValue(data.value, text)}
                         label={data.title}
                         importantLabel={data.importantLabel}
@@ -278,7 +281,7 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                       <StyledConnectionAddSwitch>
                         <DvtCheckbox
                           label="SSL"
-                          checked={input.switch}
+                          checked={meta.result.parameters.encryption}
                           onChange={bol => setInputValue(data.value, bol)}
                         />
                         <DvtPopper
@@ -295,31 +298,6 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                           />
                         </DvtPopper>
                       </StyledConnectionAddSwitch>
-                    )}
-                    {data.type === 'toBasic' && (
-                      <StyledConnectionAddButtonGroup>
-                        <StyledConnectionAddToBasic>
-                          {data.title}
-                        </StyledConnectionAddToBasic>
-                        <StyledConnectionAddButton>
-                          <DvtButton
-                            bold
-                            label={t('BACK')}
-                            onClick={handleBackButton}
-                            typeColour="powder"
-                          />
-                          <DvtButton
-                            bold
-                            label={t('CONNECT')}
-                            onClick={() => {
-                              setApiUrl('database/validate_parameters/');
-                              setTimeout(() => {
-                                setApiUrl('');
-                              }, 100);
-                            }}
-                          />
-                        </StyledConnectionAddButton>
-                      </StyledConnectionAddButtonGroup>
                     )}
                   </React.Fragment>
                 </div>

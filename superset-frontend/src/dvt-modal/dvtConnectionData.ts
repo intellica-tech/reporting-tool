@@ -29,6 +29,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
         ),
         placeholder: t('e.g 127.0.01'),
         popoverLabel: t('Cannot be empty'),
+        apiValue: 'host',
       },
       {
         title: t('PORT'),
@@ -36,6 +37,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
         type: 'text',
         placeholder: t('e.g 5432'),
         popoverLabel: t('Cannot be empty'),
+        apiValue: 'port',
       },
       {
         title: t('DATABASE NAME'),
@@ -46,6 +48,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
         importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
         ),
+        apiValue: 'database',
       },
       {
         title: t('USER NAME'),
@@ -56,12 +59,14 @@ const DvtConnectionData: ConnectionDataProps[] = [
         importantLabel: t(
           'Copy the name of the database you are trying to connect to.',
         ),
+        apiValue: 'username',
       },
       {
         title: t('PASSWORD'),
         value: 'password',
         type: 'password',
         placeholder: 'e.g *******',
+        apiValue: 'password',
       },
       {
         title: t('DISPLAY NAME'),
@@ -70,6 +75,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
         importantLabel: t(
           'Pick a nickname for how the database will display in Superset.',
         ),
+        apiValue: 'database_name',
       },
       {
         title: t('ADDITIONAL PARAMETERS'),
@@ -77,11 +83,13 @@ const DvtConnectionData: ConnectionDataProps[] = [
         type: 'text',
         placeholder: t('e.g param1=value1&param2=value2'),
         importantLabel: t('Add additional custom parameterss'),
+        apiValue: 'query',
       },
       {
         type: 'switch',
         value: 'switch',
         importantLabel: t('SSL Mode "require" will be used.'),
+        apiValue: 'encryption',
       },
       {
         title: t('Connect this database with a SQLAlchemy URI string instead'),
