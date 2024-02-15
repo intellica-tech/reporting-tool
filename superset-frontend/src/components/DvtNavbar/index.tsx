@@ -280,6 +280,15 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               }
             />
           )}
+          {pathName === '/sqlhub/' && (
+            <DvtButtonTabs
+              active={viewListSelector.sqlhub}
+              data={activeData}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'sqlhub' }))
+              }
+            />
+          )}
           {pathName === '/explore/' && (
             <>
               <DvtButtonTabs

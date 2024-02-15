@@ -36,6 +36,7 @@ interface DvtNavbarState {
   viewlist: {
     dashboard: ButtonTabsDataProps;
     reports: ButtonTabsDataProps;
+    sqlhub: ButtonTabsDataProps;
   };
 }
 
@@ -69,6 +70,10 @@ const initialState: DvtNavbarState = {
     reports: {
       label: t('Table'),
       value: 'Table',
+    },
+    sqlhub: {
+      label: t('Sql HUB'),
+      value: 'sqlHub',
     },
   },
 };

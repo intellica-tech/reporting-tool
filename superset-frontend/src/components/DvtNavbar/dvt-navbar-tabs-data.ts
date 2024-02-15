@@ -88,6 +88,24 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
     ],
   },
   {
+    pathname: '/sqlhub/',
+    data: [
+      {
+        label: t('Sql HUB'),
+        icon: 'dvt-box',
+        value: 'sqlHub',
+      },
+      {
+        label: t('Saved queries'),
+        value: 'saved',
+      },
+      {
+        label: t('Query history'),
+        value: 'history',
+      },
+    ],
+  },
+  {
     pathname: '/explore/',
     data: [
       {
@@ -111,4 +129,5 @@ export const WithNavbarBottom: string[] = [
   '/dashboard/list/',
   '/report/list/',
   '/explore/',
+  '/sqlhub/',
 ];
