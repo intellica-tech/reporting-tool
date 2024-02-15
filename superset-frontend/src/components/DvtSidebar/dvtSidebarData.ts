@@ -157,7 +157,7 @@ const DvtSidebarData: SidebarDataProps[] = [
         label: t('Time Range'),
         placeholder: t('Type a value'),
         name: 'time-range',
-        datePicker: true,
+        status: 'datepicker',
       },
       {
         label: t('Search by Query Text'),
@@ -553,6 +553,7 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('See Table Schema'),
         name: 'see_table_schema',
+        status: 'select-input',
       },
     ],
     apiUrls: [

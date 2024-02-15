@@ -76,7 +76,7 @@ interface DvtSidebarState {
   sqlhub: {
     database: any;
     schema: any;
-    see_table_schema: any;
+    see_table_schema: any[string];
   };
   data: {
     fetched: {
@@ -208,7 +208,7 @@ const INITIAL_STATE = {
   sqlhub: {
     database: '',
     schema: '',
-    see_table_schema: '',
+    see_table_schema: [],
   },
 };
 
@@ -310,6 +310,18 @@ const dvtSidebarSlice = createSlice({
         [action.payload.key]: action.payload.value,
       },
     }),
+    dvtSidebarSetPropertySelectedRemove: (
+      state,
+      action: PayloadAction<{ pageKey: string; key: string; value: any }>,
+    ) => ({
+      ...state,
+      [action.payload.pageKey]: {
+        ...state[action.payload.pageKey],
+        [action.payload.key]: state[action.payload.pageKey][
+          action.payload.key
+        ].filter((s: any) => s !== action.payload.value),
+      },
+    }),
     dvtSidebarSetPropertyClear: (state, action: PayloadAction<string>) => {
       const keyNames = action.payload;
       const autoDataClear = (key: string) => {
@@ -385,6 +397,7 @@ const dvtSidebarSlice = createSlice({
 export const {
   dvtSidebarChartAddSetProperty,
   dvtSidebarSetProperty,
+  dvtSidebarSetPropertySelectedRemove,
   dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
 } = dvtSidebarSlice.actions;

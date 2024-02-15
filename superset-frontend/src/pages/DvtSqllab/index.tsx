@@ -5,7 +5,11 @@ import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
-import { dvtSqlhubSetSelectedTables } from 'src/dvt-redux/dvt-sqlhubReducer';
+import {
+  dvtSqlhubSetSelectedTableRemove,
+  dvtSqlhubSetSelectedTables,
+  dvtSqlhubSetSelectedTablesClear,
+} from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
 import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
@@ -16,6 +20,7 @@ function DvtSqllab() {
   const sqlhubSidebarSelector = useAppSelector(
     state => state.dvtSidebar.sqlhub,
   );
+  const sqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const [limit, setLimit] = useState(1000);
   const [value, setValue] = useState('');
 
@@ -53,11 +58,28 @@ function DvtSqllab() {
     if (
       sqlhubSidebarSelector.database?.value &&
       sqlhubSidebarSelector.schema?.value &&
-      sqlhubSidebarSelector.see_table_schema?.value
+      sqlhubSidebarSelector.see_table_schema.length
     ) {
-      setSelectedSeeTableSchemaApiUrl(
-        `database/${sqlhubSidebarSelector.database.value}/table/${sqlhubSidebarSelector.see_table_schema.value}/${sqlhubSidebarSelector.schema.value}/`,
+      const onlyTitles = sqlhubSelector.selectedTables.map(
+        ({ title }: any) => title,
       );
+      const findedTitle = sqlhubSidebarSelector.see_table_schema.find(
+        (i: any) => !onlyTitles.includes(i),
+      );
+      if (onlyTitles.length >= sqlhubSidebarSelector.see_table_schema.length) {
+        dispatch(
+          dvtSqlhubSetSelectedTableRemove(
+            onlyTitles.find(
+              (t: string) =>
+                !sqlhubSidebarSelector.see_table_schema.includes(t),
+            ),
+          ),
+        );
+      } else {
+        setSelectedSeeTableSchemaApiUrl(
+          `database/${sqlhubSidebarSelector.database.value}/table/${findedTitle}/${sqlhubSidebarSelector.schema.value}/`,
+        );
+      }
     }
   }, [sqlhubSidebarSelector]);
 
@@ -95,7 +117,13 @@ function DvtSqllab() {
 
   useEffect(() => {
     if (selectedSeeTableSchemaApi) {
-      dispatch(dvtSqlhubSetSelectedTables(selectedSeeTableSchemaApi));
+      dispatch(
+        dvtSqlhubSetSelectedTables({
+          title: selectedSeeTableSchemaApi.name,
+          data: selectedSeeTableSchemaApi.columns,
+          selectStar: selectedSeeTableSchemaApi.selectStar,
+        }),
+      );
       setSelectedSeeTableSchemaApiUrl('');
     }
   }, [selectedSeeTableSchemaApi]);
@@ -103,7 +131,7 @@ function DvtSqllab() {
   useEffect(
     () => () => {
       dispatch(dvtSidebarSetPropertyClear('sqlhub'));
-      dispatch(dvtSqlhubSetSelectedTables([]));
+      dispatch(dvtSqlhubSetSelectedTablesClear());
       setValue('');
     },
     [],

@@ -5,7 +5,9 @@ import {
   dvtSidebarChartAddSetProperty,
   dvtSidebarSetDataProperty,
   dvtSidebarSetProperty,
+  dvtSidebarSetPropertySelectedRemove,
 } from 'src/dvt-redux/dvt-sidebarReducer';
+import { dvtSqlhubSetSelectedTableRemove } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { nativeFilterGate } from 'src/dashboard/components/nativeFilters/utils';
 import { ChartMetadata, t } from '@superset-ui/core';
@@ -41,6 +43,7 @@ import DvtDatePicker from '../DvtDatepicker';
 import { usePluginContext } from '../DynamicPlugins';
 import DvtInput from '../DvtInput';
 import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
+import DvtInputSelect from '../DvtInputSelect';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -119,7 +122,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     (item: { pathname: string }) => item.pathname === pathName,
   );
 
-  const updateProperty = (pageKey: string, key: string, value: string) => {
+  const updateProperty = (pageKey: string, key: string, value: any) => {
     dispatch(
       dvtSidebarSetProperty({
         pageKey,
@@ -525,11 +528,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     label: string;
                     values: { label: string; value: string }[];
                     placeholder: string;
-                    valuesList?: {
-                      id: number;
-                      title: string;
-                      subtitle: string;
-                    }[];
                     title: string;
                     datePicker?: boolean;
                     name: string;
@@ -538,7 +536,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   index: number,
                 ) => (
                   <StyledDvtSidebarBodySelect key={index}>
-                    {!data.datePicker && !data.valuesList && !data.status && (
+                    {!data.datePicker && !data.status && (
                       <DvtSelect
                         data={selectsData(data)}
                         label={data.label}
@@ -615,20 +613,29 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         onShowClear
                       />
                     )}
-                    {data.valuesList && (
-                      <>
-                        <DvtSelect
-                          data={data.values}
-                          label={data.label}
-                          placeholder={data.placeholder}
-                          selectedValue=""
-                          setSelectedValue={() => {}}
-                          maxWidth
-                        />
-                        <DvtList data={data.valuesList} title={data.title} />
-                      </>
+                    {data.status === 'select-input' && (
+                      <DvtInputSelect
+                        data={selectsData(data)}
+                        label={data.label}
+                        placeholder={data.placeholder}
+                        selectedValues={
+                          pathTitles(pathName) === 'sqlhub'
+                            ? sqlhubSelector[data.name]
+                            : undefined
+                        }
+                        setSelectedValues={selected => {
+                          if (sidebarDataFindPathname.key) {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              selected,
+                            );
+                          }
+                        }}
+                        typeDesign="chartsForm"
+                      />
                     )}
-                    {data.datePicker && (
+                    {data.status === 'datepicker' && (
                       <DvtDatePicker
                         isOpen
                         label={data.label}
@@ -659,16 +666,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&
-              pageSqlhubSelector.selectedTables?.name && (
+              pageSqlhubSelector.selectedTables.length !== 0 && (
                 <DvtList
-                  title={pageSqlhubSelector.selectedTables.name}
-                  data={pageSqlhubSelector.selectedTables.columns.map(
-                    (v: any, index: number) => ({
-                      id: index,
-                      title: v.name,
-                      subtitle: v.type,
-                    }),
-                  )}
+                  data={pageSqlhubSelector.selectedTables}
+                  deleteClick={ti => {
+                    dispatch(dvtSqlhubSetSelectedTableRemove(ti.title));
+                    dispatch(
+                      dvtSidebarSetPropertySelectedRemove({
+                        pageKey: 'sqlhub',
+                        key: 'see_table_schema',
+                        value: ti.title,
+                      }),
+                    );
+                  }}
                 />
               )}
           </StyledDvtSidebarBody>

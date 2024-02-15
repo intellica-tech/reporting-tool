@@ -17,13 +17,14 @@
  * under the License.
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { SelectedTablesProps } from 'src/components/DvtList';
 
 interface DvtSqlhubState {
-  selectedTables: any;
+  selectedTables: SelectedTablesProps[];
 }
 
 const initialState: DvtSqlhubState = {
-  selectedTables: {},
+  selectedTables: [],
 };
 
 const dvtSqlhubSlice = createSlice({
@@ -32,11 +33,28 @@ const dvtSqlhubSlice = createSlice({
   reducers: {
     dvtSqlhubSetSelectedTables: (state, action: PayloadAction<any>) => ({
       ...state,
-      selectedTables: action.payload,
+      selectedTables: [...state.selectedTables, action.payload],
+    }),
+    dvtSqlhubSetSelectedTableRemove: (
+      state,
+      action: PayloadAction<string>,
+    ) => ({
+      ...state,
+      selectedTables: state.selectedTables.filter(
+        i => i.title !== action.payload,
+      ),
+    }),
+    dvtSqlhubSetSelectedTablesClear: (state, action: PayloadAction) => ({
+      ...state,
+      selectedTables: [],
     }),
   },
 });
 
-export const { dvtSqlhubSetSelectedTables } = dvtSqlhubSlice.actions;
+export const {
+  dvtSqlhubSetSelectedTables,
+  dvtSqlhubSetSelectedTableRemove,
+  dvtSqlhubSetSelectedTablesClear,
+} = dvtSqlhubSlice.actions;
 
 export default dvtSqlhubSlice.reducer;
