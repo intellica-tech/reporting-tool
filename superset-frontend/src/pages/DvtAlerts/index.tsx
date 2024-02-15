@@ -105,6 +105,7 @@ function AlertList() {
       setData(getData);
       setCount(alertApi.count);
       setSelectedRows([]);
+      setAlertApiUrl('');
     }
   }, [alertApi]);
 

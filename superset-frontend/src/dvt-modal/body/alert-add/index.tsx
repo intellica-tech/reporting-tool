@@ -134,11 +134,12 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
   });
 
   useEffect(() => {
+    console.log(alertAddData);
     if (alertAddData?.id) {
-      onClose();
       dispatch(dvtAlertAddStatus('Success'));
+      onClose();
     }
-  }, [onClose, alertAddData]);
+  }, [alertAddData]);
 
   const datasetData = useFetch({
     url: '/report/related/database?q=(filter:%27%27,page:0,page_size:100)',
