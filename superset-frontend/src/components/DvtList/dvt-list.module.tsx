@@ -19,35 +19,26 @@
 import { styled } from '@superset-ui/core';
 
 const StyledDvtList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  border-radius: 12px;
+  padding-right: 10px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  height: 560px;
-  padding: 16px 20px;
-`;
-
-const StyledDvtListLabel = styled.div`
-  display: flex;
-  letter-spacing: 0.2px;
-  font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 11px;
-  color: ${({ theme }) => theme.colors.grayscale.dark2};
+  padding: 20px 16px;
+  border-radius: 12px;
 `;
 
 const StyledDvtListScroll = styled.div`
   display: flex;
-  overflow-y: auto;
   flex-direction: column;
-  padding-right: 10px;
+  gap: 10px;
+  height: 520px;
+  overflow-y: auto;
+  padding-right: 8px;
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
     width: 6px;
     border-radius: 12px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
     width: 4px;
@@ -58,11 +49,21 @@ const StyledDvtListScroll = styled.div`
 const StyledDvtListItem = styled.div`
   display: flex;
   justify-content: space-between;
+
+  &:not(:first-of-type) {
+    margin-top: 2px;
+  }
+`;
+
+const StyledDvtListItemText = styled.p`
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 export {
   StyledDvtList,
-  StyledDvtListLabel,
   StyledDvtListScroll,
   StyledDvtListItem,
+  StyledDvtListItemText,
 };

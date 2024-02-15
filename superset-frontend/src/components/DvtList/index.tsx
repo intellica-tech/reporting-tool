@@ -16,36 +16,65 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
+import DvtCollapse from '../DvtCollapse';
 import {
   StyledDvtList,
-  StyledDvtListItem,
-  StyledDvtListLabel,
   StyledDvtListScroll,
+  StyledDvtListItem,
+  StyledDvtListItemText,
 } from './dvt-list.module';
 
-export interface DataProps {
-  id: number;
-  title: string;
-  subtitle: string;
+interface DataProps {
+  name: string;
+  type: string;
 }
-export interface DvtListProps {
+
+export interface SelectedTablesProps {
   title: string;
   data: DataProps[];
 }
 
-const DvtList: React.FC<DvtListProps> = ({ data, title }) => (
-  <StyledDvtList>
-    <StyledDvtListLabel>{title}</StyledDvtListLabel>
-    <StyledDvtListScroll>
-      {data.map((item, index) => (
-        <StyledDvtListItem key={index}>
-          <p>{item.title}</p>
-          <p>{item.subtitle}</p>
-        </StyledDvtListItem>
-      ))}
-    </StyledDvtListScroll>
-  </StyledDvtList>
-);
+export interface DvtListProps {
+  data: SelectedTablesProps[];
+  deleteClick: (i: SelectedTablesProps) => void;
+}
+
+const DvtList: React.FC<DvtListProps> = ({ data, deleteClick }) => {
+  const [isOpenArray, setIsOpenArray] = useState<any[string]>(
+    data.map(i => i.title) || [],
+  );
+
+  const handleIsOpenArray = (t: string) => {
+    const findTitle = isOpenArray.includes(t)
+      ? isOpenArray.filter((ft: string) => ft !== t)
+      : [...isOpenArray, t];
+    setIsOpenArray(findTitle);
+  };
+
+  return (
+    <StyledDvtList>
+      <StyledDvtListScroll>
+        {data.map((d, i) => (
+          <DvtCollapse
+            key={i}
+            typeDesign="dvt-list"
+            label={d.title}
+            isOpen={isOpenArray.includes(d.title)}
+            setIsOpen={() => handleIsOpenArray(d.title)}
+            deleteClick={() => deleteClick(d)}
+          >
+            {d.data.map((item, index) => (
+              <StyledDvtListItem key={index}>
+                <StyledDvtListItemText>{item.name}</StyledDvtListItemText>
+                <StyledDvtListItemText>{item.type}</StyledDvtListItemText>
+              </StyledDvtListItem>
+            ))}
+          </DvtCollapse>
+        ))}
+      </StyledDvtListScroll>
+    </StyledDvtList>
+  );
+};
 
 export default DvtList;
