@@ -30,41 +30,49 @@ import {
   StyledAlertAddInputFlex,
 } from './alert-add-modal.module';
 
+interface InputProps {
+  database: { label: string; value: string };
+  sqlQuery: string;
+  trigger: { label: string; value: string };
+  value: number | undefined;
+  hour: { label: string; value: string };
+  minute: { label: string; value: string };
+  timezone: { label: string; value: string };
+  logRetention: { label: string; value: number };
+  workingTimeout: number;
+  gracePeriod: number;
+  messageContent: { label: string; value: string };
+  owners: any[];
+  alertName: string;
+  description: string;
+  ignore: boolean;
+  schedule: string;
+  year: string;
+  month: string;
+  week: string;
+  day: string;
+  email: string;
+  timeSelected: { label: string; value: string };
+  active: boolean;
+}
+
 const DvtAlertAdd = ({ onClose }: ModalProps) => {
-  const [input, setInput] = useState<{
-    database: { label: string; value: string };
-    sqlQuery: string;
-    trigger: { label: string; value: string };
-    value: number | undefined;
-    hour: { label: string; value: string };
-    minute: { label: string; value: string };
-    timezone: { label: string; value: string };
-    logRetention: { label: string; value: string };
-    workingTimeout: number;
-    gracePeriod: number;
-    messageContent: { label: string; value: string };
-    owners: any[];
-    alertName: string;
-    description: string;
-    ignore: boolean;
-    schedule: string;
-    year: string;
-    month: string;
-    week: string;
-    day: string;
-    email: string;
-    timeSelected: { label: string; value: string };
-    active: boolean;
-  }>({
+  const [input, setInput] = useState<InputProps>({
     database: { label: '', value: '' },
     sqlQuery: '',
     trigger: { label: '', value: '' },
     value: undefined,
     hour: { label: '', value: '' },
     minute: { label: '', value: '' },
-    timezone: { label: '', value: '' },
-    logRetention: { label: '', value: '' },
-    workingTimeout: 0,
+    timezone: {
+      label: t('GMT +03:00 (Antarctica/Syowa)'),
+      value: t('Antarctica/Syowa'),
+    },
+    logRetention: {
+      label: t('90 days'),
+      value: 90,
+    },
+    workingTimeout: 3600,
     gracePeriod: 0,
     messageContent: { label: '', value: '' },
     owners: [],

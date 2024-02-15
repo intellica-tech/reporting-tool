@@ -29,32 +29,40 @@ import {
   StyledAlertAddInputFlex,
 } from './report-add-modal.module';
 
+interface InputProps {
+  hour: { label: string; value: string };
+  minute: { label: string; value: string };
+  timezone: { label: string; value: string };
+  logRetention: { label: string; value: number };
+  workingTimeout: number;
+  messageContent: { label: string; value: string };
+  owners: any[];
+  reportName: string;
+  description: string;
+  ignore: boolean;
+  schedule: string;
+  year: string;
+  month: string;
+  week: string;
+  day: string;
+  email: string;
+  timeSelected: { label: string; value: string };
+  active: boolean;
+}
+
 const DvtReportAdd = ({ onClose }: ModalProps) => {
-  const [input, setInput] = useState<{
-    hour: { label: string; value: string };
-    minute: { label: string; value: string };
-    timezone: { label: string; value: string };
-    logRetention: { label: string; value: string };
-    workingTimeout: number;
-    messageContent: { label: string; value: string };
-    owners: any[];
-    reportName: string;
-    description: string;
-    ignore: boolean;
-    schedule: string;
-    year: string;
-    month: string;
-    week: string;
-    day: string;
-    email: string;
-    timeSelected: { label: string; value: string };
-    active: boolean;
-  }>({
+  const [input, setInput] = useState<InputProps>({
     hour: { label: '', value: '' },
     minute: { label: '', value: '' },
-    timezone: { label: '', value: '' },
-    logRetention: { label: '', value: '' },
-    workingTimeout: 0,
+    timezone: {
+      label: t('GMT +03:00 (Antarctica/Syowa)'),
+      value: t('Antarctica/Syowa'),
+    },
+    logRetention: {
+      label: t('90 days'),
+      value: 90,
+    },
+    workingTimeout: 3600,
     messageContent: { label: '', value: '' },
     owners: [],
     reportName: '',
