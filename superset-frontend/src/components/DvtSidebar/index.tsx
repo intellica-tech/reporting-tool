@@ -41,7 +41,6 @@ import DvtDatePicker from '../DvtDatepicker';
 import { usePluginContext } from '../DynamicPlugins';
 import DvtInput from '../DvtInput';
 import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
-import DvtMiniNavigation from '../DvtMiniNavigation';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -457,13 +456,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   <DvtTitlePlus title={data.title} />
                   <DvtNavigation data={data.data} />
                 </>
-              )}
-              {data.titleMenu === 'sql' && (
-                <DvtMiniNavigation
-                  title={data.title}
-                  url={data.url}
-                  data={data.data}
-                />
               )}
               {/* {data.titleMenu === 'folder' && (
                 <>
