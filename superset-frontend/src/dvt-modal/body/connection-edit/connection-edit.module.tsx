@@ -101,6 +101,7 @@ const StyledConnectionAddButtonGroup = styled.div`
 
 const StyledConnectionAddButton = styled.div`
   display: flex;
+  justify-content: end;
   gap: 15px;
 `;
 

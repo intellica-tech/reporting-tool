@@ -2,10 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import useFetch from 'src/hooks/useFetch';
-import {
-  DvtConnectionData,
-  OtherOptions,
-} from 'src/dvt-modal/dvtConnectionData';
+import { DvtConnectionData } from 'src/dvt-modal/dvtConnectionData';
 import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
@@ -42,13 +39,13 @@ import {
 
 const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(2);
   const [supporedDatabase, setSupporedDatabase] = useState<string>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [apiUrl, setApiUrl] = useState<string>('');
   const [selectedConnectionType, setSelectedConnectionType] =
-    useState<string>('');
+    useState<string>('PostgreSQL');
   const [collapseValues, setCollapseValues] = useState<{
     sql: boolean;
     performance: boolean;
@@ -235,7 +232,7 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
         <StyledConnectionAddLabel>Connect a database</StyledConnectionAddLabel>
       </StyledConnectionAddHeader>
       <StyledConnectionAddBody>
-        {step === 1 && (
+        {step === 2 && (
           <StyledConnectionAddStep2>
             {ConnectionDataFindType?.data.map(
               (
@@ -303,6 +300,18 @@ const DvtConnectionEdit = ({ meta, onClose }: ModalProps) => {
                 </div>
               ),
             )}
+            <StyledConnectionAddButton>
+              <DvtButton
+                bold
+                label={t('CONNECT')}
+                onClick={() => {
+                  setApiUrl('database/validate_parameters/');
+                  setTimeout(() => {
+                    setApiUrl('');
+                  }, 100);
+                }}
+              />
+            </StyledConnectionAddButton>
           </StyledConnectionAddStep2>
         )}
         {step === 3 && (
