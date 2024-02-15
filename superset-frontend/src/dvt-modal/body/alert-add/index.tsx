@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { SupersetTheme, t } from '@superset-ui/core';
+import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import { dvtAlertAddStatus } from 'src/dvt-redux/dvt-alertReducer';
-import { Switch } from 'antd';
+import DvtSwitch from 'src/components/DvtSwitch';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import useFetch from 'src/hooks/useFetch';
@@ -11,14 +11,13 @@ import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
 import DvtCheckbox from 'src/components/DvtCheckbox';
+import DvtInputSelect from 'src/components/DvtInputSelect';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
   StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
-  StyledAlertAddLabel,
-  StyledAlertAddSwitchGroup,
   StyledAlertAddSelectGroup,
   StyledAlertAddLine,
   StyledAlertAddItemGroup,
@@ -41,10 +40,10 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
     minute: { label: string; value: string };
     timezone: { label: string; value: string };
     logRetention: { label: string; value: string };
-    workingTimeout: string;
-    gracePeriod: string;
+    workingTimeout: number;
+    gracePeriod: number;
     messageContent: { label: string; value: string };
-    owners: { label: string; value: number | undefined };
+    owners: any[];
     alertName: string;
     description: string;
     ignore: boolean;
@@ -65,10 +64,10 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
     minute: { label: '', value: '' },
     timezone: { label: '', value: '' },
     logRetention: { label: '', value: '' },
-    workingTimeout: '',
-    gracePeriod: '',
+    workingTimeout: 0,
+    gracePeriod: 0,
     messageContent: { label: '', value: '' },
-    owners: { label: '', value: undefined },
+    owners: [],
     alertName: '',
     description: '',
     ignore: false,
@@ -108,7 +107,7 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
       grace_period: input.gracePeriod,
       log_retention: input.logRetention.value,
       name: input.alertName,
-      owners: [input.owners.value],
+      owners: input.owners,
       recipients: [
         {
           recipient_config_json: {
@@ -134,7 +133,6 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    console.log(alertAddData);
     if (alertAddData?.id) {
       dispatch(dvtAlertAddStatus('Success'));
       onClose();
@@ -163,11 +161,11 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
       value: item.value,
     }));
 
-  const ownersOptions: { label: string; value: string }[] =
+  const ownersOptions: { label: string; value: number }[] =
     ownersData?.result.map((item: any) => ({
       label: item.text,
       value: item.value,
-    }));
+    })) || [];
 
   const chartOptions: { label: string; value: string }[] =
     chartData?.result.map((item: any) => ({
@@ -237,18 +235,13 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
       </StyledAlertAddHeader>
       <StyledAlertAddBody>
         <StyledAlertAddLeftMenu>
-          <StyledAlertAddSwitchGroup>
-            <StyledAlertAddLabel>{t('Active')}</StyledAlertAddLabel>
-            <Switch
-              checked={input.active}
-              onChange={bol => {
-                setInput({ ...input, active: bol });
-              }}
-              css={(theme: SupersetTheme) => ({
-                backgroundColor: theme.colors.dvt.primary.base,
-              })}
-            />
-          </StyledAlertAddSwitchGroup>
+          <DvtSwitch
+            label={t('Active')}
+            checked={input.active}
+            onChange={bol => {
+              setInput({ ...input, active: bol });
+            }}
+          />
           <StyledAlertAddLine />
           <StyledAlertAddSelectGroup>
             <DvtInput
@@ -260,14 +253,15 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
               }}
               typeDesign="chartsForm"
             />
-            <DvtSelect
+            <DvtInputSelect
               data={ownersOptions}
               label={t('Owners')}
               placeholder={t('Select...')}
-              selectedValue={input.owners}
-              setSelectedValue={selected => {
+              selectedValues={input.owners}
+              setSelectedValues={selected => {
                 setInput({ ...input, owners: selected });
               }}
+              typeDesign="chartsForm"
             />
             <DvtInput
               label={t('Description')}
@@ -466,18 +460,21 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
               <DvtInput
                 label={t('Working Timeout')}
                 placeholder="3600"
-                value={input.workingTimeout}
+                value={input.workingTimeout.toString()}
                 onChange={selected => {
-                  setInput({ ...input, workingTimeout: selected });
+                  setInput({
+                    ...input,
+                    workingTimeout: parseInt(selected, 10),
+                  });
                 }}
                 typeDesign="chartsForm"
               />
               <DvtInput
                 label={t('Grace Period')}
                 placeholder={t('Seconds')}
-                value={input.gracePeriod}
+                value={input.gracePeriod.toString()}
                 onChange={selected => {
-                  setInput({ ...input, gracePeriod: selected });
+                  setInput({ ...input, gracePeriod: parseInt(selected, 10) });
                 }}
                 typeDesign="chartsForm"
               />

@@ -49,17 +49,6 @@ const StyledAlertAddLeftMenu = styled.div`
   padding: 0 14px 0 27px;
 `;
 
-const StyledAlertAddSwitchGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledAlertAddLabel = styled.div`
-  color: ${({ theme }) => theme.colors.dvt.primary.base};
-  font-size: 12px;
-  font-weight: 600;
-`;
-
 const StyledAlertAddTitle = styled.div`
   font-size: 14px;
   font-weight: 600;
@@ -144,8 +133,6 @@ export {
   StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
-  StyledAlertAddSwitchGroup,
-  StyledAlertAddLabel,
   StyledAlertAddSelectGroup,
   StyledAlertAddLine,
   StyledAlertAddItemGroup,
