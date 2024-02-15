@@ -165,11 +165,13 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   };
 
   useEffect(() => {
-    DvtConnectionData.find(
-      connection =>
-        connection.driver === meta.editedConnectionData.result.driver &&
-        setSelectedConnectionType(connection.databaseType),
-    );
+    if (meta?.isEdit) {
+      DvtConnectionData.find(
+        connection =>
+          connection.driver === meta.editedConnectionData.result.driver &&
+          setSelectedConnectionType(connection.databaseType),
+      );
+    }
   }, []);
 
   const ConnectionDataFindType = DvtConnectionData.find(
