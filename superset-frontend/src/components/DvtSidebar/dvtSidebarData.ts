@@ -448,7 +448,7 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/superset/profile/admin',
+    pathname: '/profile/',
     key: 'profile',
     data: [
       {

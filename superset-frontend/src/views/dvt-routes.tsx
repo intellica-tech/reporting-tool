@@ -74,6 +74,10 @@ const DatabaseList = lazy(
     import(/* webpackChunkName: "DatabaseList" */ 'src/pages/DvtConnection'),
 );
 
+const Profile = lazy(
+  () => import(/* webpackChunkName: "Profile" */ 'src/pages/DvtProfile'),
+);
+
 const DatasetList = lazy(
   () => import(/* webpackChunkName: "DatasetList" */ 'src/pages/DvtDatasets'),
 );
@@ -228,6 +232,10 @@ export const routes: Routes = [
   {
     path: '/sqlhub/',
     Component: SqlLab,
+  },
+  {
+    path: '/profile/',
+    Component: Profile,
   },
 ];
 

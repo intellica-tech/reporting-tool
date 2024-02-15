@@ -174,7 +174,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   return (
     <StyledDvtNavbar leftMove={leftMove}>
       <NavbarTop>
-        {pathName !== '/superset/profile/admin' ? (
+        {pathName !== '/profile/' ? (
           <>
             <DvtDotTitle label={pathTitles(pathName)} />
             <NavbarSearchGroup>

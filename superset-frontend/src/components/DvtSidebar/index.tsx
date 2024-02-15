@@ -102,7 +102,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'queryHistory';
       case '/savedqueryview/list/':
         return 'savedQuery';
-      case '/superset/profile/admin':
+      case '/profile/':
         return 'profile';
       case '/chart/add':
         return 'chartAdd';
