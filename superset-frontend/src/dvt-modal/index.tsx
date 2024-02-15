@@ -7,7 +7,6 @@ import DvtDashboardEdit from './body/dashboard-edit';
 import DvtChartEdit from './body/chart-edit';
 import DvtDeleteModal from './body/delete-modal';
 import DvtConnectionAdd from './body/connection-add';
-import DvtConnectionEdit from './body/connection-edit';
 import DvtAlertAdd from './body/alert-add';
 import {
   StyledModal,
@@ -29,8 +28,6 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtDeleteModal meta={meta} onClose={onClose} />;
     case 'edit-chart':
       return <DvtChartEdit meta={meta} onClose={onClose} />;
-    case 'edit-connection':
-      return <DvtConnectionEdit meta={meta} onClose={onClose} />;
     case 'connection-add-modal':
       return <DvtConnectionAdd meta={meta} onClose={onClose} />;
     case 'alert-add-modal':

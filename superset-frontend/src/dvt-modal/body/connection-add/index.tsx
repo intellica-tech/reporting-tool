@@ -40,7 +40,7 @@ import {
   StyledConnectionAddGroupStep3,
 } from './connection-add.module';
 
-const DvtConnectionAdd = ({ onClose }: ModalProps) => {
+const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState<number>(1);
   const [supporedDatabase, setSupporedDatabase] = useState<string>();
@@ -164,6 +164,14 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
     setStep(step - 1);
   };
 
+  useEffect(() => {
+    DvtConnectionData.find(
+      connection =>
+        connection.driver === meta.editedConnectionData.result.driver &&
+        setSelectedConnectionType(connection.databaseType),
+    );
+  }, []);
+
   const ConnectionDataFindType = DvtConnectionData.find(
     connection => connection.databaseType === selectedConnectionType,
   );
@@ -228,6 +236,24 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
       [property]: value,
     }));
   };
+
+  useEffect(() => {
+    if (meta?.isEdit) {
+      setStep(2);
+      setInput(prevState => ({
+        ...prevState,
+        host: meta.editedConnectionData.result.parameters.host,
+        port: meta.editedConnectionData.result.parameters.port,
+        database_name: meta.editedConnectionData.result.parameters.database,
+        user_name: meta.editedConnectionData.result.parameters.username,
+        password: meta.editedConnectionData.result.parameters.password,
+        display_name: meta.editedConnectionData.result.database_name,
+        addittional_parameters: JSON.stringify(
+          meta.editedConnectionData.result.parameters.query,
+        ),
+      }));
+    }
+  }, [meta]);
 
   return (
     <StyledConnectionAdd>
@@ -345,12 +371,15 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
                             {data.title}
                           </StyledConnectionAddToBasic>
                           <StyledConnectionAddButton>
-                            <DvtButton
-                              bold
-                              label={t('BACK')}
-                              onClick={handleBackButton}
-                              typeColour="powder"
-                            />
+                            {!meta?.isEdit && (
+                              <DvtButton
+                                bold
+                                label={t('BACK')}
+                                onClick={handleBackButton}
+                                typeColour="powder"
+                                size="small"
+                              />
+                            )}
                             <DvtButton
                               bold
                               label={t('CONNECT')}
@@ -1236,7 +1265,11 @@ const DvtConnectionAdd = ({ onClose }: ModalProps) => {
               <DvtButton
                 bold
                 label={t('FINISH')}
-                onClick={() => setApiUrl('database/')}
+                onClick={() =>
+                  meta?.isEdit
+                    ? setApiUrl(`database/${meta.editedConnectionData.id}`)
+                    : setApiUrl('database/')
+                }
                 size="small"
               />
             </StyledConnectionAddButtons>

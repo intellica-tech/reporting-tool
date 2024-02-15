@@ -210,8 +210,8 @@ function DvtConnection() {
 
       dispatch(
         openModal({
-          component: 'edit-connection',
-          meta: editedConnectionData,
+          component: 'connection-add-modal',
+          meta: { editedConnectionData, isEdit: true },
         }),
       );
     } catch (error) {
