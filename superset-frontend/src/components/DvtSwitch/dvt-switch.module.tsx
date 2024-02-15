@@ -16,39 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import { StyledRadioList } from './dvt-radio-list.module';
-import DvtRadio from '../DvtRadio';
+import { styled } from '@superset-ui/core';
 
-interface DvtRadioProps {
-  label: string;
-  value: string;
-}
+const StyledDvtSwitch = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
-export interface DvtRadioListProps {
-  data: DvtRadioProps[];
-  direction?: 'horizontal' | 'vertical';
-  active: string;
-  setActive: (active: string) => void;
-}
+const StyledDvtSwitchLabel = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.primary.base};
+  font-size: 12px;
+  font-weight: 600;
+`;
 
-const DvtRadioList: React.FC<DvtRadioListProps> = ({
-  data,
-  direction = 'horizontal',
-  active,
-  setActive,
-}) => (
-  <StyledRadioList direction={direction}>
-    {data.map((radio, index) => (
-      <DvtRadio
-        label={radio.label}
-        value={radio.value}
-        active={active}
-        setActive={setActive}
-        key={index}
-      />
-    ))}
-  </StyledRadioList>
-);
-
-export default DvtRadioList;
+export { StyledDvtSwitch, StyledDvtSwitchLabel };

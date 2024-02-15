@@ -16,39 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import { StyledRadioList } from './dvt-radio-list.module';
-import DvtRadio from '../DvtRadio';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface DvtRadioProps {
-  label: string;
-  value: string;
+interface DvtAppState {
+  alertAddStatus: string;
 }
 
-export interface DvtRadioListProps {
-  data: DvtRadioProps[];
-  direction?: 'horizontal' | 'vertical';
-  active: string;
-  setActive: (active: string) => void;
-}
+const initialState: DvtAppState = {
+  alertAddStatus: '',
+};
 
-const DvtRadioList: React.FC<DvtRadioListProps> = ({
-  data,
-  direction = 'horizontal',
-  active,
-  setActive,
-}) => (
-  <StyledRadioList direction={direction}>
-    {data.map((radio, index) => (
-      <DvtRadio
-        label={radio.label}
-        value={radio.value}
-        active={active}
-        setActive={setActive}
-        key={index}
-      />
-    ))}
-  </StyledRadioList>
-);
+const dvtAlertSlice = createSlice({
+  name: 'dvt-alert',
+  initialState,
+  reducers: {
+    dvtAlertAddStatus: (state, action: PayloadAction<string>) => ({
+      ...state,
+      alertAddStatus: action.payload,
+    }),
+  },
+});
 
-export default DvtRadioList;
+export const { dvtAlertAddStatus } = dvtAlertSlice.actions;
+
+export default dvtAlertSlice.reducer;

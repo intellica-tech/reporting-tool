@@ -16,39 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import { StyledRadioList } from './dvt-radio-list.module';
-import DvtRadio from '../DvtRadio';
+import React, { useState } from 'react';
+import DvtSwitch, { DvtSwitchProps } from '.';
 
-interface DvtRadioProps {
-  label: string;
-  value: string;
-}
+export default {
+  title: 'Dvt-Components/DvtSwitch',
+  component: DvtSwitch,
+};
 
-export interface DvtRadioListProps {
-  data: DvtRadioProps[];
-  direction?: 'horizontal' | 'vertical';
-  active: string;
-  setActive: (active: string) => void;
-}
+export const Default = (args: DvtSwitchProps) => {
+  const [checked, setChecked] = useState<boolean>(false);
 
-const DvtRadioList: React.FC<DvtRadioListProps> = ({
-  data,
-  direction = 'horizontal',
-  active,
-  setActive,
-}) => (
-  <StyledRadioList direction={direction}>
-    {data.map((radio, index) => (
-      <DvtRadio
-        label={radio.label}
-        value={radio.value}
-        active={active}
-        setActive={setActive}
-        key={index}
-      />
-    ))}
-  </StyledRadioList>
-);
+  return (
+    <div style={{ width: '150px' }}>
+      <DvtSwitch {...args} checked={checked} onChange={setChecked} />
+    </div>
+  );
+};
 
-export default DvtRadioList;
+Default.args = {
+  label: 'Active',
+};

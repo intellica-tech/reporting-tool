@@ -27,6 +27,7 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtAlertAddStatus } from 'src/dvt-redux/dvt-alertReducer';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
@@ -42,6 +43,7 @@ function AlertList() {
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
   );
+  const alertAddStatus = useAppSelector(state => state.dvtAlert.alertAddStatus);
   const [data, setData] = useState([]);
   const [count, setCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
@@ -68,7 +70,7 @@ function AlertList() {
         {
           col: 'last_state',
           opr: 'eq',
-          value: `'${alertsSelector.status?.value}'`,
+          value: alertsSelector.status?.value,
         },
         {
           col: 'name',
@@ -103,6 +105,7 @@ function AlertList() {
       setData(getData);
       setCount(alertApi.count);
       setSelectedRows([]);
+      setAlertApiUrl('');
     }
   }, [alertApi]);
 
@@ -110,8 +113,11 @@ function AlertList() {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
+    if (alertAddStatus) {
+      dispatch(dvtAlertAddStatus(''));
+    }
     setAlertApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, alertAddStatus]);
 
   useEffect(() => {
     setPage(1);
@@ -142,6 +148,14 @@ function AlertList() {
     dispatch(
       openModal({
         component: 'alert-add-modal',
+      }),
+    );
+  };
+
+  const handleReportAdd = () => {
+    dispatch(
+      openModal({
+        component: 'report-add-modal',
       }),
     );
   };
@@ -203,8 +217,20 @@ function AlertList() {
       />
       <StyledAlertsButton>
         <DvtButton
-          label={t('Create a New Alert')}
-          onClick={handleAlertAdd}
+          label={
+            alertTabsSelector.value === 'Alert'
+              ? t('Create a New Alert')
+              : alertTabsSelector.value === 'Report'
+              ? t('Create a New Report')
+              : ''
+          }
+          onClick={() => {
+            if (alertTabsSelector.value === 'Alert') {
+              handleAlertAdd();
+            } else if (alertTabsSelector.value === 'Report') {
+              handleReportAdd();
+            }
+          }}
           colour="grayscale"
         />
         <DvtPagination
@@ -224,13 +250,21 @@ function AlertList() {
             : 'No results match your filter criteria'
         }
         buttonLabel={
-          data.length === 0 ? t('Create a New Alert') : t('Clear All Filter')
+          data.length === 0
+            ? alertTabsSelector.value === 'Alert'
+              ? t('Create a New Alert')
+              : alertTabsSelector.value === 'Report'
+              ? t('Create a New Report')
+              : ''
+            : t('Clear All Filter')
         }
         buttonClick={() => {
           if (data.length > 0) {
             clearAlerts();
-          } else {
+          } else if (alertTabsSelector.value === 'Alert') {
             handleAlertAdd();
+          } else if (alertTabsSelector.value === 'Report') {
+            handleReportAdd();
           }
         }}
       />

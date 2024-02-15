@@ -70,26 +70,37 @@ const StyledAlertAddLine = styled.div`
 
 const StyledAlertAddItemGroup = styled.div`
   display: flex;
+  flex-direction: column;
   width: 879px;
   height: 508px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  gap: 45px;
+  gap: 10px;
   padding: 18px 21px 18px 28px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
 `;
 
-const StyledAlertAddAlertConition = styled.div`
+const StyledAlertAddScheduleSettings = styled.div`
   display: flex;
   flex-direction: column;
-  width: 226px;
   gap: 15px;
 `;
 
-const StyledAlertAddAlertConditionSchedule = styled.div`
+const StyledAlertAddReportSchedule = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 226px;
 `;
 
 const StyledAlertAddSelectFlex = styled.div`
@@ -107,7 +118,6 @@ const StyledAlertAddMessageContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 282px;
 `;
 
 const StyledAlertAddButtonGroup = styled.div`
@@ -126,9 +136,9 @@ export {
   StyledAlertAddSelectGroup,
   StyledAlertAddLine,
   StyledAlertAddItemGroup,
-  StyledAlertAddAlertConition,
+  StyledAlertAddScheduleSettings,
   StyledAlertAddTitle,
-  StyledAlertAddAlertConditionSchedule,
+  StyledAlertAddReportSchedule,
   StyledAlertAddSelectFlex,
   StyledAlertAddMessageContent,
   StyledAlertAddButtonGroup,

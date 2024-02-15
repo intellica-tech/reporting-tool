@@ -17,38 +17,33 @@
  * under the License.
  */
 import React from 'react';
-import { StyledRadioList } from './dvt-radio-list.module';
-import DvtRadio from '../DvtRadio';
+import { SupersetTheme } from '@superset-ui/core';
+import { Switch } from 'antd';
+import { StyledDvtSwitch, StyledDvtSwitchLabel } from './dvt-switch.module';
 
-interface DvtRadioProps {
-  label: string;
-  value: string;
+export interface DvtSwitchProps {
+  label?: string;
+  checked: boolean;
+  onChange: (newCheck: boolean) => void;
 }
 
-export interface DvtRadioListProps {
-  data: DvtRadioProps[];
-  direction?: 'horizontal' | 'vertical';
-  active: string;
-  setActive: (active: string) => void;
-}
-
-const DvtRadioList: React.FC<DvtRadioListProps> = ({
-  data,
-  direction = 'horizontal',
-  active,
-  setActive,
+const DvtSwitch: React.FC<DvtSwitchProps> = ({
+  label = '',
+  checked,
+  onChange,
 }) => (
-  <StyledRadioList direction={direction}>
-    {data.map((radio, index) => (
-      <DvtRadio
-        label={radio.label}
-        value={radio.value}
-        active={active}
-        setActive={setActive}
-        key={index}
-      />
-    ))}
-  </StyledRadioList>
+  <StyledDvtSwitch>
+    <StyledDvtSwitchLabel>{label}</StyledDvtSwitchLabel>
+    <Switch
+      checked={checked}
+      onChange={onChange}
+      css={(theme: SupersetTheme) => ({
+        backgroundColor: checked
+          ? theme.colors.dvt.primary.base
+          : theme.colors.dvt.grayscale.base,
+      })}
+    />
+  </StyledDvtSwitch>
 );
 
-export default DvtRadioList;
+export default DvtSwitch;
