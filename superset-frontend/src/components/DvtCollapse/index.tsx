@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
 import {
@@ -24,6 +24,7 @@ import {
   StyledCollapsePopover,
   StyledCollapseGroup,
   StyledCollapseLabel,
+  StyledCollapseDeleteIcon,
   StyledCollapseIcon,
   StyledCollapseChildren,
 } from './dvt-collapse.module';
@@ -36,6 +37,8 @@ export interface DvtCollapseProps {
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   isOpen: boolean;
   setIsOpen: (newOpen: boolean) => void;
+  typeDesign?: 'normal' | 'dvt-list';
+  deleteClick?: () => void;
 }
 
 const DvtCollapse: React.FC<DvtCollapseProps> = ({
@@ -45,15 +48,33 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   popoverLabel = '',
   isOpen,
   setIsOpen,
-}) => (
-  <StyledCollapse>
-    <StyledCollapseGroup onClick={() => setIsOpen(!isOpen)}>
-      <StyledCollapseLabel>
-        {label}
-        {popoverLabel && (
-          <StyledCollapsePopover>
-            {popoverLabel ? (
-              <DvtPopper label={popoverLabel} direction={popoverDirection}>
+  typeDesign = 'normal',
+  deleteClick,
+}) => {
+  const [onHover, setOnHover] = useState<boolean>(false);
+
+  return (
+    <StyledCollapse bgTransparent={typeDesign === 'dvt-list'}>
+      <StyledCollapseGroup
+        onClick={() => setIsOpen(!isOpen)}
+        onMouseLeave={() => deleteClick && setOnHover(false)}
+        onMouseOver={() => deleteClick && setOnHover(true)}
+      >
+        <StyledCollapseLabel>
+          {label}
+          {popoverLabel && (
+            <StyledCollapsePopover>
+              {popoverLabel ? (
+                <DvtPopper label={popoverLabel} direction={popoverDirection}>
+                  <Icon
+                    fileName="warning"
+                    css={(theme: SupersetTheme) => ({
+                      color: theme.colors.dvt.primary.base,
+                    })}
+                    iconSize="l"
+                  />
+                </DvtPopper>
+              ) : (
                 <Icon
                   fileName="warning"
                   css={(theme: SupersetTheme) => ({
@@ -61,26 +82,25 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
                   })}
                   iconSize="l"
                 />
-              </DvtPopper>
-            ) : (
-              <Icon
-                fileName="warning"
-                css={(theme: SupersetTheme) => ({
-                  color: theme.colors.dvt.primary.base,
-                })}
-                iconSize="l"
-              />
-            )}
-          </StyledCollapsePopover>
+              )}
+            </StyledCollapsePopover>
+          )}
+        </StyledCollapseLabel>
+        {onHover && deleteClick && (
+          <StyledCollapseDeleteIcon onClick={deleteClick} />
         )}
-      </StyledCollapseLabel>
-      <StyledCollapseIcon isOpen={isOpen}>
-        <Icon fileName="caret_down" iconSize="xxl" />
-      </StyledCollapseIcon>
-    </StyledCollapseGroup>
+        <StyledCollapseIcon isOpen={isOpen}>
+          <Icon fileName="caret_down" iconSize="xxl" />
+        </StyledCollapseIcon>
+      </StyledCollapseGroup>
 
-    {isOpen && <StyledCollapseChildren>{children}</StyledCollapseChildren>}
-  </StyledCollapse>
-);
+      {isOpen && (
+        <StyledCollapseChildren typeDesign={typeDesign}>
+          {children}
+        </StyledCollapseChildren>
+      )}
+    </StyledCollapse>
+  );
+};
 
 export default DvtCollapse;

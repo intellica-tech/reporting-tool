@@ -28,11 +28,20 @@ const optionsKeyframes = keyframes`
 `;
 
 interface StyledCollapseProps {
+  bgTransparent: boolean;
+}
+
+interface StyledCollapseIconProps {
   isOpen: boolean;
 }
 
-const StyledCollapse = styled.div`
-  background-color: ${({ theme }) => theme.colors.grayscale.light5};
+interface StyledCollapseChildrenProps {
+  typeDesign: string;
+}
+
+const StyledCollapse = styled.div<StyledCollapseProps>`
+  background-color: ${({ theme, bgTransparent }) =>
+    bgTransparent ? 'transparent' : theme.colors.grayscale.light5};
   width: 100%;
 `;
 
@@ -51,15 +60,47 @@ const StyledCollapseLabel = styled.div`
   font-weight: 600;
 `;
 
-const StyledCollapseIcon = styled.div<StyledCollapseProps>`
+const StyledCollapseDeleteIcon = styled.button`
+  padding: 0;
+  height: 20px;
+  width: 20px;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  margin-left: auto;
+  margin-right: 2px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 2px;
+    border-radius: 4px;
+    width: 12px;
+    transition: all 300ms;
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.dark1};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+`;
+
+const StyledCollapseIcon = styled.div<StyledCollapseIconProps>`
   transition: transform 0.3s ease-in-out;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'none')};
 `;
 
-const StyledCollapseChildren = styled.div`
+const StyledCollapseChildren = styled.div<StyledCollapseChildrenProps>`
   animation: ${optionsKeyframes} 0.3s ease-in-out;
   transform-origin: top;
-  padding-top: 20px;
+  padding-top: ${({ typeDesign }) => (typeDesign === 'dvt-list' ? 11 : 20)}px;
 `;
 
 const StyledCollapsePopover = styled.div``;
@@ -69,6 +110,7 @@ export {
   StyledCollapsePopover,
   StyledCollapseGroup,
   StyledCollapseLabel,
+  StyledCollapseDeleteIcon,
   StyledCollapseIcon,
   StyledCollapseChildren,
 };

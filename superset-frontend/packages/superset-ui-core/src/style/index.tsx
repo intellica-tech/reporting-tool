@@ -148,6 +148,7 @@ const defaultTheme = {
       },
       grayscale: {
         base: '#979797',
+        dark1: '#333333',
         light1: '#D3D5DA',
         light2: '#F8FAFC',
       },
