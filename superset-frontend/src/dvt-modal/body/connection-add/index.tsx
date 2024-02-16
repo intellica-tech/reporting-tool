@@ -180,7 +180,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
 
   const connectionAddData = useFetch({
     url: apiUrl,
-    method: 'POST',
+    method: step === 3 && meta?.isEdit ? 'PUT' : 'POST',
     body: {
       configuration_method:
         selectedConnectionType === 'PostgreSQL' ||
@@ -389,7 +389,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                                 setApiUrl('database/validate_parameters/');
                                 setTimeout(() => {
                                   setApiUrl('');
-                                }, 100);
+                                }, 500);
                               }}
                             />
                           </StyledConnectionAddButton>
