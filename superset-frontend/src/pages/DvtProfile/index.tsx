@@ -1,11 +1,11 @@
 import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtProfileInformation from 'src/components/DvtProfileInformation';
 import DvtTable from 'src/components/DvtTable';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { StyledDvtProfile, StyledDvtTable } from './dvt-profile.module';
-import useFetch from 'src/hooks/useFetch';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 
 function DvtProfile() {
   const [dashboardFavoriteData, setDashboardFavoriteData] = useState<any[]>([]);
