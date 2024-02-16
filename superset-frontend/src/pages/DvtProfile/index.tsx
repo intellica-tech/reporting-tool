@@ -39,14 +39,10 @@ function DvtProfile() {
     state => state.dvtSidebar.profile.tabs.label,
   );
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
-  const roleSelector = useAppSelector(state => state.dvtApp.user);
-  {
-    console.log(roleSelector);
-  }
+  // const roleSelector = useAppSelector(state => state.dvtApp.user);
 
   const recentActivityPromise = useFetch({ url: 'log/recent_activity' });
   const rolesAndSecurityPromise = useFetch({ url: '/me/roles' });
-  console.log(rolesAndSecurityPromise);
 
   const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({
