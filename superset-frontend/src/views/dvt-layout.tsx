@@ -92,7 +92,7 @@ const DvtLayout = () => {
     if (userPromise) {
       dispatch(dvtAppSetUser(userPromise.result));
     }
-  });
+  }, [userPromise]);
 
   return (
     <StyledApp

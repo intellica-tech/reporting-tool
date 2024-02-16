@@ -35,6 +35,7 @@ function DvtProfile() {
     [],
   );
   const [recentActivityData, setRecentActivityData] = useState<any[]>([]);
+  const [rolesAndSecurityData, setRolesAndSecurityData] = useState<any[]>([]);
   const activeSideTab = useAppSelector(
     state => state.dvtSidebar.profile.tabs.label,
   );
@@ -73,7 +74,7 @@ function DvtProfile() {
 
   useEffect(() => {
     if (rolesAndSecurityPromise) {
-      setDashboardFavoriteData(rolesAndSecurityPromise?.result);
+      setRolesAndSecurityData(rolesAndSecurityPromise?.result);
     }
   }, [rolesAndSecurityPromise]);
 
@@ -207,6 +208,7 @@ function DvtProfile() {
       {activeSideTab === 'Security and Access' && (
         <StyledDvtTable>
           <h1>Roles</h1>
+          {rolesAndSecurityData}
         </StyledDvtTable>
       )}
     </StyledDvtProfile>
