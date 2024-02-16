@@ -58,6 +58,8 @@ const DvtModal = () => {
         return 'xsmall';
       case 'connection-add-modal':
         return 'large';
+      case 'edit-connection':
+        return 'large';
       default:
         return 'small';
     }
