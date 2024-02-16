@@ -11,9 +11,20 @@ import {
   dvtSqlhubSetSelectedTablesClear,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { t } from '@superset-ui/core';
 import useFetch from 'src/hooks/useFetch';
 import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
-import { StyledSqlhub } from './dvt-sqlhub.module';
+import DvtButtonTabs, {
+  ButtonTabsDataProps,
+} from 'src/components/DvtButtonTabs';
+import { StyledSqlhub, StyledSqlhubBottom } from './dvt-sqlhub.module';
+
+const tabs = [
+  { label: t('RESULTS'), value: 'results' },
+  { label: t('QUERY HISTORY'), value: 'query_history' },
+];
+
+const UNTITLED_QUERY = 'Untitled Query';
 
 function DvtSqllab() {
   const dispatch = useDispatch();
@@ -22,12 +33,19 @@ function DvtSqllab() {
   );
   const sqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const [limit, setLimit] = useState(1000);
-  const [value, setValue] = useState('');
+  const [sqlValue, setSqlValue] = useState('SELECT ...');
+  const [sqlEditorId, setSqlEditorId] = useState('');
+  const [tabActive, setTabActive] = useState<ButtonTabsDataProps>({
+    label: t('RESULTS'),
+    value: 'results',
+  });
 
   const [getSchemaApiUrl, setGetSchemaApiUrl] = useState('');
   const [getSeeTableSchemaApiUrl, setGetSeeTableSchemaApiUrl] = useState('');
   const [selectedSeeTableSchemaApiUrl, setSelectedSeeTableSchemaApiUrl] =
     useState('');
+  const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
+  const [executePromiseUrl, setExecutePromiseUrl] = useState('');
 
   const getSchemaApi = useFetch({ url: getSchemaApiUrl });
   const getSeeTableSchemaApi = useFetch({ url: getSeeTableSchemaApiUrl });
@@ -35,11 +53,61 @@ function DvtSqllab() {
     url: selectedSeeTableSchemaApiUrl,
   });
 
+  // const formData = new FormData();
+
+  // const formDataObj = {
+  //   dbId: sqlhubSidebarSelector.database?.value,
+  //   schema: null,
+  //   autorun: false,
+  //   sql: sqlValue,
+  //   queryLimit: limit,
+  //   name: UNTITLED_QUERY,
+  // };
+
+  // formData.append('dbId', 's');
+
+  // const tabstateviewPromiseApi = useFetch({
+  //   url: tabstateviewPromiseUrl,
+  //   method: 'POST',
+  //   body: formData,
+  //   formData: true,
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //   },
+  // });
+
+  const executePromiseApi = useFetch({
+    url: executePromiseUrl,
+    method: 'POST',
+    body: {
+      client_id: '',
+      ctas_method: 'TABLE',
+      database_id: sqlhubSidebarSelector.database?.value,
+      expand_data: true,
+      json: true,
+      queryLimit: limit,
+      runAsync: false,
+      schema: sqlhubSidebarSelector.schema?.value,
+      select_as_cta: false,
+      sql: sqlValue,
+      sql_editor_id: sqlEditorId,
+      tab: UNTITLED_QUERY,
+      tmp_table_name: '',
+    },
+  });
+
+  // useEffect(() => {
+  //   if (tabstateviewPromiseApi) {
+  //     setSqlEditorId(tabstateviewPromiseApi.id);
+  //   }
+  // }, [tabstateviewPromiseApi]);
+
   useEffect(() => {
     if (sqlhubSidebarSelector.database?.value) {
       setGetSchemaApiUrl(
         `database/${sqlhubSidebarSelector.database.value}/schemas/?q=(force:!f)`,
       );
+      setTabstateviewPromiseUrl('tabstateview/');
     }
   }, [sqlhubSidebarSelector.database]);
 
@@ -128,11 +196,24 @@ function DvtSqllab() {
     }
   }, [selectedSeeTableSchemaApi]);
 
+  useEffect(() => {
+    if (executePromiseApi) {
+      console.log(executePromiseApi);
+    }
+  }, [executePromiseApi]);
+
+  const handleRun = () => {
+    setExecutePromiseUrl('sqllab/execute/');
+    setTimeout(() => {
+      setExecutePromiseUrl('');
+    }, 500);
+  };
+
   useEffect(
     () => () => {
       dispatch(dvtSidebarSetPropertyClear('sqlhub'));
       dispatch(dvtSqlhubSetSelectedTablesClear());
-      setValue('');
+      setSqlValue('');
     },
     [],
   );
@@ -142,10 +223,17 @@ function DvtSqllab() {
       <DvtTextareaSelectRun
         limit={limit}
         setLimit={setLimit}
-        value={value}
-        setValue={setValue}
-        clickRun={() => {}}
+        value={sqlValue}
+        setValue={setSqlValue}
+        clickRun={handleRun}
       />
+      <StyledSqlhubBottom>
+        <DvtButtonTabs
+          active={tabActive}
+          setActive={setTabActive}
+          data={tabs}
+        />
+      </StyledSqlhubBottom>
     </StyledSqlhub>
   );
 }

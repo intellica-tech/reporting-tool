@@ -8,6 +8,7 @@ type UseFetchProps = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
   body?: any;
+  formData?: boolean;
   withoutJson?: boolean;
 };
 
@@ -16,6 +17,7 @@ const useFetch = ({
   defaultParam = '/api/v1/',
   method = 'GET',
   body,
+  formData = false,
   headers = {},
   withoutJson = false,
 }: UseFetchProps) => {
@@ -39,7 +41,12 @@ const useFetch = ({
               'X-CSRFToken': csrf_token?.value ? csrf_token.value : '',
               ...headers,
             },
-            body: method !== 'GET' ? JSON.stringify(body) : undefined,
+            body:
+              method !== 'GET'
+                ? formData
+                  ? body
+                  : JSON.stringify(body)
+                : undefined,
           });
 
           if (!response.ok) {

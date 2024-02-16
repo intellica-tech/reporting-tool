@@ -5,4 +5,8 @@ const StyledSqlhub = styled.div`
   flex-direction: column;
 `;
 
-export { StyledSqlhub };
+const StyledSqlhubBottom = styled.div`
+  margin-top: 15px;
+`;
+
+export { StyledSqlhub, StyledSqlhubBottom };

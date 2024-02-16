@@ -188,11 +188,28 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.datasets,
     fetchedSelector.reports,
     fetchedSelector.alerts,
-    // fetchedSelector.chartAdd,
-    // fetchedSelector.annotationLayer,
-    // sqlhub, datasetAdd
     pathName,
   ]);
+
+  useEffect(() => {
+    if (
+      pathTitles(pathName) === 'sqlhub' &&
+      dataSelector.sqlhub.database.length
+    ) {
+      const firstGetId = dataSelector.sqlhub.database
+        .map((a: any) => a.value)
+        .sort()[0];
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'sqlhub',
+          key: 'database',
+          value: dataSelector.sqlhub.database.find(
+            (f: any) => f.value === firstGetId,
+          ),
+        }),
+      );
+    }
+  }, [pathName, dataSelector.sqlhub.database.length]);
 
   useEffect(() => {
     if (getApiData) {
@@ -574,7 +591,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                           }
                         }}
                         maxWidth
-                        onShowClear
+                        onShowClear={pathTitles(pathName) !== 'sqlhub'}
                       />
                     )}
                     {data.status === 'input' && (
