@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -69,19 +70,26 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [clearTrigger, setClearTrigger] = useState(false);
   const [onHover, setOnHover] = useState(false);
+  const [clearOnHover, setClearOnHover] = useState(false);
   useOnClickOutside(ref, () => setIsOpen(false));
 
   const handleSelectClick = () => {
-    setIsOpen(!isOpen);
+    if (!clearOnHover) {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleClearClick = () => {
-    setClearTrigger(!clearTrigger);
+    setClearTrigger(true);
   };
 
   useEffect(() => {
-    setSelectedValue('');
-    setIsOpen(false);
+    if (clearTrigger) {
+      setSelectedValue('');
+      setIsOpen(false);
+      setClearOnHover(false);
+      setClearTrigger(false);
+    }
   }, [clearTrigger]);
 
   const handleOptionClick = (value: any) => {
@@ -140,7 +148,11 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
       >
         {selectedValue[objectName] || placeholder}
         {onShowClear && selectedValue !== '' && onHover && (
-          <StyledSelectClear onClick={handleClearClick} />
+          <StyledSelectClear
+            onClick={handleClearClick}
+            onMouseOver={() => setClearOnHover(true)}
+            onMouseLeave={() => setClearOnHover(false)}
+          />
         )}
         {!(onShowClear && selectedValue !== '' && onHover) && (
           <StyledSelectIcon isOpen={isOpen}>

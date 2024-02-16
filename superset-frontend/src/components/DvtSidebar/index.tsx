@@ -565,7 +565,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         setSelectedValue={value => {
                           if (pathTitles(pathName) === 'chartAdd') {
                             updateChartAddProperty(value, data.name);
-                          } else if (value && sidebarDataFindPathname.key) {
+                          } else if (sidebarDataFindPathname.key) {
                             updateProperty(
                               sidebarDataFindPathname.key,
                               data.name,
