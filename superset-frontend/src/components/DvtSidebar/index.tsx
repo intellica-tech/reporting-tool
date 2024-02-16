@@ -75,6 +75,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
+  const sqlTabsSelector = useAppSelector(
+    state => state.dvtNavbar.viewlist.sqlhub.value,
+  );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -116,10 +119,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
 
   const sidebarDataFindPathname = DvtSidebarData.find(
     (item: { pathname: string }) => {
-      if (pathName === '/superset/sqllab/history/') {
-        return sqlSelector.tabs === 'Query History'
+      if (pathName === '/sqlhub/') {
+        return sqlTabsSelector === 'sqlHub'
           ? item.pathname === pathName
-          : item.pathname === '/superset/sqllab/saved_queries/';
+          : sqlTabsSelector === 'saved'
+          ? item.pathname === '/superset/sqllab/saved_queries/'
+          : item.pathname === '/superset/sqllab/history/';
       }
       return item.pathname === pathName;
     },

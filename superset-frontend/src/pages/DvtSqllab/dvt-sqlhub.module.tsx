@@ -5,4 +5,9 @@ const StyledSqlhub = styled.div`
   flex-direction: column;
 `;
 
-export { StyledSqlhub };
+const StyledSqlPagination = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export { StyledSqlhub, StyledSqlPagination };
