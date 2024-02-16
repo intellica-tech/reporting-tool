@@ -20,10 +20,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtAppState {
   sort: boolean;
+  user: any;
 }
 
 const initialState: DvtAppState = {
   sort: false,
+  user: {},
 };
 
 const dvtAppSlice = createSlice({
@@ -34,9 +36,13 @@ const dvtAppSlice = createSlice({
       ...state,
       sort: action.payload,
     }),
+    dvtAppSetUser: (state, action: PayloadAction<any>) => ({
+      ...state,
+      user: action.payload,
+    }),
   },
 });
 
-export const { dvtAppSetSort } = dvtAppSlice.actions;
+export const { dvtAppSetSort, dvtAppSetUser } = dvtAppSlice.actions;
 
 export default dvtAppSlice.reducer;

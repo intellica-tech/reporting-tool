@@ -7,42 +7,9 @@ import { StyledDvtProfile, StyledDvtTable } from './dvt-profile.module';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 
-const formatFavoriteDashboardData = (data: any[]) =>
-  data.map(item => ({
-    id: item.id,
-    title: item.dashboard_title,
-    modifiedDate: `Modified ${item.created_on_delta_humanized}`,
-    link: item.url,
-    paramUrl: 'dashboard',
-  }));
-
-const formatFavoriteChartData = (data: any[]) =>
-  data.map(item => ({
-    id: item.id,
-    title: item.title,
-    creator: item.creator,
-    creatorUrl: item.creator_url,
-    dttm: item.dttm,
-    link: item.url,
-    vizType: item.viz_type,
-    paramUrl: 'chart',
-  }));
-
-const formatRecentActivityData = (data: any[]) =>
-  data.map(item => ({
-    action: item.action,
-    title: item.item_title,
-    type: item.item_type,
-    url: item.item_url,
-    time: item.time,
-    modifiedDate: `Modified ${item.time_delta_humanized}`,
-  }));
-
 function DvtProfile() {
-  const [favoritesDashboardData, setFavoritesDashboardData] = useState<any[]>(
-    [],
-  );
-  const [favoritesChartData, setFavoritesChartData] = useState<any[]>([]);
+  const [dashboardFavoriteData, setDashboardFavoriteData] = useState<any[]>([]);
+  const [chartFavoriteData, setChartFavoriteData] = useState<any[]>([]);
   const [createdContentDashboardData, setCreatedContentDashboardData] =
     useState<any[]>([]);
   const [createdContentChartData, setCreatedContentChartData] = useState<any[]>(
@@ -53,156 +20,114 @@ function DvtProfile() {
     state => state.dvtSidebar.profile.tabs.label,
   );
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
-  const joinedDate = new Date('2024-02-13T00:00:00');
+  const roleSelector = useAppSelector(state => state.dvtApp.user);
+  {
+    console.log(roleSelector);
+  }
 
-  const dashboardPromise = useFetch({
-    url: `dashboard/${fetchQueryParamsSearch({ pageSize: 10 })}`,
-  });
-  const chartPromise = useFetch({
-    url: `chart/${fetchQueryParamsSearch({ pageSize: 10 })}`,
-  });
   const recentActivityPromise = useFetch({ url: 'log/recent_activity' });
+  const rolesAndSecurityPromise = useFetch({ url: '/me/roles' });
+  console.log(rolesAndSecurityPromise);
 
-  const dashboardFavoritePromise = useFetch({
+  const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({
-      filters: [{ col: 'id', opr: 'dashboard_is_favorite', value: 't' }],
+      filters: [{ col: 'id', opr: 'dashboard_is_favorite', value: '!t' }],
+      pageSize: 100,
     })}`,
   });
-  const chartFavoritePromise = useFetch({
+  const chartFavouritePromise = useFetch({
     url: `chart/${fetchQueryParamsSearch({
       filters: [{ col: 'id', opr: 'chart_is_favorite', value: 't' }],
+      pageSize: 100,
+    })}`,
+  });
+  const createdContentDashboardPromise = useFetch({
+    url: `dashboard/${fetchQueryParamsSearch({
+      filters: [
+        { col: 'created_by', opr: 'dashboard_created_by_me', value: 'me' },
+      ],
+      pageSize: 100,
+    })}`,
+  });
+  const createdContentChartPromise = useFetch({
+    url: `chart/${fetchQueryParamsSearch({
+      filters: [{ col: 'created_by', opr: 'chart_created_by_me', value: 'me' }],
+      pageSize: 100,
     })}`,
   });
 
   useEffect(() => {
-    if (dashboardFavoritePromise) {
-      setFavoritesDashboardData(state => [
-        ...state,
-        ...formatFavoriteDashboardData(dashboardPromise.result),
-      ]);
+    if (rolesAndSecurityPromise) {
+      setDashboardFavoriteData(rolesAndSecurityPromise?.result);
     }
-  }, [dashboardPromise]);
+  }, [rolesAndSecurityPromise]);
 
   useEffect(() => {
-    if (chartFavoritePromise) {
-      setFavoritesChartData(state => [
-        ...state,
-        ...formatFavoriteChartData(chartPromise.result),
-      ]);
+    if (dashboardFavouritePromise) {
+      setDashboardFavoriteData(dashboardFavouritePromise?.result);
     }
-  }, [chartPromise]);
+  }, [dashboardFavouritePromise]);
+
+  useEffect(() => {
+    if (chartFavouritePromise) {
+      setChartFavoriteData(chartFavouritePromise?.result);
+    }
+  }, [chartFavouritePromise]);
+
+  useEffect(() => {
+    if (createdContentDashboardPromise) {
+      setCreatedContentDashboardData(createdContentDashboardPromise?.result);
+    }
+  }, [createdContentDashboardPromise]);
+
+  useEffect(() => {
+    if (createdContentChartPromise) {
+      setCreatedContentChartData(createdContentChartPromise?.result);
+    }
+  }, [createdContentChartPromise]);
 
   useEffect(() => {
     if (recentActivityPromise) {
-      setRecentActivityData(state => [
-        ...state,
-        ...formatRecentActivityData(recentActivityPromise.result),
-      ]);
+      setRecentActivityData(recentActivityPromise.result);
     }
   }, [recentActivityPromise]);
 
-  // '/api/v1/dashboard/{pk}/favorites/'
-  // '/api/v1/chart/{pk}/favorites/'
-
-  // useEffect(() => {
-  //   if (dashboardFavouritePromise) {
-  //     console.log(dashboardFavouritePromise.result);
-  //     // setDashboardFavoriteData(
-  //     //   (dashboardFavouritePromise.result),
-  //     // );
-  //   }
-  // }, [dashboardFavouritePromise]);
-
-  // useEffect(() => {
-  //   const createdContentDashboardApiUrl =
-  //     '/api/v1/dashboard/?q=(columns:!(created_on_delta_humanized,dashboard_title,url),filters:!((col:created_by,opr:dashboard_created_by_me,value:me)),keys:!(none),order_column:changed_on,order_direction:desc,page:0,page_size:100)';
-  //   const fetchCreatedContentDashboardApi = async () => {
-  //     try {
-  //       const response = await fetch(createdContentDashboardApiUrl);
-  //       const data = await response.json();
-  //       setCreatedContentDashboardData(
-  //         data.result.map((item: any) => ({
-  //           id: item.id,
-  //           created_on_delta_humanized: item.created_on_delta_humanized,
-  //           dashboard_title: item.dashboard_title,
-  //           url: item.url,
-  //         })),
-  //       );
-  //     } catch (error) {
-  //       console.log('Error', error);
-  //     }
-  //   };
-  //   fetchCreatedContentDashboardApi();
-  // }, []);
-
-  // useEffect(() => {
-  //   const createdContentChartApiUrl =
-  //     '/api/v1/chart/?q=(columns:!(created_on_delta_humanized,slice_name,url),filters:!((col:created_by,opr:chart_created_by_me,value:me)),keys:!(none),order_column:changed_on_delta_humanized,order_direction:desc,page:0,page_size:100)';
-  //   const fetchCreatedContentChartApi = async () => {
-  //     try {
-  //       const response = await fetch(createdContentChartApiUrl);
-  //       const data = await response.json();
-  //       setCreatedContentChartData(
-  //         data.result.map((item: any) => ({
-  //           id: item.id,
-  //           created_on_delta_humanized: item.created_on_delta_humanized,
-  //           dashboard_title: item.dashboard_title,
-  //           url: item.url,
-  //         })),
-  //       );
-  //     } catch (error) {
-  //       console.log('Error', error);
-  //     }
-  //   };
-  //   fetchCreatedContentChartApi();
-  // }, []);
-
-  // useEffect(() => {
-  //   const recentActivityApiUrl =
-  //     '/api/v1/log/recent_activity/1/?q=(page_size:50)';
-  //   const fetchRecentActivityApi = async () => {
-  //     try {
-  //       const response = await fetch(recentActivityApiUrl);
-  //       const data = await response.json();
-  //       setRecentActivityData(
-  //         data.result.map((item: any) => ({
-  //           id: item.id,
-  //           action: item.action,
-  //           item_title: item.item_title,
-  //           item_type: item.item_type,
-  //           url: item.item_url,
-  //           time: item.time,
-  //           time_delta_humanized: item.time_delta_humanized,
-  //         })),
-  //       );
-  //     } catch (error) {
-  //       console.log('Error', error);
-  //     }
-  //   };
-  //   fetchRecentActivityApi();
-  // }, []);
-
   const tablesHeaderData = {
     dashboardHeader: [
-      { id: 1, title: t('Dashboard'), field: 'dashboard_title' },
+      {
+        id: 1,
+        title: t('Dashboard'),
+        field: 'dashboard_title',
+        urlField: 'url',
+      },
       { id: 2, title: t('Creator'), field: '' },
       { id: 3, title: t('Created'), field: 'created_on_delta_humanized' },
     ],
     chartHeader: [
-      { id: 1, title: t('Slice'), field: 'title' },
-      { id: 2, title: t('Creator'), field: 'creator' },
-      { id: 3, title: t('Favorited'), field: 'url' },
+      {
+        id: 1,
+        title: t('Slice'),
+        field: 'datasource_name_text',
+        urlField: 'url',
+      },
+      { id: 2, title: t('Creator'), field: 'created_by_name' },
+      { id: 3, title: t('Favorited'), field: 'changed_on_delta_humanized' },
     ],
     createdContentDashboardHeader: [
-      { id: 1, title: t('Dashboard'), field: 'dashboard_title' },
+      {
+        id: 1,
+        title: t('Dashboard'),
+        field: 'dashboard_title',
+        urlField: 'url',
+      },
       { id: 2, title: t('Created'), field: 'created_on_delta_humanized' },
     ],
     createdContentChartHeader: [
-      { id: 1, title: t('Slice'), field: 'title' },
+      { id: 1, title: t('Chart'), field: 'slice_name', urlField: 'url' },
       { id: 2, title: t('Created'), field: 'created_on_delta_humanized' },
     ],
     recentActivityHeader: [
-      { id: 1, title: t('Name'), field: 'item_title' },
+      { id: 1, title: t('Name'), field: 'item_title', urlField: 'item_url' },
       { id: 2, title: t('Type'), field: 'item_type' },
       { id: 3, title: t('Time'), field: 'time_delta_humanized' },
     ],
@@ -216,18 +141,24 @@ function DvtProfile() {
         title={profileSelector.title}
         test={profileSelector.test}
         image={profileSelector.image}
-        joinedDate={joinedDate}
+        joinedDate={profileSelector.joinedDate}
       />
       {activeSideTab === 'Favorites' && (
         <StyledDvtTable>
           <h1>Dashboards</h1>
           <DvtTable
-            data={favoritesDashboardData.map(item => ({ ...item }))}
+            data={[...dashboardFavoriteData].map(item => ({
+              ...item,
+              isFavorite: true,
+            }))}
             header={tablesHeaderData.dashboardHeader}
           />
           <h1>Charts</h1>
           <DvtTable
-            data={favoritesChartData.map(item => ({ ...item }))}
+            data={[...chartFavoriteData].map(item => ({
+              ...item,
+              isFavorite: true,
+            }))}
             header={tablesHeaderData.chartHeader}
           />
         </StyledDvtTable>
@@ -236,28 +167,31 @@ function DvtProfile() {
         <StyledDvtTable>
           <h1>Dashboards</h1>
           <DvtTable
-            data={createdContentDashboardData.map(item => ({ ...item }))}
-            header={tablesHeaderData.dashboardHeader}
+            data={[...createdContentDashboardData].map(item => ({
+              ...item,
+            }))}
+            header={tablesHeaderData.createdContentDashboardHeader}
           />
           <h1>Charts</h1>
           <DvtTable
-            data={createdContentChartData.map(item => ({ ...item }))}
-            header={tablesHeaderData.chartHeader}
+            data={[...createdContentChartData].map(item => ({
+              ...item,
+            }))}
+            header={tablesHeaderData.createdContentChartHeader}
           />
         </StyledDvtTable>
       )}
       {activeSideTab === 'Recent Activity' && (
         <StyledDvtTable>
-          <h1>Dashboards</h1>
           <DvtTable
             data={recentActivityData.map(item => ({ ...item }))}
-            header={tablesHeaderData.dashboardHeader}
+            header={tablesHeaderData.recentActivityHeader}
           />
-          <h1>Charts</h1>
-          <DvtTable
-            data={recentActivityData.map(item => ({ ...item }))}
-            header={tablesHeaderData.chartHeader}
-          />
+        </StyledDvtTable>
+      )}
+      {activeSideTab === 'Security and Access' && (
+        <StyledDvtTable>
+          <h1>Roles</h1>
         </StyledDvtTable>
       )}
     </StyledDvtProfile>
