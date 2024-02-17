@@ -34,7 +34,7 @@ function DvtSqllab() {
   const sqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const [limit, setLimit] = useState(1000);
   const [sqlValue, setSqlValue] = useState('SELECT ...');
-  const [sqlEditorId, setSqlEditorId] = useState('');
+  // const [sqlEditorId, setSqlEditorId] = useState('');
   const [tabActive, setTabActive] = useState<ButtonTabsDataProps>({
     label: t('RESULTS'),
     value: 'results',
@@ -44,7 +44,7 @@ function DvtSqllab() {
   const [getSeeTableSchemaApiUrl, setGetSeeTableSchemaApiUrl] = useState('');
   const [selectedSeeTableSchemaApiUrl, setSelectedSeeTableSchemaApiUrl] =
     useState('');
-  const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
+  // const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
   const [executePromiseUrl, setExecutePromiseUrl] = useState('');
 
   const getSchemaApi = useFetch({ url: getSchemaApiUrl });
@@ -90,7 +90,7 @@ function DvtSqllab() {
       schema: sqlhubSidebarSelector.schema?.value,
       select_as_cta: false,
       sql: sqlValue,
-      sql_editor_id: sqlEditorId,
+      sql_editor_id: '', // sqlEditorId
       tab: UNTITLED_QUERY,
       tmp_table_name: '',
     },
@@ -107,7 +107,7 @@ function DvtSqllab() {
       setGetSchemaApiUrl(
         `database/${sqlhubSidebarSelector.database.value}/schemas/?q=(force:!f)`,
       );
-      setTabstateviewPromiseUrl('tabstateview/');
+      // setTabstateviewPromiseUrl('tabstateview/');
     }
   }, [sqlhubSidebarSelector.database]);
 
