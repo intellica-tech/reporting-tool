@@ -42,7 +42,7 @@ interface InputProps {
   workingTimeout: number;
   gracePeriod: number;
   messageContent: { label: string; value: string };
-  owners: any[];
+  owners: { label: string; value: number }[];
   alertName: string;
   description: string;
   ignore: boolean;
@@ -56,7 +56,7 @@ interface InputProps {
   active: boolean;
 }
 
-const DvtAlertAdd = ({ onClose }: ModalProps) => {
+const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
   const [input, setInput] = useState<InputProps>({
     database: { label: '', value: '' },
     sqlQuery: '',
@@ -101,7 +101,7 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
 
   const alertAddData = useFetch({
     url: apiUrl,
-    method: 'POST',
+    method: meta?.isEdit ? 'PUT' : 'POST',
     body: {
       active: input.active,
       chart: value === 'Chart' ? input.messageContent.value : null,
@@ -227,6 +227,105 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
       }, 2000);
     }
   }, [apiUrl]);
+
+  useEffect(() => {
+    if (meta?.isEdit) {
+      const triggerCondition = DvtAlertReportData.find(
+        item => item.name === 'condition',
+      )?.data;
+
+      const validatorConfig = JSON.parse(
+        meta.editedAlertReportData.result.validator_config_json,
+      );
+      const validatorOpValue = validatorConfig.op;
+
+      const matchingCondition = triggerCondition?.find(
+        condition => condition.value === validatorOpValue,
+      );
+      const labelForMatchingCondition = matchingCondition
+        ? matchingCondition.label
+        : '';
+
+      const timezoneLabel =
+        DvtTimezoneData.find(
+          item => item.value === meta.editedAlertReportData.result.timezone,
+        )?.label || '';
+      const alertType = meta.editedAlertReportData.result.dashboard
+        ? 'Dashboard'
+        : 'Chart';
+
+      const logRetention =
+        DvtAlertReportData.find(
+          item => item.name === 'scheduleSettings',
+        )?.data.find(
+          item =>
+            item.value === meta.editedAlertReportData.result.log_retention,
+        )?.label || '';
+
+      const owner: { label: string; value: number }[] =
+        meta.editedAlertReportData.result.owners.map((item: any) => ({
+          label: item.text,
+          value: item.value,
+        })) || [];
+
+      setValue(alertType);
+      setInput(prevState => ({
+        ...prevState,
+        database: {
+          label: meta.editedAlertReportData.result.database.database_name,
+          value: meta.editedAlertReportData.result.database.id,
+        },
+        sqlQuery: meta.editedAlertReportData.result.sql,
+        trigger: {
+          label: labelForMatchingCondition,
+          value: validatorOpValue,
+        },
+        value: JSON.parse(
+          meta.editedAlertReportData.result.validator_config_json,
+        ).threshold,
+        timezone: {
+          value: meta.editedAlertReportData.result.timezone,
+          label: timezoneLabel,
+        },
+        logRetention: {
+          value: meta.editedAlertReportData.result.log_retention,
+          label: logRetention,
+        },
+        workingTimeout: meta.editedAlertReportData.result.working_timeout,
+        gracePeriod: meta.editedAlertReportData.result.grace_period,
+        owners: owner,
+        alertName: meta.editedAlertReportData.result.name,
+        description: meta.editedAlertReportData.result.description,
+        ignore: meta.editedAlertReportData.result.force_screenshot,
+        email: JSON.parse(
+          meta.editedAlertReportData.result.recipients[0].recipient_config_json,
+        ).target,
+        active: meta.editedAlertReportData.result.active,
+        messageContent:
+          alertType === 'Dashboard'
+            ? {
+                value: meta.editedAlertReportData.result.dashboard.id,
+                label:
+                  meta.editedAlertReportData.result.dashboard.dashboard_title,
+              }
+            : {
+                value: meta.editedAlertReportData.result.chart.id,
+                label: meta.editedAlertReportData.result.chart.slice_name,
+              },
+      }));
+      setChartType(meta.editedAlertReportData.result.report_format);
+    }
+  }, [meta]);
+
+  useEffect(() => {
+    if (ownersData?.result) {
+      const ownersValues = ownersData.result.map((item: any) => item.value);
+      setInput(prevState => ({
+        ...prevState,
+        owners: ownersValues,
+      }));
+    }
+  }, [ownersData]);
 
   return (
     <StyledAlertAdd>
@@ -549,8 +648,12 @@ const DvtAlertAdd = ({ onClose }: ModalProps) => {
               <DvtButton
                 bold
                 colour="grayscale"
-                label={t('Add')}
-                onClick={() => setApiUrl('/report/')}
+                label={meta?.isEdit ? t('Save') : t('Add')}
+                onClick={() =>
+                  meta?.isEdit
+                    ? setApiUrl(`report/${meta.editedAlertReportData.id}`)
+                    : setApiUrl('/report/')
+                }
               />
             </StyledAlertAddButtonGroup>
           </StyledAlertAddMessageContent>
