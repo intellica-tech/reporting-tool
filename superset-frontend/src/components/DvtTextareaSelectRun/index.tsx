@@ -29,6 +29,8 @@ import {
   StyledDvtTextareaDropdown,
   StyledDvtTextareaDropdownItem,
   StyledDvtTextareaIcon,
+  StyledError,
+  StyledTextarea,
 } from './dvt-textarea-select-run.module';
 
 export interface DvtTextareaSelectRunProps {
@@ -38,6 +40,7 @@ export interface DvtTextareaSelectRunProps {
   placeholder?: string;
   value: string;
   setValue: (newValue: string) => void;
+  error?: string;
 }
 
 const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
@@ -47,6 +50,7 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
   placeholder = '',
   value,
   setValue,
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const limitData = [10, 100, 1000, 10000, 100000];
@@ -61,46 +65,49 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
   };
 
   return (
-    <StyledDvtTextareaSelectRun>
-      <DvtAceEditor
-        mode="sql"
-        placeholder={placeholder}
-        value={value}
-        onChange={setValue}
-        height="auto"
-        fontSize={16}
-      />
-      <StyledDvtTextareaGroup>
-        <StyledDvtTextareaLimit onClick={handleIsOpen}>
-          LIMIT:
-          {limit.toString().length > 3
-            ? `${limit.toString().slice(0, -3)} 000`
-            : limit}
-          <StyledDvtTextareaIcon isOpen={isOpen}>
-            <Icon fileName="caret_right" iconSize="xxl" iconColor="black" />
-          </StyledDvtTextareaIcon>
-          {isOpen && (
-            <StyledDvtTextareaDropdown>
-              {limitData.map((option, index) => (
-                <StyledDvtTextareaDropdownItem
-                  key={index}
-                  onClick={() => handleDropdownClick(option)}
-                  selectedItem={limit}
-                  Item={option}
-                >
-                  {option.toString().length > 3
-                    ? `${option.toString().slice(0, -3)} 000`
-                    : option}
-                </StyledDvtTextareaDropdownItem>
-              ))}
-            </StyledDvtTextareaDropdown>
-          )}
-        </StyledDvtTextareaLimit>
-        <StyledDvtTextareaButton>
-          <DvtButton label={t('Run')} onClick={clickRun} maxWidth />
-        </StyledDvtTextareaButton>
-      </StyledDvtTextareaGroup>
-    </StyledDvtTextareaSelectRun>
+    <StyledTextarea>
+      <StyledDvtTextareaSelectRun>
+        <DvtAceEditor
+          mode="sql"
+          placeholder={placeholder}
+          value={value}
+          onChange={setValue}
+          height="auto"
+          fontSize={16}
+        />
+        <StyledDvtTextareaGroup>
+          <StyledDvtTextareaLimit onClick={handleIsOpen}>
+            LIMIT:
+            {limit.toString().length > 3
+              ? `${limit.toString().slice(0, -3)} 000`
+              : limit}
+            <StyledDvtTextareaIcon isOpen={isOpen}>
+              <Icon fileName="caret_right" iconSize="xxl" iconColor="black" />
+            </StyledDvtTextareaIcon>
+            {isOpen && (
+              <StyledDvtTextareaDropdown>
+                {limitData.map((option, index) => (
+                  <StyledDvtTextareaDropdownItem
+                    key={index}
+                    onClick={() => handleDropdownClick(option)}
+                    selectedItem={limit}
+                    Item={option}
+                  >
+                    {option.toString().length > 3
+                      ? `${option.toString().slice(0, -3)} 000`
+                      : option}
+                  </StyledDvtTextareaDropdownItem>
+                ))}
+              </StyledDvtTextareaDropdown>
+            )}
+          </StyledDvtTextareaLimit>
+          <StyledDvtTextareaButton>
+            <DvtButton label={t('Run')} onClick={clickRun} maxWidth />
+          </StyledDvtTextareaButton>
+        </StyledDvtTextareaGroup>
+      </StyledDvtTextareaSelectRun>
+      {error && <StyledError>{error}</StyledError>}
+    </StyledTextarea>
   );
 };
 

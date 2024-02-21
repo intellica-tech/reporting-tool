@@ -29,6 +29,7 @@ import {
   StyledInputSelectOptions,
   StyledInputSelectOptionsLabel,
   StyledInputSelectDiv,
+  StyledError,
 } from './dvt-input-select.module';
 
 interface SelectData {
@@ -43,6 +44,7 @@ export interface DvtInputSelectProps {
   selectedValues: any[];
   setSelectedValues: (newSelectedVales: any[]) => void;
   typeDesign?: 'text' | 'form' | 'chartsForm';
+  error?: string;
 }
 
 const DvtInputSelect = ({
@@ -52,6 +54,7 @@ const DvtInputSelect = ({
   selectedValues,
   setSelectedValues,
   typeDesign = 'text',
+  error,
 }: DvtInputSelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -137,6 +140,7 @@ const DvtInputSelect = ({
           ))}
         </StyledInputSelectOptions>
       )}
+      {error && <StyledError>{error}</StyledError>}
     </StyledInputSelect>
   );
 };
