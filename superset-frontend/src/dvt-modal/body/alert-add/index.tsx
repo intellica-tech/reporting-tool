@@ -107,7 +107,7 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
       chart: value === 'Chart' ? input.messageContent.value : null,
       context_markdown: 'string',
       creation_method: 'alerts_reports',
-      crontab: timeSchedule === 'Cron' ? input.schedule : '* * * * *',
+      crontab: timeSchedule === 'Cron' ? input.schedule : '0 * * * *',
       dashboard: value === 'Dashboard' ? input.messageContent.value : null,
       database: input.database.value,
       description: input.description,
