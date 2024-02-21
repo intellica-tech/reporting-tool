@@ -175,7 +175,9 @@ function AlertList() {
       clicks: [
         {
           icon: 'edit_alt',
-          click: () => {},
+          click: (item: any) => {
+            handleEditConnection(item);
+          },
           popperLabel: t('Edit'),
         },
         {
@@ -200,6 +202,27 @@ function AlertList() {
     },
     [],
   );
+
+  const handleEditConnection = async (item: any) => {
+    try {
+      const response = await fetch(`/api/v1/report/${item.id}`);
+      const editedAlertReportData = await response.json();
+
+      const type =
+        editedAlertReportData.result.type === 'Alert'
+          ? 'alert-add-modal'
+          : 'report-add-modal';
+
+      dispatch(
+        openModal({
+          component: type,
+          meta: { editedAlertReportData, isEdit: true },
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return data.length ? (
     <StyledAlerts>
