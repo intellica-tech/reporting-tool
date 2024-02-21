@@ -203,22 +203,6 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
 
   useEffect(() => {
     if (meta?.isEdit) {
-      const triggerCondition = DvtAlertReportData.find(
-        item => item.name === 'condition',
-      )?.data;
-
-      const validatorConfig = JSON.parse(
-        meta.editedAlertReportData.result.validator_config_json,
-      );
-      const validatorOpValue = validatorConfig.op;
-
-      const matchingCondition = triggerCondition?.find(
-        condition => condition.value === validatorOpValue,
-      );
-      const labelForMatchingCondition = matchingCondition
-        ? matchingCondition.label
-        : '';
-
       const timezoneLabel =
         DvtTimezoneData.find(
           item => item.value === meta.editedAlertReportData.result.timezone,
