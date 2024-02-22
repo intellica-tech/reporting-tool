@@ -18,9 +18,32 @@
  */
 import { styled } from '@superset-ui/core';
 
-const StyledOpenSelectMenu = styled.div``;
+interface TabProps {
+  activeTab: boolean;
+}
+
+const StyledOpenSelectMenu = styled.div`
+  width: 308px;
+  height: 315px;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
+  padding: 0 11px;
+`;
 const StyledOpenSelectMenuFilter = styled.div``;
-const StyledOpenSelectMenuFilterTabs = styled.div``;
+const StyledOpenSelectMenuFilterTabs = styled.div<TabProps>`
+  display: flex;
+  flex: 1;
+  font-size: 10px;
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  cursor: pointer;
+  border-bottom: 2px solid
+    ${({ theme, activeTab }) =>
+      activeTab ? theme.colors.dvt.primary.base : theme.colors.dvt.border.base};
+`;
 const StyledOpenSelectMenuFilterTabsGroup = styled.div`
   display: flex;
 `;
@@ -28,8 +51,15 @@ const StyledOpenSelectMenuFilterInputGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 27px 0 0px 0;
 `;
-const StyledOpenSelectMenuFilterButtonGroup = styled.div``;
+const StyledOpenSelectMenuFilterButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 71px;
+`;
 
 export {
   StyledOpenSelectMenu,

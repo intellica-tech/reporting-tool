@@ -28,7 +28,11 @@ export default {
 export const Default = (args: DvtOpenSelectMenuProps) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
-  return <DvtOpenSelectMenu {...args} />;
+  return (
+    <div >
+      <DvtOpenSelectMenu {...args} />
+    </div>
+  );
 };
 
 Default.args = {
