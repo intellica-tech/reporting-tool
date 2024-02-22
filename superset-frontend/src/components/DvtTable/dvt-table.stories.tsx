@@ -424,3 +424,66 @@ ActiveColumn.args = {
     },
   ],
 };
+
+export const SortExample = (args: DvtTableProps) => {
+  const [selected, setSelected] = useState<number[]>([]);
+
+  return (
+    <div
+      style={{
+        width: 1440,
+        height: 1050,
+        backgroundColor: '#F8FAFC',
+        padding: 32,
+      }}
+    >
+      <DvtTable
+        {...args}
+        data={TableData.activeColumnData}
+        selected={selected}
+        setSelected={setSelected}
+      />
+    </div>
+  );
+};
+
+SortExample.args = {
+  header: [
+    {
+      title: 'Name',
+      field: 'name',
+      icon: 'dvt-folder',
+      iconActive: 'dvt-file',
+      urlField: 'link',
+      flex: 3,
+      sort: true,
+      sortClick: (field: string) => {
+        console.log(field);
+      },
+    },
+    { title: 'Type', field: 'type' },
+    { title: 'Database', field: 'database' },
+    { title: 'Schema', field: 'schema' },
+    { title: 'Modified Date', field: 'date' },
+    { title: 'Modified By', field: 'modifiedBy' },
+    { title: 'Owners', field: 'owners' },
+    {
+      title: 'Action',
+      clicks: [
+        {
+          icon: 'edit_alt',
+          click: () => {},
+        },
+
+        {
+          icon: 'share',
+          click: () => {},
+        },
+        {
+          icon: 'trash',
+          click: () => {},
+        },
+      ],
+    },
+  ],
+};
