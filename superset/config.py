@@ -756,7 +756,7 @@ HTML_SANITIZATION_SCHEMA_EXTENSIONS: dict[str, Any] = {}
 # next available socket. PR #5039 is trying to allow domain sharding for Superset,
 # and this feature will be enabled by configuration only (by default Superset
 # doesn't allow cross-domain request).
-SUPERSET_WEBSERVER_DOMAINS = None
+SUPERSET_WEBSERVER_DOMAINS = ["localhost:5000", "http://localhost:5000"]
 
 # Allowed format types for upload on Database view
 EXCEL_EXTENSIONS = {"xlsx", "xls"}
