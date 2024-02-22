@@ -85,6 +85,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectCategories, setSelectCategories] =
     useState<{ value: string; label: string }>();
+  const [selectAlgorithm, setSelectAlgorithm] =
+    useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
@@ -197,6 +199,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.alerts,
     pathName,
   ]);
+
+  useEffect(() => {
+    const changeAlgorithmName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'algorithm_name',
+          value: selectAlgorithm,
+        }),
+      );
+    };
+    changeAlgorithmName();
+  }, [selectAlgorithm]);
 
   useEffect(() => {
     if (
@@ -477,35 +492,14 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chart',
   ];
 
-  const [responseData, setResponseData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://www.api.mapbox.com');
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        setResponseData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error.message);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const getAlgorithmOptions = () => {
     switch (selectCategories?.value) {
       case '1':
-        return [{ value: '16', label: 'LSTM' }];
+        return [{ value: 'lstm', label: 'LSTM' }];
       case '2':
         return [
           { value: '0', label: 'Cumulative sum' },
-          { value: '1', label: 'Mean' },
+          { value: 'mean', label: 'Mean' },
           { value: '2', label: 'Median' },
           { value: '3', label: 'Min Max' },
           { value: '4', label: 'Variance' },
@@ -631,8 +625,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   data={getAlgorithmOptions()}
                   label="ALGORİTHM"
                   placeholder="ALGORİTHM"
-                  selectedValue=""
-                  setSelectedValue={() => {}}
+                  selectedValue={selectAlgorithm}
+                  setSelectedValue={setSelectAlgorithm}
                   maxWidth
                   onShowClear={pathTitles(pathName) !== 'sqlhub'}
                 />

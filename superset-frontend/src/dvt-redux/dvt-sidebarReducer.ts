@@ -57,6 +57,7 @@ interface DvtSidebarState {
     database: any;
     schema: any;
     selectDatabase: any;
+    algorithm_name: any;
   };
   chartAdd: {
     dataset: any;
@@ -151,6 +152,7 @@ interface DvtSidebarState {
       database: any[];
       schema: any[];
       selectDatabase: any[];
+      algorithm_name: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -202,6 +204,7 @@ const INITIAL_STATE = {
     database: '',
     schema: '',
     selectDatabase: '',
+    algorithm_name: '',
   },
   chartAdd: {
     dataset: '',
@@ -300,6 +303,7 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       selectDatabase: [],
+      algorithm_name: [],
     },
     chartAdd: {
       dataset: [],

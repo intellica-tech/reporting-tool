@@ -36,7 +36,6 @@ function DvtNewTainedTable() {
   const newTainedTableAddSelector = useAppSelector(
     state => state.dvtSidebar.newTrainedTable,
   );
-
   const [getSchemaDataApiUrl, setGetSchemaDataApiUrl] = useState({
     url: '',
     key: '',
@@ -56,15 +55,14 @@ function DvtNewTainedTable() {
   const getTableData = useFetch({
     url: getTableDataApiUrl,
   });
-  const postDataset = useFetch({
-    url: postDataSetUrl,
-    method: 'POST',
-    body: {
-      database: newTainedTableAddSelector.database?.value,
-      schema: newTainedTableAddSelector.schema?.value,
-      table_name: newTainedTableAddSelector.selectDatabase?.value,
-    },
-  });
+  // const postDataset = useFetch({
+  //   url: postDataSetUrl,
+  //   method: 'POST',
+  //   body: {
+  //     algoritmh_name: newTainedTableAddSelector.algorithm_name?.value,
+  //     table_name: newTainedTableAddSelector.schema?.value,
+  //   },
+  // });
 
   useEffect(() => {
     if (newTainedTableAddSelector.database?.value) {
@@ -144,28 +142,28 @@ function DvtNewTainedTable() {
   }, [getTableData]);
 
   const handleCreateDataset = () => {
-    setPostDataSetUrl('dataset/');
+    setPostDataSetUrl('http://localhost:5000/ml_and_insert');
     setTimeout(() => {
       setPostDataSetUrl('');
     }, 200);
   };
 
-  useEffect(() => {
-    if (postDataset) {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'chartAdd',
-          key: 'dataset',
-          value: {
-            id: postDataset.id,
-            value: postDataset.result.table_name,
-            label: postDataset.result.table_name,
-          },
-        }),
-      );
-      history.push('/chart/add');
-    }
-  }, [postDataset]);
+  // useEffect(() => {
+  //   if (postDataset) {
+  //     dispatch(
+  //       dvtSidebarSetProperty({
+  //         pageKey: 'chartAdd',
+  //         key: 'dataset',
+  //         value: {
+  //           id: postDataset.id,
+  //           value: postDataset.result.table_name,
+  //           label: postDataset.result.table_name,
+  //         },
+  //       }),
+  //     );
+  //     history.push('/chart/add');
+  //   }
+  // }, [postDataset]);
 
   useEffect(
     () => () => {
@@ -175,6 +173,35 @@ function DvtNewTainedTable() {
     },
     [],
   );
+
+  useEffect(() => {
+    if (postDataSetUrl) {
+      const fetchData = async () => {
+        try {
+          const url = postDataSetUrl;
+
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              algoritmh_name: newTainedTableAddSelector.algorithm_name?.value,
+              table_name: newTainedTableAddSelector.schema?.value,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error.message);
+        }
+      };
+
+      fetchData();
+    }
+  }, [postDataSetUrl]);
 
   return (
     <StyledDvtNewTainedTable>
@@ -238,7 +265,7 @@ function DvtNewTainedTable() {
           }
           onClick={() =>
             newTainedTableAddSelector.selectDatabase?.value &&
-            !newTainedTableAddSelector.selectDatabase?.explore_url &&
+            newTainedTableAddSelector.algorithm_name?.value &&
             handleCreateDataset()
           }
         />
