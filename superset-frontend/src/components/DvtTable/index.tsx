@@ -58,6 +58,8 @@ interface HeaderProps {
   checkbox?: boolean;
   isFavorite?: boolean;
   isFavoriteApiUrl?: string;
+  sort?: boolean;
+  sortClick?: (field: string) => void;
 }
 
 export interface DvtTableProps {
@@ -164,7 +166,17 @@ const DvtTable: React.FC<DvtTableProps> = ({
                     />
                   </StyledTableCheckbox>
                 )}
-                {column.title}
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  {column.title}
+                  {column.sort && (
+                    <Icon
+                      fileName="filter_small"
+                      onClick={() => column.sortClick?.(column.field ?? '')}
+                    />
+                  )}
+                </div>
               </StyledTableTh>
             ))}
           </StyledTableTitle>
