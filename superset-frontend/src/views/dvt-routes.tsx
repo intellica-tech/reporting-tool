@@ -54,7 +54,7 @@ const AnnotationList = lazy(
 const CssTemplateList = lazy(
   () =>
     import(
-      /* webpackChunkName: "CssTemplateList" */ 'src/pages/CssTemplateList'
+      /* webpackChunkName: "CssTemplateList" */ 'src/pages/DvtNewTrainedTable'
     ),
 );
 

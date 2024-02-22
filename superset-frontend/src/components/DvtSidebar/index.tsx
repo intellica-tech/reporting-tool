@@ -63,6 +63,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const datasetAddSelector = useAppSelector(
     state => state.dvtSidebar.datasetAdd,
   );
+  const newTrainedTableSelector = useAppSelector(
+    state => state.dvtSidebar.newTrainedTable,
+  );
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
@@ -113,6 +116,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/csstemplatemodelview/list/':
+        return 'newTrainedTable';
       default:
         return '';
     }
@@ -247,6 +252,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'datasetAdd',
           keyNames: ['database'],
         },
+        {
+          key: 'newTrainedTable',
+          keyNames: ['database'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -277,6 +286,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       label: item.dashboard_title,
                     };
                   case 'datasetAdd-database':
+                    return {
+                      value: item.explore_database_id,
+                      label: item.database_name,
+                    };
+                  case 'newTrainedTable-database':
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
@@ -403,6 +417,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         keyNames: ['database', 'schema'],
       },
       {
+        key: 'newTrainedTable',
+        keyNames: ['database', 'schema'],
+      },
+      {
         key: 'sqlhub',
         keyNames: ['database', 'schema', 'see_table_schema'],
       },
@@ -445,6 +463,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const withForms = [
     'datasets',
     'datasetAdd',
+    'newTrainedTable',
     'dashboard',
     'annotationLayer',
     'alerts',
@@ -577,6 +596,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'newTrainedTable'
+                            ? newTrainedTableSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -675,6 +696,22 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     dispatch(
                       dvtSidebarSetProperty({
                         pageKey: 'datasetAdd',
+                        key: 'selectDatabase',
+                        value: vItem,
+                      }),
+                    )
+                  }
+                />
+              )}
+            {pathTitles(pathName) === 'newTrainedTable' &&
+              dataSelector.newTrainedTable.selectDatabase.length > 0 && (
+                <DvtSelectDatabaseList
+                  data={dataSelector.newTrainedTable.selectDatabase}
+                  active={newTrainedTableSelector.selectDatabase}
+                  setActive={vItem =>
+                    dispatch(
+                      dvtSidebarSetProperty({
+                        pageKey: 'newTrainedTable',
                         key: 'selectDatabase',
                         value: vItem,
                       }),

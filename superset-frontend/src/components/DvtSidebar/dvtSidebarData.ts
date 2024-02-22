@@ -269,6 +269,38 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
+    pathname: '/csstemplatemodelview/list/',
+    key: 'newTrainedTable',
+    data: [
+      {
+        placeholder: t('CATEGORY'),
+        name: 'category',
+        label: 'CATEGORY',
+      },
+      {
+        placeholder: t('ALGORİTHM'),
+        name: 'algorithm',
+        label: 'ALGORİTHM',
+      },
+      {
+        placeholder: t('DATABASE'),
+        name: 'database',
+        label: 'DATABASE',
+      },
+      {
+        placeholder: t('SCHEMA'),
+        name: 'schema',
+        label: 'SCHEMA',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
+      },
+    ],
+  },
+  {
     pathname: '/dashboard/list/',
     key: 'dashboard',
     data: [

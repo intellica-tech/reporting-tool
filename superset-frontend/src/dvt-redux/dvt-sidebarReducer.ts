@@ -53,6 +53,11 @@ interface DvtSidebarState {
     schema: any;
     selectDatabase: any;
   };
+  newTrainedTable: {
+    database: any;
+    schema: any;
+    selectDatabase: any;
+  };
   chartAdd: {
     dataset: any;
     recommended_tags: any;
@@ -105,6 +110,9 @@ interface DvtSidebarState {
       datasetAdd: {
         database: boolean;
       };
+      newTrainedTable: {
+        database: boolean;
+      };
       chartAdd: {
         dataset: boolean;
       };
@@ -135,6 +143,11 @@ interface DvtSidebarState {
       schema: any[];
     };
     datasetAdd: {
+      database: any[];
+      schema: any[];
+      selectDatabase: any[];
+    };
+    newTrainedTable: {
       database: any[];
       schema: any[];
       selectDatabase: any[];
@@ -181,6 +194,11 @@ const INITIAL_STATE = {
     search: '',
   },
   datasetAdd: {
+    database: '',
+    schema: '',
+    selectDatabase: '',
+  },
+  newTrainedTable: {
     database: '',
     schema: '',
     selectDatabase: '',
@@ -241,6 +259,9 @@ const initialState: DvtSidebarState = {
       datasetAdd: {
         database: false,
       },
+      newTrainedTable: {
+        database: false,
+      },
       chartAdd: {
         dataset: false,
       },
@@ -271,6 +292,11 @@ const initialState: DvtSidebarState = {
       schema: [],
     },
     datasetAdd: {
+      database: [],
+      schema: [],
+      selectDatabase: [],
+    },
+    newTrainedTable: {
       database: [],
       schema: [],
       selectDatabase: [],
