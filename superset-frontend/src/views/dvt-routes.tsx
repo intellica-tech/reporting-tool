@@ -54,7 +54,7 @@ const AnnotationList = lazy(
 const CssTemplateList = lazy(
   () =>
     import(
-      /* webpackChunkName: "CssTemplateList" */ 'src/pages/DvtNewTrainedTable'
+      /* webpackChunkName: "CssTemplateList" */ 'src/pages/CssTemplateList'
     ),
 );
 
@@ -120,6 +120,10 @@ const Tags = lazy(
   () => import(/* webpackChunkName: "Tags" */ 'src/pages/Tags'),
 );
 
+const TrainData = lazy(
+  () => import(/* webpackChunkName: "Tags" */ 'src/pages/DvtNewTrainedTable'),
+);
+
 const RowLevelSecurityList = lazy(
   () =>
     import(
@@ -158,6 +162,10 @@ export const routes: Routes = [
   {
     path: '/tablemodelview/list/',
     Component: DatasetList,
+  },
+  {
+    path: '/traindata/',
+    Component: TrainData,
   },
   {
     path: '/databaseview/list/',

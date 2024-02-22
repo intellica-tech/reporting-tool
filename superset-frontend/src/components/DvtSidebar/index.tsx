@@ -83,6 +83,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectCategories, setSelectCategories] =
+    useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
@@ -116,7 +118,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
-      case '/csstemplatemodelview/list/':
+      case '/traindata/':
         return 'newTrainedTable';
       default:
         return '';
@@ -475,6 +477,58 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chart',
   ];
 
+  const [responseData, setResponseData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://www.api.mapbox.com');
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setResponseData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getAlgorithmOptions = () => {
+    switch (selectCategories?.value) {
+      case '1':
+        return [{ value: '16', label: 'LSTM' }];
+      case '2':
+        return [
+          { value: '0', label: 'Cumulative sum' },
+          { value: '1', label: 'Mean' },
+          { value: '2', label: 'Median' },
+          { value: '3', label: 'Min Max' },
+          { value: '4', label: 'Variance' },
+          { value: '5', label: 'Percentile' },
+          { value: '6', label: 'Skewness Kurtosis' },
+          { value: '7', label: 'Histogram' },
+          { value: '8', label: 'Correlation' },
+          { value: '9', label: 'T-test' },
+          { value: '10', label: 'Z-test' },
+          { value: '11', label: 'Chi square' },
+          { value: '12', label: 'Linear regression' },
+        ];
+      case '3':
+        return [
+          { value: '13', label: 'kMeans' },
+          { value: '14', label: 'GMM' },
+          { value: '15', label: 'DB Scan' },
+        ];
+      default:
+        return [];
+    }
+  };
+
   return (
     <StyledDvtSidebar minWidth={minWidth}>
       <StyledDvtSidebarHeader>
@@ -556,7 +610,34 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 </StyledDvtSidebarIconGroup>
               </div>
             ))}
+
           <StyledDvtSidebarBody pathName={pathName}>
+            {pathTitles(pathName) === 'newTrainedTable' && (
+              <div>
+                <DvtSelect
+                  data={[
+                    { value: '1', label: 'Time Series' },
+                    { value: '2', label: 'Statistical' },
+                    { value: '3', label: 'Segmentation' },
+                  ]}
+                  label="CATEGORY"
+                  placeholder="CATEGORY"
+                  selectedValue={selectCategories}
+                  setSelectedValue={setSelectCategories}
+                  maxWidth
+                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                />
+                <DvtSelect
+                  data={getAlgorithmOptions()}
+                  label="ALGORİTHM"
+                  placeholder="ALGORİTHM"
+                  selectedValue=""
+                  setSelectedValue={() => {}}
+                  maxWidth
+                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                />
+              </div>
+            )}
             {!isOpen &&
               sidebarDataFindPathname?.data.map(
                 (

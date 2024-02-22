@@ -269,19 +269,9 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/csstemplatemodelview/list/',
+    pathname: '/traindata/',
     key: 'newTrainedTable',
     data: [
-      {
-        placeholder: t('CATEGORY'),
-        name: 'category',
-        label: 'CATEGORY',
-      },
-      {
-        placeholder: t('ALGORİTHM'),
-        name: 'algorithm',
-        label: 'ALGORİTHM',
-      },
       {
         placeholder: t('DATABASE'),
         name: 'database',
