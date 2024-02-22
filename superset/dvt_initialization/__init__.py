@@ -259,6 +259,15 @@ class DVTAppInitializer(SupersetAppInitializer):
             category="SQL Lab",
             category_label=__("SQL Lab"),
         )
+        appbuilder.add_link(
+            "Train Data",
+            label=__("Train Data"),
+            href="/traindata/",
+            category_icon="fa-flask",
+            icon="fa-flask",
+            category="Train Data",
+            category_label=__("Train Data"),
+        )
         appbuilder.add_view(
             TagModelView,
             "Tags",
