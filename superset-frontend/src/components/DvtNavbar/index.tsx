@@ -115,6 +115,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
+      case '/traindata/':
+        return t('New Trained Table');
       default:
         return '';
     }

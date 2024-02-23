@@ -56,6 +56,11 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
+          {
+            title: t('Trained Data'),
+            url: '/traindata/',
+            fileName: 'cards',
+          },
         ],
       },
       {
@@ -259,6 +264,28 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('SCHEMA'),
         name: 'schema',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
+      },
+    ],
+  },
+  {
+    pathname: '/traindata/',
+    key: 'newTrainedTable',
+    data: [
+      {
+        placeholder: t('DATABASE'),
+        name: 'database',
+        label: 'DATABASE',
+      },
+      {
+        placeholder: t('SCHEMA'),
+        name: 'schema',
+        label: 'SCHEMA',
       },
     ],
     apiUrls: [

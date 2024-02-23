@@ -63,6 +63,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const datasetAddSelector = useAppSelector(
     state => state.dvtSidebar.datasetAdd,
   );
+  const newTrainedTableSelector = useAppSelector(
+    state => state.dvtSidebar.newTrainedTable,
+  );
   const connectionSelector = useAppSelector(
     state => state.dvtSidebar.connection,
   );
@@ -80,6 +83,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectCategories, setSelectCategories] =
+    useState<{ value: string; label: string }>();
+  const [selectAlgorithm, setSelectAlgorithm] =
+    useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
@@ -113,6 +120,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/traindata/':
+        return 'newTrainedTable';
       default:
         return '';
     }
@@ -192,6 +201,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   ]);
 
   useEffect(() => {
+    const changeAlgorithmName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'algorithm_name',
+          value: selectAlgorithm,
+        }),
+      );
+    };
+    changeAlgorithmName();
+  }, [selectAlgorithm]);
+
+  useEffect(() => {
     if (
       pathTitles(pathName) === 'sqlhub' &&
       dataSelector.sqlhub.database.length
@@ -247,6 +269,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'datasetAdd',
           keyNames: ['database'],
         },
+        {
+          key: 'newTrainedTable',
+          keyNames: ['database'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -277,6 +303,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       label: item.dashboard_title,
                     };
                   case 'datasetAdd-database':
+                    return {
+                      value: item.explore_database_id,
+                      label: item.database_name,
+                    };
+                  case 'newTrainedTable-database':
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
@@ -403,6 +434,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         keyNames: ['database', 'schema'],
       },
       {
+        key: 'newTrainedTable',
+        keyNames: ['database', 'schema'],
+      },
+      {
         key: 'sqlhub',
         keyNames: ['database', 'schema', 'see_table_schema'],
       },
@@ -445,6 +480,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const withForms = [
     'datasets',
     'datasetAdd',
+    'newTrainedTable',
     'dashboard',
     'annotationLayer',
     'alerts',
@@ -455,6 +491,38 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'sqlhubHistory',
     'chart',
   ];
+
+  const getAlgorithmOptions = () => {
+    switch (selectCategories?.value) {
+      case '1':
+        return [{ value: 'lstm', label: 'LSTM' }];
+      case '2':
+        return [
+          { value: 'cumulative_sum', label: 'Cumulative sum' },
+          { value: 'mean', label: 'Mean' },
+          { value: 'median', label: 'Median' },
+          { value: 'min_max', label: 'Min Max' },
+          { value: 'variance', label: 'Variance' },
+          { value: 'percentile', label: 'Percentile' },
+          { value: 'skewness', label: 'Skewness' },
+          { value: 'kurtosis', label: 'Kurtosis' },
+          { value: 'histogram', label: 'Histogram' },
+          { value: 'correlation', label: 'Correlation' },
+          { value: 't_test', label: 'T-test' },
+          { value: 'z_test', label: 'Z-test' },
+          { value: 'chi_square', label: 'Chi square' },
+          { value: 'linear_regression', label: 'Linear regression' },
+        ];
+      case '3':
+        return [
+          { value: '13', label: 'kMeans' },
+          { value: '14', label: 'GMM' },
+          { value: '15', label: 'DB Scan' },
+        ];
+      default:
+        return [];
+    }
+  };
 
   return (
     <StyledDvtSidebar minWidth={minWidth}>
@@ -537,7 +605,34 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 </StyledDvtSidebarIconGroup>
               </div>
             ))}
+
           <StyledDvtSidebarBody pathName={pathName}>
+            {pathTitles(pathName) === 'newTrainedTable' && (
+              <div>
+                <DvtSelect
+                  data={[
+                    { value: '1', label: 'Time Series' },
+                    { value: '2', label: 'Statistical' },
+                    { value: '3', label: 'Segmentation' },
+                  ]}
+                  label="CATEGORY"
+                  placeholder="CATEGORY"
+                  selectedValue={selectCategories}
+                  setSelectedValue={setSelectCategories}
+                  maxWidth
+                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                />
+                <DvtSelect
+                  data={getAlgorithmOptions()}
+                  label="ALGORİTHM"
+                  placeholder="ALGORİTHM"
+                  selectedValue={selectAlgorithm}
+                  setSelectedValue={setSelectAlgorithm}
+                  maxWidth
+                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                />
+              </div>
+            )}
             {!isOpen &&
               sidebarDataFindPathname?.data.map(
                 (
@@ -577,6 +672,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'newTrainedTable'
+                            ? newTrainedTableSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -675,6 +772,22 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     dispatch(
                       dvtSidebarSetProperty({
                         pageKey: 'datasetAdd',
+                        key: 'selectDatabase',
+                        value: vItem,
+                      }),
+                    )
+                  }
+                />
+              )}
+            {pathTitles(pathName) === 'newTrainedTable' &&
+              dataSelector.newTrainedTable.selectDatabase.length > 0 && (
+                <DvtSelectDatabaseList
+                  data={dataSelector.newTrainedTable.selectDatabase}
+                  active={newTrainedTableSelector.selectDatabase}
+                  setActive={vItem =>
+                    dispatch(
+                      dvtSidebarSetProperty({
+                        pageKey: 'newTrainedTable',
                         key: 'selectDatabase',
                         value: vItem,
                       }),
