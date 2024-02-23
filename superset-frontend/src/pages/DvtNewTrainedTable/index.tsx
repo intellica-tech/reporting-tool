@@ -59,8 +59,8 @@ function DvtNewTainedTable() {
     url: postDataSetUrl,
     method: 'POST',
     body: {
-      algoritmh_name: newTainedTableAddSelector.algorithm_name?.value,
-      table_name: newTainedTableAddSelector.schema?.value,
+      algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+      table_name: newTainedTableAddSelector.selectDatabase?.value,
     },
   });
 
@@ -142,26 +142,32 @@ function DvtNewTainedTable() {
   }, [getTableData]);
 
   const handleCreateDataset = () => {
-    setPostDataSetUrl('ml_and_insert');
+    setPostDataSetUrl('ml_and_insert/');
     setTimeout(() => {
       setPostDataSetUrl('');
     }, 200);
   };
 
+  // useEffect(() => {
+  //   if (postDataset) {
+  //     dispatch(
+  //       dvtSidebarSetProperty({
+  //         pageKey: 'chartAdd',
+  //         key: 'dataset',
+  //         value: {
+  //           id: postDataset.id,
+  //           value: postDataset.result.table_name,
+  //           label: postDataset.result.table_name,
+  //         },
+  //       }),
+  //     );
+  //     history.push('/chart/add');
+  //   }
+  // }, [postDataset]);
+
   useEffect(() => {
     if (postDataset) {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'chartAdd',
-          key: 'dataset',
-          value: {
-            id: postDataset.id,
-            value: postDataset.result.table_name,
-            label: postDataset.result.table_name,
-          },
-        }),
-      );
-      history.push('/chart/add');
+      history.push('/traindata');
     }
   }, [postDataset]);
 

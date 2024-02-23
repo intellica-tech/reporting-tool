@@ -498,19 +498,20 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return [{ value: 'lstm', label: 'LSTM' }];
       case '2':
         return [
-          { value: '0', label: 'Cumulative sum' },
+          { value: 'cumulative_sum', label: 'Cumulative sum' },
           { value: 'mean', label: 'Mean' },
-          { value: '2', label: 'Median' },
-          { value: '3', label: 'Min Max' },
-          { value: '4', label: 'Variance' },
-          { value: '5', label: 'Percentile' },
-          { value: '6', label: 'Skewness Kurtosis' },
-          { value: '7', label: 'Histogram' },
-          { value: '8', label: 'Correlation' },
-          { value: '9', label: 'T-test' },
-          { value: '10', label: 'Z-test' },
-          { value: '11', label: 'Chi square' },
-          { value: '12', label: 'Linear regression' },
+          { value: 'median', label: 'Median' },
+          { value: 'min_max', label: 'Min Max' },
+          { value: 'variance', label: 'Variance' },
+          { value: 'percentile', label: 'Percentile' },
+          { value: 'skewness', label: 'Skewness' },
+          { value: 'kurtosis', label: 'Kurtosis' },
+          { value: 'histogram', label: 'Histogram' },
+          { value: 'correlation', label: 'Correlation' },
+          { value: 't_test', label: 'T-test' },
+          { value: 'z_test', label: 'Z-test' },
+          { value: 'chi_square', label: 'Chi square' },
+          { value: 'linear_regression', label: 'Linear regression' },
         ];
       case '3':
         return [
