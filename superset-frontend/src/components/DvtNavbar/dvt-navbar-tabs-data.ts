@@ -104,7 +104,7 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       {
         label: t('Filter List'),
         value: 'filterList',
-        icon: 'dvt-filter'
+        icon: 'dvt-filter',
       },
     ],
   },
