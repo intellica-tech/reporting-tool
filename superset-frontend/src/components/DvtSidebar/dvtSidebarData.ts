@@ -56,6 +56,11 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
+          {
+            title: t('Trained Data'),
+            url: '/traindata/',
+            fileName: 'cards',
+          },
         ],
       },
       {
