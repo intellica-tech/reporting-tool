@@ -98,6 +98,16 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/rowlevelsecurity/list',
+    data: [
+      {
+        label: t('Filter List'),
+        value: 'filterList',
+        icon: 'dvt-filter'
+      },
+    ],
+  },
 ];
 
 export const WithNavbarBottom: string[] = [
@@ -110,4 +120,5 @@ export const WithNavbarBottom: string[] = [
   '/dashboard/list/',
   '/report/list/',
   '/explore/',
+  '/rowlevelsecurity/list',
 ];

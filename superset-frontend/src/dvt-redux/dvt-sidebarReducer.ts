@@ -19,6 +19,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtSidebarState {
+  rowLevelSecurity: {
+    name: string;
+    description: string;
+    filterType: string;
+    tables: string;
+    roles: string;
+    groupKey: string;
+    clause: string;
+  };
   reports: {
     owner: any;
     createdBy: any;
@@ -151,6 +160,15 @@ interface DvtSidebarState {
 }
 
 const INITIAL_STATE = {
+  rowLevelSecurity: {
+    name: '',
+    description: '',
+    filterType: '',
+    tables: '',
+    roles: '',
+    groupKey: '',
+    clause: '',
+  },
   reports: {
     owner: '',
     createdBy: '',

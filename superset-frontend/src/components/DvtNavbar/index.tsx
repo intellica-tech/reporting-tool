@@ -115,6 +115,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
+      // case '/rowlevelsecurity/list':
+      //   return t('Row Level Security');
       default:
         return '';
     }
@@ -308,6 +310,16 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
+          {/* {pathName === '/rowlevelsecurity/list' && (
+            <>
+              <DvtDropdown
+                data={activeData}
+                icon="dvt-filter"
+                label="Filter List"
+                onClick={() => {}}
+              />
+            </>
+          )} */}
         </NavbarBottom>
       )}
     </StyledDvtNavbar>

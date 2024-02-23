@@ -123,7 +123,7 @@ const Tags = lazy(
 const RowLevelSecurityList = lazy(
   () =>
     import(
-      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/RowLevelSecurityList'
+      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/DvtRowLevelSecurity'
     ),
 );
 

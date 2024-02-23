@@ -584,6 +584,114 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/rowlevelsecurity/list',
+    key: 'rowLevelSecurity',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
+        data: [
+          {
+            label: 'Superset Admin',
+            value: 'Superset Admin',
+            url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
+          },
+        ],
+      },
+      {
+        placeholder: t('Group Key'),
+        name: 'groupKey',
+        status: 'input',
+      },
+      {
+        placeholder: t('Filter Type'),
+        name: 'filterType',
+        data: [
+          {
+            label: 'Regular',
+            value: 'Regular',
+          },
+          {
+            label: 'Base',
+            value: 'Base',
+          },
+        ],
+      },
+      {
+        placeholder: t('Tables'),
+        name: 'tables',
+      },
+      {
+        placeholder: t('Roles'),
+        name: 'roles',
+      },
+      {
+        placeholder: t('Clause'),
+        name: 'clause',
+        status: 'clause',
+      },
+    ],
+  },
+  {
+    pathname: '/rowlevelsecurity/list/',
+    key: 'rowLevelSecurity',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
+        data: [
+          {
+            label: 'Superset Admin',
+            value: 'Superset Admin',
+            url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
+          },
+        ],
+      },
+      {
+        placeholder: t('Group Key'),
+        name: 'groupKey',
+        status: 'input',
+      },
+      {
+        placeholder: t('Filter Type'),
+        name: 'filterType',
+        data: [
+          {
+            label: 'Regular',
+            value: 'Regular',
+          },
+          {
+            label: 'Base',
+            value: 'Base',
+          },
+        ],
+      },
+      {
+        placeholder: t('Tables'),
+        name: 'tables',
+      },
+      {
+        placeholder: t('Roles'),
+        name: 'roles',
+      },
+      {
+        placeholder: t('Clause'),
+        name: 'clause',
+        status: 'clause',
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [

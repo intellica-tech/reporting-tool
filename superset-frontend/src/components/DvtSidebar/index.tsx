@@ -77,6 +77,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
+  const rowLevelSecuritySelector = useAppSelector(
+    state => state.dvtSidebar.rowLevelSecurity,
+  );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -113,6 +116,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/rowlevelsecurity/list/':
+        return 'rowLevelSecurity';
+      case '/rowlevelsecurity/list':
+        return 'rowLevelSecurity';
       default:
         return '';
     }
@@ -454,6 +461,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chartAdd',
     'sqlhubHistory',
     'chart',
+    'rowLevelSecurity',
   ];
 
   return (
@@ -549,13 +557,18 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     datePicker?: boolean;
                     name: string;
                     status: string;
+                    data: [];
                   },
                   index: number,
                 ) => (
                   <StyledDvtSidebarBodySelect key={index}>
                     {!data.datePicker && !data.status && (
                       <DvtSelect
-                        data={selectsData(data)}
+                        data={
+                          pathTitles(pathName) === 'rowLevelSecurity'
+                            ? data.data
+                            : selectsData(data)
+                        }
                         label={data.label}
                         placeholder={data.placeholder}
                         selectedValue={
@@ -577,6 +590,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -614,6 +629,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : undefined
                         }
                         onChange={value => {

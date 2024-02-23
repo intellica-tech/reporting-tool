@@ -62,6 +62,7 @@ const initialState: DvtNavbarState = {
       value: 'Table',
     },
   },
+
 };
 
 const dvtNavbarSlice = createSlice({
