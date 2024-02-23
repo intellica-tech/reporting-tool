@@ -85,6 +85,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.views.tags import TagModelView, TagView
         from superset.views.users.api import CurrentUserRestApi
         from superset.views.dvt_traindata import TrainDataView
+        from superset.dvt_traindata.api import TrainDataRestApi
 
         #
         # Setup API views
@@ -119,6 +120,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_api(SavedQueryRestApi)
         appbuilder.add_api(TagRestApi)
         appbuilder.add_api(SqlLabRestApi)
+        appbuilder.add_api(TrainDataRestApi)
         #
         # Setup regular views
         #
