@@ -1,6 +1,11 @@
 import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Icon from 'src/components/Icons/Icon';
+// import { useHistory } from 'react-router-dom';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTable from 'src/components/DvtTable';
@@ -10,11 +15,6 @@ import {
   StyledRowLevelSecurityButton,
   StyledRowLevelSecurityFilterAdd,
 } from './dvt-row-level-security.module';
-import Icon from 'src/components/Icons/Icon';
-// import { useHistory } from 'react-router-dom';
-import useFetch from 'src/hooks/useFetch';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { useAppSelector } from 'src/hooks/useAppSelector';
 
 function DvtRowLevelSecurity() {
   const dispatch = useDispatch();
@@ -59,7 +59,10 @@ function DvtRowLevelSecurity() {
     })}`;
 
   useEffect(() => {
-    setRowLevelSecurityApiUrl(searchApiUrls(page));
+    setPage(1);
+    if (page === 1) {
+      setRowLevelSecurityApiUrl(searchApiUrls(page));
+    }
   }, [rowLevelSecuritySelector]);
 
   useEffect(() => {
