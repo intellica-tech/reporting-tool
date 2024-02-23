@@ -57,7 +57,7 @@ const DvtSidebarData: SidebarDataProps[] = [
             fileName: 'dvt-box',
           },
           {
-            title: t('Train Data'),
+            title: t('Data Training'),
             url: '/traindata/',
             fileName: 'cards',
           },
