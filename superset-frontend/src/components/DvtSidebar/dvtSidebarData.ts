@@ -611,6 +611,77 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: 'users/list/',
+    key:'usersList',
+
+    data: [
+      {
+        placeholder: t('Role'),
+        name:'role',
+      },
+      {
+        placeholder: t('Created By'),
+        name:'createdBy',
+      },
+      {
+        placeholder: t('First Name'),
+        name:'firstName',
+      },
+      {
+        placeholder: t('Last Name'),
+        name:'lastName',
+      },
+      {
+        placeholder: t('User Name'),
+        name:'userName',
+      },
+      {
+        placeholder: t('isActive?'),
+        name:'isActive',
+      },
+      {
+        placeholder: t('E Mail'),
+        name:'email',
+      },
+      {
+        placeholder: t('Last Login'),
+        name:'lastLogin',
+      },
+      {
+        placeholder: t('Login Count'),
+        name:'loginCount',
+      },
+      {
+        placeholder: t('failedLoginCount'),
+        name:'failedLoginCount',
+      },
+      {
+        placeholder: t('Created On'),
+        name:'createdOn',
+      },
+      {
+        placeholder: t('Changed On'),
+        name:'changedOn',
+      },
+      {
+        placeholder: t('Created'),
+        name:'created',
+      },
+      {
+        placeholder: t('Changed'),
+        name:'changed',
+      },
+      {
+        placeholder: t('Role'),
+        name:'role',
+      },
+      {
+        placeholder: t('Role'),
+        name:'role',
+      },
+    ]
+  }
 ];
 
 const DefaultOrder = [

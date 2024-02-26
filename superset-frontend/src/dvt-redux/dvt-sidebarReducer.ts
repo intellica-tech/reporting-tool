@@ -35,6 +35,22 @@ interface DvtSidebarState {
     status: any;
     search: string;
   };
+  usersList: {
+    role: string;
+    createdBy: string;
+    changedBy: string;
+    firstName: string;
+    lastName: string;
+    isActive: string;
+    email: string;
+    lastLogin: string;
+    loginCount: string;
+    failedLoginCount: string;
+    createdOn: string;
+    changedOn: string;
+    created: string;
+    changed: string;
+  };
   connection: {
     expose_in_sqllab: any;
     allow_run_async: any;
@@ -162,6 +178,22 @@ interface DvtSidebarState {
       schema: any[];
       see_table_schema: any[];
     };
+    usersList: {
+      role: '',
+      createdBy: '',
+      changedBy: '',
+      firstName: '',
+      lastName: '',
+      isActive: '',
+      email: '',
+      lastLogin: '',
+      loginCount: '',
+      failedLoginCount: '',
+      createdOn: '',
+      changedOn: '',
+      created: '',
+      changed: '',
+    },
   };
 }
 
@@ -226,10 +258,26 @@ const INITIAL_STATE = {
     createdBy: '',
     search: '',
   },
-  sqlhub: {
+  sqlhub: { 
     database: '',
     schema: '',
     see_table_schema: [],
+  },
+  usersList: {
+    role: '',
+    createdBy: '',
+    changedBy: '',
+    firstName: '',
+    lastName: '',
+    isActive: '',
+    email: '',
+    lastLogin: '',
+    loginCount: '',
+    failedLoginCount: '',
+    createdOn: '',
+    changedOn: '',
+    created: '',
+    changed: '',
   },
 };
 
@@ -312,6 +360,22 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       see_table_schema: [],
+    },
+    usersList: {
+      role: '',
+      createdBy: '',
+      changedBy: '',
+      firstName: '',
+      lastName: '',
+      isActive: '',
+      email: '',
+      lastLogin: '',
+      loginCount: '',
+      failedLoginCount: '',
+      createdOn: '',
+      changedOn: '',
+      created: '',
+      changed: '',
     },
   },
 };
