@@ -6,7 +6,6 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
-  dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/hooks/useFetch';
@@ -147,23 +146,6 @@ function DvtNewTainedTable() {
       setPostDataSetUrl('');
     }, 200);
   };
-
-  // useEffect(() => {
-  //   if (postDataset) {
-  //     dispatch(
-  //       dvtSidebarSetProperty({
-  //         pageKey: 'chartAdd',
-  //         key: 'dataset',
-  //         value: {
-  //           id: postDataset.id,
-  //           value: postDataset.result.table_name,
-  //           label: postDataset.result.table_name,
-  //         },
-  //       }),
-  //     );
-  //     history.push('/chart/add');
-  //   }
-  // }, [postDataset]);
 
   useEffect(() => {
     if (postDataset) {
