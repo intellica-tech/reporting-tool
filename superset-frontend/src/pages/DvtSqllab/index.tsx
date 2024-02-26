@@ -64,7 +64,23 @@ function DvtSqllab() {
   //   name: UNTITLED_QUERY,
   // };
 
-  // formData.append('dbId', 's');
+  // formData.append(
+  //   'queryEditor',
+  //   JSON.stringify({
+  //     dbId: 1,
+  //     schema: null,
+  //     autorun: false,
+  //     sql: 'SELECT ...',
+  //     queryLimit: 1000,
+  //     name: 'Untitled Query 4',
+  //   }),
+  // );
+
+  // formData.append('aaa', 'sss');
+
+  // function generateBoundary() {
+  //   return `----WebKitFormBoundary${Math.random().toString(36).slice(2)}`;
+  // }
 
   // const tabstateviewPromiseApi = useFetch({
   //   url: tabstateviewPromiseUrl,
@@ -72,7 +88,8 @@ function DvtSqllab() {
   //   body: formData,
   //   formData: true,
   //   headers: {
-  //     'Content-Type': 'multipart/form-data',
+  //     'Content-Type': `multipart/form-data;boundary=${generateBoundary()}`,
+  //     'Content-Disposition': 'form-data; name="queryEditor"',
   //   },
   // });
 
@@ -97,8 +114,9 @@ function DvtSqllab() {
   });
 
   // useEffect(() => {
+  //   console.log(tabstateviewPromiseApi);
   //   if (tabstateviewPromiseApi) {
-  //     setSqlEditorId(tabstateviewPromiseApi.id);
+  //     // setSqlEditorId(tabstateviewPromiseApi.id);
   //   }
   // }, [tabstateviewPromiseApi]);
 
