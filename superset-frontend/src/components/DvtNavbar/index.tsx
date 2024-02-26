@@ -167,7 +167,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     }
   }, [getExploreApi]);
 
-  const sqlPathname = ['/sqlhub/history/', '/savedqueryview/list/'];
+  const sqlPathname = ['/sqlhub/', '/sqlhub/history/', '/savedqueryview/list/'];
 
   useEffect(() => {
     if (sqlPathname.includes(pathName) && pathName !== sqlTab.value) {
@@ -309,6 +309,13 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                 onClick={() => {}}
               />
             </>
+          )}
+          {pathName === '/sqlhub/' && (
+            <DvtButtonTabs
+              active={sqlTab}
+              data={activeData}
+              setActive={() => {}}
+            />
           )}
         </NavbarBottom>
       )}
