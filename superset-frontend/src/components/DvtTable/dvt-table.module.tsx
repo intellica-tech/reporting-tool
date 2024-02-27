@@ -105,12 +105,12 @@ const StyledTableThSort = styled.button`
 `;
 
 interface StyledTableThSortRotate {
-  onAsc: boolean;
+  asc: boolean;
 }
 
 const StyledTableThSortRotate = styled.span<StyledTableThSortRotate>`
   display: flex;
-  transform: rotate(${({ onAsc }) => (onAsc ? '180deg' : '0deg')});
+  transform: rotate(${({ asc }) => (asc ? '180deg' : '0deg')});
 `;
 
 const StyledTableTbody = styled.tbody``;

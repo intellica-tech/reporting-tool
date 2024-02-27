@@ -193,7 +193,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                   >
                     {column.title}
                     <StyledTableThSortRotate
-                      onAsc={
+                      asc={
                         column.field === sort?.column &&
                         sort?.direction === 'asc'
                       }
