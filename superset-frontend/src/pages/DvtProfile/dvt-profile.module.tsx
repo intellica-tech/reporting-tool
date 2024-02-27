@@ -16,33 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { styled } from '@superset-ui/core';
 
-interface DvtAppState {
-  sort: boolean;
-  user: any;
-}
+const StyledDvtProfile = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 66px;
+`;
 
-const initialState: DvtAppState = {
-  sort: false,
-  user: {},
-};
-
-const dvtAppSlice = createSlice({
-  name: 'dvt-app',
-  initialState,
-  reducers: {
-    dvtAppSetSort: (state, action: PayloadAction<boolean>) => ({
-      ...state,
-      sort: action.payload,
-    }),
-    dvtAppSetUser: (state, action: PayloadAction<any>) => ({
-      ...state,
-      user: action.payload,
-    }),
-  },
-});
-
-export const { dvtAppSetSort, dvtAppSetUser } = dvtAppSlice.actions;
-
-export default dvtAppSlice.reducer;
+const StyledDvtTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 800px;
+  gap: 24px;
+`;
+export { StyledDvtProfile, StyledDvtTable };

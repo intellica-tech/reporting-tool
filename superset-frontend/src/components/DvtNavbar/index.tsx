@@ -102,8 +102,6 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       case '/sqlhub/history/':
       case '/savedqueryview/list/':
         return t('SQL');
-      case '/superset/profile/admin/':
-        return t('Profile');
       case '/chart/add':
         return t('Create New Chart');
       case '/explore/':
@@ -178,7 +176,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   return (
     <StyledDvtNavbar leftMove={leftMove}>
       <NavbarTop>
-        {pathName !== '/superset/profile/admin/' ? (
+        {pathName !== '/profile/' ? (
           <>
             <DvtDotTitle label={pathTitles(pathName)} />
             <NavbarSearchGroup>

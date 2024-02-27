@@ -475,48 +475,28 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/superset/profile/admin/',
+    pathname: '/profile/',
     key: 'profile',
     data: [
       {
-        items: [
-          {
-            icon: 'dvt-briefcase',
-            label: t('Created Content'),
-            url: 'test',
-          },
-          {
-            icon: 'dvt-calendar',
-            label: t('Schedule'),
-            url: 'test1',
-          },
-          {
-            icon: 'dvt-history',
-            label: t('Recent Activity'),
-            url: 'test2',
-          },
-          {
-            icon: 'dvt-star',
-            label: t('Favorites'),
-            url: 'test3',
-          },
-          {
-            icon: 'dvt-users',
-            label: t('Groups and Roles'),
-            url: 'test4',
-          },
-          {
-            icon: 'dvt-arrow_forwardup',
-            label: t('Query History'),
-            url: 'test5',
-          },
-        ],
-        itemsLogout: [
-          {
-            icon: 'dvt-logout',
-            label: t('Log Out'),
-          },
-        ],
+        icon: 'dvt-star',
+        label: t('Favorites'),
+        url: 'favorites',
+      },
+      {
+        icon: 'dvt-briefcase',
+        label: t('Created Content'),
+        url: 'createContent',
+      },
+      {
+        icon: 'dvt-history',
+        label: t('Recent Activity'),
+        url: 'recentActivity',
+      },
+      {
+        icon: 'dvt-calendar',
+        label: t('Security and Access'),
+        url: 'securityAndAccess',
       },
     ],
   },

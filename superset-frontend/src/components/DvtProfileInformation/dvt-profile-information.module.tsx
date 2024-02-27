@@ -30,9 +30,10 @@ const StyledProfileImage = styled.div`
   position: absolute;
   width: 155px;
   height: 155px;
-  border-radius: 50px;
+  border-radius: 50%;
   top: -42px;
   right: 99px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
 `;
 
 const StyledHeading = styled.div`

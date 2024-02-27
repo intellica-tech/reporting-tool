@@ -28,8 +28,8 @@ interface DataProps {
 
 export interface DvtNavigationBarProps {
   data: DataProps[];
-  active?: string;
-  setActive?: (newUrl: string) => void;
+  active?: { label: string; url: string };
+  setActive?: (args: { label: string; url: string }) => void;
 }
 
 const DvtNavigationBar: React.FC<DvtNavigationBarProps> = ({
@@ -45,10 +45,10 @@ const DvtNavigationBar: React.FC<DvtNavigationBarProps> = ({
         label={item.label}
         onClick={() => {
           if (item.url) {
-            setActive?.(item.url);
+            setActive?.({ label: item.label, url: item.url });
           }
         }}
-        active={item.url ? item.url === active : false}
+        active={item.url ? item.url === active?.url : false}
       />
     ))}
   </StyledNavigationBar>

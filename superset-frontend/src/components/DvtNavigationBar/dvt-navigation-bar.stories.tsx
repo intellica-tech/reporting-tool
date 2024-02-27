@@ -25,7 +25,10 @@ export default {
 };
 
 export const Default = (args: DvtNavigationBarProps) => {
-  const [active, setActive] = useState<string>('test');
+  const [active, setActive] = useState<any>({
+    label: 'Created Content',
+    url: 'test',
+  });
 
   return (
     <div

@@ -81,14 +81,6 @@ const StyledDvtSidebarFooter = styled.div`
   padding: 0 16px;
 `;
 
-const StyledDvtSidebarNavbarLogout = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 35px;
-`;
-
 const StyledDvtSidebarIconGroup = styled.div<SidebarRotateIcon>`
   display: flex;
   flex-direction: column;
@@ -145,7 +137,6 @@ export {
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
   StyledDvtSidebarFooter,
-  StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
   StyledDvtSidebarIcon,
