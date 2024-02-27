@@ -190,7 +190,7 @@ function DvtConnection() {
       },
       {
         id: 4,
-        title: t('Action'),
+        title: t('Actions'),
         clicks: [
           {
             icon: 'edit_alt',
