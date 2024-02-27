@@ -26,11 +26,28 @@ export default {
 };
 
 export const Default = (args: DvtOpenSelectMenuProps) => {
-  const [selectedValue, setSelectedValue] = useState<string>('');
-
+  const exampleData = {
+    savedData: {
+      column: 'exampleColumn',
+      aggregate: 'exampleAggregate',
+    },
+    metricData: {
+      column: 'exampleMetricColumn',
+      aggregate: 'exampleMetricAggregate',
+    },
+    filterData: {
+      column: 'exampleFilterColumn',
+      operator: 'exampleOperator',
+      filterValue: 'exampleFilterValue',
+    },
+    customSql: {
+      selectSql: 'SELECT * FROM your_table WHERE condition',
+      sqlQuery: 'SELECT column1, column2 FROM your_table WHERE condition',
+    },
+  };
   return (
-    <div >
-      <DvtOpenSelectMenu {...args} />
+    <div>
+      <DvtOpenSelectMenu {...args} data={exampleData} />
     </div>
   );
 };

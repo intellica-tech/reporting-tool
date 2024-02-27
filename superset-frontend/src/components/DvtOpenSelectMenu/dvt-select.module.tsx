@@ -61,6 +61,40 @@ const StyledOpenSelectMenuFilterButtonGroup = styled.div`
   height: 71px;
 `;
 
+const StyledOpenSelectMenuSaved = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 187px;
+  gap: 15px;
+`;
+
+const StyledOpenSelectMenuTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.dvt.text.bold};
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 140%; /* 19.6px */
+  letter-spacing: 0.2px;
+`;
+
+const StyledOpenSelectMenuLabel = styled.div`
+  display: flex;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 20px;
+`;
+
+const StyledOpenSelectMenuIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 15px;
+  min-height: 100px;
+`;
+
 export {
   StyledOpenSelectMenu,
   StyledOpenSelectMenuFilter,
@@ -68,4 +102,8 @@ export {
   StyledOpenSelectMenuFilterTabsGroup,
   StyledOpenSelectMenuFilterInputGroup,
   StyledOpenSelectMenuFilterButtonGroup,
+  StyledOpenSelectMenuSaved,
+  StyledOpenSelectMenuTitle,
+  StyledOpenSelectMenuLabel,
+  StyledOpenSelectMenuIcon,
 };
