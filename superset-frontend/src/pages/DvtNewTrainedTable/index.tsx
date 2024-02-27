@@ -6,7 +6,6 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
-  dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/hooks/useFetch';
