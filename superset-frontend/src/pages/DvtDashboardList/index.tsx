@@ -31,7 +31,7 @@ import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
@@ -55,6 +55,10 @@ function DvtDashboardList() {
   );
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'changed_on_delta_humanized',
+    direction: 'desc',
+  });
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
@@ -85,6 +89,8 @@ function DvtDashboardList() {
         },
       ],
       page: gPage,
+      orderColumn: sort.column,
+      orderDirection: sort.direction,
     })}`;
 
   const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
@@ -98,6 +104,7 @@ function DvtDashboardList() {
       setData(
         dashboardApi.result.map((item: any) => ({
           ...item,
+          published: item.status,
           owners: item.owners.length
             ? item.owners
                 .map(
@@ -121,7 +128,7 @@ function DvtDashboardList() {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setDashboardApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -211,19 +218,19 @@ function DvtDashboardList() {
       flex: 3,
       checkbox: true,
       urlField: 'url',
+      sort: true,
     },
+    { id: 2, title: t('Status'), field: 'published', sort: true },
     {
-      id: 2,
-      title: t('Modified By'),
-      field: 'changed_by_name',
-      urlField: 'changed_by_url',
+      id: 3,
+      title: t('Modified'),
+      field: 'changed_on_delta_humanized',
+      sort: true,
     },
-    { id: 3, title: t('Status'), field: 'status' },
-    { id: 4, title: t('Modified'), field: 'created_on_delta_humanized' },
-    { id: 5, title: t('Created By'), field: 'createdbyName' },
-    { id: 6, title: t('Owners'), field: 'owners' },
+    { id: 4, title: t('Created By'), field: 'createdbyName' },
+    { id: 5, title: t('Owners'), field: 'owners' },
     {
-      id: 7,
+      id: 6,
       title: t('Action'),
       showHover: true,
       clicks: [
@@ -273,6 +280,8 @@ function DvtDashboardList() {
             selected={selectedRows}
             setSelected={setSelectedRows}
             checkboxActiveField="id"
+            sort={sort}
+            setSort={setSort}
           />
         ) : (
           <DvtTitleCardList

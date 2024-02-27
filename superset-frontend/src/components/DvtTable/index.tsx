@@ -29,6 +29,8 @@ import {
   StyledTabletHead,
   StyledTableTr,
   StyledTableTh,
+  StyledTableThSort,
+  StyledTableThSortRotate,
   StyledTableTbody,
   StyledTableTd,
   StyledTableTitle,
@@ -58,6 +60,12 @@ interface HeaderProps {
   checkbox?: boolean;
   isFavorite?: boolean;
   isFavoriteApiUrl?: string;
+  sort?: boolean;
+}
+
+export interface DvtTableSortProps {
+  column: string;
+  direction: 'desc' | 'asc';
 }
 
 export interface DvtTableProps {
@@ -68,6 +76,8 @@ export interface DvtTableProps {
   setSelected?: (newSelected: any[]) => void;
   checkboxActiveField?: string;
   setFavoriteData?: (item: any) => void;
+  sort?: DvtTableSortProps;
+  setSort?: (args: any) => void;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -78,6 +88,8 @@ const DvtTable: React.FC<DvtTableProps> = ({
   setSelected = () => {},
   checkboxActiveField = 'id',
   setFavoriteData,
+  sort,
+  setSort,
 }) => {
   const { addDangerToast } = useToasts();
   const [openRow, setOpenRow] = useState<number | null>(null);
@@ -164,7 +176,41 @@ const DvtTable: React.FC<DvtTableProps> = ({
                     />
                   </StyledTableCheckbox>
                 )}
-                {column.title}
+                {column.sort ? (
+                  <StyledTableThSort
+                    onClick={() =>
+                      !!setSort &&
+                      setSort({
+                        column: column.field,
+                        direction:
+                          column.field === sort?.column
+                            ? sort?.direction === 'desc'
+                              ? 'asc'
+                              : 'desc'
+                            : 'asc',
+                      })
+                    }
+                  >
+                    {column.title}
+                    <StyledTableThSortRotate
+                      onAsc={
+                        column.field === sort?.column &&
+                        sort?.direction === 'asc'
+                      }
+                    >
+                      <Icon
+                        fileName="dvt-sort"
+                        iconColor={
+                          column.field === sort?.column
+                            ? supersetTheme.colors.dvt.primary.base
+                            : supersetTheme.colors.grayscale.dark2
+                        }
+                      />
+                    </StyledTableThSortRotate>
+                  </StyledTableThSort>
+                ) : (
+                  column.title
+                )}
               </StyledTableTh>
             ))}
           </StyledTableTitle>
