@@ -1,7 +1,6 @@
 import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Icon from 'src/components/Icons/Icon';
 // import { useHistory } from 'react-router-dom';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
@@ -13,16 +12,22 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import {
   StyledRowLevelSecurity,
   StyledRowLevelSecurityButton,
-  StyledRowLevelSecurityFilterAdd,
+  StyledRowLevelSecurityCount,
 } from './dvt-row-level-security.module';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 function DvtRowLevelSecurity() {
   const dispatch = useDispatch();
   // const history = useHistory();
   const [page, setPage] = useState<number>(1);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const rowLevelSecuritySelector = useAppSelector(
     state => state.dvtSidebar.rowLevelSecurity,
+  );
+  const deleteSuccessStatus = useAppSelector(
+    state => state.dvtHome.deleteSuccessStatus,
   );
   const [rowLevelSecurityApiUrl, setRowLevelSecurityApiUrl] =
     useState<string>('');
@@ -73,6 +78,7 @@ function DvtRowLevelSecurity() {
     if (rowLevelSecurityData) {
       const editedData = rowLevelSecurityData.result.map((item: any) => ({
         ...item,
+        id: item.id,
         name: item.name,
         filter_type: item.filter_type,
         tables: item.tables[0].table_name,
@@ -81,12 +87,31 @@ function DvtRowLevelSecurity() {
         modified: item.changed_on_delta_humanized,
         creator: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
       }));
+      setCount(rowLevelSecurityData.count);
       setData(editedData);
+      console.log('setData');
     }
   }, [rowLevelSecurityData]);
-  // const handleAddClick = () => {
-  //   history.push('/rowlevelsecurityfiltersmodelview/add');
-  // };
+
+  useEffect(() => {
+    if (deleteSuccessStatus) {
+      dispatch(dvtHomeDeleteSuccessStatus(''));
+    }
+    setRowLevelSecurityApiUrl(searchApiUrls(page));
+  }, [deleteSuccessStatus, page]);
+
+  const handleDelete = () => {
+    const selectedId = selectedRows.map(row => row.id);
+    const updatedData = data.filter(item => !selectedId.includes(item.id));
+
+    setData(updatedData);
+    setCount(updatedData.length);
+
+    setSelectedRows([]);
+    console.log('row', selectedRows);
+    console.log('data', data);
+    console.log('Deleted!', updatedData);
+  };
 
   const handleModalDelete = (item: any) => {
     dispatch(
@@ -108,7 +133,7 @@ function DvtRowLevelSecurity() {
   };
 
   const headerData = [
-    { id: 1, title: t('Name'), field: 'name' },
+    { id: 1, title: t('Name'), field: 'name', checkbox: true },
     { id: 2, title: t('Filter Type'), field: 'filter_type' },
     { id: 3, title: t('Tables'), field: 'tables', flex: 1.5 },
     {
@@ -117,15 +142,9 @@ function DvtRowLevelSecurity() {
       field: 'roles',
     },
     { id: 5, title: t('Clause'), field: 'clause' },
+    { id: 6, title: t('Modified'), field: 'modified' },
     {
-      id: 6,
-      title: t('Creator'),
-      field: 'creator',
-      urlField: '/superset/profile/admin/',
-    },
-    { id: 7, title: t('Modified'), field: 'modified' },
-    {
-      id: 8,
+      id: 7,
       title: 'Actions',
       showHover: true,
       clicks: [
@@ -150,9 +169,6 @@ function DvtRowLevelSecurity() {
 
   return (
     <StyledRowLevelSecurity>
-      <StyledRowLevelSecurityFilterAdd>
-        <Icon fileName="dvt-add_square" onClick={() => {}} />
-      </StyledRowLevelSecurityFilterAdd>
       <div style={{ paddingBottom: '23px' }}>
         <DvtButton
           label="REFRESH"
@@ -160,7 +176,7 @@ function DvtRowLevelSecurity() {
           iconToRight
           colour="primary"
           typeColour="powder"
-          icon="circle"
+          icon="dvt-refresh"
         />
       </div>
       <div>
@@ -170,17 +186,26 @@ function DvtRowLevelSecurity() {
             buttonLabel="Add New Record"
           />
         ) : (
-          <DvtTable data={data} header={headerData} />
+          <DvtTable
+            data={data}
+            header={headerData}
+            selected={selectedRows}
+            setSelected={setSelectedRows}
+            checkboxActiveField="id"
+          />
         )}
       </div>
       <StyledRowLevelSecurityButton>
         <DvtButton
-          label="Actions"
-          onClick={() => ({})}
-          colour="grayscale"
-          typeColour="powder"
+          label="Delete"
+          onClick={handleDelete}
+          colour="error"
+          typeColour="basic"
         />
-        <div></div>
+        <StyledRowLevelSecurityCount>
+          {t('Record Count: ')}
+          {count}
+        </StyledRowLevelSecurityCount>
       </StyledRowLevelSecurityButton>
     </StyledRowLevelSecurity>
   );

@@ -585,7 +585,7 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/rowlevelsecurity/list',
+    pathname: '/rowlevelsecurityfiltersmodelview/list/',
     key: 'rowLevelSecurity',
     data: [
       {
@@ -639,7 +639,7 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/rowlevelsecurity/list/',
+    pathname: '/rowlevelsecurityfiltersmodelview/list/',
     key: 'rowLevelSecurity',
     data: [
       {

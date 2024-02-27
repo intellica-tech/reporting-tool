@@ -116,9 +116,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
-      case '/rowlevelsecurity/list/':
+      case '/rowlevelsecurityfiltersmodelview/list/':
         return 'rowLevelSecurity';
-      case '/rowlevelsecurity/list':
+      case '/rowlevelsecurityfiltersmodelview/list/':
         return 'rowLevelSecurity';
       default:
         return '';

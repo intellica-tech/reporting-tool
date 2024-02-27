@@ -35,14 +35,22 @@ const StyledRowLevelSecurityFilterAdd = styled.div`
 
 const StyledRowLevelSecurityButton = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  flex-direction: column;
   padding-top: 36px;
 `;
 
+const StyledRowLevelSecurityCount = styled.div`
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+  letter-spacing: 0.2px;
+`;
 export {
   StyledRowLevelSecurity,
   StyledRowLevelSecurityButton,
   StyledRowLevelSecurityFilterAdd,
+  StyledRowLevelSecurityCount
 };

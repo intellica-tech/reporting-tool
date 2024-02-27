@@ -24,6 +24,7 @@ import { useHistory } from 'react-router-dom';
 import useFetch from 'src/hooks/useFetch';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
+import Icon from 'src/components/Icons/Icon';
 import {
   dvtNavbarAlertSetTabs,
   dvtNavbarChartsSetTabs,
@@ -115,8 +116,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
-      // case '/rowlevelsecurity/list':
-      //   return t('Row Level Security');
+      case '/rowlevelsecurityfiltersmodelview/list/':
+        return t('Row Level Security');
       default:
         return '';
     }
@@ -271,6 +272,19 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               </NavbarBottomRight>
             </>
           )}
+          {pathName === '/rowlevelsecurityfiltersmodelview/list/' && (
+            <>
+              <div />
+              <NavbarBottomRight>
+                <Icon
+                  fileName="dvt-add_square"
+                  onClick={() =>
+                    history.push('/rowlevelsecurityfiltersmodelview/add')
+                  }
+                />
+              </NavbarBottomRight>
+            </>
+          )}
           {sqlPathname.includes(pathName) && (
             <DvtButtonTabs
               active={sqlTab}
@@ -310,7 +324,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
-          {/* {pathName === '/rowlevelsecurity/list' && (
+          {/* {pathName === '/rowlevelsecurityfiltersmodelview/list/' && (
             <>
               <DvtDropdown
                 data={activeData}
