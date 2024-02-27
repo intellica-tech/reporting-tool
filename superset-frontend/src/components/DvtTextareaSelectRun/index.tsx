@@ -29,7 +29,6 @@ import {
   StyledDvtTextareaDropdown,
   StyledDvtTextareaDropdownItem,
   StyledDvtTextareaIcon,
-  StyledError,
   StyledTextarea,
 } from './dvt-textarea-select-run.module';
 
@@ -40,7 +39,6 @@ export interface DvtTextareaSelectRunProps {
   placeholder?: string;
   value: string;
   setValue: (newValue: string) => void;
-  error?: string;
 }
 
 const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
@@ -50,7 +48,6 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
   placeholder = '',
   value,
   setValue,
-  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const limitData = [10, 100, 1000, 10000, 100000];
@@ -106,7 +103,6 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
           </StyledDvtTextareaButton>
         </StyledDvtTextareaGroup>
       </StyledDvtTextareaSelectRun>
-      {error && <StyledError>{error}</StyledError>}
     </StyledTextarea>
   );
 };

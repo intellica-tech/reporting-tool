@@ -49,10 +49,3 @@ export const Default = (args: DvtTextareaSelectRunProps) => {
     </div>
   );
 };
-
-Default.argTypes = {
-  error: {
-    control: { type: 'text' },
-    defaultValue: 'Error Example',
-  },
-};

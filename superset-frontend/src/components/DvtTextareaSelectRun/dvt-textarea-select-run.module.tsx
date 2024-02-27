@@ -104,13 +104,6 @@ const StyledDvtTextareaIcon = styled.div<StyledDvtTextareaIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
-const StyledError = styled.div`
-  color: ${({ theme }) => theme.colors.dvt.error.base};
-  font-size: 12px;
-  font-weight: 400;
-  padding: 0 0 0 2px;
-`;
-
 const StyledTextarea = styled.div`
   display: flex;
   flex-direction: column;
@@ -125,6 +118,5 @@ export {
   StyledDvtTextareaDropdown,
   StyledDvtTextareaDropdownItem,
   StyledDvtTextareaIcon,
-  StyledError,
   StyledTextarea,
 };
