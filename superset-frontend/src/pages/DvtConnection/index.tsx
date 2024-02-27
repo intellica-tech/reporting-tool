@@ -85,9 +85,14 @@ function DvtConnection() {
     })}`;
 
   const [connectionApiUrl, setConnectionApiUrl] = useState<string>('');
+  const [connectionEditApiUrl, setConnectionEditApiUrl] = useState<string>('');
 
   const connectionApi = useFetch({
     url: connectionApiUrl,
+  });
+
+  const connectionEditPromise = useFetch({
+    url: connectionEditApiUrl,
   });
 
   useEffect(() => {
@@ -159,6 +164,13 @@ function DvtConnection() {
     handleResourceExport('database', selectedIds, () => {});
   };
 
+  const handleEditConnection = (item: any) => {
+    setConnectionEditApiUrl(`database/${item.id}/connection`);
+    setTimeout(() => {
+      setConnectionEditApiUrl('');
+    }, 500);
+  };
+
   const modifiedData = {
     header: [
       {
@@ -200,6 +212,17 @@ function DvtConnection() {
     ],
   };
 
+  useEffect(() => {
+    if (connectionEditPromise) {
+      dispatch(
+        openModal({
+          component: 'connection-add-modal',
+          meta: { ...connectionEditPromise, isEdit: true },
+        }),
+      );
+    }
+  }, [connectionEditPromise]);
+
   useEffect(
     () => () => {
       clearConnection();
@@ -208,22 +231,6 @@ function DvtConnection() {
     },
     [],
   );
-
-  const handleEditConnection = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/database/${item.id}/connection`);
-      const editedConnectionData = await response.json();
-
-      dispatch(
-        openModal({
-          component: 'connection-add-modal',
-          meta: { editedConnectionData, isEdit: true },
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return data.length > 0 ? (
     <StyledConnection>
