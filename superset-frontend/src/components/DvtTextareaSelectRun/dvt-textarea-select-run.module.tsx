@@ -104,12 +104,6 @@ const StyledDvtTextareaIcon = styled.div<StyledDvtTextareaIconProps>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'none')};
 `;
 
-const StyledTextarea = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
 export {
   StyledDvtTextareaSelectRun,
   StyledDvtTextareaLimit,
@@ -118,5 +112,4 @@ export {
   StyledDvtTextareaDropdown,
   StyledDvtTextareaDropdownItem,
   StyledDvtTextareaIcon,
-  StyledTextarea,
 };
