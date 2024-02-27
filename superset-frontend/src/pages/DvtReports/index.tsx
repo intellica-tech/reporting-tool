@@ -107,10 +107,14 @@ function ReportList() {
     })}`;
 
   const [reportApiUrl, setReportApiUrl] = useState<string>('');
+  const [reportApiEditUrl, setReportApiEditUrl] = useState<string>('');
   const [favoriteApiUrl, setFavoriteApiUrl] = useState<string>('');
 
   const reportData = useFetch({
     url: reportApiUrl,
+  });
+  const reportEditPromise = useFetch({
+    url: reportApiEditUrl,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
 
@@ -219,20 +223,11 @@ function ReportList() {
     setSelectedRows([]);
   };
 
-  const handleEditCharts = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/chart/${item.id}`);
-      const editedChartData = await response.json();
-
-      dispatch(
-        openModal({
-          component: 'edit-chart',
-          meta: editedChartData,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
+  const handleEditCharts = (item: any) => {
+    setReportApiEditUrl(`chart/${item.id}`);
+    setTimeout(() => {
+      setReportApiEditUrl('');
+    }, 500);
   };
 
   const handleSingleExport = (id: number) => {
@@ -296,6 +291,17 @@ function ReportList() {
       },
     ],
   };
+
+  useEffect(() => {
+    if (reportEditPromise) {
+      dispatch(
+        openModal({
+          component: 'edit-chart',
+          meta: reportEditPromise,
+        }),
+      );
+    }
+  }, [reportEditPromise]);
 
   useEffect(
     () => () => {
