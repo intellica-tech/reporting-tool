@@ -94,10 +94,40 @@ function DvtDashboardList() {
     })}`;
 
   const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
+  const [dashboardAddApiUrl, setDashboardAddApiUrl] = useState<string>('');
 
   const dashboardApi = useFetch({
     url: dashboardApiUrl,
   });
+
+  const dashboardAdd = useFetch({
+    url: dashboardAddApiUrl,
+    method: 'POST',
+    body: {
+      certification_details: '',
+      certified_by: '',
+      css: '',
+      dashboard_title: '',
+      external_url: '',
+      is_managed_externally: true,
+      json_metadata: '{}',
+      owners: [1],
+      position_json: '{}',
+      published: true,
+      roles: [1],
+      slug: null,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  useEffect(() => {
+    if (dashboardAdd?.id) {
+      history.push(`/superset/dashboard/${dashboardAdd.id}/?edit=true`);
+      console.log('dsfjhs');
+    }
+  }, [dashboardAdd]);
 
   useEffect(() => {
     if (dashboardApi) {
@@ -323,7 +353,7 @@ function DvtDashboardList() {
             colour="grayscale"
             bold
             typeColour="basic"
-            onClick={() => history.push('/superset/dashboard')}
+            onClick={() => setDashboardAddApiUrl('dashboard/')}
           />
         </StyledDashboardCreateDashboard>
         <StyledDashboardPagination>

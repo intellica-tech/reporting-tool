@@ -34,18 +34,28 @@ export interface DvtCardDetailChartListProps {
 
 const DvtCardDetailChartList: React.FC<DvtCardDetailChartListProps> = ({
   data,
-}) => (
-  <StyledDvtCardDetailChartList>
-    {data.map((item, index) => (
-      <DvtCardDetailChart
-        key={index}
-        datasetLabel={item.datasetLabel}
-        labelTitle={item.labelTitle}
-        modified={item.modified}
-        vizTypeLabel={item.vizTypeLabel}
-      />
-    ))}
-  </StyledDvtCardDetailChartList>
-);
+}) => {
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    draggedData: CardDetailChartDataProps,
+  ) => {
+    e.dataTransfer.setData('drag-drop', JSON.stringify(draggedData));
+  };
 
+  return (
+    <StyledDvtCardDetailChartList>
+      {data.map((item, index) => (
+        <div onDragStart={e => handleDragStart(e, item)} draggable key={index}>
+          <DvtCardDetailChart
+            datasetLabel={item.datasetLabel}
+            labelTitle={item.labelTitle}
+            modified={item.modified}
+            vizTypeLabel={item.vizTypeLabel}
+            datasetLink={item.datasetLink}
+          />
+        </div>
+      ))}
+    </StyledDvtCardDetailChartList>
+  );
+};
 export default DvtCardDetailChartList;
