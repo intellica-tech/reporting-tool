@@ -17,8 +17,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
+import { t } from '@superset-ui/core';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtProfileInformation from 'src/components/DvtProfileInformation';
@@ -35,14 +35,12 @@ function DvtProfile() {
     [],
   );
   const [recentActivityData, setRecentActivityData] = useState<any[]>([]);
-  const [rolesAndSecurityData, setRolesAndSecurityData] = useState<any[]>([]);
   const activeSideTab = useAppSelector(
     state => state.dvtSidebar.profile.tabs.label,
   );
   const userSelector = useAppSelector(state => state.user);
 
   const recentActivityPromise = useFetch({ url: 'log/recent_activity' });
-  const rolesAndSecurityPromise = useFetch({ url: '/me/roles' });
 
   const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({
@@ -70,12 +68,6 @@ function DvtProfile() {
       pageSize: 100,
     })}`,
   });
-
-  useEffect(() => {
-    if (rolesAndSecurityPromise) {
-      setRolesAndSecurityData(rolesAndSecurityPromise?.result);
-    }
-  }, [rolesAndSecurityPromise]);
 
   useEffect(() => {
     if (dashboardFavouritePromise) {
@@ -204,8 +196,7 @@ function DvtProfile() {
       )}
       {activeSideTab === 'Security and Access' && (
         <StyledDvtTable>
-          <h1>Roles</h1>
-          {rolesAndSecurityData}
+          <h1>{`${t('Roles')} (${userSelector.roles.Admin.length})`}</h1>
         </StyledDvtTable>
       )}
     </StyledDvtProfile>
