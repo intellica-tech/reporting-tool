@@ -54,12 +54,12 @@ Default.argTypes = {
     control: { type: 'date' },
     defaultValue: new Date('2023-11-30T00:34:23Z'),
   },
-  title: {
+  email: {
     control: { type: 'text' },
-    defaultValue: 'Frontend developer',
+    defaultValue: 'admin@superset.com',
   },
-  test: {
-    control: { type: 'text' },
-    defaultValue: 'Lorem Ipsum Lorem',
+  userId: {
+    control: { type: 'number' },
+    defaultValue: 2,
   },
 };

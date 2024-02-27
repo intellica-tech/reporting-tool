@@ -39,8 +39,7 @@ function DvtProfile() {
   const activeSideTab = useAppSelector(
     state => state.dvtSidebar.profile.tabs.label,
   );
-  const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
-  // const roleSelector = useAppSelector(state => state.dvtApp.user);
+  const userSelector = useAppSelector(state => state.user);
 
   const recentActivityPromise = useFetch({ url: 'log/recent_activity' });
   const rolesAndSecurityPromise = useFetch({ url: '/me/roles' });
@@ -152,12 +151,10 @@ function DvtProfile() {
   return (
     <StyledDvtProfile>
       <DvtProfileInformation
-        header={profileSelector.header}
-        location={profileSelector.location}
-        title={profileSelector.title}
-        test={profileSelector.test}
-        image={profileSelector.image}
-        joinedDate={profileSelector.joinedDate}
+        header={`${userSelector.firstName} ${userSelector.lastName}`}
+        email={userSelector.email}
+        userId={userSelector.userId}
+        joinedDate={userSelector.createdOn}
       />
       {activeSideTab === 'Favorites' && (
         <StyledDvtTable>
