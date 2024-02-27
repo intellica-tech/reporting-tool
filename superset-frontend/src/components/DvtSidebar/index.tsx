@@ -30,7 +30,6 @@ import {
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
   // StyledDvtSidebarFooter,
-  StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
   StyledDvtSidebarIcon,
@@ -77,7 +76,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     state => state.dvtSidebar.data.fetched,
   );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
