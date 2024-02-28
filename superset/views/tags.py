@@ -47,7 +47,7 @@ def process_template(content: str) -> str:
 
 
 class TagModelView(SupersetModelView):
-    route_base = "/superset/tags"
+    route_base = "/tags"
     datamodel = SQLAInterface(Tag)
     class_permission_name = "Tags"
 

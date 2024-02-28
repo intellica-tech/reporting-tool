@@ -1,7 +1,11 @@
+from flask import redirect
+from flask_appbuilder import IndexView
+from flask_appbuilder.api import expose
 from flask_babel import gettext as __
 
 from superset.extensions import appbuilder, feature_flag_manager
 from superset.initialization import SupersetAppInitializer
+from superset.superset_typing import FlaskResponse
 
 
 class DVTAppInitializer(SupersetAppInitializer):
@@ -127,7 +131,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_link(
             "Home",
             label=__("Home"),
-            href="/superset/welcome/",
+            href="/welcome/",
             cond=lambda: bool(appbuilder.app.config["LOGO_TARGET_PATH"]),
         )
 
@@ -226,7 +230,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_link(
             "Import Dashboards",
             label=__("Import Dashboards"),
-            href="/superset/import_dashboards/",
+            href="/import_dashboards/",
             icon="fa-cloud-upload",
             category="Manage",
             category_label=__("Manage"),
@@ -338,3 +342,9 @@ class DVTAppInitializer(SupersetAppInitializer):
             category_icon="fa-cogs",
             icon="fa-group",
         )
+
+
+class SupersetIndexView(IndexView):
+    @expose("/")
+    def index(self) -> FlaskResponse:
+        return redirect("/welcome/")
