@@ -51,7 +51,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.sqllab.api import SqlLabRestApi
         from superset.tags.api import TagRestApi
         from superset.views.alerts import AlertView, ReportView
-        from superset.views.all_entities import TaggedObjectsModelView, TaggedObjectView
+        from superset.views.all_entities import TaggedObjectView
         from superset.views.annotations import AnnotationLayerView
         from superset.views.api import Api
         from superset.views.chart.views import SliceAsync, SliceModelView
@@ -74,7 +74,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.views.datasource.views import DatasetEditor, Datasource
         from superset.views.dvt_sqllab import DVTSqlHubView
         from superset.views.dynamic_plugins import DynamicPluginsView
-        from superset.views.explore import ExplorePermalinkView, ExploreView
+        from superset.views.explore import ExploreView
         from superset.views.key_value import KV
         from superset.views.log.api import LogRestApi
         from superset.views.log.views import LogModelView
@@ -86,10 +86,13 @@ class DVTAppInitializer(SupersetAppInitializer):
             TableSchemaView,
             TabStateView,
         )
-        from superset.views.tags import TagModelView, TagView
+        from superset.views.tags import TagView
         from superset.views.users.api import CurrentUserRestApi
         from superset.views.dvt_traindata import TrainDataView
         from superset.dvt_traindata.api import TrainDataRestApi
+        from superset.dvt_tags.tags import DVTTagModelView
+        from superset.dvt_all_entities.all_entities import DVTTaggedObjectsModelView
+        from superset.dvt_explore.explore import DVTExplorePermalinkView
 
         #
         # Setup API views
@@ -204,7 +207,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(DatasetEditor)
         appbuilder.add_view_no_menu(EmbeddedView)
         appbuilder.add_view_no_menu(ExploreView)
-        appbuilder.add_view_no_menu(ExplorePermalinkView)
+        appbuilder.add_view_no_menu(DVTExplorePermalinkView)
         appbuilder.add_view_no_menu(KV)
         appbuilder.add_view_no_menu(ProfileView)
         appbuilder.add_view_no_menu(SavedQueryView)
@@ -220,7 +223,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(TableSchemaView)
         appbuilder.add_view_no_menu(TabStateView)
         appbuilder.add_view_no_menu(TaggedObjectView)
-        appbuilder.add_view_no_menu(TaggedObjectsModelView)
+        appbuilder.add_view_no_menu(DVTTaggedObjectsModelView)
         appbuilder.add_view_no_menu(TagView)
         appbuilder.add_view_no_menu(ReportView)
 
@@ -277,7 +280,7 @@ class DVTAppInitializer(SupersetAppInitializer):
             category_label=__("Train Data"),
         )
         appbuilder.add_view(
-            TagModelView,
+            DVTTagModelView,
             "Tags",
             label=__("Tags"),
             icon="",

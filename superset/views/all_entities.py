@@ -46,7 +46,7 @@ def process_template(content: str) -> str:
 
 
 class TaggedObjectsModelView(SupersetModelView):
-    route_base = "/all_entities"
+    route_base = "/superset/all_entities"
     datamodel = SQLAInterface(Tag)
     class_permission_name = "Tags"
 
