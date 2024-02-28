@@ -40,7 +40,7 @@ const StyledTab = styled.div`
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
 `;
 
-const StyledOpenSelectMenuFilterTabs = styled.div<TabProps>`
+const StyledTabs = styled.div<TabProps>`
   display: flex;
   flex: 1;
   font-size: 20px;
@@ -60,7 +60,7 @@ const StyledOpenSelectMenuFilterTabs = styled.div<TabProps>`
       ? theme.colors.grayscale.dark2
       : theme.colors.dvt.text.placeholder};
 `;
-const StyledOpenSelectMenuFilterTabsGroup = styled.div`
+const StyledTabsGroup = styled.div`
   display: flex;
   width: 100%;
 `;
@@ -81,8 +81,8 @@ export {
   StyledDashboardEdit,
   StyledDashboard,
   StyledTab,
-  StyledOpenSelectMenuFilterTabs,
-  StyledOpenSelectMenuFilterTabsGroup,
+  StyledTabs,
+  StyledTabsGroup,
   StyledChartList,
   StyledChartFilter,
 };

@@ -20,17 +20,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import useFetch from 'src/hooks/useFetch';
+import rison from 'rison';
 import { useHistory } from 'react-router-dom';
 import withToasts from 'src/components/MessageToasts/withToasts';
-import {
-  StyledTab,
-  StyledDashboard,
-  StyledDashboardEdit,
-  StyledOpenSelectMenuFilterTabs,
-  StyledOpenSelectMenuFilterTabsGroup,
-  StyledChartList,
-  StyledChartFilter,
-} from './dvtdashboardEdit.module';
 import DvtCardDetailChartList, {
   DvtCardDetailChartListProps,
 } from 'src/components/DvtCardDetailChartList';
@@ -38,15 +32,21 @@ import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import useFetch from 'src/hooks/useFetch';
 import NewTabs from 'src/dashboard/components/gridComponents/new/NewTabs';
 import NewRow from 'src/dashboard/components/gridComponents/new/NewRow';
 import NewColumn from 'src/dashboard/components/gridComponents/new/NewColumn';
 import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
 import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
 import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import rison from 'rison';
+import {
+  StyledTab,
+  StyledDashboard,
+  StyledDashboardEdit,
+  StyledTabs,
+  StyledTabsGroup,
+  StyledChartList,
+  StyledChartFilter,
+} from './dvtdashboardEdit.module';
 
 function DvtDashboardList() {
   const history = useHistory<{ from: string }>();
@@ -129,29 +129,31 @@ function DvtDashboardList() {
   return (
     <StyledDashboardEdit>
       <StyledDashboard onDragOver={handleDragOver} onDrop={handleDrop}>
-        <DvtIconDataLabel
-          description="You can create a new chart or use existinh ones from the panel on the right"
-          icon="square"
-          label="Drag and drop components and charts to the dashboard"
-          buttonLabel="+ Create a New Chart"
-          buttonClick={() => history.push('/chart/add')}
-        />
+        {droppedData.length === 0 && (
+          <DvtIconDataLabel
+            description="You can create a new chart or use existinh ones from the panel on the right"
+            icon="square"
+            label="Drag and drop components and charts to the dashboard"
+            buttonLabel="+ Create a New Chart"
+            buttonClick={() => history.push('/chart/add')}
+          />
+        )}
       </StyledDashboard>
       <StyledTab>
-        <StyledOpenSelectMenuFilterTabsGroup>
-          <StyledOpenSelectMenuFilterTabs
+        <StyledTabsGroup>
+          <StyledTabs
             activeTab={activeTab === 'charts'}
             onClick={() => setActiveTab('charts')}
           >
             Charts
-          </StyledOpenSelectMenuFilterTabs>
-          <StyledOpenSelectMenuFilterTabs
+          </StyledTabs>
+          <StyledTabs
             activeTab={activeTab === 'layoutElements'}
             onClick={() => setActiveTab('layoutElements')}
           >
             Layout Elements
-          </StyledOpenSelectMenuFilterTabs>
-        </StyledOpenSelectMenuFilterTabsGroup>
+          </StyledTabs>
+        </StyledTabsGroup>
 
         {activeTab === 'charts' && (
           <StyledChartList>
