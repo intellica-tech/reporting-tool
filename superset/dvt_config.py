@@ -11,6 +11,8 @@ LANGUAGES = {
     "tr": {"flag": "tr", "name": "Turkish"},
 }
 
+APP_NAME = "Data Visualization Tool"
+
 # Replace this code block with scripts/po2json.sh
 # for file in $( find superset/translations/** );
 # do
