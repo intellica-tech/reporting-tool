@@ -27,12 +27,13 @@ const StyledDashboardEdit = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
 `;
 const StyledDashboard = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
 `;
-const StyledChartList = styled.div`
+const StyledTab = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 455px;
@@ -47,21 +48,41 @@ const StyledOpenSelectMenuFilterTabs = styled.div<TabProps>`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  padding: 28px 0 18px 0;
+
   border-bottom: 2px solid
     ${({ theme, activeTab }) =>
-      activeTab ? theme.colors.grayscale.dark2 : theme.colors.dvt.text.label};
+      activeTab
+        ? theme.colors.grayscale.dark2
+        : theme.colors.dvt.text.placeholder};
   color: ${({ theme, activeTab }) =>
-    activeTab ? theme.colors.grayscale.dark2 : theme.colors.dvt.text.label};
+    activeTab
+      ? theme.colors.grayscale.dark2
+      : theme.colors.dvt.text.placeholder};
 `;
 const StyledOpenSelectMenuFilterTabsGroup = styled.div`
   display: flex;
   width: 100%;
 `;
 
+const StyledChartList = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  gap: 26px;
+`;
+
+const StyledChartFilter = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
 export {
   StyledDashboardEdit,
   StyledDashboard,
-  StyledChartList,
+  StyledTab,
   StyledOpenSelectMenuFilterTabs,
   StyledOpenSelectMenuFilterTabsGroup,
+  StyledChartList,
+  StyledChartFilter,
 };

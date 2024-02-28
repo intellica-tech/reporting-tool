@@ -125,7 +125,6 @@ function DvtDashboardList() {
   useEffect(() => {
     if (dashboardAdd?.id) {
       history.push(`/superset/dashboard/${dashboardAdd.id}/?edit=true`);
-      console.log('dsfjhs');
     }
   }, [dashboardAdd]);
 
