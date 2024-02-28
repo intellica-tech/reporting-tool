@@ -29,6 +29,8 @@ import {
   StyledInputSelectOptions,
   StyledInputSelectOptionsLabel,
   StyledInputSelectDiv,
+  StyledInputSelectNumberOptions,
+  StyledInputSelectNumber,
 } from './dvt-input-select.module';
 
 interface SelectData {
@@ -43,6 +45,8 @@ export interface DvtInputSelectProps {
   selectedValues: any[];
   setSelectedValues: (newSelectedVales: any[]) => void;
   typeDesign?: 'text' | 'form' | 'chartsForm';
+  startNumber?: number;
+  endNumber?: number;
 }
 
 const DvtInputSelect = ({
@@ -52,6 +56,8 @@ const DvtInputSelect = ({
   selectedValues,
   setSelectedValues,
   typeDesign = 'text',
+  startNumber,
+  endNumber,
 }: DvtInputSelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -72,6 +78,17 @@ const DvtInputSelect = ({
     option => !selectedValues.includes(option.value),
   );
 
+  let index: number = startNumber || 0;
+
+  if (data.length === 0) {
+    while (endNumber ? index < endNumber + 1 : false) {
+      data.push({
+        label: index.toString(),
+        value: index,
+      });
+      index += 1;
+    }
+  }
   return (
     <StyledInputSelect ref={ref}>
       <StyledInputSelectLabel
@@ -110,7 +127,7 @@ const DvtInputSelect = ({
           />{' '}
         </StyledInputSelectIcon>
       </StyledInputSelectInput>
-      {isOpen && (
+      {isOpen && !endNumber && (
         <StyledInputSelectOptions
           itemLength={data.length}
           typeDesign={typeDesign}
@@ -136,6 +153,20 @@ const DvtInputSelect = ({
             </StyledInputSelectOptionsLabel>
           ))}
         </StyledInputSelectOptions>
+      )}
+      {isOpen && endNumber && (
+        <StyledInputSelectNumberOptions>
+          {data.map(option => (
+            <StyledInputSelectNumber
+              key={option.value}
+              onClick={() => toggleOption(option.value)}
+              selected={selectedValues.includes(option.value)}
+              typeDesign={typeDesign}
+            >
+              {option.label}
+            </StyledInputSelectNumber>
+          ))}
+        </StyledInputSelectNumberOptions>
       )}
     </StyledInputSelect>
   );

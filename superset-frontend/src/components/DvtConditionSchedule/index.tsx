@@ -73,39 +73,6 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
     }[]
   >([]);
 
-  const dayOptions: { label: string; value: number }[] = [];
-  let dayIndex = 0;
-
-  while (dayIndex < 31) {
-    dayIndex += 1;
-    dayOptions.push({
-      label: `Day ${dayIndex}`,
-      value: dayIndex,
-    });
-  }
-
-  const hourOptions: { label: string; value: number }[] = [];
-  let hourIndex = 0;
-
-  while (hourIndex < 24) {
-    hourOptions.push({
-      label: `Hour ${hourIndex}`,
-      value: hourIndex,
-    });
-    hourIndex += 1;
-  }
-
-  const minuteOptions: { label: string; value: number }[] = [];
-  let minuteIndex = 0;
-
-  while (minuteIndex < 60) {
-    minuteOptions.push({
-      label: `Minute ${minuteIndex}`,
-      value: minuteIndex,
-    });
-    minuteIndex += 1;
-  }
-
   const generateCronExpression = () => {
     const sortAndCombine = (arr: any[]) => {
       if (arr.length === 0) {
@@ -178,7 +145,9 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
           )}
           {['year', 'month'].includes(timeSelected.value) && (
             <DvtInputSelect
-              data={dayOptions}
+              data={[]}
+              startNumber={1}
+              endNumber={31}
               placeholder={t('day')}
               selectedValues={day}
               setSelectedValues={setDay}
@@ -198,7 +167,9 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
           )}
           {['year', 'month', 'week', 'day'].includes(timeSelected.value) && (
             <DvtInputSelect
-              data={hourOptions}
+              data={[]}
+              startNumber={0}
+              endNumber={23}
               placeholder={t('hour')}
               selectedValues={hour}
               setSelectedValues={setHour}
@@ -209,7 +180,9 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
             timeSelected.value,
           ) && (
             <DvtInputSelect
-              data={minuteOptions}
+              data={[]}
+              startNumber={0}
+              endNumber={59}
               placeholder={t('minute')}
               selectedValues={minute}
               setSelectedValues={setMinute}
