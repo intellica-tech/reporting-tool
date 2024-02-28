@@ -55,6 +55,18 @@ const StyledModalCard = styled.div<StyledModalProps>`
       ? '790px'
       : '250px'};
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
 `;
 
 const StyledModalCardClose = styled.div`

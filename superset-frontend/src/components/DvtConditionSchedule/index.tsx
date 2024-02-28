@@ -110,6 +110,58 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
     setSchedule(generateCronExpression());
   }, [minute, hour, day, month, week]);
 
+  const parseCronExpression = (cronExpression: string) => {
+    const [minuteExp, hourExp, dayExp, monthExp, weekExp] =
+      cronExpression.split(' ');
+
+    // Parse minute
+    const parsedMinute =
+      minuteExp === '*' ? [] : parseRangeExpression(minuteExp);
+
+    // Parse hour
+    const parsedHour = hourExp === '*' ? [] : parseRangeExpression(hourExp);
+
+    // Parse day
+    const parsedDay = dayExp === '*' ? [] : parseRangeExpression(dayExp);
+
+    // Parse month
+    const parsedMonth = monthExp === '*' ? [] : parseRangeExpression(monthExp);
+
+    // Parse week
+    const parsedWeek = weekExp === '*' ? [] : parseRangeExpression(weekExp);
+
+    // Update state
+    setMinute(parsedMinute);
+    setHour(parsedHour);
+    setDay(parsedDay);
+    setMonth(parsedMonth);
+    setWeek(parsedWeek);
+  };
+
+  const parseRangeExpression = (expression: string) => {
+    const result: any[] = [];
+    const ranges = expression.split(',');
+
+    ranges.forEach(range => {
+      if (range.includes('-')) {
+        const [start, end] = range.split('-').map(item => item);
+        for (let i = start; i <= end; i += 1) {
+          result.push(i);
+        }
+      } else {
+        result.push(range);
+      }
+    });
+
+    return result;
+  };
+
+  useEffect(() => {
+    if (schedule && selectedRadio === 'Cron') {
+      parseCronExpression(schedule);
+    }
+  }, [schedule]);
+
   return (
     <StyledConditionSchedule>
       <DvtRadioList

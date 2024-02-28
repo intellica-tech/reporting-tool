@@ -92,12 +92,6 @@ const StyledAlertAddAlertConditionSchedule = styled.div`
   width: 226px;
 `;
 
-const StyledAlertAddSelectFlex = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-`;
-
 const StyledAlertAddInputFlex = styled.div`
   display: flex;
   gap: 6px;
@@ -129,7 +123,6 @@ export {
   StyledAlertAddAlertConition,
   StyledAlertAddTitle,
   StyledAlertAddAlertConditionSchedule,
-  StyledAlertAddSelectFlex,
   StyledAlertAddMessageContent,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
