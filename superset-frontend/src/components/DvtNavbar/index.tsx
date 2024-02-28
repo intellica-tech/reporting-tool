@@ -330,7 +330,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               data={activeData}
               setActive={() => {}}
             />
-          )}{' '}
+          )}
         </NavbarBottom>
       )}{' '}
       {pathName === `/superset/dashboard/${extractDashboardId(pathName)}/` && (
