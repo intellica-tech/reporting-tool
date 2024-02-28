@@ -60,8 +60,7 @@ const StyledDvtSidebarHeader = styled.div`
 `;
 
 const StyledDvtSidebarBody = styled.div<StyledDvtSidebarBodyProps>`
-  padding: ${({ pathName }) =>
-    `0 ${pathName === '/welcome/' ? 16 : 8}`}px;
+  padding: ${({ pathName }) => `0 ${pathName === '/welcome/' ? 16 : 8}`}px;
   flex: 1;
   display: flex;
   flex-direction: column;
