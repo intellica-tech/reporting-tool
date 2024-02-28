@@ -17,6 +17,10 @@ export const UserData: UserDataProps = {
 
 export const sqlTabsData = [
   {
+    label: t('SQL Hub'),
+    value: '/sqlhub/',
+  },
+  {
     label: t('Saved Queries'),
     value: '/savedqueryview/list/',
   },

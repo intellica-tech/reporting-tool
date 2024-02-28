@@ -33,6 +33,7 @@ import {
   StyledSelectColors,
   StyledSelectColor,
   StyledSelectColorsLabel,
+  StyledError,
 } from './dvt-select-color-scheme.module';
 
 export interface DvtSelectColorSchemeProps {
@@ -48,6 +49,7 @@ export interface DvtSelectColorSchemeProps {
   important?: boolean;
   importantLabel?: string;
   objectName?: string;
+  error?: string;
 }
 
 const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
@@ -63,6 +65,7 @@ const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
   important,
   importantLabel = 'Cannot be empty',
   objectName = 'label',
+  error,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -166,6 +169,7 @@ const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
           ))}
         </StyledSelectColorSchemeOptions>
       )}
+      {error && <StyledError>{error}</StyledError>}
     </StyledSelectColorScheme>
   );
 };

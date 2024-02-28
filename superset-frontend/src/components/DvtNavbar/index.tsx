@@ -82,9 +82,6 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
-  const [sqlTab, setSqlTab] = useState<any>(
-    sqlTabsData.find(item => item.value === pathName),
-  );
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -105,8 +102,6 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       case '/sqlhub/history/':
       case '/savedqueryview/list/':
         return t('SQL');
-      case '/superset/profile/admin/':
-        return t('Profile');
       case '/chart/add':
         return t('Create New Chart');
       case '/explore/':
@@ -167,18 +162,21 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     }
   }, [getExploreApi]);
 
-  const sqlPathname = ['/sqlhub/history/', '/savedqueryview/list/'];
+  const sqlPathname = ['/sqlhub/', '/sqlhub/history/', '/savedqueryview/list/'];
 
   useEffect(() => {
-    if (sqlPathname.includes(pathName) && pathName !== sqlTab.value) {
-      history.push(sqlTab.value);
+    if (
+      sqlPathname.includes(pathName) &&
+      pathName !== viewListSelector.sqlhub.value
+    ) {
+      history.push(viewListSelector.sqlhub.value);
     }
-  }, [pathName, sqlTab]);
+  }, [pathName, viewListSelector]);
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
       <NavbarTop>
-        {pathName !== '/superset/profile/admin/' ? (
+        {pathName !== '/profile/' ? (
           <>
             <DvtDotTitle label={pathTitles(pathName)} />
             <NavbarSearchGroup>
@@ -273,9 +271,11 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           )}
           {sqlPathname.includes(pathName) && (
             <DvtButtonTabs
-              active={sqlTab}
+              active={viewListSelector.sqlhub}
               data={sqlTabsData}
-              setActive={value => setSqlTab(value)}
+              setActive={value =>
+                dispatch(dvtNavbarViewlistTabs({ value, key: 'sqlhub' }))
+              }
             />
           )}
           {pathName === '/dashboard/list/' && (
@@ -309,6 +309,13 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                 onClick={() => {}}
               />
             </>
+          )}
+          {pathName === '/sqlhub/' && (
+            <DvtButtonTabs
+              active={viewListSelector}
+              data={activeData}
+              setActive={() => {}}
+            />
           )}
         </NavbarBottom>
       )}

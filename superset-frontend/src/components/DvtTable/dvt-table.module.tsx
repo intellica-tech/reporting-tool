@@ -93,6 +93,26 @@ const StyledTableTh = styled.th<StyledTableThProps>`
   }
 `;
 
+const StyledTableThSort = styled.button`
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  border: none;
+`;
+
+interface StyledTableThSortRotate {
+  asc: boolean;
+}
+
+const StyledTableThSortRotate = styled.span<StyledTableThSortRotate>`
+  display: flex;
+  transform: rotate(${({ asc }) => (asc ? '180deg' : '0deg')});
+`;
+
 const StyledTableTbody = styled.tbody``;
 
 const StyledTableTd = styled.td`
@@ -125,6 +145,8 @@ export {
   StyledTabletHead,
   StyledTableTr,
   StyledTableTh,
+  StyledTableThSort,
+  StyledTableThSortRotate,
   StyledTableTbody,
   StyledTableTd,
   StyledTableTitle,

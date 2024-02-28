@@ -29,7 +29,7 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
@@ -49,6 +49,10 @@ function ReportList() {
   );
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'changed_on_delta_humanized',
+    direction: 'desc',
+  });
   const [count, setCount] = useState(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [dataOnReady, setDataOnReady] = useState<boolean>(false);
@@ -98,13 +102,19 @@ function ReportList() {
         },
       ],
       page: gPage,
+      orderColumn: sort.column,
+      orderDirection: sort.direction,
     })}`;
 
   const [reportApiUrl, setReportApiUrl] = useState<string>('');
+  const [reportApiEditUrl, setReportApiEditUrl] = useState<string>('');
   const [favoriteApiUrl, setFavoriteApiUrl] = useState<string>('');
 
   const reportData = useFetch({
     url: reportApiUrl,
+  });
+  const reportEditPromise = useFetch({
+    url: reportApiEditUrl,
   });
   const favoriteData = useFetch({ url: favoriteApiUrl });
 
@@ -112,15 +122,7 @@ function ReportList() {
     if (reportData) {
       const editedDatas = reportData.result.map((item: any) => ({
         ...item,
-        date: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
-        created_by: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
-        changed_by: `${item.changed_by?.first_name} ${item.changed_by?.last_name}`,
-        owner: item.owners.length
-          ? `${item.owners[0]?.first_name} ${item.owners[0]?.last_name}`
-          : '',
-        dashboards: item.dashboards.length
-          ? item.dashboards[0]?.dashboard_title
-          : '',
+        last_saved_at: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
       }));
       setData(editedDatas);
       setCount(reportData.count);
@@ -163,7 +165,7 @@ function ReportList() {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setReportApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -221,20 +223,11 @@ function ReportList() {
     setSelectedRows([]);
   };
 
-  const handleEditCharts = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/chart/${item.id}`);
-      const editedChartData = await response.json();
-
-      dispatch(
-        openModal({
-          component: 'edit-chart',
-          meta: editedChartData,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
+  const handleEditCharts = (item: any) => {
+    setReportApiEditUrl(`chart/${item.id}`);
+    setTimeout(() => {
+      setReportApiEditUrl('');
+    }, 500);
   };
 
   const handleSingleExport = (id: number) => {
@@ -261,24 +254,23 @@ function ReportList() {
     header: [
       {
         id: 1,
-        title: t('Chart'),
+        title: t('Name'),
         field: 'slice_name',
         checkbox: true,
         urlField: 'url',
+        sort: true,
       },
-      { id: 2, title: t('Visualization Type'), field: 'viz_type' },
+      { id: 2, title: t('Visualization Type'), field: 'viz_type', sort: true },
       {
         id: 3,
         title: t('Dataset'),
         field: 'datasource_name_text',
         urlField: 'datasource_url',
       },
-      { id: 4, title: t('Modified date'), field: 'date' },
-      { id: 5, title: t('Modified by'), field: 'changed_by' },
-      { id: 6, title: t('Created by'), field: 'created_by' },
+      { id: 4, title: t('Modified date'), field: 'last_saved_at', sort: true },
       {
-        id: 7,
-        title: t('Action'),
+        id: 5,
+        title: t('Actions'),
         clicks: [
           {
             icon: 'edit_alt',
@@ -299,6 +291,17 @@ function ReportList() {
       },
     ],
   };
+
+  useEffect(() => {
+    if (reportEditPromise) {
+      dispatch(
+        openModal({
+          component: 'edit-chart',
+          meta: reportEditPromise,
+        }),
+      );
+    }
+  }, [reportEditPromise]);
 
   useEffect(
     () => () => {
@@ -325,6 +328,8 @@ function ReportList() {
             selected={selectedRows}
             setSelected={setSelectedRows}
             checkboxActiveField="id"
+            sort={sort}
+            setSort={setSort}
           />
         </>
       ) : (

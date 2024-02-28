@@ -161,3 +161,24 @@ Popover.args = {
   popoverLabel: 'Info',
   important: true,
 };
+export const ErrorExample = (args: DvtSelectProps) => {
+  const [selectedValue, setSelectedValue] = useState<string>('');
+
+  return (
+    <DvtSelect
+      {...args}
+      selectedValue={selectedValue}
+      setSelectedValue={setSelectedValue}
+    />
+  );
+};
+
+ErrorExample.args = {
+  label: 'State',
+  data: [
+    { value: 'failed', label: 'Failed' },
+    { value: 'success', label: 'Success' },
+  ],
+  placeholder: 'Select or type a value',
+  error: 'Error Example',
+};

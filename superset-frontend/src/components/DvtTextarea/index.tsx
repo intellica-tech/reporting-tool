@@ -22,6 +22,7 @@ import {
   StyleTextarea,
   StyleTextareaLabel,
   StyleTextareaText,
+  StyledError,
 } from './dvt-textarea.module';
 
 export interface DvtTextareaProps {
@@ -30,6 +31,7 @@ export interface DvtTextareaProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  error?: string;
 }
 
 const DvtTextarea: React.FC<DvtTextareaProps> = ({
@@ -38,6 +40,7 @@ const DvtTextarea: React.FC<DvtTextareaProps> = ({
   placeholder,
   value,
   onChange,
+  error,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
@@ -52,6 +55,7 @@ const DvtTextarea: React.FC<DvtTextareaProps> = ({
         placeholder={placeholder}
         onChange={handleChange}
       />
+      {error && <StyledError>{error}</StyledError>}
     </StyleTextarea>
   );
 };

@@ -214,6 +214,13 @@ const StyledInputSelectNumber = styled.div<StyledInputSelectProps>`
   font-weight: ${({ selected }) => (selected ? '600' : '')}; ;
 `;
 
+const StyledError = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.error.base};
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 0 0 2px;
+`;
+
 export {
   StyledInputSelectInput,
   StyledInputSelectField,
@@ -225,4 +232,5 @@ export {
   StyledInputSelectDiv,
   StyledInputSelectNumberOptions,
   StyledInputSelectNumber,
+  StyledError,
 };

@@ -49,4 +49,11 @@ const StyleTextareaText = styled.textarea<StyledTextAreaProps>`
       : ''};
 `;
 
-export { StyleTextarea, StyleTextareaText, StyleTextareaLabel };
+const StyledError = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.error.base};
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 0 0 2px;
+`;
+
+export { StyleTextarea, StyleTextareaText, StyleTextareaLabel, StyledError };

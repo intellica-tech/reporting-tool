@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarChartAddSetProperty,
+  dvtSidebarProfileSetTabs,
   dvtSidebarSetDataProperty,
   dvtSidebarSetProperty,
   dvtSidebarSetPropertySelectedRemove,
@@ -31,7 +32,6 @@ import {
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
   // StyledDvtSidebarFooter,
-  StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
   StyledDvtSidebarIcon,
@@ -75,13 +75,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     state => state.dvtSidebar.annotationLayer,
   );
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
+  const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectCategories, setSelectCategories] =
     useState<{ value: string; label: string }>();
@@ -110,7 +110,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'queryHistory';
       case '/savedqueryview/list/':
         return 'savedQuery';
-      case '/superset/profile/admin/':
+      case '/profile/':
         return 'profile';
       case '/chart/add':
         return 'chartAdd';
@@ -814,22 +814,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
+
       {pathTitles(pathName) === 'profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
-          {sidebarDataFindPathname?.data.map((data: any, index: number) => (
-            <StyledDvtSidebarBodyItem key={index}>
-              <DvtNavigationBar
-                active={active}
-                data={data.items}
-                setActive={setActive}
-              />
-              <StyledDvtSidebarNavbarLogout>
-                <DvtNavigationBar data={data.itemsLogout} />
-              </StyledDvtSidebarNavbarLogout>
-            </StyledDvtSidebarBodyItem>
-          ))}
+          <StyledDvtSidebarBodyItem>
+            <DvtNavigationBar
+              active={profileSelector.tabs}
+              data={sidebarDataFindPathname?.data || []}
+              setActive={pItem => dispatch(dvtSidebarProfileSetTabs(pItem))}
+            />
+          </StyledDvtSidebarBodyItem>
         </StyledDvtSidebarBody>
       )}
+
       {/* {pathTitles(pathName) === 'welcome' && (
         <StyledDvtSidebarFooter>
           <DvtDarkMode
