@@ -726,8 +726,8 @@ EXPLORE_FORM_DATA_CACHE_CONFIG: CacheConfig = {
 STORE_CACHE_KEYS_IN_METADATA_DB = False
 
 # CORS Options
-ENABLE_CORS = True
-CORS_OPTIONS = { 'supports_credentials': True, 'allow_headers': ['*'], 'resources':['*'], 'origins': ['http://localhost:5000'], }
+ENABLE_CORS = False
+CORS_OPTIONS: dict[Any, Any] = {}
 
 # Sanitizes the HTML content used in markdowns to allow its rendering in a safe manner.
 # Disabling this option is not recommended for security reasons. If you wish to allow
@@ -756,7 +756,7 @@ HTML_SANITIZATION_SCHEMA_EXTENSIONS: dict[str, Any] = {}
 # next available socket. PR #5039 is trying to allow domain sharding for Superset,
 # and this feature will be enabled by configuration only (by default Superset
 # doesn't allow cross-domain request).
-SUPERSET_WEBSERVER_DOMAINS = ["localhost:5000", "http://localhost:5000"]
+SUPERSET_WEBSERVER_DOMAINS = None
 
 # Allowed format types for upload on Database view
 EXCEL_EXTENSIONS = {"xlsx", "xls"}
