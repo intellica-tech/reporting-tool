@@ -78,6 +78,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
+  const queryHistorySelector = useAppSelector(
+    state => state.dvtSidebar.queryHistory,
+  );
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
@@ -262,6 +265,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           keyNames: ['database'],
         },
         {
+          key: 'queryHistory',
+          keyNames: ['database'],
+        },
+        {
           key: 'reports',
           keyNames: ['owner', 'createdBy', 'dataset', 'dashboards'],
         },
@@ -442,6 +449,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         keyNames: ['database', 'schema', 'see_table_schema'],
       },
       {
+        key: 'queryHistory',
+        keyNames: ['database'],
+      },
+      {
         key: 'dashboard',
         keyNames: ['owner', 'createdBy'],
       },
@@ -488,7 +499,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'connection',
     'sqlhub',
     'chartAdd',
-    'sqlhubHistory',
+    'queryHistory',
     'chart',
   ];
 
@@ -670,6 +681,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'sqlhub'
                             ? sqlhubSelector[data.name]
+                            : pathTitles(pathName) === 'queryHistory'
+                            ? queryHistorySelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
@@ -710,7 +723,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             : pathTitles(pathName) === 'dashboard'
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
-                            ? annotationLayerSelector[data.name]
+                            ? annotationLayerSelector[data.name] 
+                            : pathTitles(pathName) === 'queryHistory'
+                            ? queryHistorySelector[data.name]
                             : undefined
                         }
                         onChange={value => {

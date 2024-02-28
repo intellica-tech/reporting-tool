@@ -6,6 +6,7 @@ import DvtTable from 'src/components/DvtTable';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { StyledSqlPagination } from './dvt-query-history.module';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 
 const QueryHistoryHeader = [
   {
@@ -63,6 +64,9 @@ const QueryHistoryHeader = [
 ];
 
 function DvtQueryHistory() {
+  const queryHistorySelector = useAppSelector(
+    state => state.dvtSidebar.queryHistory,
+  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState<number>(0);

@@ -85,6 +85,11 @@ interface DvtSidebarState {
     schema: any;
     see_table_schema: any[string];
   };
+  queryHistory: {
+    database: any;
+    schema: any;
+    see_table_schema: any[string];
+  };
   profile: {
     tabs: any;
   };
@@ -122,6 +127,9 @@ interface DvtSidebarState {
         dataset: boolean;
       };
       sqlhub: {
+        database: boolean;
+      };
+      queryHistory: {
         database: boolean;
       };
     };
@@ -162,6 +170,11 @@ interface DvtSidebarState {
       dataset: any[];
     };
     sqlhub: {
+      database: any[];
+      schema: any[];
+      see_table_schema: any[];
+    };
+    queryHistory: {
       database: any[];
       schema: any[];
       see_table_schema: any[];
@@ -235,6 +248,11 @@ const INITIAL_STATE = {
     schema: '',
     see_table_schema: [],
   },
+  queryHistory: {
+    database: '',
+    schema: '',
+    see_table_schema: [],
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -278,6 +296,9 @@ const initialState: DvtSidebarState = {
       sqlhub: {
         database: false,
       },
+      queryHistory: {
+        database: false,
+      },
     },
     alerts: {
       createdBy: [],
@@ -316,6 +337,11 @@ const initialState: DvtSidebarState = {
       dataset: [],
     },
     sqlhub: {
+      database: [],
+      schema: [],
+      see_table_schema: [],
+    },
+    queryHistory: {
       database: [],
       schema: [],
       see_table_schema: [],
@@ -380,6 +406,17 @@ const dvtSidebarSlice = createSlice({
                 ...state.data,
                 sqlhub: {
                   ...state.data.sqlhub,
+                  schema: [],
+                  see_table_schema: [],
+                },
+              },
+            };
+          case 'queryHistory':
+            return {
+              data: {
+                ...state.data,
+                queryHistory: {
+                  ...state.data.queryHistory,
                   schema: [],
                   see_table_schema: [],
                 },
