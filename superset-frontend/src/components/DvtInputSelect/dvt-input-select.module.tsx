@@ -170,6 +170,50 @@ const StyledInputSelectDiv = styled.div`
   font-size: 15px;
 `;
 
+const StyledInputSelectNumberOptions = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  width: 100%;
+  max-height: 274px;
+  overflow-y: auto;
+  animation: ${optionsKeyframes} 0.3s ease-in-out;
+  z-index: 999;
+  transform-origin: top;
+  background: ${({ theme }) => theme.colors.dvt.primary.light2};
+  margin-top: 5px;
+  border-radius: 4px;
+  padding: 8px 0 8px 0;
+  animation: ${optionsKeyframes} 0.3s ease-in-out;
+  transform-origin: top;
+  padding-left: 5px;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    border-radius: 3px;
+  }
+`;
+
+const StyledInputSelectNumber = styled.div<StyledInputSelectProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  background-color: ${({ theme, selected }) =>
+    selected ? theme.colors.dvt.text.help : ''};
+  font-weight: ${({ selected }) => (selected ? '600' : '')}; ;
+`;
+
 const StyledError = styled.div`
   color: ${({ theme }) => theme.colors.dvt.error.base};
   font-size: 12px;
@@ -186,5 +230,7 @@ export {
   StyledInputSelectOptions,
   StyledInputSelectOptionsLabel,
   StyledInputSelectDiv,
+  StyledInputSelectNumberOptions,
+  StyledInputSelectNumber,
   StyledError,
 };

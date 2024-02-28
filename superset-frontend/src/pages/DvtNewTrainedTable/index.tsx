@@ -147,23 +147,6 @@ function DvtNewTainedTable() {
     }, 200);
   };
 
-  // useEffect(() => {
-  //   if (postDataset) {
-  //     dispatch(
-  //       dvtSidebarSetProperty({
-  //         pageKey: 'chartAdd',
-  //         key: 'dataset',
-  //         value: {
-  //           id: postDataset.id,
-  //           value: postDataset.result.table_name,
-  //           label: postDataset.result.table_name,
-  //         },
-  //       }),
-  //     );
-  //     history.push('/chart/add');
-  //   }
-  // }, [postDataset]);
-
   useEffect(() => {
     if (postDataset) {
       history.push('/traindata');
