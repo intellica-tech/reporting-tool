@@ -34,7 +34,7 @@ function DvtSqllab() {
   const sqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const [limit, setLimit] = useState(1000);
   const [sqlValue, setSqlValue] = useState('SELECT ...');
-  // const [sqlEditorId, setSqlEditorId] = useState('');
+  const [sqlEditorId, setSqlEditorId] = useState('');
   const [tabActive, setTabActive] = useState<ButtonTabsDataProps>({
     label: t('RESULTS'),
     value: 'results',
@@ -44,7 +44,7 @@ function DvtSqllab() {
   const [getSeeTableSchemaApiUrl, setGetSeeTableSchemaApiUrl] = useState('');
   const [selectedSeeTableSchemaApiUrl, setSelectedSeeTableSchemaApiUrl] =
     useState('');
-  // const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
+  const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
   const [executePromiseUrl, setExecutePromiseUrl] = useState('');
 
   const getSchemaApi = useFetch({ url: getSchemaApiUrl });
@@ -53,45 +53,30 @@ function DvtSqllab() {
     url: selectedSeeTableSchemaApiUrl,
   });
 
-  // const formData = new FormData();
+  const formData = new FormData();
 
-  // const formDataObj = {
-  //   dbId: sqlhubSidebarSelector.database?.value,
-  //   schema: null,
-  //   autorun: false,
-  //   sql: sqlValue,
-  //   queryLimit: limit,
-  //   name: UNTITLED_QUERY,
-  // };
+  const formDataObj = {
+    dbId: sqlhubSidebarSelector.database?.value,
+    schema: null,
+    autorun: false,
+    sql: sqlValue,
+    queryLimit: limit,
+    name: UNTITLED_QUERY,
+  };
 
-  // formData.append(
-  //   'queryEditor',
-  //   JSON.stringify({
-  //     dbId: 1,
-  //     schema: null,
-  //     autorun: false,
-  //     sql: 'SELECT ...',
-  //     queryLimit: 1000,
-  //     name: 'Untitled Query 4',
-  //   }),
-  // );
+  formData.append('queryEditor', JSON.stringify(formDataObj));
 
-  // formData.append('aaa', 'sss');
-
-  // function generateBoundary() {
-  //   return `----WebKitFormBoundary${Math.random().toString(36).slice(2)}`;
-  // }
-
-  // const tabstateviewPromiseApi = useFetch({
-  //   url: tabstateviewPromiseUrl,
-  //   method: 'POST',
-  //   body: formData,
-  //   formData: true,
-  //   headers: {
-  //     'Content-Type': `multipart/form-data;boundary=${generateBoundary()}`,
-  //     'Content-Disposition': 'form-data; name="queryEditor"',
-  //   },
-  // });
+  const tabstateviewPromiseApi = useFetch({
+    url: tabstateviewPromiseUrl,
+    defaultParam: '/',
+    method: 'POST',
+    body: formData,
+    formData: true,
+    headers: {
+      'Content-Disposition': 'form-data; name="queryEditor"',
+    },
+    withoutJson: true,
+  });
 
   const executePromiseApi = useFetch({
     url: executePromiseUrl,
@@ -107,25 +92,24 @@ function DvtSqllab() {
       schema: sqlhubSidebarSelector.schema?.value,
       select_as_cta: false,
       sql: sqlValue,
-      sql_editor_id: '', // sqlEditorId
+      sql_editor_id: sqlEditorId,
       tab: UNTITLED_QUERY,
       tmp_table_name: '',
     },
   });
 
-  // useEffect(() => {
-  //   console.log(tabstateviewPromiseApi);
-  //   if (tabstateviewPromiseApi) {
-  //     // setSqlEditorId(tabstateviewPromiseApi.id);
-  //   }
-  // }, [tabstateviewPromiseApi]);
+  useEffect(() => {
+    if (tabstateviewPromiseApi) {
+      setSqlEditorId(tabstateviewPromiseApi.id);
+    }
+  }, [tabstateviewPromiseApi]);
 
   useEffect(() => {
     if (sqlhubSidebarSelector.database?.value) {
       setGetSchemaApiUrl(
         `database/${sqlhubSidebarSelector.database.value}/schemas/?q=(force:!f)`,
       );
-      // setTabstateviewPromiseUrl('tabstateview/');
+      setTabstateviewPromiseUrl('tabstateview/');
     }
   }, [sqlhubSidebarSelector.database]);
 
