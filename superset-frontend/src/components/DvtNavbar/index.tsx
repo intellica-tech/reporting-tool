@@ -85,7 +85,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
-      case '/superset/welcome/':
+      case '/welcome/':
         return t('Welcome Page');
       case '/dashboard/list/':
         return t('Dashboards');

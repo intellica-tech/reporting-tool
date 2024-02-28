@@ -19,7 +19,7 @@ const dataYesOrNo = [
 
 const DvtSidebarData: SidebarDataProps[] = [
   {
-    pathname: '/superset/welcome/',
+    pathname: '/welcome/',
     key: 'welcome',
     data: [
       {

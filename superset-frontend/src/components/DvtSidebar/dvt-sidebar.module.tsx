@@ -61,11 +61,11 @@ const StyledDvtSidebarHeader = styled.div`
 
 const StyledDvtSidebarBody = styled.div<StyledDvtSidebarBodyProps>`
   padding: ${({ pathName }) =>
-    `0 ${pathName === '/superset/welcome/' ? 16 : 8}`}px;
+    `0 ${pathName === '/welcome/' ? 16 : 8}`}px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: ${({ pathName }) => (pathName === '/superset/welcome/' ? 40 : 12)}px;
+  gap: ${({ pathName }) => (pathName === '/welcome/' ? 40 : 12)}px;
 `;
 
 const StyledDvtSidebarBodyItem = styled.div`

@@ -144,7 +144,7 @@ type Routes = {
 
 export const routes: Routes = [
   {
-    path: '/superset/welcome/',
+    path: '/welcome/',
     Component: DvtHome,
   },
   {
@@ -152,7 +152,7 @@ export const routes: Routes = [
     Component: DashboardList,
   },
   {
-    path: '/superset/dashboard/:idOrSlug/',
+    path: '/dashboard/:idOrSlug/',
     Component: Dashboard,
   },
   {
