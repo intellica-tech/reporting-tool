@@ -20,16 +20,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import {
-  StyledChartList,
+  StyledTab,
   StyledDashboard,
   StyledDashboardEdit,
   StyledOpenSelectMenuFilterTabs,
   StyledOpenSelectMenuFilterTabsGroup,
+  StyledChartList,
+  StyledChartFilter,
 } from './dvtdashboardEdit.module';
 import DvtCardDetailChartList, {
   DvtCardDetailChartListProps,
@@ -39,19 +39,50 @@ import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import useFetch from 'src/hooks/useFetch';
+import NewTabs from 'src/dashboard/components/gridComponents/new/NewTabs';
+import NewRow from 'src/dashboard/components/gridComponents/new/NewRow';
+import NewColumn from 'src/dashboard/components/gridComponents/new/NewColumn';
+import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
+import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
+import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import rison from 'rison';
 
 function DvtDashboardList() {
-  const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
   const [activeTab, setActiveTab] = useState<string>('charts');
+  const [chartsApiUrl, setChartsApiUrl] = useState<string>('');
   const [droppedData, setDroppedData] = useState<any[]>([]);
   const [chartData, setChartData] = useState<DvtCardDetailChartListProps>({
     data: [],
   });
+  const [sortType, setsortType] = useState<{ value: string; label: string }>({
+    label: t('Sort by name'),
+    value: 'slice_name',
+  });
+  const [searchInput, setSearchInput] = useState<string>('');
 
   const getApiData = useFetch({
-    url: '/chart/?q=(columns:!(changed_on_delta_humanized,changed_on_utc,datasource_id,datasource_type,datasource_url,datasource_name_text,description_markeddown,description,id,params,slice_name,thumbnail_url,url,viz_type,owners.id,created_by.id),filters:!((col:viz_type,opr:neq,value:filter_box)),order_column:changed_on_delta_humanized,order_direction:desc,page_size:200)',
+    url: chartsApiUrl,
   });
+
+  const searchApiUrls = () =>
+    `chart/${fetchQueryParamsSearch({
+      filters: [
+        {
+          col: 'slice_name',
+          opr: 'chart_all_text',
+          value: rison.encode(searchInput),
+        },
+      ],
+      pageSize: 250,
+      orderColumn: sortType.value,
+      orderDirection: 'asc',
+    })}`;
+
+  useEffect(() => {
+    setChartsApiUrl(searchApiUrls);
+  }, [searchInput, sortType]);
 
   useEffect(() => {
     if (getApiData) {
@@ -83,10 +114,16 @@ function DvtDashboardList() {
         const newData = Array.isArray(prevData)
           ? [...prevData, droppedData]
           : [droppedData];
-        console.log(newData);
         return newData;
       });
     }
+  };
+
+  const KEYS_TO_SORT = {
+    slice_name: t('name'),
+    viz_type: t('viz type'),
+    datasource_name: t('dataset'),
+    changed_on_delta_humanized: t('recent'),
   };
 
   return (
@@ -100,7 +137,7 @@ function DvtDashboardList() {
           buttonClick={() => history.push('/chart/add')}
         />
       </StyledDashboard>
-      <StyledChartList>
+      <StyledTab>
         <StyledOpenSelectMenuFilterTabsGroup>
           <StyledOpenSelectMenuFilterTabs
             activeTab={activeTab === 'charts'}
@@ -116,39 +153,48 @@ function DvtDashboardList() {
           </StyledOpenSelectMenuFilterTabs>
         </StyledOpenSelectMenuFilterTabsGroup>
 
-        <DvtButton
-          label="+ Create a New Chart"
-          onClick={() => history.push('/chart/add')}
-          size="small"
-          typeColour="powder"
-        />
-        <DvtInput
-          handleSearchClick={() => {}}
-          onChange={() => {}}
-          placeholder="Filter your charts"
-          size="small"
-          type="text"
-          typeDesign="chartsForm"
-          value=""
-        />
+        {activeTab === 'charts' && (
+          <StyledChartList>
+            <DvtButton
+              label="+ Create a New Chart"
+              onClick={() => history.push('/chart/add')}
+              size="small"
+              typeColour="powder"
+            />
+            <StyledChartFilter>
+              <DvtInput
+                onChange={setSearchInput}
+                placeholder="Filter your charts"
+                size="small"
+                type="text"
+                typeDesign="chartsForm"
+                value={searchInput}
+              />
 
-        <DvtSelect
-          data={[
-            {
-              label: 'Failed',
-              value: 'failed',
-            },
-            {
-              label: 'Success',
-              value: 'success',
-            },
-          ]}
-          placeholder="Short by recent"
-          selectedValue=""
-          setSelectedValue={() => {}}
-        />
-        <DvtCardDetailChartList data={chartData.data} />
-      </StyledChartList>
+              <DvtSelect
+                data={Object.entries(KEYS_TO_SORT).map(([key, label]) => ({
+                  label: t('Sort by %s', label),
+                  value: key,
+                }))}
+                placeholder="Short by recent"
+                selectedValue={sortType}
+                setSelectedValue={setsortType}
+              />
+            </StyledChartFilter>
+            <DvtCardDetailChartList data={chartData.data} />
+          </StyledChartList>
+        )}
+        {activeTab === 'layoutElements' && (
+          <>
+            <NewTabs />
+            <NewRow />
+            <NewColumn />
+            <NewHeader />
+            <NewMarkdown />
+            <NewDivider />
+          </>
+        )}
+      </StyledTab>
     </StyledDashboardEdit>
   );
 }

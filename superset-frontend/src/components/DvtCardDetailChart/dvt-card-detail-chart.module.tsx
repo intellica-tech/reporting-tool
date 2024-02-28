@@ -8,6 +8,7 @@ const StyledDvtCardDetailChart = styled.div`
   padding: 19px;
   gap: 20px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  cursor: move;
 `;
 
 const StyledDvtCardDetailChartTitle = styled.div`

@@ -83,6 +83,18 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
 
+  const extractDashboardId = (pathName: string) => {
+    const dashboardRegex = /^\/superset\/dashboard\/(\d+)\/?$/;
+    const isDashboardPage = dashboardRegex.test(pathName);
+
+    if (isDashboardPage) {
+      const dashboardId = pathName.match(dashboardRegex)?.[1];
+      return dashboardId ?? null;
+    }
+
+    return null;
+  };
+
   const pathTitles = (pathname: string) => {
     switch (pathname) {
       case '/welcome/':
@@ -112,6 +124,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('Annotation Layers');
       case '/traindata/':
         return t('New Trained Table');
+      case `/superset/dashboard/${extractDashboardId(pathName)}/`:
+        return t('Dashboards');
       default:
         return '';
     }
@@ -316,7 +330,22 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               data={activeData}
               setActive={() => {}}
             />
-          )}
+          )}{' '}
+        </NavbarBottom>
+      )}{' '}
+      {pathName === `/superset/dashboard/${extractDashboardId(pathName)}/` && (
+        <NavbarBottom>
+          <div />
+          <NavbarBottomRight>
+            <DvtButton
+              label="CANCEL"
+              onClick={() => {
+                history.push('/dashboard/list/');
+              }}
+              colour="grayscale"
+            />
+            <DvtButton label="SAVE" onClick={() => {}} />
+          </NavbarBottomRight>
         </NavbarBottom>
       )}
     </StyledDvtNavbar>
