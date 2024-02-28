@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import useOnClickOutside from '../../hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
@@ -40,7 +41,7 @@ interface SelectData {
 
 export interface DvtInputSelectProps {
   label?: string;
-  data: SelectData[];
+  data?: SelectData[];
   placeholder?: string;
   selectedValues: any[];
   setSelectedValues: (newSelectedVales: any[]) => void;
@@ -51,7 +52,7 @@ export interface DvtInputSelectProps {
 
 const DvtInputSelect = ({
   label,
-  data,
+  data = [],
   placeholder = '',
   selectedValues,
   setSelectedValues,
@@ -60,6 +61,7 @@ const DvtInputSelect = ({
   endNumber,
 }: DvtInputSelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [fixData, setFixData] = useState<SelectData[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
@@ -78,17 +80,21 @@ const DvtInputSelect = ({
     option => !selectedValues.includes(option.value),
   );
 
-  let index: number = startNumber || 0;
-
-  if (data.length === 0) {
-    while (endNumber ? index < endNumber + 1 : false) {
-      data.push({
-        label: index.toString(),
-        value: index,
-      });
-      index += 1;
+  useEffect(() => {
+    let fData = [];
+    if (startNumber !== undefined && endNumber) {
+      for (let i = startNumber; i < endNumber + 1; i += 1) {
+        fData.push({
+          label: i.toString(),
+          value: i,
+        });
+      }
+    } else {
+      fData = data;
     }
-  }
+    setFixData(fData);
+  }, [startNumber, endNumber]);
+
   return (
     <StyledInputSelect ref={ref}>
       <StyledInputSelectLabel
@@ -109,7 +115,7 @@ const DvtInputSelect = ({
           isOpen={isOpen}
           selected={selectedValues.length > 0}
         >
-          {data
+          {fixData
             .filter(option => selectedValues.includes(option.value))
             .map(option => option.label)
             .join(', ') || placeholder}
@@ -124,12 +130,12 @@ const DvtInputSelect = ({
                   ? theme.colors.dvt.text.label
                   : theme.colors.grayscale.dark2,
             })}
-          />{' '}
+          />
         </StyledInputSelectIcon>
       </StyledInputSelectInput>
-      {isOpen && !endNumber && (
+      {isOpen && !startNumber && !endNumber && (
         <StyledInputSelectOptions
-          itemLength={data.length}
+          itemLength={fixData.length}
           typeDesign={typeDesign}
         >
           {[...selectedOptions, ...unselectedOptions].map(option => (
@@ -154,20 +160,25 @@ const DvtInputSelect = ({
           ))}
         </StyledInputSelectOptions>
       )}
-      {isOpen && endNumber && (
-        <StyledInputSelectNumberOptions>
-          {data.map(option => (
-            <StyledInputSelectNumber
-              key={option.value}
-              onClick={() => toggleOption(option.value)}
-              selected={selectedValues.includes(option.value)}
-              typeDesign={typeDesign}
-            >
-              {option.label}
-            </StyledInputSelectNumber>
-          ))}
-        </StyledInputSelectNumberOptions>
-      )}
+      {isOpen &&
+        !!(
+          startNumber !== undefined &&
+          endNumber &&
+          !!(startNumber < endNumber)
+        ) && (
+          <StyledInputSelectNumberOptions>
+            {fixData.map(option => (
+              <StyledInputSelectNumber
+                key={option.value}
+                onClick={() => toggleOption(option.value)}
+                selected={selectedValues.includes(option.value)}
+                typeDesign={typeDesign}
+              >
+                {option.label}
+              </StyledInputSelectNumber>
+            ))}
+          </StyledInputSelectNumberOptions>
+        )}
     </StyledInputSelect>
   );
 };
