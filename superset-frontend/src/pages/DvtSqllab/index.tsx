@@ -17,7 +17,12 @@ import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
 import DvtButtonTabs, {
   ButtonTabsDataProps,
 } from 'src/components/DvtButtonTabs';
-import { StyledSqlhub, StyledSqlhubBottom } from './dvt-sqlhub.module';
+import DvtTable from 'src/components/DvtTable';
+import {
+  StyledSqlhub,
+  StyledSqlhubBottom,
+  SqlhubTableScroll,
+} from './dvt-sqlhub.module';
 
 const tabs = [
   { label: t('RESULTS'), value: 'results' },
@@ -34,17 +39,20 @@ function DvtSqllab() {
   const sqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const [limit, setLimit] = useState(1000);
   const [sqlValue, setSqlValue] = useState('SELECT ...');
-  // const [sqlEditorId, setSqlEditorId] = useState('');
+  const [sqlEditorId, setSqlEditorId] = useState('');
   const [tabActive, setTabActive] = useState<ButtonTabsDataProps>({
     label: t('RESULTS'),
     value: 'results',
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [resultHeader, setResultHeader] = useState<any[]>([]);
+  const [resultData, setResultData] = useState<any[]>([]);
 
   const [getSchemaApiUrl, setGetSchemaApiUrl] = useState('');
   const [getSeeTableSchemaApiUrl, setGetSeeTableSchemaApiUrl] = useState('');
   const [selectedSeeTableSchemaApiUrl, setSelectedSeeTableSchemaApiUrl] =
     useState('');
-  // const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
+  const [tabstateviewPromiseUrl, setTabstateviewPromiseUrl] = useState('');
   const [executePromiseUrl, setExecutePromiseUrl] = useState('');
 
   const getSchemaApi = useFetch({ url: getSchemaApiUrl });
@@ -53,28 +61,30 @@ function DvtSqllab() {
     url: selectedSeeTableSchemaApiUrl,
   });
 
-  // const formData = new FormData();
+  const formData = new FormData();
 
-  // const formDataObj = {
-  //   dbId: sqlhubSidebarSelector.database?.value,
-  //   schema: null,
-  //   autorun: false,
-  //   sql: sqlValue,
-  //   queryLimit: limit,
-  //   name: UNTITLED_QUERY,
-  // };
+  const formDataObj = {
+    dbId: sqlhubSidebarSelector.database?.value,
+    schema: null,
+    autorun: false,
+    sql: sqlValue,
+    queryLimit: limit,
+    name: UNTITLED_QUERY,
+  };
 
-  // formData.append('dbId', 's');
+  formData.append('queryEditor', JSON.stringify(formDataObj));
 
-  // const tabstateviewPromiseApi = useFetch({
-  //   url: tabstateviewPromiseUrl,
-  //   method: 'POST',
-  //   body: formData,
-  //   formData: true,
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  // });
+  const tabstateviewPromiseApi = useFetch({
+    url: tabstateviewPromiseUrl,
+    defaultParam: '/',
+    method: 'POST',
+    body: formData,
+    formData: true,
+    headers: {
+      'Content-Disposition': 'form-data; name="queryEditor"',
+    },
+    withoutJson: true,
+  });
 
   const executePromiseApi = useFetch({
     url: executePromiseUrl,
@@ -90,24 +100,24 @@ function DvtSqllab() {
       schema: sqlhubSidebarSelector.schema?.value,
       select_as_cta: false,
       sql: sqlValue,
-      sql_editor_id: '', // sqlEditorId
+      sql_editor_id: sqlEditorId.toString(),
       tab: UNTITLED_QUERY,
       tmp_table_name: '',
     },
   });
 
-  // useEffect(() => {
-  //   if (tabstateviewPromiseApi) {
-  //     setSqlEditorId(tabstateviewPromiseApi.id);
-  //   }
-  // }, [tabstateviewPromiseApi]);
+  useEffect(() => {
+    if (tabstateviewPromiseApi) {
+      setSqlEditorId(tabstateviewPromiseApi.id);
+    }
+  }, [tabstateviewPromiseApi]);
 
   useEffect(() => {
     if (sqlhubSidebarSelector.database?.value) {
       setGetSchemaApiUrl(
         `database/${sqlhubSidebarSelector.database.value}/schemas/?q=(force:!f)`,
       );
-      // setTabstateviewPromiseUrl('tabstateview/');
+      setTabstateviewPromiseUrl('tabstateview/');
     }
   }, [sqlhubSidebarSelector.database]);
 
@@ -198,11 +208,23 @@ function DvtSqllab() {
 
   useEffect(() => {
     if (executePromiseApi) {
-      console.log(executePromiseApi);
+      if (executePromiseApi.data.length) {
+        const firstObjectItem = Object.keys(executePromiseApi.data[0]);
+        const headerFormation = firstObjectItem.map((v, i) => ({
+          id: i,
+          title: v,
+          field: v,
+          sort: true,
+        }));
+        setResultHeader(headerFormation);
+        setResultData(executePromiseApi.data);
+      }
+      setLoading(false);
     }
   }, [executePromiseApi]);
 
   const handleRun = () => {
+    setLoading(true);
     setExecutePromiseUrl('sqllab/execute/');
     setTimeout(() => {
       setExecutePromiseUrl('');
@@ -233,6 +255,13 @@ function DvtSqllab() {
           setActive={setTabActive}
           data={tabs}
         />
+        {tabActive.value === 'results' &&
+          !loading &&
+          resultHeader.length !== 0 && (
+            <SqlhubTableScroll>
+              <DvtTable header={resultHeader} data={resultData} />
+            </SqlhubTableScroll>
+          )}
       </StyledSqlhubBottom>
     </StyledSqlhub>
   );

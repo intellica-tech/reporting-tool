@@ -68,7 +68,7 @@ const StyledCollapseDeleteIcon = styled.button`
   border: none;
   position: relative;
   margin-left: auto;
-  margin-right: 2px;
+  margin-right: 4px;
 
   &::before,
   &::after {
