@@ -17,7 +17,6 @@
  * under the License.
  */
 import React from 'react';
-import { supersetTheme } from '@superset-ui/core';
 import DvtSpinner, { DvtSpinnerProps } from '.';
 
 export default {
