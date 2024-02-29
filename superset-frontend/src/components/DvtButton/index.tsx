@@ -19,6 +19,7 @@
 import React from 'react';
 import { StyledDvtButton } from './dvt-button.module';
 import Icon from '../Icons/Icon';
+import DvtSpinner from '../DvtSpinner';
 
 export interface DvtButtonProps {
   label: string;
@@ -30,6 +31,8 @@ export interface DvtButtonProps {
   maxWidth?: boolean;
   iconToRight?: boolean;
   bold?: boolean;
+  loading?: boolean;
+  loadingType?: 'border' | 'grow';
 }
 
 const DvtButton: React.FC<DvtButtonProps> = ({
@@ -42,6 +45,8 @@ const DvtButton: React.FC<DvtButtonProps> = ({
   maxWidth = false,
   iconToRight = false,
   bold = false,
+  loading = false,
+  loadingType = 'border',
 }) => (
   <StyledDvtButton
     $size={size}
@@ -51,9 +56,17 @@ const DvtButton: React.FC<DvtButtonProps> = ({
     onClick={onClick}
     $bold={bold}
     $iconToRight={iconToRight}
+    disabled={loading}
   >
     {label}
-    {icon && <Icon fileName={icon} iconSize="l" />}
+    {icon && !loading && <Icon fileName={icon} iconSize="l" />}
+    {loading && (
+      <DvtSpinner
+        type={loadingType}
+        colour={typeColour === 'basic' ? 'white' : colour}
+        size="small"
+      />
+    )}
   </StyledDvtButton>
 );
 

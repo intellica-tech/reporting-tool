@@ -17,6 +17,7 @@
  * under the License.
  */
 import React from 'react';
+import { supersetTheme } from '@superset-ui/core';
 import DvtSpinner, { DvtSpinnerProps } from '.';
 
 export default {
@@ -32,6 +33,7 @@ export const Default = (args: DvtSpinnerProps) => (
     style={{
       padding: 20,
       height: '88vh',
+      backgroundColor: supersetTheme.colors.dvt.primary.light2,
     }}
   >
     <DvtSpinner {...args} />

@@ -21,23 +21,14 @@ import { StyledDvtSpinner } from './dvt-spinner.module';
 
 export interface DvtSpinnerProps {
   type: 'border' | 'grow';
-  colour?: 'primary' | 'success' | 'grayscale' | 'error';
-  typeColour?: 'basic' | 'powder';
-  size: 'small' | 'medium' | 'large';
+  colour?: 'primary' | 'success' | 'grayscale' | 'error' | 'white';
+  size: 'small' | 'medium' | 'large' | 'xlarge';
 }
 
 const DvtSpinner: React.FC<DvtSpinnerProps> = ({
   type = 'border',
   colour = 'primary',
-  typeColour = 'basic',
   size = 'medium',
-}) => (
-  <StyledDvtSpinner
-    $type={type}
-    $colour={colour}
-    $typeColour={typeColour}
-    $size={size}
-  />
-);
+}) => <StyledDvtSpinner $type={type} $colour={colour} $size={size} />;
 
 export default DvtSpinner;

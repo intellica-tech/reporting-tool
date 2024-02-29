@@ -19,34 +19,37 @@
 import { styled } from '@superset-ui/core';
 
 const sizes = {
-  small: 1.5,
-  medium: 2,
-  large: 3,
+  small: 1,
+  medium: 1.5,
+  large: 2.5,
+  xlarge: 4,
+};
+
+const sizesBorder = {
+  small: 0.15,
+  medium: 0.25,
+  large: 0.3,
+  xlarge: 0.4,
 };
 
 const colourFinder = {
   primary: {
     basic: 'base',
-    powder: 'light3',
   },
   success: {
     basic: 'dark1',
-    powder: 'light3',
   },
   grayscale: {
     basic: 'base',
-    powder: 'light2',
   },
   error: {
     basic: 'base',
-    powder: 'light1',
   },
 };
 
 interface StyledDvtSpinnerProps {
-  $size: 'small' | 'medium' | 'large';
-  $colour: 'primary' | 'success' | 'grayscale' | 'error';
-  $typeColour: 'basic' | 'powder';
+  $size: 'small' | 'medium' | 'large' | 'xlarge';
+  $colour: 'primary' | 'success' | 'grayscale' | 'error' | 'white';
   $type: 'border' | 'grow';
 }
 
@@ -56,12 +59,14 @@ const StyledDvtSpinner = styled.div<StyledDvtSpinnerProps>`
   min-height: ${({ $size }) => sizes[$size]}rem;
   border-radius: 50%;
 
-  ${({ $type, $colour, $typeColour, theme }) =>
+  ${({ $size, $type, $colour, theme }) =>
     ($type === 'border' &&
       `
-    border: 0.25rem solid ${
-      theme.colors.dvt[$colour][colourFinder[$colour][$typeColour]]
-    };
+    border: ${sizesBorder[$size]}rem solid ${
+        $colour === 'white'
+          ? theme.colors.grayscale.light5
+          : theme.colors.dvt[$colour][colourFinder[$colour].basic]
+      };
     border-right-color: transparent;
     animation: spinnerBorder .75s infinite;
 
@@ -75,7 +80,9 @@ const StyledDvtSpinner = styled.div<StyledDvtSpinnerProps>`
       `
     vertical-align: text-bottom;
     background-color: ${
-      theme.colors.dvt[$colour][colourFinder[$colour][$typeColour]]
+      $colour === 'white'
+        ? theme.colors.grayscale.light5
+        : theme.colors.dvt[$colour][colourFinder[$colour].basic]
     };
     animation: spinnerGrow .75s infinite;
 
