@@ -31,17 +31,17 @@ import {
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
-import {
-  sqlTabsData,
-  DvtNavbarTabsData,
-  WithNavbarBottom,
-} from './dvt-navbar-tabs-data';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
 import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
 import DvtDotTitle from '../DvtDotTitle';
 import DvtDropdown from '../DvtDropdown';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import {
+  sqlTabsData,
+  DvtNavbarTabsData,
+  WithNavbarBottom,
+} from './dvt-navbar-tabs-data';
 // import DvtInput from '../DvtInput';
 // import DvtSelect from '../DvtSelect';
 import DvtProfileMenu from '../DvtProfileMenu';

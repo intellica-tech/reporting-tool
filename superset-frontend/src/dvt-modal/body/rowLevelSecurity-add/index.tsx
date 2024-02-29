@@ -22,6 +22,10 @@ import useFetch from 'src/hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtButton from 'src/components/DvtButton';
+import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtTextarea from 'src/components/DvtTextarea';
+import { useDispatch } from 'react-redux';
+import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
 import {
   StyledDvtButtons,
   StyledDvtDescription,
@@ -32,10 +36,6 @@ import {
   StyledHeadTitle,
   StyledRowLevelSecurity,
 } from './rowlevelsecurity-add.module';
-import DvtInputSelect from 'src/components/DvtInputSelect';
-import DvtTextarea from 'src/components/DvtTextarea';
-import { useDispatch } from 'react-redux';
-import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
 
 const filterTypeData = [
   {
@@ -124,11 +124,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   }, [rolesDataPromise]);
 
   const handleAdd = () => {
-    // if (!value.ruleName) {
-    //   setErrorRuleName('You Have To Enter Rule Name');
-    // }
     setApiUrl('rowlevelsecurity/');
-    console.log(value);
   };
 
   useEffect(() => {
@@ -138,7 +134,6 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
       console.log('Close?:');
     }
   }, [rowLevelSecurityAddData]);
-  console.log(rowLevelSecurityAddData);
 
   const handleCancel = () => {
     setValue({
@@ -152,10 +147,6 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     });
     onClose();
   };
-  // console.log('value', value);
-
-  // console.log('rolesData:', rolesData);
-  // console.log('datasetData:', datasetData);
 
   useEffect(() => {
     if (apiUrl) {
