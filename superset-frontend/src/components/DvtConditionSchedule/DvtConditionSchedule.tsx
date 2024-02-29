@@ -1,21 +1,3 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import {
@@ -27,19 +9,15 @@ import DvtSelect from '../DvtSelect';
 import DvtInput from '../DvtInput';
 import { DvtAlertReportData } from '../../dvt-modal/alert-reportData';
 import DvtInputSelect from '../DvtInputSelect';
+import { DvtConditionScheduleProps } from '.';
 
-export interface DvtConditionScheduleProps {
-  schedule: string;
-  setSchedule: (newData: string) => void;
-}
-
-const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
+export const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
   schedule,
   setSchedule,
 }) => {
   const [selectedRadio, setSelectedRadio] = useState<string>('Every');
-  const [select, setSelect] = useState({
-    timeSelected: '' as string,
+  const [selecet, setSelect] = useState({
+    timeSelected: [] as number[],
     month: [] as number[],
     day: [] as number[],
     week: [] as number[],
@@ -71,22 +49,19 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
       return result.join(',');
     };
     const minuteExpression =
-      select.minute.length > 0 ? sortAndCombine(select.minute) : '*';
-    const hourExpression =
-      select.hour.length > 0 ? sortAndCombine(select.hour) : '*';
-    const dayExpression =
-      select.day.length > 0 ? sortAndCombine(select.day) : '*';
-    const monthExpression =
-      select.month.length > 0 ? sortAndCombine(select.month) : '*';
-    const weekExpression =
-      select.week.length > 0 ? sortAndCombine(select.week) : '*';
+      selecet.minute.length > 0 ? sortAndCombine(selecet.minute) : '*';
+    const hourExpression = selecethour.length > 0 ? sortAndCombine(hour) : '*';
+    const dayExpression = day.length > 0 ? sortAndCombine(day) : '*';
+    const monthExpression = month.length > 0 ? sortAndCombine(month) : '*';
+    const weekExpression = week.length > 0 ? sortAndCombine(week) : '*';
 
     return `${minuteExpression} ${hourExpression} ${dayExpression} ${monthExpression} ${weekExpression}`;
   };
 
   useEffect(() => {
     setSchedule(generateCronExpression());
-  }, [select.minute, select.hour, select.day, select.month, select.week]);
+    console.log('minute', minute);
+  }, [minute, hour, day, month, week]);
 
   const parseCronExpression = (cronExpression: string) => {
     const parseSegment = (segment: string) => {
@@ -148,34 +123,16 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
       const parsedSchedule = parseCronExpression(schedule);
       console.log('parsed', parsedSchedule);
       if (parsedSchedule.day.length) {
-        setSelect(prevSelect => ({
-          ...prevSelect,
-          day: parsedSchedule.day,
-        }));
+        setDay(parsedSchedule.day);
       }
       if (parsedSchedule.minute.length) {
-        setSelect(prevSelect => ({
-          ...prevSelect,
-          minute: parsedSchedule.minute,
-        }));
+        setMinute(parsedSchedule.minute);
       }
       if (parsedSchedule.month.length) {
-        setSelect(prevSelect => ({
-          ...prevSelect,
-          month: parsedSchedule.month,
-        }));
+        setMonth(parsedSchedule.month);
       }
       if (parsedSchedule.week.length) {
-        setSelect(prevSelect => ({
-          ...prevSelect,
-          week: parsedSchedule.week,
-        }));
-      }
-      if (parsedSchedule.hour.length) {
-        setSelect(prevSelect => ({
-          ...prevSelect,
-          hour: parsedSchedule.hour,
-        }));
+        setWeek(parsedSchedule.week);
       }
     }
   }, [schedule]);
@@ -196,96 +153,68 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
             data={
               DvtAlertReportData.find(item => item.name === 'time')?.data || []
             }
-            selectedValue={select.timeSelected}
-            setSelectedValue={selected => {
-              setSelect(prevSelect => ({
-                ...prevSelect,
-                timeSelected: selected,
-              }));
-            }}
+            selectedValue={timeSelected}
+            setSelectedValue={setTimeSelected}
             typeDesign="form"
             width={110}
           />
-          {select.timeSelected === 'year' && (
+          {timeSelected.value === 'year' && (
             <DvtInputSelect
               data={
                 DvtAlertReportData.find(item => item.name === 'month')?.data ||
                 []
               }
-              selectedValues={select.month}
+              selectedValues={month}
               placeholder={t('month')}
-              setSelectedValues={selected => {
-                setSelect(prevSelect => ({
-                  ...prevSelect,
-                  month: selected,
-                }));
-              }}
+              setSelectedValues={setMonth}
               typeDesign="chartsForm"
             />
           )}
-          {['year', 'month'].includes(select.timeSelected) && (
+          {['year', 'month'].includes(timeSelected.value) && (
             <DvtInputSelect
               data={[]}
               startNumber={1}
               endNumber={31}
               placeholder={t('day')}
-              selectedValues={select.day}
-              setSelectedValues={selected => {
-                setSelect(prevSelect => ({
-                  ...prevSelect,
-                  day: selected,
-                }));
-              }}
+              selectedValues={day}
+              setSelectedValues={setDay}
               typeDesign="chartsForm"
             />
           )}
-          {['year', 'month', 'week'].includes(select.timeSelected) && (
+          {['year', 'month', 'week'].includes(timeSelected.value) && (
             <DvtInputSelect
               data={
                 DvtAlertReportData.find(item => item.name === 'day')?.data || []
               }
               placeholder={t('week')}
-              selectedValues={select.week}
-              setSelectedValues={selected => {
-                setSelect(prevSelect => ({
-                  ...prevSelect,
-                  week: selected,
-                }));
-              }}
+              selectedValues={week}
+              setSelectedValues={setWeek}
               typeDesign="chartsForm"
             />
           )}
-          {['year', 'month', 'week', 'day'].includes(select.timeSelected) && (
+          {['year', 'month', 'week', 'day'].includes(timeSelected.value) && (
             <DvtInputSelect
               data={[]}
               startNumber={0}
               endNumber={23}
               placeholder={t('hour')}
-              selectedValues={select.hour}
-              setSelectedValues={selected => {
-                setSelect(prevSelect => ({
-                  ...prevSelect,
-                  hour: selected,
-                }));
-              }}
+              selectedValues={
+                DvtAlertReportData.find(item => item.name === hour)?.data || []
+              }
+              setSelectedValues={setHour}
               typeDesign="chartsForm"
             />
           )}
           {['year', 'month', 'week', 'day', 'hour'].includes(
-            select.timeSelected,
+            timeSelected.value,
           ) && (
             <DvtInputSelect
               data={[]}
               startNumber={0}
               endNumber={59}
               placeholder={t('minute')}
-              selectedValues={select.minute}
-              setSelectedValues={selected => {
-                setSelect(prevSelect => ({
-                  ...prevSelect,
-                  minute: selected,
-                }));
-              }}
+              selectedValues={minute}
+              setSelectedValues={setMinute}
               typeDesign="chartsForm"
             />
           )}
@@ -302,5 +231,3 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
     </StyledConditionSchedule>
   );
 };
-
-export default DvtConditionSchedule;

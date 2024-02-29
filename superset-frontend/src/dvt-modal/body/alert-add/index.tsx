@@ -10,6 +10,7 @@ import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
+import DvtConditionSchedule from 'src/components/DvtConditionSchedule/DvtConditionSchedule';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
@@ -28,7 +29,6 @@ import {
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
 } from './alert-add-modal.module';
-import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 
 interface InputProps {
   database: { label: string; value: string };
@@ -389,7 +389,7 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
             </StyledAlertAddTitle>
             <DvtConditionSchedule
               schedule={input.schedule}
-              setSchedule={selected => {
+              setSchedule={(selected: string) => {
                 const newValue =
                   selected === '' ? '0 * * * *' : String(selected);
                 setInput({ ...input, schedule: newValue });
