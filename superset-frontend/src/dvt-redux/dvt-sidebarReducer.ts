@@ -19,15 +19,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DvtSidebarState {
-  rowLevelSecurity: {
-    name: string;
-    description: string;
-    filterType: string;
-    tables: string;
-    roles: string;
-    groupKey: string;
-    clause: string;
-  };
   reports: {
     owner: any;
     createdBy: any;
@@ -87,6 +78,12 @@ interface DvtSidebarState {
     schema: any;
     see_table_schema: any[string];
   };
+  rowLevelSecurity: {
+    name: any;
+    modifiedBy: any;
+    groupKey: any;
+    filterType:any;
+  };
   data: {
     fetched: {
       alerts: {
@@ -119,6 +116,9 @@ interface DvtSidebarState {
       };
       sqlhub: {
         database: boolean;
+      };
+      rowLevelSecurity: {
+        modifiedBy: boolean;
       };
     };
     alerts: {
@@ -156,19 +156,13 @@ interface DvtSidebarState {
       schema: any[];
       see_table_schema: any[];
     };
+    rowLevelSecurity: {
+      modifiedBy: any[];
+    };
   };
 }
 
 const INITIAL_STATE = {
-  rowLevelSecurity: {
-    name: '',
-    description: '',
-    filterType: '',
-    tables: '',
-    roles: '',
-    groupKey: '',
-    clause: '',
-  },
   reports: {
     owner: '',
     createdBy: '',
@@ -228,6 +222,12 @@ const INITIAL_STATE = {
     schema: '',
     see_table_schema: [],
   },
+  rowLevelSecurity: {
+    name: '',
+    modifiedBy: '',
+    groupKey: '',
+    filterType:'',
+  },
 };
 
 const initialState: DvtSidebarState = {
@@ -265,6 +265,9 @@ const initialState: DvtSidebarState = {
       sqlhub: {
         database: false,
       },
+      rowLevelSecurity: {
+        modifiedBy: false,
+      },
     },
     alerts: {
       createdBy: [],
@@ -300,6 +303,9 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       see_table_schema: [],
+    },
+    rowLevelSecurity: {
+      modifiedBy: [],
     },
   },
 };

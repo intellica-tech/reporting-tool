@@ -24,7 +24,6 @@ import { useHistory } from 'react-router-dom';
 import useFetch from 'src/hooks/useFetch';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
-import Icon from 'src/components/Icons/Icon';
 import {
   dvtNavbarAlertSetTabs,
   dvtNavbarChartsSetTabs,
@@ -57,6 +56,7 @@ import {
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
 import DvtDropdown from '../DvtDropdown';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -116,7 +116,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
-      case '/rowlevelsecurityfiltersmodelview/list/':
+      case '/rowlevelsecurity/list/':
         return t('Row Level Security');
       default:
         return '';
@@ -175,6 +175,14 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       history.push(sqlTab.value);
     }
   }, [pathName, sqlTab]);
+
+  const handleRowLevelSecurityOpenModal = () => {
+    dispatch(
+      openModal({
+        component: 'rowlevelsecurity-add-modal',
+      }),
+    );
+  };
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
@@ -272,15 +280,14 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               </NavbarBottomRight>
             </>
           )}
-          {pathName === '/rowlevelsecurityfiltersmodelview/list/' && (
+          {pathName === '/rowlevelsecurity/list/' && (
             <>
               <div />
               <NavbarBottomRight>
-                <Icon
-                  fileName="dvt-add_square"
-                  onClick={() =>
-                    history.push('/rowlevelsecurityfiltersmodelview/add')
-                  }
+                <DvtButton
+                  label="Rule"
+                  onClick={handleRowLevelSecurityOpenModal}
+                  icon="dvt-add_square"
                 />
               </NavbarBottomRight>
             </>
@@ -324,7 +331,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
-          {/* {pathName === '/rowlevelsecurityfiltersmodelview/list/' && (
+          {/* {pathName === '/rowlevelsecurity/list/' && (
             <>
               <DvtDropdown
                 data={activeData}

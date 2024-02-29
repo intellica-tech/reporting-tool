@@ -16,46 +16,63 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 import { styled } from '@superset-ui/core';
 
 const StyledRowLevelSecurity = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
-`;
-
-const StyledRowLevelSecurityFilterAdd = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
+  padding: 10px;
+`;
+const StyledHeadTitle = styled.div`
+  font-size: 18px;
+  font-style: normal;
+  align-items: center;
+  font-weight: 700;
+  line-height: 160%;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
 `;
 
-const StyledRowLevelSecurityButton = styled.div`
+const StyledDvtInputLabel = styled.div`
+  ::after {
+    display: inline-block;
+    margin-left: 4px;
+    color: rgb(224, 67, 85);
+    content: '*';
+  }
+`;
+
+const StyledDvtInputLabelUnneccessary = styled.div``;
+
+const StyledDvtInput = styled.div`
+  flex: auto;
+  width: 404px;
+`;
+
+const StyledDvtSelect = styled.div`
+  flex: auto;
+`;
+
+const StyledDvtDescription = styled.div`
+  flex: auto;
+  width: 404px;
+  height: 90px;
+`;
+
+const StyledDvtButtons = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
+  gap: 10px;
 `;
 
-const StyledRowLevelSecurityCount = styled.div`
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 160%;
-  letter-spacing: 0.2px;
-`;
-
-const StyledRowLevelSecurityPagination = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
 export {
   StyledRowLevelSecurity,
-  StyledRowLevelSecurityButton,
-  StyledRowLevelSecurityFilterAdd,
-  StyledRowLevelSecurityCount,
-  StyledRowLevelSecurityPagination,
+  StyledHeadTitle,
+  StyledDvtInputLabel,
+  StyledDvtInput,
+  StyledDvtSelect,
+  StyledDvtInputLabelUnneccessary,
+  StyledDvtDescription,
+  StyledDvtButtons,
 };

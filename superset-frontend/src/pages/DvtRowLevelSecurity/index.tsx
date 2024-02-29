@@ -12,9 +12,11 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import {
   StyledRowLevelSecurity,
   StyledRowLevelSecurityButton,
-  StyledRowLevelSecurityCount,
+  StyledRowLevelSecurityPagination,
 } from './dvt-row-level-security.module';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
+import DvtPagination from 'src/components/DvtPagination';
 
 function DvtRowLevelSecurity() {
   const dispatch = useDispatch();
@@ -23,6 +25,9 @@ function DvtRowLevelSecurity() {
   const [data, setData] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const modalAddSuccess = useAppSelector(
+    state => state.dvtRowLevelSecurity.rowLevelSecurityAddStatus,
+  );
   const rowLevelSecuritySelector = useAppSelector(
     state => state.dvtSidebar.rowLevelSecurity,
   );
@@ -42,7 +47,7 @@ function DvtRowLevelSecurity() {
         {
           col: 'name',
           opr: 'sw',
-          value: rowLevelSecuritySelector.name?.value,
+          value: rowLevelSecuritySelector.name,
         },
         {
           col: 'filter_type',
@@ -52,7 +57,7 @@ function DvtRowLevelSecurity() {
         {
           col: 'group_key',
           opr: 'sw',
-          value: rowLevelSecuritySelector.groupKey?.value,
+          value: rowLevelSecuritySelector.groupKey,
         },
         {
           col: 'changed_by',
@@ -72,6 +77,9 @@ function DvtRowLevelSecurity() {
 
   useEffect(() => {
     setRowLevelSecurityApiUrl('rowlevelsecurity/');
+    setTimeout(() => {
+      setRowLevelSecurityApiUrl('');
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -94,11 +102,28 @@ function DvtRowLevelSecurity() {
   }, [rowLevelSecurityData]);
 
   useEffect(() => {
+    if (modalAddSuccess === 'Success') {
+      setRowLevelSecurityApiUrl('rowlevelsecurity/');
+      setTimeout(() => {
+        setRowLevelSecurityApiUrl('');
+      }, 500);
+      dispatch(dvtRowLevelSecurityAddStatus(''));
+    }
+  }, [modalAddSuccess]);
+
+  useEffect(() => {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setRowLevelSecurityApiUrl(searchApiUrls(page));
   }, [deleteSuccessStatus, page]);
+
+  useEffect(() => {
+    setPage(1);
+    if (page === 1) {
+      setRowLevelSecurityApiUrl(searchApiUrls(page));
+    }
+  }, [rowLevelSecuritySelector]);
 
   const handleDelete = () => {
     const selectedId = selectedRows.map(row => row.id);
@@ -169,16 +194,14 @@ function DvtRowLevelSecurity() {
 
   return (
     <StyledRowLevelSecurity>
-      <div style={{ paddingBottom: '23px' }}>
+      <StyledRowLevelSecurityButton>
         <DvtButton
-          label="REFRESH"
-          onClick={() => ({})}
-          iconToRight
-          colour="primary"
-          typeColour="powder"
-          icon="dvt-refresh"
+          label="Delete"
+          onClick={handleDelete}
+          colour="error"
+          typeColour="basic"
         />
-      </div>
+      </StyledRowLevelSecurityButton>
       <div>
         {!rowLevelSecurityData || rowLevelSecurityData.length === 0 ? (
           <DvtIconDataLabel
@@ -195,18 +218,14 @@ function DvtRowLevelSecurity() {
           />
         )}
       </div>
-      <StyledRowLevelSecurityButton>
-        <DvtButton
-          label="Delete"
-          onClick={handleDelete}
-          colour="error"
-          typeColour="basic"
+      <StyledRowLevelSecurityPagination>
+        <DvtPagination
+          page={page}
+          itemSize={count}
+          pageItemSize={10}
+          setPage={setPage}
         />
-        <StyledRowLevelSecurityCount>
-          {t('Record Count: ')}
-          {count}
-        </StyledRowLevelSecurityCount>
-      </StyledRowLevelSecurityButton>
+      </StyledRowLevelSecurityPagination>
     </StyledRowLevelSecurity>
   );
 }

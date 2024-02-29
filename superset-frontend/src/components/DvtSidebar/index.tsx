@@ -116,9 +116,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
-      case '/rowlevelsecurityfiltersmodelview/list/':
-        return 'rowLevelSecurity';
-      case '/rowlevelsecurityfiltersmodelview/list/':
+      case '/rowlevelsecurity/list/':
         return 'rowLevelSecurity';
       default:
         return '';
@@ -254,6 +252,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'datasetAdd',
           keyNames: ['database'],
         },
+        {
+          key: 'rowLevelSecurity',
+          keyNames: ['modifiedBy'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -287,6 +289,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'rowLevelSecurity-modifiedBy':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   default:
                     return {
@@ -424,6 +431,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       {
         key: 'annotationLayer',
         keyNames: ['createdBy'],
+      },
+      {
+        key: 'rowLevelSecurity',
+        keyNames: ['modifiedBy'],
       },
     ];
     const findPathTitle = selectionObjectKeys.find(
@@ -564,11 +575,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   <StyledDvtSidebarBodySelect key={index}>
                     {!data.datePicker && !data.status && (
                       <DvtSelect
-                        data={
-                          pathTitles(pathName) === 'rowLevelSecurity'
-                            ? data.data
-                            : selectsData(data)
-                        }
+                        data={selectsData(data)}
                         label={data.label}
                         placeholder={data.placeholder}
                         selectedValue={

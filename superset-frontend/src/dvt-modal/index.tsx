@@ -15,6 +15,7 @@ import {
   StyledModalCardBody,
   StyledModalCardClose,
 } from './dvt-modal.module';
+import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
 
 export interface ModalProps {
   meta: any;
@@ -35,6 +36,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtAlertAdd meta={meta} onClose={onClose} />;
     case 'report-add-modal':
       return <DvtReportAdd meta={meta} onClose={onClose} />;
+    case 'rowlevelsecurity-add-modal':
+      return <DvtRowLevelSecurityAdd meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -59,6 +62,8 @@ const DvtModal = () => {
       case 'connection-add-modal':
         return 'large';
       case 'edit-connection':
+        return 'large';
+      case 'rowlevelsecurity-add-modal':
         return 'large';
       default:
         return 'small';

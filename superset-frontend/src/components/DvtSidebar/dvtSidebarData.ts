@@ -585,7 +585,7 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/rowlevelsecurityfiltersmodelview/list/',
+    pathname: '/rowlevelsecurity/list/',
     key: 'rowLevelSecurity',
     data: [
       {
@@ -596,13 +596,6 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Modified By'),
         name: 'modifiedBy',
-        data: [
-          {
-            label: 'Superset Admin',
-            value: 'Superset Admin',
-            url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
-          },
-        ],
       },
       {
         placeholder: t('Group Key'),
@@ -612,7 +605,7 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Filter Type'),
         name: 'filterType',
-        data: [
+        values: [
           {
             label: 'Regular',
             value: 'Regular',
@@ -623,74 +616,13 @@ const DvtSidebarData: SidebarDataProps[] = [
           },
         ],
       },
-      {
-        placeholder: t('Tables'),
-        name: 'tables',
-      },
-      {
-        placeholder: t('Roles'),
-        name: 'roles',
-      },
-      {
-        placeholder: t('Clause'),
-        name: 'clause',
-        status: 'clause',
-      },
     ],
-  },
-  {
-    pathname: '/rowlevelsecurityfiltersmodelview/list/',
-    key: 'rowLevelSecurity',
-    data: [
+    apiUrls: [
       {
-        placeholder: t('Name'),
-        name: 'name',
-        status: 'input',
-      },
-      {
-        placeholder: t('Modified By'),
         name: 'modifiedBy',
-        data: [
-          {
-            label: 'Superset Admin',
-            value: 'Superset Admin',
-            url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
-          },
-        ],
+        url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
       },
-      {
-        placeholder: t('Group Key'),
-        name: 'groupKey',
-        status: 'input',
-      },
-      {
-        placeholder: t('Filter Type'),
-        name: 'filterType',
-        data: [
-          {
-            label: 'Regular',
-            value: 'Regular',
-          },
-          {
-            label: 'Base',
-            value: 'Base',
-          },
-        ],
-      },
-      {
-        placeholder: t('Tables'),
-        name: 'tables',
-      },
-      {
-        placeholder: t('Roles'),
-        name: 'roles',
-      },
-      {
-        placeholder: t('Clause'),
-        name: 'clause',
-        status: 'clause',
-      },
-    ],
+    ]
   },
 ];
 

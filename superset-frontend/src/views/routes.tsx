@@ -218,7 +218,7 @@ export const routes: Routes = [
     Component: DatasetCreation,
   },
   {
-    path: '/rowlevelsecurityfiltersmodelview/list/',
+    path: '/rowlevelsecurity/list/',
     Component: RowLevelSecurityList,
   },
   {
