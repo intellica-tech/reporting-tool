@@ -42,7 +42,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.dvt_auth.login import DVTAuthDBView
         from superset.dvt_explore.explore import DVTExplorePermalinkView
         from superset.dvt_tags.tags import DVTTagModelView
-        from superset.dvt_traindata.api import TrainDataRestApi
+        from superset.dvt_traindata.api import TrainDataRestApi, TrainDataSegmentationRestApi
         from superset.embedded.api import EmbeddedDashboardRestApi
         from superset.embedded.view import EmbeddedView
         from superset.explore.api import ExploreRestApi
@@ -131,6 +131,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_api(TagRestApi)
         appbuilder.add_api(SqlLabRestApi)
         appbuilder.add_api(TrainDataRestApi)
+        appbuilder.add_api(TrainDataSegmentationRestApi)
         #
         # Setup regular views
         #
