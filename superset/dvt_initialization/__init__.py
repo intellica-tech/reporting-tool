@@ -6,7 +6,7 @@ from flask_appbuilder.api import expose
 from flask_babel import gettext as __
 
 from superset import SupersetSecurityManager
-from superset.extensions import appbuilder, feature_flag_manager, db
+from superset.extensions import appbuilder, db, feature_flag_manager
 from superset.initialization import SupersetAppInitializer, SupersetIndexView
 from superset.superset_typing import FlaskResponse
 
@@ -38,7 +38,11 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.datasets.columns.api import DatasetColumnsRestApi
         from superset.datasets.metrics.api import DatasetMetricRestApi
         from superset.datasource.api import DatasourceRestApi
+        from superset.dvt_all_entities.all_entities import DVTTaggedObjectsModelView
         from superset.dvt_auth.login import DVTAuthDBView
+        from superset.dvt_explore.explore import DVTExplorePermalinkView
+        from superset.dvt_tags.tags import DVTTagModelView
+        from superset.dvt_traindata.api import TrainDataRestApi
         from superset.embedded.api import EmbeddedDashboardRestApi
         from superset.embedded.view import EmbeddedView
         from superset.explore.api import ExploreRestApi
@@ -76,6 +80,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         )
         from superset.views.datasource.views import DatasetEditor, Datasource
         from superset.views.dvt_sqllab import DVTSqlHubView
+        from superset.views.dvt_traindata import TrainDataView
         from superset.views.dynamic_plugins import DynamicPluginsView
         from superset.views.explore import ExploreView
         from superset.views.key_value import KV
@@ -91,11 +96,6 @@ class DVTAppInitializer(SupersetAppInitializer):
         )
         from superset.views.tags import TagView
         from superset.views.users.api import CurrentUserRestApi
-        from superset.views.dvt_traindata import TrainDataView
-        from superset.dvt_traindata.api import TrainDataRestApi
-        from superset.dvt_tags.tags import DVTTagModelView
-        from superset.dvt_all_entities.all_entities import DVTTaggedObjectsModelView
-        from superset.dvt_explore.explore import DVTExplorePermalinkView
 
         #
         # Setup API views
@@ -353,8 +353,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         if self.config["SILENCE_FAB"]:
             logging.getLogger("flask_appbuilder").setLevel(logging.ERROR)
 
-        custom_sm = self.config[
-                        "CUSTOM_SECURITY_MANAGER"] or SupersetSecurityManager
+        custom_sm = self.config["CUSTOM_SECURITY_MANAGER"] or SupersetSecurityManager
         if not issubclass(custom_sm, SupersetSecurityManager):
             raise Exception(  # pylint: disable=broad-exception-raised
                 """Your CUSTOM_SECURITY_MANAGER must now extend SupersetSecurityManager,

@@ -17,10 +17,9 @@
 import logging
 
 import requests
-from flask import request, Response, jsonify
+from flask import jsonify, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import permission_name
-
 
 from superset.extensions import event_logger
 from superset.views.base_api import BaseSupersetApi
@@ -54,8 +53,16 @@ class TrainDataRestApi(BaseSupersetApi):
             response = requests.post(external_api_url, json=payload)
 
             if response.ok:
-                return jsonify({"success": True, "message": f"Received payload: {payload}", "response": response.json()}), 200
+                return (
+                    jsonify(
+                        {
+                            "success": True,
+                            "message": f"Received payload: {payload}",
+                            "response": response.json(),
+                        }
+                    ),
+                    200,
+                )
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-

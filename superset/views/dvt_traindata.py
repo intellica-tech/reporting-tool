@@ -1,4 +1,4 @@
-from flask_appbuilder import permission_name, has_access
+from flask_appbuilder import has_access, permission_name
 from flask_appbuilder.api import expose
 
 from superset import event_logger
@@ -15,4 +15,3 @@ class TrainDataView(BaseSupersetView):
     @event_logger.log_this
     def root(self) -> FlaskResponse:
         return self.render_app_template()
-
