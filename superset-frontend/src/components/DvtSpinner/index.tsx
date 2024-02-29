@@ -20,9 +20,9 @@ import React from 'react';
 import { StyledDvtSpinner } from './dvt-spinner.module';
 
 export interface DvtSpinnerProps {
-  type: 'border' | 'grow';
+  type?: 'border' | 'grow';
   colour?: 'primary' | 'success' | 'grayscale' | 'error' | 'white';
-  size: 'small' | 'medium' | 'large' | 'xlarge';
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
 }
 
 const DvtSpinner: React.FC<DvtSpinnerProps> = ({

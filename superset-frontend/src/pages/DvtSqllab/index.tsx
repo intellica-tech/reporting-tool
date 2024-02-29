@@ -18,10 +18,12 @@ import DvtButtonTabs, {
   ButtonTabsDataProps,
 } from 'src/components/DvtButtonTabs';
 import DvtTable from 'src/components/DvtTable';
+import DvtSpinner from 'src/components/DvtSpinner';
 import {
   StyledSqlhub,
   StyledSqlhubBottom,
   SqlhubTableScroll,
+  SpinnerContainer,
 } from './dvt-sqlhub.module';
 
 const tabs = [
@@ -248,6 +250,7 @@ function DvtSqllab() {
         value={sqlValue}
         setValue={setSqlValue}
         clickRun={handleRun}
+        loading={loading}
       />
       <StyledSqlhubBottom>
         <DvtButtonTabs
@@ -255,13 +258,19 @@ function DvtSqllab() {
           setActive={setTabActive}
           data={tabs}
         />
-        {tabActive.value === 'results' &&
-          !loading &&
-          resultHeader.length !== 0 && (
-            <SqlhubTableScroll>
-              <DvtTable header={resultHeader} data={resultData} />
-            </SqlhubTableScroll>
-          )}
+        {loading ? (
+          <SpinnerContainer>
+            <DvtSpinner size="xlarge" />
+          </SpinnerContainer>
+        ) : (
+          <>
+            {tabActive.value === 'results' && resultHeader.length !== 0 && (
+              <SqlhubTableScroll>
+                <DvtTable header={resultHeader} data={resultData} />
+              </SqlhubTableScroll>
+            )}
+          </>
+        )}
       </StyledSqlhubBottom>
     </StyledSqlhub>
   );

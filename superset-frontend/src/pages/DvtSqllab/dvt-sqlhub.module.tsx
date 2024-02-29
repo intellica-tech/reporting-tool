@@ -59,4 +59,16 @@ const SqlhubTableScroll = styled.div`
   }
 `;
 
-export { StyledSqlhub, StyledSqlhubBottom, SqlhubTableScroll };
+const SpinnerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 38vh;
+  justify-content: center;
+`;
+
+export {
+  StyledSqlhub,
+  StyledSqlhubBottom,
+  SqlhubTableScroll,
+  SpinnerContainer,
+};

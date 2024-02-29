@@ -38,6 +38,7 @@ export interface DvtTextareaSelectRunProps {
   placeholder?: string;
   value: string;
   setValue: (newValue: string) => void;
+  loading?: boolean;
 }
 
 const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
@@ -47,6 +48,7 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
   placeholder = '',
   value,
   setValue,
+  loading = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const limitData = [10, 100, 1000, 10000, 100000];
@@ -97,7 +99,12 @@ const DvtTextareaSelectRun: React.FC<DvtTextareaSelectRunProps> = ({
           )}
         </StyledDvtTextareaLimit>
         <StyledDvtTextareaButton>
-          <DvtButton label={t('Run')} onClick={clickRun} maxWidth />
+          <DvtButton
+            label={t('Run')}
+            onClick={clickRun}
+            maxWidth
+            loading={loading}
+          />
         </StyledDvtTextareaButton>
       </StyledDvtTextareaGroup>
     </StyledDvtTextareaSelectRun>
