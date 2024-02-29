@@ -75,7 +75,7 @@ const DvtLayout = () => {
 
   const mainAppSidebarWidth = (pathName: string) => {
     switch (pathName) {
-      case '/superset/welcome/':
+      case '/welcome/':
         return 250;
       case '/dataset/add/':
         return 380;

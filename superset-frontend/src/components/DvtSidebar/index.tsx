@@ -92,7 +92,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
-      case '/superset/welcome/':
+      case '/welcome/':
         return 'welcome';
       case '/dashboard/list/':
         return 'dashboard';
@@ -556,8 +556,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       {withForms.includes(pathTitles(pathName)) && (
         <StyledDvtSidebarGroup>
           {DvtSidebarData.find(
-            (item: { pathname: string }) =>
-              item.pathname === '/superset/welcome/',
+            (item: { pathname: string }) => item.pathname === '/welcome/',
           )
             ?.data.filter((data: any) => data.titleMenu === 'folder navigation')
             .map((filteredData: any, index: number) => (

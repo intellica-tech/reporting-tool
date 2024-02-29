@@ -105,7 +105,7 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
 ];
 
 export const WithNavbarBottom: string[] = [
-  // '/superset/welcome/',
+  // '/welcome/',
   '/alert/list/',
   '/sqlhub/history/',
   '/savedqueryview/list/',
