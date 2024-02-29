@@ -96,7 +96,7 @@ const DvtInputSelect = ({
       fData = data;
     }
     setFixData(fData);
-  }, [startNumber, endNumber]);
+  }, [data, startNumber, endNumber]);
 
   return (
     <StyledInputSelect ref={ref}>

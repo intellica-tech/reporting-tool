@@ -39,7 +39,7 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
 }) => {
   const [selectedRadio, setSelectedRadio] = useState<string>('Every');
   const [select, setSelect] = useState({
-    timeSelected: '' as string,
+    timeSelected: 'minute' as string,
     month: [] as number[],
     day: [] as number[],
     week: [] as number[],
@@ -49,7 +49,7 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
 
   const generateCronExpression = () => {
     const sortAndCombine = (arr: any[]) => {
-      if (arr.length === 0) {
+      if (!arr || arr.length === 0 || arr.every(Number.isNaN)) {
         return '*';
       }
 
@@ -129,24 +129,33 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
     };
   };
 
-  const arrayNumbersFormationData = (numbers: any[]) => {
-    const fixedData = [];
-    for (let i = 0; i < numbers.length; i += 1) {
-      const element = numbers[i];
-      fixedData.push({
-        label: element.toString(),
-        value: element,
-      });
+  const timeSelectControl = (cronExpression: string) => {
+    const fields = cronExpression.split(/\s+/);
+    for (let i = fields.length; i > 0; i -= 1) {
+      if (fields[i] !== '*') {
+        switch (fields.length) {
+          case 1:
+            return 'minute';
+          case 2:
+            return 'hour';
+          case 3:
+            return 'day';
+          case 4:
+            return 'month';
+          case 5:
+            return 'year';
+          default:
+            return 'unknown';
+        }
+      }
     }
-    console.log('fix', fixedData);
-    return fixedData;
+
+    return 'unknown';
   };
 
   useEffect(() => {
-    console.log('schedule', schedule);
     if (schedule) {
       const parsedSchedule = parseCronExpression(schedule);
-      console.log('parsed', parsedSchedule);
       if (parsedSchedule.day.length) {
         setSelect(prevSelect => ({
           ...prevSelect,
@@ -180,6 +189,15 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
     }
   }, [schedule]);
 
+  useEffect(() => {
+    if (select.timeSelected === 'minute') {
+      setSelect(prevSelect => ({
+        ...prevSelect,
+        timeSelected: timeSelectControl(schedule),
+      }));
+    }
+  }, [schedule]);
+
   return (
     <StyledConditionSchedule>
       <DvtRadioList
@@ -196,11 +214,13 @@ const DvtConditionSchedule: React.FC<DvtConditionScheduleProps> = ({
             data={
               DvtAlertReportData.find(item => item.name === 'time')?.data || []
             }
-            selectedValue={select.timeSelected}
+            selectedValue={DvtAlertReportData.find(
+              item => item.name === 'time',
+            )?.data.find(item => item.value === select.timeSelected)}
             setSelectedValue={selected => {
               setSelect(prevSelect => ({
                 ...prevSelect,
-                timeSelected: selected,
+                timeSelected: selected.value,
               }));
             }}
             typeDesign="form"

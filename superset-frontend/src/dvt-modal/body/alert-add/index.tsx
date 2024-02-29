@@ -9,8 +9,8 @@ import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
+import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 import DvtInput from 'src/components/DvtInput';
-import DvtConditionSchedule from 'src/components/DvtConditionSchedule/DvtConditionSchedule';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
@@ -259,15 +259,15 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
         ).target,
         active: meta.editedAlertReportData.result.active,
         messageContent:
-          alertType === 'Dashboard'
+          alertType === 'Chart'
             ? {
-                value: meta.editedAlertReportData.result.dashboard.id,
-                label:
-                  meta.editedAlertReportData.result.dashboard.dashboard_title,
+                value: meta.editedAlertReportData.result.chart?.id,
+                label: meta.editedAlertReportData.result.chart?.slice_name,
               }
             : {
-                value: meta.editedAlertReportData.result.chart.id,
-                label: meta.editedAlertReportData.result.chart.slice_name,
+                value: meta.editedAlertReportData.result.dashboard?.id,
+                label:
+                  meta.editedAlertReportData.result.dashboard?.dashboard_title,
               },
       }));
       setChartType(meta.editedAlertReportData.result.report_format);
