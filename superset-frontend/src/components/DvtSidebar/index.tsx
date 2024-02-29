@@ -723,7 +723,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             : pathTitles(pathName) === 'dashboard'
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
-                            ? annotationLayerSelector[data.name] 
+                            ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'queryHistory'
                             ? queryHistorySelector[data.name]
                             : undefined
