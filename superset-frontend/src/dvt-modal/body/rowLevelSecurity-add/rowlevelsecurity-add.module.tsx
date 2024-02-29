@@ -38,7 +38,7 @@ const StyledDvtInputLabel = styled.div`
   ::after {
     display: inline-block;
     margin-left: 4px;
-    color: rgb(224, 67, 85);
+    color: ${({ theme }) => theme.colors.dvt.error.base};
     content: '*';
   }
 `;

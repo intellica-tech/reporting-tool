@@ -40,7 +40,8 @@ import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
 import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
 import DvtDotTitle from '../DvtDotTitle';
-
+import DvtDropdown from '../DvtDropdown';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 // import DvtInput from '../DvtInput';
 // import DvtSelect from '../DvtSelect';
 import DvtProfileMenu from '../DvtProfileMenu';
@@ -55,8 +56,6 @@ import {
   NavbarProfileIcon,
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
-import DvtDropdown from '../DvtDropdown';
-import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 
 export interface DvtNavbarProps {
   pathName: string;

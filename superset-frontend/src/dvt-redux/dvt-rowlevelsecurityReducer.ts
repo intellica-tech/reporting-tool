@@ -23,7 +23,7 @@ interface DvtAppState {
 }
 
 const initialState: DvtAppState = {
-    rowLevelSecurityAddStatus: '',
+  rowLevelSecurityAddStatus: '',
 };
 
 const dvtRowLevelSecuritySlice = createSlice({
@@ -37,6 +37,7 @@ const dvtRowLevelSecuritySlice = createSlice({
   },
 });
 
-export const { dvtRowLevelSecurityAddStatus } = dvtRowLevelSecuritySlice.actions;
+export const { dvtRowLevelSecurityAddStatus } =
+  dvtRowLevelSecuritySlice.actions;
 
 export default dvtRowLevelSecuritySlice.reducer;

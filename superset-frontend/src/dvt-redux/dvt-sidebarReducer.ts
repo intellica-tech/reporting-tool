@@ -82,7 +82,7 @@ interface DvtSidebarState {
     name: any;
     modifiedBy: any;
     groupKey: any;
-    filterType:any;
+    filterType: any;
   };
   data: {
     fetched: {
@@ -226,7 +226,7 @@ const INITIAL_STATE = {
     name: '',
     modifiedBy: '',
     groupKey: '',
-    filterType:'',
+    filterType: '',
   },
 };
 

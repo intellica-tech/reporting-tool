@@ -622,7 +622,7 @@ const DvtSidebarData: SidebarDataProps[] = [
         name: 'modifiedBy',
         url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
       },
-    ]
+    ],
   },
 ];
 
