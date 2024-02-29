@@ -517,12 +517,25 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return [
           { value: '13', label: 'kMeans' },
           { value: '14', label: 'GMM' },
-          { value: '15', label: 'DB Scan' },
+          { value: '15', label: 'DBSCAN' },
         ];
       default:
         return [];
     }
   };
+
+  useEffect(() => {
+    const changeAlgorithmName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'selectCategory',
+          value: selectCategories,
+        }),
+      );
+    };
+    changeAlgorithmName();
+  }, [selectCategories]);
 
   return (
     <StyledDvtSidebar minWidth={minWidth}>
