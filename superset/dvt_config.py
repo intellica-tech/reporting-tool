@@ -13,6 +13,10 @@ LANGUAGES = {
 
 APP_NAME = "Data Visualization Tool"
 
+LOGOUT_REDIRECT_URL = "/welcome"
+
+LOGO_TARGET_PATH = "/welcome"
+
 # Replace this code block with scripts/po2json.sh
 # for file in $( find superset/translations/** );
 # do

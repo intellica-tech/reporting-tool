@@ -1,10 +1,13 @@
+import logging
+
 from flask import redirect
 from flask_appbuilder import IndexView
 from flask_appbuilder.api import expose
 from flask_babel import gettext as __
 
-from superset.extensions import appbuilder, feature_flag_manager
-from superset.initialization import SupersetAppInitializer
+from superset import SupersetSecurityManager
+from superset.extensions import appbuilder, feature_flag_manager, db
+from superset.initialization import SupersetAppInitializer, SupersetIndexView
 from superset.superset_typing import FlaskResponse
 
 
@@ -346,8 +349,26 @@ class DVTAppInitializer(SupersetAppInitializer):
             icon="fa-group",
         )
 
+    def configure_fab(self) -> None:
+        if self.config["SILENCE_FAB"]:
+            logging.getLogger("flask_appbuilder").setLevel(logging.ERROR)
 
-class SupersetIndexView(IndexView):
+        custom_sm = self.config[
+                        "CUSTOM_SECURITY_MANAGER"] or SupersetSecurityManager
+        if not issubclass(custom_sm, SupersetSecurityManager):
+            raise Exception(  # pylint: disable=broad-exception-raised
+                """Your CUSTOM_SECURITY_MANAGER must now extend SupersetSecurityManager,
+                 not FAB's security manager.
+                 See [4565] in UPDATING.md"""
+            )
+
+        appbuilder.indexview = DVTSupersetIndexView
+        appbuilder.base_template = "superset/base.html"
+        appbuilder.security_manager_class = custom_sm
+        appbuilder.init_app(self.superset_app, db.session)
+
+
+class DVTSupersetIndexView(SupersetIndexView):
     @expose("/")
     def index(self) -> FlaskResponse:
         return redirect("/welcome/")
