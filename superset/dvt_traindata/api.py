@@ -93,7 +93,7 @@ class TrainDataSegmentationRestApi(BaseSupersetApi):
                         {
                             "success": True,
                             "message": f"Received payload: {payload}",
-                            "response": response.json(),
+                            "response": response.content.decode('utf-8'),
                         }
                     ),
                     200,
