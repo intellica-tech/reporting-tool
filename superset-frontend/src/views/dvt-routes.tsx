@@ -134,6 +134,9 @@ const RowLevelSecurityList = lazy(
       /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/RowLevelSecurityList'
     ),
 );
+const DvtRolesList = lazy(
+  () => import(/* webpackChunkName: "RolesList" */ 'src/pages/DvtRolesList'),
+);
 
 type Routes = {
   path: string;
@@ -244,6 +247,10 @@ export const routes: Routes = [
   {
     path: '/profile/',
     Component: Profile,
+  },
+  {
+    path: '/roles/list/',
+    Component: DvtRolesList,
   },
 ];
 

@@ -74,6 +74,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const annotationLayerSelector = useAppSelector(
     state => state.dvtSidebar.annotationLayer,
   );
+  const rolesListSelector = useAppSelector(state => state.dvtSidebar.rolesList);
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
@@ -122,6 +123,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'annotationLayer';
       case '/traindata/':
         return 'newTrainedTable';
+      case '/roles/list/':
+        return 'rolesList';
       default:
         return '';
     }
@@ -490,6 +493,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chartAdd',
     'sqlhubHistory',
     'chart',
+    'rolesList',
   ];
 
   const getAlgorithmOptions = () => {
@@ -686,6 +690,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? datasetAddSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
+                            : pathTitles(pathName) === 'rolesList'
+                            ? rolesListSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -723,6 +729,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
+                            : pathTitles(pathName) === 'rolesList'
+                            ? rolesListSelector[data.name]
                             : undefined
                         }
                         onChange={value => {

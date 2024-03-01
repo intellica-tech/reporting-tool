@@ -591,6 +591,32 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/roles/list/',
+    key: 'rolesList',
+    data: [
+      {
+        placeholder: t('Permissions'),
+        name: 'permissions',
+        data: [
+          {
+            label:'ex',
+            value: 'ex',
+          },
+        ],
+      },
+      {
+        placeholder: t('Name'),
+        name: 'name',
+       
+      },
+      {
+        placeholder: t('User'),
+        name: 'user',
+        
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [
