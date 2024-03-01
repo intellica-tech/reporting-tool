@@ -28,6 +28,7 @@ import {
   StyledInputLabel,
   StyledInputPopover,
   StyledInputClear,
+  StyledError,
 } from './dvt-input.module';
 
 export interface DvtInputProps {
@@ -44,6 +45,7 @@ export interface DvtInputProps {
   popoverLabel?: string;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   onShowClear?: boolean;
+  error?: string;
 }
 
 const DvtInput = ({
@@ -60,6 +62,7 @@ const DvtInput = ({
   disabled,
   popoverLabel,
   onShowClear = false,
+  error,
 }: DvtInputProps) => {
   const [show, setShow] = useState<boolean>(false);
   const [onHover, setOnHover] = useState(false);
@@ -162,6 +165,7 @@ const DvtInput = ({
           </StyledInputIcon>
         )}
       </StyledInputInput>
+      {error && <StyledError>{error}</StyledError>}
     </StyledInput>
   );
 };

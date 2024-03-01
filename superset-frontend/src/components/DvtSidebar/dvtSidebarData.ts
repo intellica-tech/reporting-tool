@@ -19,7 +19,7 @@ const dataYesOrNo = [
 
 const DvtSidebarData: SidebarDataProps[] = [
   {
-    pathname: '/superset/welcome/',
+    pathname: '/welcome/',
     key: 'welcome',
     data: [
       {
@@ -52,9 +52,14 @@ const DvtSidebarData: SidebarDataProps[] = [
             fileName: 'dvt-alert',
           },
           {
-            title: t('Sqlhub'),
+            title: t('SQL Hub'),
             url: '/sqlhub/',
             fileName: 'dvt-box',
+          },
+          {
+            title: t('Data Training'),
+            url: '/traindata/',
+            fileName: 'cards',
           },
         ],
       },
@@ -269,6 +274,28 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
+    pathname: '/traindata/',
+    key: 'newTrainedTable',
+    data: [
+      {
+        placeholder: t('DATABASE'),
+        name: 'database',
+        label: 'DATABASE',
+      },
+      {
+        placeholder: t('SCHEMA'),
+        name: 'schema',
+        label: 'SCHEMA',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
+      },
+    ],
+  },
+  {
     pathname: '/dashboard/list/',
     key: 'dashboard',
     data: [
@@ -448,48 +475,28 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/superset/profile/admin/',
+    pathname: '/profile/',
     key: 'profile',
     data: [
       {
-        items: [
-          {
-            icon: 'dvt-briefcase',
-            label: t('Created Content'),
-            url: 'test',
-          },
-          {
-            icon: 'dvt-calendar',
-            label: t('Schedule'),
-            url: 'test1',
-          },
-          {
-            icon: 'dvt-history',
-            label: t('Recent Activity'),
-            url: 'test2',
-          },
-          {
-            icon: 'dvt-star',
-            label: t('Favorites'),
-            url: 'test3',
-          },
-          {
-            icon: 'dvt-users',
-            label: t('Groups and Roles'),
-            url: 'test4',
-          },
-          {
-            icon: 'dvt-arrow_forwardup',
-            label: t('Query History'),
-            url: 'test5',
-          },
-        ],
-        itemsLogout: [
-          {
-            icon: 'dvt-logout',
-            label: t('Log Out'),
-          },
-        ],
+        icon: 'dvt-star',
+        label: t('Favorites'),
+        url: 'favorites',
+      },
+      {
+        icon: 'dvt-briefcase',
+        label: t('Created Content'),
+        url: 'createContent',
+      },
+      {
+        icon: 'dvt-history',
+        label: t('Recent Activity'),
+        url: 'recentActivity',
+      },
+      {
+        icon: 'dvt-calendar',
+        label: t('Security and Access'),
+        url: 'securityAndAccess',
       },
     ],
   },

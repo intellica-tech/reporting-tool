@@ -182,6 +182,13 @@ const StyledSelectColor = styled.div<StyledSelectColorSchemeProps>`
   height: 8px;
 `;
 
+const StyledError = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.error.base};
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 0 0 2px;
+`;
+
 export {
   StyledSelectColorScheme,
   StyledSelectColorSchemeOption,
@@ -193,4 +200,5 @@ export {
   StyledSelectColors,
   StyledSelectColor,
   StyledSelectColorsLabel,
+  StyledError,
 };

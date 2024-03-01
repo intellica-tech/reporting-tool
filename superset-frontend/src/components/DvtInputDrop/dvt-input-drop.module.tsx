@@ -87,6 +87,13 @@ const StyledInputDropFieldColumn = styled.div`
   width: 100%;
 `;
 
+const StyledError = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.error.base};
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 0 0 2px;
+`;
+
 export {
   StyledInputDrop,
   StyledInputDropField,
@@ -96,4 +103,5 @@ export {
   StyledInputDropInputGroup,
   StyledInputDropFieldIcon,
   StyledInputDropFieldColumn,
+  StyledError,
 };

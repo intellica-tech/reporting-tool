@@ -10,6 +10,7 @@ import {
   StyledInputDropIcon,
   StyledInputDropInputGroup,
   StyledInputDropLabel,
+  StyledError,
 } from './dvt-input-drop.module';
 
 export interface DvtInputDropProps {
@@ -22,6 +23,7 @@ export interface DvtInputDropProps {
   multiple?: boolean;
   droppedData: any[] | null;
   setDroppedData: (newDroppedData: any[] | any) => void;
+  error?: string;
 }
 
 const DvtInputDrop = ({
@@ -34,6 +36,7 @@ const DvtInputDrop = ({
   multiple,
   droppedData,
   setDroppedData,
+  error,
 }: DvtInputDropProps) => {
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -132,6 +135,7 @@ const DvtInputDrop = ({
           )}
         </StyledInputDropFieldColumn>
       </StyledInputDropInputGroup>
+      {error && <StyledError>{error}</StyledError>}
     </StyledInputDrop>
   );
 };

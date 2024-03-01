@@ -74,6 +74,10 @@ const DatabaseList = lazy(
     import(/* webpackChunkName: "DatabaseList" */ 'src/pages/DvtConnection'),
 );
 
+const Profile = lazy(
+  () => import(/* webpackChunkName: "Profile" */ 'src/pages/DvtProfile'),
+);
+
 const DatasetList = lazy(
   () => import(/* webpackChunkName: "DatasetList" */ 'src/pages/DvtDatasets'),
 );
@@ -120,6 +124,10 @@ const Tags = lazy(
   () => import(/* webpackChunkName: "Tags" */ 'src/pages/Tags'),
 );
 
+const TrainData = lazy(
+  () => import(/* webpackChunkName: "Tags" */ 'src/pages/DvtNewTrainedTable'),
+);
+
 const RowLevelSecurityList = lazy(
   () =>
     import(
@@ -136,7 +144,7 @@ type Routes = {
 
 export const routes: Routes = [
   {
-    path: '/superset/welcome/',
+    path: '/welcome/',
     Component: DvtHome,
   },
   {
@@ -144,7 +152,7 @@ export const routes: Routes = [
     Component: DashboardList,
   },
   {
-    path: '/superset/dashboard/:idOrSlug/',
+    path: '/dashboard/:idOrSlug/',
     Component: Dashboard,
   },
   {
@@ -158,6 +166,10 @@ export const routes: Routes = [
   {
     path: '/tablemodelview/list/',
     Component: DatasetList,
+  },
+  {
+    path: '/traindata/',
+    Component: TrainData,
   },
   {
     path: '/databaseview/list/',
@@ -210,7 +222,7 @@ export const routes: Routes = [
     Component: Chart,
   },
   {
-    path: '/superset/explore/p',
+    path: '/explore/p',
     Component: Chart,
   },
   {
@@ -229,15 +241,19 @@ export const routes: Routes = [
     path: '/sqlhub/',
     Component: SqlLab,
   },
+  {
+    path: '/profile/',
+    Component: Profile,
+  },
 ];
 
 if (isFeatureEnabled(FeatureFlag.TAGGING_SYSTEM)) {
   routes.push({
-    path: '/superset/all_entities/',
+    path: '/all_entities/',
     Component: AllEntities,
   });
   routes.push({
-    path: '/superset/tags/',
+    path: '/tags/',
     Component: Tags,
   });
 }

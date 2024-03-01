@@ -17,6 +17,7 @@
  * under the License.
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { t } from '@superset-ui/core';
 
 interface DvtSidebarState {
   reports: {
@@ -53,6 +54,13 @@ interface DvtSidebarState {
     schema: any;
     selectDatabase: any;
   };
+  newTrainedTable: {
+    database: any;
+    schema: any;
+    selectDatabase: any;
+    algorithm_name: any;
+    selectCategory: any;
+  };
   chartAdd: {
     dataset: any;
     recommended_tags: any;
@@ -84,6 +92,9 @@ interface DvtSidebarState {
     groupKey: any;
     filterType: any;
   };
+  profile: {
+    tabs: any;
+  };
   data: {
     fetched: {
       alerts: {
@@ -109,6 +120,9 @@ interface DvtSidebarState {
         schema: boolean;
       };
       datasetAdd: {
+        database: boolean;
+      };
+      newTrainedTable: {
         database: boolean;
       };
       chartAdd: {
@@ -147,6 +161,13 @@ interface DvtSidebarState {
       database: any[];
       schema: any[];
       selectDatabase: any[];
+    };
+    newTrainedTable: {
+      database: any[];
+      schema: any[];
+      selectDatabase: any[];
+      algorithm_name: any[];
+      selectCategory: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -197,6 +218,13 @@ const INITIAL_STATE = {
     schema: '',
     selectDatabase: '',
   },
+  newTrainedTable: {
+    database: '',
+    schema: '',
+    selectDatabase: '',
+    algorithm_name: '',
+    selectCategory: '',
+  },
   chartAdd: {
     dataset: '',
     recommended_tags: { label: 'Popular', value: 'popular' },
@@ -228,6 +256,9 @@ const INITIAL_STATE = {
     groupKey: '',
     filterType: '',
   },
+  profile: {
+    tabs: { label: t('Favorites'), url: 'favorites' },
+  },
 };
 
 const initialState: DvtSidebarState = {
@@ -257,6 +288,9 @@ const initialState: DvtSidebarState = {
         schema: false,
       },
       datasetAdd: {
+        database: false,
+      },
+      newTrainedTable: {
         database: false,
       },
       chartAdd: {
@@ -295,6 +329,13 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       selectDatabase: [],
+    },
+    newTrainedTable: {
+      database: [],
+      schema: [],
+      selectDatabase: [],
+      algorithm_name: [],
+      selectCategory: [],
     },
     chartAdd: {
       dataset: [],
@@ -415,6 +456,15 @@ const dvtSidebarSlice = createSlice({
         },
       };
     },
+    dvtSidebarProfileSetTabs: (
+      state,
+      action: PayloadAction<{ label: string; url: string }>,
+    ) => ({
+      ...state,
+      profile: {
+        tabs: action.payload,
+      },
+    }),
   },
 });
 
@@ -424,6 +474,7 @@ export const {
   dvtSidebarSetPropertySelectedRemove,
   dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
+  dvtSidebarProfileSetTabs,
 } = dvtSidebarSlice.actions;
 
 export default dvtSidebarSlice.reducer;

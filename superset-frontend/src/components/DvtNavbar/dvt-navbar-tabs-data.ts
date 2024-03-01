@@ -17,6 +17,10 @@ export const UserData: UserDataProps = {
 
 export const sqlTabsData = [
   {
+    label: t('SQL Hub'),
+    value: '/sqlhub/',
+  },
+  {
     label: t('Saved Queries'),
     value: '/savedqueryview/list/',
   },
@@ -111,7 +115,7 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
 ];
 
 export const WithNavbarBottom: string[] = [
-  // '/superset/welcome/',
+  // '/welcome/',
   '/alert/list/',
   '/sqlhub/history/',
   '/savedqueryview/list/',

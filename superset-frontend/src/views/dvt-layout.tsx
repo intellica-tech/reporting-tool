@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { GlobalStyles } from 'src/GlobalStyles';
 import ErrorBoundary from 'src/components/ErrorBoundary';
@@ -29,6 +29,9 @@ import ToastContainer from 'src/components/MessageToasts/ToastContainer';
 import { routes } from 'src/views/dvt-routes';
 import { styled } from '@superset-ui/core';
 import { WithNavbarBottom } from 'src/components/DvtNavbar/dvt-navbar-tabs-data';
+import useFetch from 'src/hooks/useFetch';
+import { dvtAppSetUser } from 'src/dvt-redux/dvt-appReducer';
+import { useDispatch } from 'react-redux';
 
 interface StyledLayoutProps {
   navbarInHeight: boolean;
@@ -67,11 +70,12 @@ const bootstrapData = getBootstrapData();
 
 const DvtLayout = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { pathname } = location;
 
   const mainAppSidebarWidth = (pathName: string) => {
     switch (pathName) {
-      case '/superset/welcome/':
+      case '/welcome/':
         return 250;
       case '/dataset/add/':
         return 380;
@@ -81,6 +85,14 @@ const DvtLayout = () => {
         return 300;
     }
   };
+
+  const userPromise = useFetch({ url: 'me/' });
+
+  useEffect(() => {
+    if (userPromise) {
+      dispatch(dvtAppSetUser(userPromise.result));
+    }
+  }, [userPromise]);
 
   return (
     <StyledApp

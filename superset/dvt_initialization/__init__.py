@@ -1,7 +1,14 @@
+import logging
+
+from flask import redirect
+from flask_appbuilder import IndexView
+from flask_appbuilder.api import expose
 from flask_babel import gettext as __
 
-from superset.extensions import appbuilder, feature_flag_manager
-from superset.initialization import SupersetAppInitializer
+from superset import SupersetSecurityManager
+from superset.extensions import appbuilder, db, feature_flag_manager
+from superset.initialization import SupersetAppInitializer, SupersetIndexView
+from superset.superset_typing import FlaskResponse
 
 
 class DVTAppInitializer(SupersetAppInitializer):
@@ -31,7 +38,11 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.datasets.columns.api import DatasetColumnsRestApi
         from superset.datasets.metrics.api import DatasetMetricRestApi
         from superset.datasource.api import DatasourceRestApi
+        from superset.dvt_all_entities.all_entities import DVTTaggedObjectsModelView
         from superset.dvt_auth.login import DVTAuthDBView
+        from superset.dvt_explore.explore import DVTExplorePermalinkView
+        from superset.dvt_tags.tags import DVTTagModelView
+        from superset.dvt_traindata.api import TrainDataRestApi, TrainDataSegmentationRestApi
         from superset.embedded.api import EmbeddedDashboardRestApi
         from superset.embedded.view import EmbeddedView
         from superset.explore.api import ExploreRestApi
@@ -47,7 +58,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.sqllab.api import SqlLabRestApi
         from superset.tags.api import TagRestApi
         from superset.views.alerts import AlertView, ReportView
-        from superset.views.all_entities import TaggedObjectsModelView, TaggedObjectView
+        from superset.views.all_entities import TaggedObjectView
         from superset.views.annotations import AnnotationLayerView
         from superset.views.api import Api
         from superset.views.chart.views import SliceAsync, SliceModelView
@@ -69,8 +80,9 @@ class DVTAppInitializer(SupersetAppInitializer):
         )
         from superset.views.datasource.views import DatasetEditor, Datasource
         from superset.views.dvt_sqllab import DVTSqlHubView
+        from superset.views.dvt_traindata import TrainDataView
         from superset.views.dynamic_plugins import DynamicPluginsView
-        from superset.views.explore import ExplorePermalinkView, ExploreView
+        from superset.views.explore import ExploreView
         from superset.views.key_value import KV
         from superset.views.log.api import LogRestApi
         from superset.views.log.views import LogModelView
@@ -82,7 +94,7 @@ class DVTAppInitializer(SupersetAppInitializer):
             TableSchemaView,
             TabStateView,
         )
-        from superset.views.tags import TagModelView, TagView
+        from superset.views.tags import TagView
         from superset.views.users.api import CurrentUserRestApi
 
         #
@@ -118,13 +130,15 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_api(SavedQueryRestApi)
         appbuilder.add_api(TagRestApi)
         appbuilder.add_api(SqlLabRestApi)
+        appbuilder.add_api(TrainDataRestApi)
+        appbuilder.add_api(TrainDataSegmentationRestApi)
         #
         # Setup regular views
         #
         appbuilder.add_link(
             "Home",
             label=__("Home"),
-            href="/superset/welcome/",
+            href="/welcome/",
             cond=lambda: bool(appbuilder.app.config["LOGO_TARGET_PATH"]),
         )
 
@@ -197,10 +211,11 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(DatasetEditor)
         appbuilder.add_view_no_menu(EmbeddedView)
         appbuilder.add_view_no_menu(ExploreView)
-        appbuilder.add_view_no_menu(ExplorePermalinkView)
+        appbuilder.add_view_no_menu(DVTExplorePermalinkView)
         appbuilder.add_view_no_menu(KV)
         appbuilder.add_view_no_menu(ProfileView)
         appbuilder.add_view_no_menu(SavedQueryView)
+        appbuilder.add_view_no_menu(TrainDataView)
         appbuilder.add_view_no_menu(SavedQueryViewApi)
         appbuilder.add_view_no_menu(SliceAsync)
         appbuilder.add_view_no_menu(SqlLab)
@@ -212,7 +227,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(TableSchemaView)
         appbuilder.add_view_no_menu(TabStateView)
         appbuilder.add_view_no_menu(TaggedObjectView)
-        appbuilder.add_view_no_menu(TaggedObjectsModelView)
+        appbuilder.add_view_no_menu(DVTTaggedObjectsModelView)
         appbuilder.add_view_no_menu(TagView)
         appbuilder.add_view_no_menu(ReportView)
 
@@ -222,7 +237,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_link(
             "Import Dashboards",
             label=__("Import Dashboards"),
-            href="/superset/import_dashboards/",
+            href="/import_dashboards/",
             icon="fa-cloud-upload",
             category="Manage",
             category_label=__("Manage"),
@@ -259,8 +274,17 @@ class DVTAppInitializer(SupersetAppInitializer):
             category="SQL Lab",
             category_label=__("SQL Lab"),
         )
+        appbuilder.add_link(
+            "Train Data",
+            label=__("Train Data"),
+            href="/traindata/",
+            category_icon="fa-flask",
+            icon="fa-flask",
+            category="Train Data",
+            category_label=__("Train Data"),
+        )
         appbuilder.add_view(
-            TagModelView,
+            DVTTagModelView,
             "Tags",
             label=__("Tags"),
             icon="",
@@ -325,3 +349,26 @@ class DVTAppInitializer(SupersetAppInitializer):
             category_icon="fa-cogs",
             icon="fa-group",
         )
+
+    def configure_fab(self) -> None:
+        if self.config["SILENCE_FAB"]:
+            logging.getLogger("flask_appbuilder").setLevel(logging.ERROR)
+
+        custom_sm = self.config["CUSTOM_SECURITY_MANAGER"] or SupersetSecurityManager
+        if not issubclass(custom_sm, SupersetSecurityManager):
+            raise Exception(  # pylint: disable=broad-exception-raised
+                """Your CUSTOM_SECURITY_MANAGER must now extend SupersetSecurityManager,
+                 not FAB's security manager.
+                 See [4565] in UPDATING.md"""
+            )
+
+        appbuilder.indexview = DVTSupersetIndexView
+        appbuilder.base_template = "superset/base.html"
+        appbuilder.security_manager_class = custom_sm
+        appbuilder.init_app(self.superset_app, db.session)
+
+
+class DVTSupersetIndexView(SupersetIndexView):
+    @expose("/")
+    def index(self) -> FlaskResponse:
+        return redirect("/welcome/")

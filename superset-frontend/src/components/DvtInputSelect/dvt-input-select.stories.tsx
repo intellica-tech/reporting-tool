@@ -60,3 +60,19 @@ Default.argTypes = {
     defaultValue: 'Select...',
   },
 };
+
+export const Number = (args: DvtInputSelectProps) => {
+  const [selectedValues, setSelectedValues] = useState<any[]>([]);
+  return (
+    <div style={{ width: 404 }}>
+      <DvtInputSelect
+        {...args}
+        data={[]}
+        startNumber={0}
+        endNumber={24}
+        selectedValues={selectedValues}
+        setSelectedValues={setSelectedValues}
+      />
+    </div>
+  );
+};

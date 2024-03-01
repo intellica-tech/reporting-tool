@@ -29,10 +29,9 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import handleResourceExport from 'src/utils/export';
-import moment from 'moment';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { StyledButtons, StyledDvtDatasets } from './dvt-datasets.module';
 
@@ -45,6 +44,10 @@ function DvtDatasets() {
   );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'changed_on_delta_humanized',
+    direction: 'desc',
+  });
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
@@ -83,6 +86,8 @@ function DvtDatasets() {
         },
       ],
       page: gPage,
+      orderColumn: sort.column,
+      orderDirection: sort.direction,
     })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
@@ -96,8 +101,7 @@ function DvtDatasets() {
       setData(
         datasetApi.result.map((item: any) => ({
           ...item,
-          database: `${item.database.database_name}`,
-          changed_on_utc: moment(item.changed_on_utc).fromNow(),
+          'database.database_name': `${item.database.database_name}`,
           owners: item.owners.length
             ? item.owners
                 .map(
@@ -118,7 +122,7 @@ function DvtDatasets() {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setDatasetApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -159,15 +163,25 @@ function DvtDatasets() {
       checkbox: true,
       folderIcon: true,
       urlField: 'explore_url',
+      sort: true,
     },
     { id: 2, title: t('Type'), field: 'kind' },
-    { id: 3, title: t('Database'), field: 'database' },
-    { id: 4, title: t('Schema'), field: 'schema' },
-    { id: 5, title: t('Modified Date'), field: 'changed_on_utc' },
-    { id: 6, title: t('Modified by'), field: 'changed_by_name' },
-    { id: 7, title: t('Owners'), field: 'owners' },
     {
-      id: 8,
+      id: 3,
+      title: t('Database'),
+      field: 'database.database_name',
+      sort: true,
+    },
+    { id: 4, title: t('Schema'), field: 'schema', sort: true },
+    { id: 5, title: t('Owners'), field: 'owners' },
+    {
+      id: 6,
+      title: t('Modified Date'),
+      field: 'changed_on_delta_humanized',
+      sort: true,
+    },
+    {
+      id: 7,
       title: t('Actions'),
       clicks: [
         {
@@ -213,6 +227,8 @@ function DvtDatasets() {
           selected={selectedRows}
           setSelected={setSelectedRows}
           checkboxActiveField="id"
+          sort={sort}
+          setSort={setSort}
         />
       </div>
       <StyledButtons>

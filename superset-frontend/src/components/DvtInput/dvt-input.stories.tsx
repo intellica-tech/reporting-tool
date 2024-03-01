@@ -188,3 +188,28 @@ ChartsForm.argTypes = {
     defaultValue: 'chartsForm',
   },
 };
+
+export const ErrorExample = (args: DvtInputProps) => {
+  const [text, setText] = useState<string>('');
+
+  return (
+    <div style={{ width: 404 }}>
+      <DvtInput {...args} value={text} onChange={setText} />
+    </div>
+  );
+};
+
+ErrorExample.argTypes = {
+  type: {
+    control: { type: 'select' },
+    defaultValue: 'Text',
+  },
+  placeholder: {
+    control: { type: 'text' },
+    defaultValue: 'Error Example',
+  },
+  error: {
+    control: { type: 'text' },
+    defaultValue: 'Error Example',
+  },
+};

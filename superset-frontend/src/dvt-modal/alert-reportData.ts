@@ -173,51 +173,51 @@ const DvtAlertReportData: Data[] = [
     data: [
       {
         label: t('January'),
-        value: 'january',
+        value: 1,
       },
       {
         label: t('February'),
-        value: 'February',
+        value: 2,
       },
       {
         label: t('March'),
-        value: 'March',
+        value: 3,
       },
       {
         label: t('April'),
-        value: 'April',
+        value: 4,
       },
       {
         label: t('May'),
-        value: 'May',
+        value: 5,
       },
       {
         label: t('June'),
-        value: 'June',
+        value: 6,
       },
       {
         label: t('July'),
-        value: 'July',
+        value: 7,
       },
       {
         label: t('August'),
-        value: 'August',
+        value: 8,
       },
       {
         label: t('September'),
-        value: 'September',
+        value: 9,
       },
       {
         label: t('October'),
-        value: 'October',
+        value: 10,
       },
       {
         label: t('November'),
-        value: 'November',
+        value: 11,
       },
       {
         label: t('December'),
-        value: 'December',
+        value: 12,
       },
     ],
   },
@@ -226,31 +226,31 @@ const DvtAlertReportData: Data[] = [
     data: [
       {
         label: t('Sunday'),
-        value: 'Sunday',
+        value: 0,
       },
       {
         label: t('Monday'),
-        value: 'Monday',
+        value: 1,
       },
       {
         label: t('Tuesday'),
-        value: 'Tuesday',
+        value: 2,
       },
       {
         label: t('Wednesday'),
-        value: 'Wednesday',
+        value: 3,
       },
       {
         label: t('Thursday'),
-        value: 'Thursday',
+        value: 4,
       },
       {
         label: t('Friday'),
-        value: 'Friday',
+        value: 5,
       },
       {
         label: t('Saturday'),
-        value: 'Saturday',
+        value: 6,
       },
     ],
   },
