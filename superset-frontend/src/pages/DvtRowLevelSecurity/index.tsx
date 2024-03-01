@@ -20,7 +20,6 @@ import {
 
 function DvtRowLevelSecurity() {
   const dispatch = useDispatch();
-  // const history = useHistory();
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);

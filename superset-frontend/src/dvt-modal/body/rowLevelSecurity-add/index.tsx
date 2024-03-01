@@ -73,7 +73,6 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   const [apiUrl, setApiUrl] = useState<string>('');
   const [datasetData, setDatasetData] = useState<any[]>([]);
   const [rolesData, setRolesData] = useState<any[]>([]);
-  const [errorRuleName, setErrorRuleName] = useState<string>('');
 
   const rowLevelSecurityAddData = useFetch({
     url: apiUrl,
