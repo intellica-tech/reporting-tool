@@ -9,12 +9,24 @@ const StyledSqlhubBottom = styled.div`
   margin-top: 15px;
 `;
 
+const ResultButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+
+  & div:last-of-type {
+    min-height: 40px;
+    flex: 1;
+  }
+`;
+
 const SqlhubTableScroll = styled.div`
-  margin-top: 15px;
+  margin-top: 10px;
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
-  max-height: 38vh;
+  max-height: 32vh;
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
@@ -69,6 +81,7 @@ const SpinnerContainer = styled.div`
 export {
   StyledSqlhub,
   StyledSqlhubBottom,
+  ResultButtonContainer,
   SqlhubTableScroll,
   SpinnerContainer,
 };
