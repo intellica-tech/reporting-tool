@@ -96,12 +96,10 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (tablesData) {
       setDatasetData(
-        tablesData.result.map((item: any) => {
-          return {
-            label: item.text,
-            value: item.value,
-          };
-        }),
+        tablesData.result.map((item: any) => ({
+          label: item.text,
+          value: item.value,
+        })),
       );
     }
   }, [tablesData]);
@@ -113,12 +111,10 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (rolesDataPromise) {
       setRolesData(
-        rolesDataPromise.result.map((item: any) => {
-          return {
-            label: item.text,
-            value: item.value,
-          };
-        }),
+        rolesDataPromise.result.map((item: any) => ({
+          label: item.text,
+          value: item.value,
+        })),
       );
     }
   }, [rolesDataPromise]);
