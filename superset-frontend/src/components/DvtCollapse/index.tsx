@@ -58,11 +58,10 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   return (
     <StyledCollapse bgTransparent={typeDesign === 'dvt-list'}>
       <StyledCollapseGroup
-        onClick={() => setIsOpen(!isOpen)}
         onMouseLeave={() => (deleteClick || copyToClick) && setOnHover(false)}
         onMouseOver={() => (deleteClick || copyToClick) && setOnHover(true)}
       >
-        <StyledCollapseLabel>
+        <StyledCollapseLabel onClick={() => setIsOpen(!isOpen)}>
           {label}
           {popoverLabel && (
             <StyledCollapsePopover>
@@ -94,7 +93,7 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
         {onHover && copyToClick && (
           <Icon iconSize="l" fileName="dvt-file" onClick={copyToClick} />
         )}
-        <StyledCollapseIcon isOpen={isOpen}>
+        <StyledCollapseIcon isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
           <Icon fileName="caret_down" iconSize="xxl" />
         </StyledCollapseIcon>
       </StyledCollapseGroup>
