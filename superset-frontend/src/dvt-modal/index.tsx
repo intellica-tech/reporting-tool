@@ -17,6 +17,8 @@ import {
 } from './dvt-modal.module';
 import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
 import DvtQueryPreview from './body/query-preview';
+import DvtSaveQuery from './body/save-query';
+import DvtSaveDataset from './body/save-dataset';
 
 export interface ModalProps {
   meta: any;
@@ -41,6 +43,10 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtRowLevelSecurityAdd meta={meta} onClose={onClose} />;
     case 'query-preview':
       return <DvtQueryPreview meta={meta} onClose={onClose} />;
+    case 'save-query':
+      return <DvtSaveQuery meta={meta} onClose={onClose} />;
+    case 'save-dataset':
+      return <DvtSaveDataset meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -68,6 +74,10 @@ const DvtModal = () => {
         return 'large';
       case 'rowlevelsecurity-add-modal':
         return 'large';
+      case 'save-query':
+        return 'custom';
+      case 'save-dataset':
+        return 'custom';
       default:
         return 'small';
     }
