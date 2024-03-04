@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -7,7 +8,7 @@ import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
 import DvtPagination from 'src/components/DvtPagination';
@@ -23,6 +24,10 @@ function DvtRowLevelSecurity() {
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'changed_on_delta_humanized',
+    direction: 'desc',
+  });
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const modalAddSuccess = useAppSelector(
     state => state.dvtRowLevelSecurity.rowLevelSecurityAddStatus,
@@ -65,6 +70,8 @@ function DvtRowLevelSecurity() {
         },
       ],
       page: gPage,
+      orderColumn: sort.column,
+      orderDirection: sort.direction,
     })}`;
 
   useEffect(() => {
@@ -72,7 +79,7 @@ function DvtRowLevelSecurity() {
     if (page === 1) {
       setRowLevelSecurityApiUrl(searchApiUrls(page));
     }
-  }, [rowLevelSecuritySelector]);
+  }, [rowLevelSecuritySelector, sort]);
 
   useEffect(() => {
     setRowLevelSecurityApiUrl('rowlevelsecurity/');
@@ -83,17 +90,7 @@ function DvtRowLevelSecurity() {
 
   useEffect(() => {
     if (rowLevelSecurityData) {
-      const editedData = rowLevelSecurityData.result.map((item: any) => ({
-        ...item,
-        id: item.id,
-        name: item.name,
-        filter_type: item.filter_type,
-        tables: item.tables[0].table_name,
-        roles: item.roles[0].name,
-        clause: item.clause,
-        modified: item.changed_on_delta_humanized,
-        creator: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
-      }));
+      const editedData = rowLevelSecurityData.result;
       setCount(rowLevelSecurityData.count);
       setData(editedData);
     }
@@ -114,7 +111,7 @@ function DvtRowLevelSecurity() {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setRowLevelSecurityApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -137,7 +134,7 @@ function DvtRowLevelSecurity() {
     dispatch(
       openModal({
         component: 'delete-modal',
-        meta: { item, type: 'dashboard', title: 'dashboard' },
+        meta: { item, type: 'rowlevelsecurity', title: 'rules' },
       }),
     );
     setRowLevelSecurityApiUrl('');
@@ -146,42 +143,37 @@ function DvtRowLevelSecurity() {
   const handleEdit = (item: any) => {
     dispatch(
       openModal({
-        component: 'edit-dashboard',
-        meta: { id: item.id },
+        component: 'rowlevelsecurity-add-modal',
+        meta: { ...item, isEdit: true },
       }),
     );
   };
 
   const headerData = [
-    { id: 1, title: t('Name'), field: 'name', checkbox: true },
-    { id: 2, title: t('Filter Type'), field: 'filter_type' },
-    { id: 3, title: t('Tables'), field: 'tables', flex: 1.5 },
+    { id: 1, title: t('Name'), field: 'name', checkbox: true, sort: true },
+    { id: 2, title: t('Filter Type'), field: 'filter_type', sort: true },
+    { id: 3, title: t('Group Key'), field: 'group_key', flex: 1.5, sort: true },
+    { id: 4, title: t('Clause'), field: 'clause', sort: true },
     {
-      id: 4,
-      title: t('Roles'),
-      field: 'roles',
+      id: 5,
+      title: t('Modified'),
+      field: 'changed_on_delta_humanized',
+      sort: true,
     },
-    { id: 5, title: t('Clause'), field: 'clause' },
-    { id: 6, title: t('Modified'), field: 'modified' },
     {
-      id: 7,
+      id: 6,
       title: 'Actions',
       showHover: true,
       clicks: [
         {
-          icon: 'search',
-          click: (item: any) => handleEdit(item),
-          popperLabel: t('Show Record'),
-        },
-        {
           icon: 'edit_alt',
           click: (item: any) => handleEdit(item),
-          popperLabel: t('Edit Record'),
+          popperLabel: t('Edit'),
         },
         {
           icon: 'trash',
           click: (item: any) => handleModalDelete(item),
-          popperLabel: t('Show Record'),
+          popperLabel: t('Delete'),
         },
       ],
     },
@@ -192,7 +184,7 @@ function DvtRowLevelSecurity() {
       <StyledRowLevelSecurityButton>
         <DvtButton
           label="Delete"
-          onClick={handleDelete}
+          onClick={() => handleModalDelete(selectedRows)}
           colour="error"
           typeColour="basic"
         />
@@ -210,6 +202,8 @@ function DvtRowLevelSecurity() {
             selected={selectedRows}
             setSelected={setSelectedRows}
             checkboxActiveField="id"
+            sort={sort}
+            setSort={setSort}
           />
         )}
       </div>

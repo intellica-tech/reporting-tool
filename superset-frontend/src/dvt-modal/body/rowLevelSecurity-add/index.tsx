@@ -88,6 +88,20 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     },
   });
 
+  useEffect(() => {
+    if (meta?.isEdit) {
+      setValue({
+        ruleName: meta.name,
+        filterType: { label: '', value: '' },
+        datasets: [],
+        roles: [],
+        groupKey: '',
+        clause: '',
+        description: '',
+      });
+    }
+  }, [meta?.isEdit]);
+
   const tablesData = useFetch({
     url: 'rowlevelsecurity/related/tables?q=(filter:%27%27,page:0,page_size:100)',
   });
@@ -126,7 +140,6 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     if (rowLevelSecurityAddData?.id) {
       dispatch(dvtRowLevelSecurityAddStatus('Success'));
       onClose();
-      console.log('Close?:');
     }
   }, [rowLevelSecurityAddData]);
 
