@@ -21,7 +21,7 @@ import { t } from '@superset-ui/core';
 import {
   StyledConditionSchedule,
   StyledConditionScheduleSelectDate,
-} from './dvt-select.module';
+} from './dvt-condition-schedule.module';
 import DvtRadioList from '../DvtRadioList';
 import DvtSelect from '../DvtSelect';
 import DvtInput from '../DvtInput';
