@@ -124,7 +124,7 @@ function DvtDashboardList() {
 
   useEffect(() => {
     if (dashboardAdd?.id) {
-      history.push(`/superset/dashboard/${dashboardAdd.id}/?edit=true`);
+      history.push(`/dashboard/${dashboardAdd.id}/?edit=true`);
     }
   }, [dashboardAdd]);
 
@@ -246,7 +246,8 @@ function DvtDashboardList() {
       field: 'dashboard_title',
       flex: 3,
       checkbox: true,
-      urlField: 'url',
+      urlField: '/dashboard/',
+      urlFieldEnd: '/?edit=true',
       sort: true,
     },
     { id: 2, title: t('Status'), field: 'published', sort: true },

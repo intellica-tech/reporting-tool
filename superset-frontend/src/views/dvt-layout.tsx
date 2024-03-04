@@ -95,7 +95,7 @@ const DvtLayout = () => {
   }, [userPromise]);
 
   const extractDashboardId = (pathName: string) => {
-    const dashboardRegex = /^\/superset\/dashboard\/(\d+)\/?$/;
+    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
     const isDashboardPage = dashboardRegex.test(pathName);
 
     if (isDashboardPage) {
@@ -110,7 +110,7 @@ const DvtLayout = () => {
     <StyledApp
       navbarInHeight={
         WithNavbarBottom.includes(pathname) ||
-        pathname === `/superset/dashboard/${extractDashboardId(pathname)}/`
+        pathname === `/dashboard/${extractDashboardId(pathname)}/`
       }
       marginLeft={mainAppSidebarWidth(pathname)}
     >
@@ -128,7 +128,7 @@ const DvtLayout = () => {
       <Main
         navbarInHeight={
           WithNavbarBottom.includes(pathname) ||
-          pathname === `/superset/dashboard/${extractDashboardId(pathname)}/`
+          pathname === `/dashboard/${extractDashboardId(pathname)}/`
         }
       >
         <Switch>

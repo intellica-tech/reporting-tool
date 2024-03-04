@@ -84,7 +84,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
 
   const extractDashboardId = (pathName: string) => {
-    const dashboardRegex = /^\/superset\/dashboard\/(\d+)\/?$/;
+    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
     const isDashboardPage = dashboardRegex.test(pathName);
 
     if (isDashboardPage) {
@@ -124,7 +124,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('Annotation Layers');
       case '/traindata/':
         return t('New Trained Table');
-      case `/superset/dashboard/${extractDashboardId(pathName)}/`:
+      case `/dashboard/${extractDashboardId(pathName)}/`:
         return t('Dashboards');
       default:
         return '';
@@ -333,7 +333,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           )}
         </NavbarBottom>
       )}{' '}
-      {pathName === `/superset/dashboard/${extractDashboardId(pathName)}/` && (
+      {pathName === `/dashboard/${extractDashboardId(pathName)}/` && (
         <NavbarBottom>
           <div />
           <NavbarBottomRight>

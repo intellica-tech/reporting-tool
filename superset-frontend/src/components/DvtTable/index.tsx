@@ -49,6 +49,7 @@ interface HeaderProps {
   iconActive?: string;
   iconClick?: () => {};
   urlField?: string;
+  urlFieldEnd?: string;
   flex?: number;
   clicks?: {
     icon: string;
@@ -288,7 +289,11 @@ const DvtTable: React.FC<DvtTableProps> = ({
                         <StyledTableUrl
                           onClick={() => {
                             if (column.urlField) {
-                              history.push(row[column.urlField]);
+                              history.push(
+                                `${column.urlField}${row.id}${
+                                  column.urlFieldEnd && column.urlFieldEnd
+                                }`,
+                              );
                             }
                           }}
                         >
