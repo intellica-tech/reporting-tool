@@ -106,6 +106,18 @@ const DvtLayout = () => {
     return null;
   };
 
+  const extractDashboardId = (pathName: string) => {
+    const dashboardRegex = /^\/superset\/dashboard\/(\d+)\/?$/;
+    const isDashboardPage = dashboardRegex.test(pathName);
+
+    if (isDashboardPage) {
+      const dashboardId = pathName.match(dashboardRegex)?.[1];
+      return dashboardId ?? null;
+    }
+
+    return null;
+  };
+
   return (
     <StyledApp
       navbarInHeight={
