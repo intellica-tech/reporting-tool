@@ -237,7 +237,7 @@ export const routes: Routes = [
     Component: RowLevelSecurityList,
   },
   {
-    path: '/users/list/',
+    path: '/user/list/',
     Component: UsersList,
   },
   {

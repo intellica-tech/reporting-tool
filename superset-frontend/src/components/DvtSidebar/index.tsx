@@ -123,7 +123,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'annotationLayer';
       case '/traindata/':
         return 'newTrainedTable';
-      case '/users/list/':
+      case '/user/list/':
         return 'usersList';
       default:
         return '';
