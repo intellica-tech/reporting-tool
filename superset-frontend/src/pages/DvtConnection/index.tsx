@@ -31,7 +31,7 @@ import useFetch from 'src/hooks/useFetch';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import DvtPagination from 'src/components/DvtPagination';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
@@ -53,6 +53,10 @@ function DvtConnection() {
   );
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'changed_on_delta_humanized',
+    direction: 'desc',
+  });
   const [count, setCount] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
@@ -76,12 +80,19 @@ function DvtConnection() {
         },
       ],
       page: gPage,
+      orderColumn: sort.column,
+      orderDirection: sort.direction,
     })}`;
 
   const [connectionApiUrl, setConnectionApiUrl] = useState<string>('');
+  const [connectionEditApiUrl, setConnectionEditApiUrl] = useState<string>('');
 
   const connectionApi = useFetch({
     url: connectionApiUrl,
+  });
+
+  const connectionEditPromise = useFetch({
+    url: connectionEditApiUrl,
   });
 
   useEffect(() => {
@@ -97,13 +108,7 @@ function DvtConnection() {
       setSelectedRows([]);
     }
     if (editSuccessStatus) {
-      setData(
-        connectionApi.result.map((item: any) => ({
-          ...item,
-          admin: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
-          date: new Date(item.changed_on).toLocaleString('tr-TR'),
-        })),
-      );
+      setData(connectionApi.result);
       setCount(connectionApi.count);
       setSelectedRows([]);
       dispatch(dvtConnectionEditSuccessStatus(''));
@@ -115,7 +120,7 @@ function DvtConnection() {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
     setConnectionApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page]);
+  }, [deleteSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -159,6 +164,13 @@ function DvtConnection() {
     handleResourceExport('database', selectedIds, () => {});
   };
 
+  const handleEditConnection = (item: any) => {
+    setConnectionEditApiUrl(`database/${item.id}/connection`);
+    setTimeout(() => {
+      setConnectionEditApiUrl('');
+    }, 500);
+  };
+
   const modifiedData = {
     header: [
       {
@@ -167,12 +179,18 @@ function DvtConnection() {
         field: 'database_name',
         checkbox: true,
         heartIcon: true,
+        sort: true,
       },
-      { id: 2, title: t('Admin'), field: 'admin' },
-      { id: 3, title: t('Last Modified'), field: 'date' },
+      { id: 2, title: t('Backend'), field: 'backend' },
+      {
+        id: 3,
+        title: t('Last Modified'),
+        field: 'changed_on_delta_humanized',
+        sort: true,
+      },
       {
         id: 4,
-        title: t('Action'),
+        title: t('Actions'),
         clicks: [
           {
             icon: 'edit_alt',
@@ -194,6 +212,17 @@ function DvtConnection() {
     ],
   };
 
+  useEffect(() => {
+    if (connectionEditPromise) {
+      dispatch(
+        openModal({
+          component: 'connection-add-modal',
+          meta: { ...connectionEditPromise, isEdit: true },
+        }),
+      );
+    }
+  }, [connectionEditPromise]);
+
   useEffect(
     () => () => {
       clearConnection();
@@ -202,22 +231,6 @@ function DvtConnection() {
     },
     [],
   );
-
-  const handleEditConnection = async (item: any) => {
-    try {
-      const response = await fetch(`/api/v1/database/${item.id}/connection`);
-      const editedConnectionData = await response.json();
-
-      dispatch(
-        openModal({
-          component: 'connection-add-modal',
-          meta: { editedConnectionData, isEdit: true },
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return data.length > 0 ? (
     <StyledConnection>
@@ -233,6 +246,8 @@ function DvtConnection() {
         selected={selectedRows}
         setSelected={setSelectedRows}
         checkboxActiveField="id"
+        sort={sort}
+        setSort={setSort}
       />
       <StyledConnectionButton>
         <DvtButton

@@ -6,7 +6,6 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
-  dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/hooks/useFetch';
@@ -44,6 +43,8 @@ function DvtNewTainedTable() {
     useState('');
   const [getTableDataApiUrl, setGetTableDataApiUrl] = useState('');
   const [postDataSetUrl, setPostDataSetUrl] = useState('');
+  const [postSegmentationDataSetUrl, setPostSegmentationDataSetUrl] =
+    useState('');
   const [data, setData] = useState([]);
   const [dataSchema, setDataSchema] = useState<any[]>([]);
 
@@ -61,6 +62,20 @@ function DvtNewTainedTable() {
     body: {
       algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
       table_name: newTainedTableAddSelector.selectDatabase?.value,
+    },
+  });
+
+  const postSegmentationDataset = useFetch({
+    url: postSegmentationDataSetUrl,
+    method: 'POST',
+    body: {
+      algorithmName: newTainedTableAddSelector.algorithm_name?.label,
+      modelInput: {
+        tableName: newTainedTableAddSelector.selectDatabase?.value,
+        ...(newTainedTableAddSelector.algorithm_name?.label === 'DBSCAN'
+          ? { epsilon: 100, minPoints: 10 }
+          : { clusterSize: 10 }),
+      },
     },
   });
 
@@ -142,34 +157,24 @@ function DvtNewTainedTable() {
   }, [getTableData]);
 
   const handleCreateDataset = () => {
-    setPostDataSetUrl('ml_and_insert/');
-    setTimeout(() => {
-      setPostDataSetUrl('');
-    }, 200);
+    if (newTainedTableAddSelector.selectCategory.label === 'Segmentation') {
+      setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
+      setTimeout(() => {
+        setPostSegmentationDataSetUrl('');
+      }, 200);
+    } else {
+      setPostDataSetUrl('ml_and_insert/');
+      setTimeout(() => {
+        setPostDataSetUrl('');
+      }, 200);
+    }
   };
 
-  // useEffect(() => {
-  //   if (postDataset) {
-  //     dispatch(
-  //       dvtSidebarSetProperty({
-  //         pageKey: 'chartAdd',
-  //         key: 'dataset',
-  //         value: {
-  //           id: postDataset.id,
-  //           value: postDataset.result.table_name,
-  //           label: postDataset.result.table_name,
-  //         },
-  //       }),
-  //     );
-  //     history.push('/chart/add');
-  //   }
-  // }, [postDataset]);
-
   useEffect(() => {
-    if (postDataset) {
+    if (postDataset || postSegmentationDataset) {
       history.push('/traindata');
     }
-  }, [postDataset]);
+  }, [postDataset, postSegmentationDataset]);
 
   useEffect(
     () => () => {

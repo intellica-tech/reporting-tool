@@ -18,8 +18,10 @@
  */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { SupersetTheme, supersetTheme } from '@superset-ui/core';
+import { SupersetTheme, supersetTheme, t } from '@superset-ui/core';
 import { Checkbox } from 'antd';
 import Icons from '../Icons';
 import Icon from '../Icons/Icon';
@@ -29,6 +31,8 @@ import {
   StyledTabletHead,
   StyledTableTr,
   StyledTableTh,
+  StyledTableThSort,
+  StyledTableThSortRotate,
   StyledTableTbody,
   StyledTableTd,
   StyledTableTitle,
@@ -58,6 +62,14 @@ interface HeaderProps {
   checkbox?: boolean;
   isFavorite?: boolean;
   isFavoriteApiUrl?: string;
+  sort?: boolean;
+  modal?: string;
+  modalLabel?: string;
+}
+
+export interface DvtTableSortProps {
+  column: string;
+  direction: 'desc' | 'asc';
 }
 
 export interface DvtTableProps {
@@ -68,6 +80,8 @@ export interface DvtTableProps {
   setSelected?: (newSelected: any[]) => void;
   checkboxActiveField?: string;
   setFavoriteData?: (item: any) => void;
+  sort?: DvtTableSortProps;
+  setSort?: (args: any) => void;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -78,7 +92,10 @@ const DvtTable: React.FC<DvtTableProps> = ({
   setSelected = () => {},
   checkboxActiveField = 'id',
   setFavoriteData,
+  sort,
+  setSort,
 }) => {
+  const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
   const [openRow, setOpenRow] = useState<number | null>(null);
 
@@ -164,7 +181,41 @@ const DvtTable: React.FC<DvtTableProps> = ({
                     />
                   </StyledTableCheckbox>
                 )}
-                {column.title}
+                {column.sort ? (
+                  <StyledTableThSort
+                    onClick={() =>
+                      !!setSort &&
+                      setSort({
+                        column: column.field,
+                        direction:
+                          column.field === sort?.column
+                            ? sort?.direction === 'desc'
+                              ? 'asc'
+                              : 'desc'
+                            : 'asc',
+                      })
+                    }
+                  >
+                    {column.title}
+                    <StyledTableThSortRotate
+                      asc={
+                        column.field === sort?.column &&
+                        sort?.direction === 'asc'
+                      }
+                    >
+                      <Icon
+                        fileName="dvt-sort"
+                        iconColor={
+                          column.field === sort?.column
+                            ? supersetTheme.colors.dvt.primary.base
+                            : supersetTheme.colors.grayscale.dark2
+                        }
+                      />
+                    </StyledTableThSortRotate>
+                  </StyledTableThSort>
+                ) : (
+                  column.title
+                )}
               </StyledTableTh>
             ))}
           </StyledTableTitle>
@@ -237,6 +288,20 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             />
                           )}
                         </StyledTableTbody>
+                      )}
+                      {column.modal && column.field && (
+                        <StyledTableUrl
+                          onClick={() => {
+                            dispatch(
+                              openModal({
+                                component: column.modal ? column.modal : '',
+                                meta: row,
+                              }),
+                            );
+                          }}
+                        >
+                          {column.modalLabel ? column.modalLabel : t('Select')}
+                        </StyledTableUrl>
                       )}
                       {column.urlField && column.field && (
                         <StyledTableUrl

@@ -17,10 +17,9 @@
 import logging
 
 import requests
-from flask import request, Response, jsonify
+from flask import jsonify, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import permission_name
-
 
 from superset.extensions import event_logger
 from superset.views.base_api import BaseSupersetApi
@@ -54,8 +53,51 @@ class TrainDataRestApi(BaseSupersetApi):
             response = requests.post(external_api_url, json=payload)
 
             if response.ok:
-                return jsonify({"success": True, "message": f"Received payload: {payload}", "response": response.json()}), 200
+                return (
+                    jsonify(
+                        {
+                            "success": True,
+                            "message": f"Received payload: {payload}",
+                            "response": response.json(),
+                        }
+                    ),
+                    200,
+                )
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+
+class TrainDataSegmentationRestApi(BaseSupersetApi):
+    resource_name = "algorithms/run-ml-algorithm"
+    allow_browser_login = True
+
+    @expose("/", methods=("POST",))
+    @event_logger.log_this
+    @permission_name("list")
+    def traindata(self) -> Response:
+        try:
+            payload = request.json
+
+            if "algorithmName" not in payload or "modelInput" not in payload:
+                return jsonify({"error": "Missing required fields in the payload"}), 400
+
+
+            external_api_url = "http://172.16.11.14:8091/algorithms/run-ml-algorithm"
+
+            response = requests.post(external_api_url, json=payload)
+
+            if response.ok:
+                return (
+                    jsonify(
+                        {
+                            "success": True,
+                            "message": f"Received payload: {payload}",
+                            "response": response.content.decode('utf-8'),
+                        }
+                    ),
+                    200,
+                )
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500

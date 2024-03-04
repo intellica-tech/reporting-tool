@@ -168,7 +168,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     if (meta?.isEdit) {
       DvtConnectionData.find(
         connection =>
-          connection.driver === meta.editedConnectionData.result.driver &&
+          connection.driver === meta.result.driver &&
           setSelectedConnectionType(connection.databaseType),
       );
     }
@@ -244,15 +244,13 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
       setStep(2);
       setInput(prevState => ({
         ...prevState,
-        host: meta.editedConnectionData.result.parameters.host,
-        port: meta.editedConnectionData.result.parameters.port,
-        database_name: meta.editedConnectionData.result.parameters.database,
-        user_name: meta.editedConnectionData.result.parameters.username,
-        password: meta.editedConnectionData.result.parameters.password,
-        display_name: meta.editedConnectionData.result.database_name,
-        addittional_parameters: JSON.stringify(
-          meta.editedConnectionData.result.parameters.query,
-        ),
+        host: meta.result.parameters.host,
+        port: meta.result.parameters.port,
+        database_name: meta.result.parameters.database,
+        user_name: meta.result.parameters.username,
+        password: meta.result.parameters.password,
+        display_name: meta.result.database_name,
+        addittional_parameters: JSON.stringify(meta.result.parameters.query),
       }));
     }
   }, [meta]);
@@ -1269,7 +1267,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                 label={t('FINISH')}
                 onClick={() =>
                   meta?.isEdit
-                    ? setApiUrl(`database/${meta.editedConnectionData.id}`)
+                    ? setApiUrl(`database/${meta.id}`)
                     : setApiUrl('database/')
                 }
                 size="small"

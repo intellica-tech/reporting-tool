@@ -17,6 +17,8 @@
  * under the License.
  */
 import React, { useState } from 'react';
+import { t } from '@superset-ui/core';
+import { useToasts } from '../MessageToasts/withToasts';
 import DvtCollapse from '../DvtCollapse';
 import {
   StyledDvtList,
@@ -33,6 +35,7 @@ interface DataProps {
 export interface SelectedTablesProps {
   title: string;
   data: DataProps[];
+  selectStar: string;
 }
 
 export interface DvtListProps {
@@ -41,6 +44,7 @@ export interface DvtListProps {
 }
 
 const DvtList: React.FC<DvtListProps> = ({ data, deleteClick }) => {
+  const { addDangerToast } = useToasts();
   const [isOpenArray, setIsOpenArray] = useState<any[string]>(
     data.map(i => i.title) || [],
   );
@@ -50,6 +54,11 @@ const DvtList: React.FC<DvtListProps> = ({ data, deleteClick }) => {
       ? isOpenArray.filter((ft: string) => ft !== t)
       : [...isOpenArray, t];
     setIsOpenArray(findTitle);
+  };
+
+  const handleCopyToClick = (sql: string) => {
+    addDangerToast(t('Sql Copied!'));
+    navigator.clipboard.writeText(sql);
   };
 
   return (
@@ -63,6 +72,7 @@ const DvtList: React.FC<DvtListProps> = ({ data, deleteClick }) => {
             isOpen={isOpenArray.includes(d.title)}
             setIsOpen={() => handleIsOpenArray(d.title)}
             deleteClick={() => deleteClick(d)}
+            copyToClick={() => handleCopyToClick(d.selectStar)}
           >
             {d.data.map((item, index) => (
               <StyledDvtListItem key={index}>

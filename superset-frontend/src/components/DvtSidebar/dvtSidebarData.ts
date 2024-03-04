@@ -19,7 +19,7 @@ const dataYesOrNo = [
 
 const DvtSidebarData: SidebarDataProps[] = [
   {
-    pathname: '/superset/welcome/',
+    pathname: '/welcome/',
     key: 'welcome',
     data: [
       {
@@ -52,7 +52,7 @@ const DvtSidebarData: SidebarDataProps[] = [
             fileName: 'dvt-alert',
           },
           {
-            title: t('Sqlhub'),
+            title: t('SQL Hub'),
             url: '/sqlhub/',
             fileName: 'dvt-box',
           },
@@ -475,48 +475,28 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/superset/profile/admin/',
+    pathname: '/profile/',
     key: 'profile',
     data: [
       {
-        items: [
-          {
-            icon: 'dvt-briefcase',
-            label: t('Created Content'),
-            url: 'test',
-          },
-          {
-            icon: 'dvt-calendar',
-            label: t('Schedule'),
-            url: 'test1',
-          },
-          {
-            icon: 'dvt-history',
-            label: t('Recent Activity'),
-            url: 'test2',
-          },
-          {
-            icon: 'dvt-star',
-            label: t('Favorites'),
-            url: 'test3',
-          },
-          {
-            icon: 'dvt-users',
-            label: t('Groups and Roles'),
-            url: 'test4',
-          },
-          {
-            icon: 'dvt-arrow_forwardup',
-            label: t('Query History'),
-            url: 'test5',
-          },
-        ],
-        itemsLogout: [
-          {
-            icon: 'dvt-logout',
-            label: t('Log Out'),
-          },
-        ],
+        icon: 'dvt-star',
+        label: t('Favorites'),
+        url: 'favorites',
+      },
+      {
+        icon: 'dvt-briefcase',
+        label: t('Created Content'),
+        url: 'createContent',
+      },
+      {
+        icon: 'dvt-history',
+        label: t('Recent Activity'),
+        url: 'recentActivity',
+      },
+      {
+        icon: 'dvt-calendar',
+        label: t('Security and Access'),
+        url: 'securityAndAccess',
       },
     ],
   },
@@ -612,76 +592,72 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: 'users/list/',
+    pathname: '/user/list/',
     key:'usersList',
 
     data: [
       {
-        placeholder: t('Role'),
-        name:'role',
-      },
-      {
-        placeholder: t('Created By'),
-        name:'createdBy',
-      },
-      {
         placeholder: t('First Name'),
         name:'firstName',
+        status: 'input',
       },
       {
         placeholder: t('Last Name'),
         name:'lastName',
+        status: 'input',
       },
       {
         placeholder: t('User Name'),
         name:'userName',
-      },
-      {
-        placeholder: t('isActive?'),
-        name:'isActive',
+        status: 'input',
       },
       {
         placeholder: t('E Mail'),
         name:'email',
+        status: 'input',
+      },
+    ],
+  },
+  {
+    pathname: '/rowlevelsecurity/list/',
+    key: 'rowLevelSecurity',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
       },
       {
-        placeholder: t('Last Login'),
-        name:'lastLogin',
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
       },
       {
-        placeholder: t('Login Count'),
-        name:'loginCount',
+        placeholder: t('Group Key'),
+        name: 'groupKey',
+        status: 'input',
       },
       {
-        placeholder: t('failedLoginCount'),
-        name:'failedLoginCount',
+        placeholder: t('Filter Type'),
+        name: 'filterType',
+        values: [
+          {
+            label: 'Regular',
+            value: 'Regular',
+          },
+          {
+            label: 'Base',
+            value: 'Base',
+          },
+        ],
       },
+    ],
+    apiUrls: [
       {
-        placeholder: t('Created On'),
-        name:'createdOn',
+        name: 'modifiedBy',
+        url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
       },
-      {
-        placeholder: t('Changed On'),
-        name:'changedOn',
-      },
-      {
-        placeholder: t('Created'),
-        name:'created',
-      },
-      {
-        placeholder: t('Changed'),
-        name:'changed',
-      },
-      {
-        placeholder: t('Role'),
-        name:'role',
-      },
-      {
-        placeholder: t('Role'),
-        name:'role',
-      },
-    ]
-  }
+    ],
+  },
 ];
 
 const DefaultOrder = [

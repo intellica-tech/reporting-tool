@@ -202,6 +202,13 @@ const StyledSelectPopover = styled.div`
   gap: 8px;
 `;
 
+const StyledError = styled.div`
+  color: ${({ theme }) => theme.colors.dvt.error.base};
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 0 0 2px;
+`;
+
 export {
   StyledSelect,
   StyledSelectOption,
@@ -211,4 +218,5 @@ export {
   StyledSelectOptions,
   StyledSelectClear,
   StyledSelectPopover,
+  StyledError,
 };

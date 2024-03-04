@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarChartAddSetProperty,
+  dvtSidebarProfileSetTabs,
   dvtSidebarSetDataProperty,
   dvtSidebarSetProperty,
   dvtSidebarSetPropertySelectedRemove,
@@ -31,7 +32,6 @@ import {
   StyledDvtSidebarBodyItem,
   StyledDvtSidebarBodySelect,
   // StyledDvtSidebarFooter,
-  StyledDvtSidebarNavbarLogout,
   StyledDvtSidebarIconGroup,
   StyledDvtSidebarGroup,
   StyledDvtSidebarIcon,
@@ -76,13 +76,16 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
+  const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
+  const rowLevelSecuritySelector = useAppSelector(
+    state => state.dvtSidebar.rowLevelSecurity,
+  );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [active, setActive] = useState<string>('test');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectCategories, setSelectCategories] =
     useState<{ value: string; label: string }>();
@@ -93,7 +96,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
-      case '/superset/welcome/':
+      case '/welcome/':
         return 'welcome';
       case '/dashboard/list/':
         return 'dashboard';
@@ -111,7 +114,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'queryHistory';
       case '/savedqueryview/list/':
         return 'savedQuery';
-      case '/superset/profile/admin/':
+      case '/profile/':
         return 'profile';
       case '/chart/add':
         return 'chartAdd';
@@ -121,6 +124,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/rowlevelsecurity/list/':
+        return 'rowLevelSecurity';
       case '/traindata/':
         return 'newTrainedTable';
       case '/user/list/':
@@ -273,6 +278,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           keyNames: ['database'],
         },
         {
+          key: 'rowLevelSecurity',
+          keyNames: ['modifiedBy'],
+        },
+        {
           key: 'newTrainedTable',
           keyNames: ['database'],
         },
@@ -309,6 +318,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'rowLevelSecurity-modifiedBy':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   case 'newTrainedTable-database':
                     return {
@@ -456,6 +470,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'annotationLayer',
         keyNames: ['createdBy'],
       },
+      {
+        key: 'rowLevelSecurity',
+        keyNames: ['modifiedBy'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -494,6 +512,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'sqlhubHistory',
     'chart',
     'usersList',
+    'rowLevelSecurity',
   ];
 
   const getAlgorithmOptions = () => {
@@ -521,12 +540,25 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return [
           { value: '13', label: 'kMeans' },
           { value: '14', label: 'GMM' },
-          { value: '15', label: 'DB Scan' },
+          { value: '15', label: 'DBSCAN' },
         ];
       default:
         return [];
     }
   };
+
+  useEffect(() => {
+    const changeAlgorithmName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'selectCategory',
+          value: selectCategories,
+        }),
+      );
+    };
+    changeAlgorithmName();
+  }, [selectCategories]);
 
   return (
     <StyledDvtSidebar minWidth={minWidth}>
@@ -560,8 +592,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       {withForms.includes(pathTitles(pathName)) && (
         <StyledDvtSidebarGroup>
           {DvtSidebarData.find(
-            (item: { pathname: string }) =>
-              item.pathname === '/superset/welcome/',
+            (item: { pathname: string }) => item.pathname === '/welcome/',
           )
             ?.data.filter((data: any) => data.titleMenu === 'folder navigation')
             .map((filteredData: any, index: number) => (
@@ -648,6 +679,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     datePicker?: boolean;
                     name: string;
                     status: string;
+                    data: [];
                   },
                   index: number,
                 ) => (
@@ -676,6 +708,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
+                            : pathTitles(pathName) === 'usersList'
+                            ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
                             : undefined
@@ -717,6 +753,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'usersList'
                             ? usersListSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : undefined
                         }
                         onChange={value => {
@@ -820,22 +858,19 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
+
       {pathTitles(pathName) === 'profile' && (
         <StyledDvtSidebarBody pathName={pathName}>
-          {sidebarDataFindPathname?.data.map((data: any, index: number) => (
-            <StyledDvtSidebarBodyItem key={index}>
-              <DvtNavigationBar
-                active={active}
-                data={data.items}
-                setActive={setActive}
-              />
-              <StyledDvtSidebarNavbarLogout>
-                <DvtNavigationBar data={data.itemsLogout} />
-              </StyledDvtSidebarNavbarLogout>
-            </StyledDvtSidebarBodyItem>
-          ))}
+          <StyledDvtSidebarBodyItem>
+            <DvtNavigationBar
+              active={profileSelector.tabs}
+              data={sidebarDataFindPathname?.data || []}
+              setActive={pItem => dispatch(dvtSidebarProfileSetTabs(pItem))}
+            />
+          </StyledDvtSidebarBodyItem>
         </StyledDvtSidebarBody>
       )}
+
       {/* {pathTitles(pathName) === 'welcome' && (
         <StyledDvtSidebarFooter>
           <DvtDarkMode

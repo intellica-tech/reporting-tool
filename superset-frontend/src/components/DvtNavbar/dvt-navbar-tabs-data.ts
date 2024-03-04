@@ -17,6 +17,10 @@ export const UserData: UserDataProps = {
 
 export const sqlTabsData = [
   {
+    label: t('SQL Hub'),
+    value: '/sqlhub/',
+  },
+  {
     label: t('Saved Queries'),
     value: '/savedqueryview/list/',
   },
@@ -98,10 +102,20 @@ export const DvtNavbarTabsData: DvtNavbarTabsDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/rowlevelsecurity/list/',
+    data: [
+      {
+        label: t('Filter List'),
+        value: 'filterList',
+        icon: 'dvt-filter',
+      },
+    ],
+  },
 ];
 
 export const WithNavbarBottom: string[] = [
-  // '/superset/welcome/',
+  // '/welcome/',
   '/alert/list/',
   '/sqlhub/history/',
   '/savedqueryview/list/',
@@ -110,4 +124,5 @@ export const WithNavbarBottom: string[] = [
   '/dashboard/list/',
   '/report/list/',
   '/explore/',
+  '/rowlevelsecurity/list/',
 ];

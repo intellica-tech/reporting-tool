@@ -18,7 +18,7 @@ const DvtProfileMenuData: DvtProfileMenuDataProps[] = [
       { label: t('List Roles'), link: '/roles/list/' },
       {
         label: t('Row Level Security'),
-        link: '/rowlevelsecurityfiltersmodelview/list/',
+        link: '/rowlevelsecurity/list/',
       },
       { label: t('Action Log'), link: '/logmodelview/list/' },
     ],
@@ -38,7 +38,7 @@ const DvtProfileMenuData: DvtProfileMenuDataProps[] = [
   {
     title: t('User'),
     menu: [
-      { label: t('Profile'), link: '/superset/profile/admin' },
+      { label: t('Profile'), link: '/profile/' },
       { label: t('Info'), link: '/users/userinfo/' },
       { label: t('Logout'), link: '/logout/' },
     ],

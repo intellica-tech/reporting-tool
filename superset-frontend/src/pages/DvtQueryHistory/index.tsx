@@ -48,6 +48,7 @@ const QueryHistoryHeader = [
     id: 8,
     title: t('SQL'),
     field: 'sql',
+    modal: 'query-preview',
   },
   {
     id: 9,

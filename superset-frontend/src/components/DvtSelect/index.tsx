@@ -31,6 +31,7 @@ import {
   StyledSelectIcon,
   StyledSelectPopover,
   StyledSelectClear,
+  StyledError,
 } from './dvt-select.module';
 
 export interface DvtSelectProps {
@@ -48,6 +49,7 @@ export interface DvtSelectProps {
   importantLabel?: string;
   objectName?: string;
   onShowClear?: boolean;
+  error?: string;
 }
 
 const DvtSelect: React.FC<DvtSelectProps> = ({
@@ -65,6 +67,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
   importantLabel = 'Cannot be empty',
   objectName = 'label',
   onShowClear = false,
+  error,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -188,6 +191,7 @@ const DvtSelect: React.FC<DvtSelectProps> = ({
           ))}
         </StyledSelectOptions>
       )}
+      {error && <StyledError>{error}</StyledError>}
     </StyledSelect>
   );
 };

@@ -16,22 +16,27 @@ function DvtUsersList() {
     {
       id: 1,
       title: t('First Name'),
+      sort: true,
     },
     {
       id: 2,
       title: t('Last Name'),
+      sort: true,
     },
     {
       id: 3,
       title: t('User Name'),
+      sort: true,
     },
     {
       id: 4,
       title: t('E-mail'),
+      sort: true,
     },
     {
       id: 5,
       title: t('Is Active?'),
+      sort: true,
     },
     {
       id: 6,

@@ -17,6 +17,7 @@
  * under the License.
  */
 import React from 'react';
+import { t } from '@superset-ui/core';
 import {
   StyledProfileIndormation,
   StyledProfileImage,
@@ -27,12 +28,12 @@ import {
 } from './dvt-profile-information.module';
 
 export interface DvtProfileInformationProps {
-  image: string;
+  image?: string;
   header: string;
-  location: string;
+  location?: string;
   joinedDate: Date;
-  title: string;
-  test: string;
+  email: string;
+  userId: number;
 }
 
 const DvtProfileInformation: React.FC<DvtProfileInformationProps> = ({
@@ -40,8 +41,8 @@ const DvtProfileInformation: React.FC<DvtProfileInformationProps> = ({
   header,
   location,
   joinedDate,
-  title,
-  test,
+  email,
+  userId,
 }) => {
   const getTimeAgo = (joinedDate: Date | string): string => {
     let dateToUse = joinedDate;
@@ -81,21 +82,23 @@ const DvtProfileInformation: React.FC<DvtProfileInformationProps> = ({
   return (
     <StyledProfileIndormation>
       <StyledProfileImage>
-        <img
-          src={image}
-          alt="Profile"
-          height={155}
-          width={155}
-          style={{ borderRadius: '155px' }}
-        />
+        {image && (
+          <img
+            src={image}
+            alt="Profile"
+            height={155}
+            width={155}
+            style={{ borderRadius: '155px' }}
+          />
+        )}
       </StyledProfileImage>
       <StyledHeading>{header}</StyledHeading>
       <StyledInformation>
         <StyledInformationDiv>{location}</StyledInformationDiv>
         <StyledInformationDiv>{getTimeAgo(joinedDate)}</StyledInformationDiv>
       </StyledInformation>
-      <StyledLabel>Title: {title}</StyledLabel>
-      <StyledLabel>Test: {test}</StyledLabel>
+      <StyledLabel>{`${t('Email')}: ${email}`}</StyledLabel>
+      <StyledLabel>{`${t('ID')}: ${userId}`}</StyledLabel>
     </StyledProfileIndormation>
   );
 };

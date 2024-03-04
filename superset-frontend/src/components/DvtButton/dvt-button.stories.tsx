@@ -53,6 +53,12 @@ export default {
     maxWidth: {
       control: { type: 'boolean' },
     },
+    loading: {
+      control: { type: 'boolean' },
+    },
+    loadingType: {
+      control: { type: 'radio' },
+    },
   },
 };
 

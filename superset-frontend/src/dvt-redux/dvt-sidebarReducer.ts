@@ -17,6 +17,7 @@
  * under the License.
  */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { t } from '@superset-ui/core';
 
 interface DvtSidebarState {
   reports: {
@@ -36,20 +37,10 @@ interface DvtSidebarState {
     search: string;
   };
   usersList: {
-    role: string;
-    createdBy: string;
-    changedBy: string;
+    userName: string;
     firstName: string;
     lastName: string;
-    isActive: string;
     email: string;
-    lastLogin: string;
-    loginCount: string;
-    failedLoginCount: string;
-    createdOn: string;
-    changedOn: string;
-    created: string;
-    changed: string;
   };
   connection: {
     expose_in_sqllab: any;
@@ -74,6 +65,7 @@ interface DvtSidebarState {
     schema: any;
     selectDatabase: any;
     algorithm_name: any;
+    selectCategory: any;
   };
   chartAdd: {
     dataset: any;
@@ -99,6 +91,15 @@ interface DvtSidebarState {
     database: any;
     schema: any;
     see_table_schema: any[string];
+  };
+  rowLevelSecurity: {
+    name: any;
+    modifiedBy: any;
+    groupKey: any;
+    filterType: any;
+  };
+  profile: {
+    tabs: any;
   };
   data: {
     fetched: {
@@ -136,6 +137,9 @@ interface DvtSidebarState {
       sqlhub: {
         database: boolean;
       };
+      rowLevelSecurity: {
+        modifiedBy: boolean;
+      };
     };
     alerts: {
       createdBy: any[];
@@ -169,6 +173,7 @@ interface DvtSidebarState {
       schema: any[];
       selectDatabase: any[];
       algorithm_name: any[];
+      selectCategory: any[];
     };
     chartAdd: {
       dataset: any[];
@@ -179,21 +184,14 @@ interface DvtSidebarState {
       see_table_schema: any[];
     };
     usersList: {
-      role: '',
-      createdBy: '',
-      changedBy: '',
+      userName: '',
       firstName: '',
       lastName: '',
-      isActive: '',
       email: '',
-      lastLogin: '',
-      loginCount: '',
-      failedLoginCount: '',
-      createdOn: '',
-      changedOn: '',
-      created: '',
-      changed: '',
     },
+    rowLevelSecurity: {
+      modifiedBy: any[];
+    };
   };
 }
 
@@ -237,6 +235,7 @@ const INITIAL_STATE = {
     schema: '',
     selectDatabase: '',
     algorithm_name: '',
+    selectCategory: '',
   },
   chartAdd: {
     dataset: '',
@@ -264,20 +263,19 @@ const INITIAL_STATE = {
     see_table_schema: [],
   },
   usersList: {
-    role: '',
-    createdBy: '',
-    changedBy: '',
+    userName: '',
     firstName: '',
     lastName: '',
-    isActive: '',
     email: '',
-    lastLogin: '',
-    loginCount: '',
-    failedLoginCount: '',
-    createdOn: '',
-    changedOn: '',
-    created: '',
-    changed: '',
+  },
+  rowLevelSecurity: {
+    name: '',
+    modifiedBy: '',
+    groupKey: '',
+    filterType: '',
+  },
+  profile: {
+    tabs: { label: t('Favorites'), url: 'favorites' },
   },
 };
 
@@ -319,6 +317,9 @@ const initialState: DvtSidebarState = {
       sqlhub: {
         database: false,
       },
+      rowLevelSecurity: {
+        modifiedBy: false,
+      },
     },
     alerts: {
       createdBy: [],
@@ -352,6 +353,7 @@ const initialState: DvtSidebarState = {
       schema: [],
       selectDatabase: [],
       algorithm_name: [],
+      selectCategory: [],
     },
     chartAdd: {
       dataset: [],
@@ -362,20 +364,13 @@ const initialState: DvtSidebarState = {
       see_table_schema: [],
     },
     usersList: {
-      role: '',
-      createdBy: '',
-      changedBy: '',
+      userName: '',
       firstName: '',
       lastName: '',
-      isActive: '',
       email: '',
-      lastLogin: '',
-      loginCount: '',
-      failedLoginCount: '',
-      createdOn: '',
-      changedOn: '',
-      created: '',
-      changed: '',
+    },
+    rowLevelSecurity: {
+      modifiedBy: [],
     },
   },
 };
@@ -485,6 +480,15 @@ const dvtSidebarSlice = createSlice({
         },
       };
     },
+    dvtSidebarProfileSetTabs: (
+      state,
+      action: PayloadAction<{ label: string; url: string }>,
+    ) => ({
+      ...state,
+      profile: {
+        tabs: action.payload,
+      },
+    }),
   },
 });
 
@@ -494,6 +498,7 @@ export const {
   dvtSidebarSetPropertySelectedRemove,
   dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
+  dvtSidebarProfileSetTabs,
 } = dvtSidebarSlice.actions;
 
 export default dvtSidebarSlice.reducer;
