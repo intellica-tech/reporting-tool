@@ -1,5 +1,4 @@
 import { styled } from '@superset-ui/core';
-import Alert from 'src/components/Alert';
 
 const StyledDvtNewTainedTable = styled.div`
   display: flex;
