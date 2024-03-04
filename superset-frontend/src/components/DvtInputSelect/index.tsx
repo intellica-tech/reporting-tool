@@ -116,13 +116,18 @@ const DvtInputSelect = ({
         <StyledInputSelectField
           typeDesign={typeDesign}
           isOpen={isOpen}
-          selected={selectedValues.length > 0}
+          selected={
+            selectedValues.length > 0 && !selectedValues.every(Number.isNaN)
+          }
         >
-          {fixData
-            .filter(option => selectedValues.includes(option.value))
-            .map(option => option.label)
-            .join(', ') || placeholder}
+          {!selectedValues.every(Number.isNaN)
+            ? fixData
+                .filter(option => selectedValues.includes(option.value))
+                .map(option => option.label)
+                .join(', ')
+            : placeholder}
         </StyledInputSelectField>
+
         <StyledInputSelectIcon isOpen={isOpen}>
           <Icon
             fileName="caret_right"
