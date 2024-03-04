@@ -61,7 +61,7 @@ function DvtRowLevelSecurity() {
         {
           col: 'changed_by',
           opr: 'rel_o_m',
-          value: rowLevelSecuritySelector.changedBy?.value,
+          value: rowLevelSecuritySelector.modifiedBy?.value,
         },
       ],
       page: gPage,
@@ -96,7 +96,6 @@ function DvtRowLevelSecurity() {
       }));
       setCount(rowLevelSecurityData.count);
       setData(editedData);
-      console.log('setData');
     }
   }, [rowLevelSecurityData]);
 
@@ -132,9 +131,6 @@ function DvtRowLevelSecurity() {
     setCount(updatedData.length);
 
     setSelectedRows([]);
-    console.log('row', selectedRows);
-    console.log('data', data);
-    console.log('Deleted!', updatedData);
   };
 
   const handleModalDelete = (item: any) => {
