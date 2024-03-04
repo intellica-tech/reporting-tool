@@ -20,6 +20,7 @@ import DvtButtonTabs, {
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtSpinner from 'src/components/DvtSpinner';
 import DvtButton from 'src/components/DvtButton';
+import { Button } from 'antd';
 import DvtInput from 'src/components/DvtInput';
 import {
   StyledSqlhub,
@@ -28,7 +29,6 @@ import {
   SqlhubTableScroll,
   SpinnerContainer,
 } from './dvt-sqlhub.module';
-import { Button } from 'antd';
 
 const tabs = [
   { label: t('RESULTS'), value: 'results' },
