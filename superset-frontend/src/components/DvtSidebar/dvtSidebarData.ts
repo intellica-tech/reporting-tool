@@ -598,7 +598,7 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Permissions'),
         name: 'permissions',
-        data: [
+        values: [
           {
             label:'ex',
             value: 'ex',
@@ -608,12 +608,16 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         placeholder: t('Name'),
         name: 'name',
-       
+        status: 'input'
       },
       {
         placeholder: t('User'),
         name: 'user',
-        
+        values: [
+          {
+            label: 'Superset Admin', value: 'supersetAdmin'
+          },
+        ],
       },
     ],
   },
