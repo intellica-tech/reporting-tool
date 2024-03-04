@@ -92,12 +92,12 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     if (meta?.isEdit) {
       setValue({
         ruleName: meta.name,
-        filterType: { label: '', value: '' },
-        datasets: [],
-        roles: [],
-        groupKey: '',
-        clause: '',
-        description: '',
+        filterType: { label: meta.filter_type, value: meta.value },
+        datasets: meta.tables.map((item: any) => item.id),
+        roles: meta.roles.map((item: any) => item.id),
+        groupKey: meta.group_key,
+        clause: meta.clause,
+        description: meta.description,
       });
     }
   }, [meta?.isEdit]);
