@@ -24,27 +24,8 @@ const StyledNewTainedTableIconLabel = styled.div`
   margin-top: auto;
 `;
 
-const StyledAlertInfo = styled(Alert)`
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  position: relative;
-`;
-
-const StyledAlertInfoLink = styled.span`
-  position: absolute;
-  top: 10px;
-  right: 20px;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 export {
   StyledDvtNewTainedTable,
   StyledNewTainedTableButtons,
   StyledNewTainedTableIconLabel,
-  StyledAlertInfo,
-  StyledAlertInfoLink,
 };
