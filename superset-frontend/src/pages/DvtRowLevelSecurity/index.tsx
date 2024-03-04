@@ -120,16 +120,6 @@ function DvtRowLevelSecurity() {
     }
   }, [rowLevelSecuritySelector]);
 
-  const handleDelete = () => {
-    const selectedId = selectedRows.map(row => row.id);
-    const updatedData = data.filter(item => !selectedId.includes(item.id));
-
-    setData(updatedData);
-    setCount(updatedData.length);
-
-    setSelectedRows([]);
-  };
-
   const handleModalDelete = (item: any) => {
     dispatch(
       openModal({
