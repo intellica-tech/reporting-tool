@@ -28,6 +28,7 @@ import {
   SqlhubTableScroll,
   SpinnerContainer,
 } from './dvt-sqlhub.module';
+import { Button } from 'antd';
 
 const tabs = [
   { label: t('RESULTS'), value: 'results' },
@@ -277,6 +278,9 @@ function DvtSqllab() {
       )
     : [];
 
+  const getExportCsvUrl = (clientId: string) =>
+    `/api/v1/sqllab/export/${clientId}/`;
+
   return (
     <StyledSqlhub>
       <DvtTextareaSelectRun
@@ -308,12 +312,17 @@ function DvtSqllab() {
                     bold
                     onClick={() => {}}
                   />
-                  <DvtButton
-                    label={t('DOWNLOAD TO CSV')}
-                    size="small"
-                    bold
-                    onClick={() => {}}
-                  />
+                  <Button
+                    style={{ display: 'contents' }}
+                    href={getExportCsvUrl(executePromiseApi.query.id)}
+                  >
+                    <DvtButton
+                      label={t('DOWNLOAD TO CSV')}
+                      size="small"
+                      bold
+                      onClick={() => {}}
+                    />
+                  </Button>
                   <DvtButton
                     label={t('COPY TO CLIPBOARD')}
                     icon="file"
