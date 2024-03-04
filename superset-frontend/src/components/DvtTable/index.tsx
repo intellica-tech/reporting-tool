@@ -18,8 +18,10 @@
  */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { SupersetTheme, supersetTheme } from '@superset-ui/core';
+import { SupersetTheme, supersetTheme, t } from '@superset-ui/core';
 import { Checkbox } from 'antd';
 import Icons from '../Icons';
 import Icon from '../Icons/Icon';
@@ -61,6 +63,8 @@ interface HeaderProps {
   isFavorite?: boolean;
   isFavoriteApiUrl?: string;
   sort?: boolean;
+  modal?: string;
+  modalLabel?: string;
 }
 
 export interface DvtTableSortProps {
@@ -91,6 +95,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
   sort,
   setSort,
 }) => {
+  const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
   const [openRow, setOpenRow] = useState<number | null>(null);
 
@@ -283,6 +288,20 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             />
                           )}
                         </StyledTableTbody>
+                      )}
+                      {column.modal && column.field && (
+                        <StyledTableUrl
+                          onClick={() => {
+                            dispatch(
+                              openModal({
+                                component: column.modal ? column.modal : '',
+                                meta: row,
+                              }),
+                            );
+                          }}
+                        >
+                          {column.modalLabel ? column.modalLabel : t('Select')}
+                        </StyledTableUrl>
                       )}
                       {column.urlField && column.field && (
                         <StyledTableUrl
