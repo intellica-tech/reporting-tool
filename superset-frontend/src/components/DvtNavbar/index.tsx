@@ -31,16 +31,17 @@ import {
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
+import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
+import DvtButton from '../DvtButton';
+import DvtDotTitle from '../DvtDotTitle';
+import DvtDropdown from '../DvtDropdown';
 import {
   sqlTabsData,
   DvtNavbarTabsData,
   WithNavbarBottom,
 } from './dvt-navbar-tabs-data';
-import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
-import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
-import DvtButton from '../DvtButton';
-import DvtDotTitle from '../DvtDotTitle';
-
 // import DvtInput from '../DvtInput';
 // import DvtSelect from '../DvtSelect';
 import DvtProfileMenu from '../DvtProfileMenu';
@@ -55,7 +56,6 @@ import {
   NavbarProfileIcon,
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
-import DvtDropdown from '../DvtDropdown';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -110,6 +110,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
+      case '/rowlevelsecurity/list/':
+        return t('Row Level Security');
       case '/traindata/':
         return t('New Trained Table');
       default:
@@ -172,6 +174,14 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       history.push(viewListSelector.sqlhub.value);
     }
   }, [pathName, viewListSelector]);
+
+  const handleRowLevelSecurityOpenModal = () => {
+    dispatch(
+      openModal({
+        component: 'rowlevelsecurity-add-modal',
+      }),
+    );
+  };
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
@@ -265,6 +275,18 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                     handleOpenExplore()
                   }
                   bold
+                />
+              </NavbarBottomRight>
+            </>
+          )}
+          {pathName === '/rowlevelsecurity/list/' && (
+            <>
+              <div />
+              <NavbarBottomRight>
+                <DvtButton
+                  label="Rule"
+                  onClick={handleRowLevelSecurityOpenModal}
+                  icon="dvt-add_square"
                 />
               </NavbarBottomRight>
             </>

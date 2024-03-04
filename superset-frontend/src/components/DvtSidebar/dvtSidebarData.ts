@@ -591,6 +591,46 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/rowlevelsecurity/list/',
+    key: 'rowLevelSecurity',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
+      },
+      {
+        placeholder: t('Group Key'),
+        name: 'groupKey',
+        status: 'input',
+      },
+      {
+        placeholder: t('Filter Type'),
+        name: 'filterType',
+        values: [
+          {
+            label: 'Regular',
+            value: 'Regular',
+          },
+          {
+            label: 'Base',
+            value: 'Base',
+          },
+        ],
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'modifiedBy',
+        url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [

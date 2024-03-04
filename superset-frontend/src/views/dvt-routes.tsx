@@ -131,7 +131,7 @@ const TrainData = lazy(
 const RowLevelSecurityList = lazy(
   () =>
     import(
-      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/RowLevelSecurityList'
+      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/DvtRowLevelSecurity'
     ),
 );
 
@@ -234,7 +234,7 @@ export const routes: Routes = [
     Component: DatasetCreation,
   },
   {
-    path: '/rowlevelsecurity/list',
+    path: '/rowlevelsecurity/list/',
     Component: RowLevelSecurityList,
   },
   {

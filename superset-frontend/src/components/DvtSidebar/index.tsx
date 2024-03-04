@@ -81,6 +81,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
   );
+  const rowLevelSecuritySelector = useAppSelector(
+    state => state.dvtSidebar.rowLevelSecurity,
+  );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectCategories, setSelectCategories] =
@@ -120,6 +123,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/rowlevelsecurity/list/':
+        return 'rowLevelSecurity';
       case '/traindata/':
         return 'newTrainedTable';
       default:
@@ -270,6 +275,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           keyNames: ['database'],
         },
         {
+          key: 'rowLevelSecurity',
+          keyNames: ['modifiedBy'],
+        },
+        {
           key: 'newTrainedTable',
           keyNames: ['database'],
         },
@@ -306,6 +315,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'rowLevelSecurity-modifiedBy':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   case 'newTrainedTable-database':
                     return {
@@ -453,6 +467,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'annotationLayer',
         keyNames: ['createdBy'],
       },
+      {
+        key: 'rowLevelSecurity',
+        keyNames: ['modifiedBy'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -490,6 +508,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chartAdd',
     'sqlhubHistory',
     'chart',
+    'rowLevelSecurity',
   ];
 
   const getAlgorithmOptions = () => {
@@ -656,6 +675,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     datePicker?: boolean;
                     name: string;
                     status: string;
+                    data: [];
                   },
                   index: number,
                 ) => (
@@ -684,6 +704,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
                             : undefined
@@ -723,6 +745,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : undefined
                         }
                         onChange={value => {
