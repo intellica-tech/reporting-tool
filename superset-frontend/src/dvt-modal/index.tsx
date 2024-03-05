@@ -16,6 +16,7 @@ import {
   StyledModalCardClose,
 } from './dvt-modal.module';
 import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
+import DvtDatasetEdit from './body/dataset-edit';
 
 export interface ModalProps {
   meta: any;
@@ -38,6 +39,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtReportAdd meta={meta} onClose={onClose} />;
     case 'rowlevelsecurity-add-modal':
       return <DvtRowLevelSecurityAdd meta={meta} onClose={onClose} />;
+    case 'dataset-edit-modal':
+      return <DvtDatasetEdit meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
