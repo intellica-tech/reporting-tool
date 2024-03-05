@@ -1,15 +1,39 @@
 import { t } from '@superset-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DvtButton from 'src/components/DvtButton';
 import DvtTable from 'src/components/DvtTable';
 
 function DvtListRoles() {
   const [data, setData] = useState<any[]>([]);
 
+  useEffect(() => {
+    const fetchData = () => {
+      try {
+        const userData = fetchUserData;
+        setData(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const fetchUserData = [
+    {
+      id: 1,
+      name: 'John',
+    },
+
+    {
+      id: 2,
+      name: 'Jane',
+    },
+  ];
   const listRolesHeaderData = [
     {
       id: 1,
       title: t('Name'),
+      field: 'name',
       flex: 5,
     },
     {

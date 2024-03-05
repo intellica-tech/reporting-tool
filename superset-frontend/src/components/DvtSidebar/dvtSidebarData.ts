@@ -592,7 +592,7 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
-    pathname: '/roles/list/',
+    pathname: '/role/list/',
     key: 'rolesList',
     data: [
       {

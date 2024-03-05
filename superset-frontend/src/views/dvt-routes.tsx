@@ -249,7 +249,7 @@ export const routes: Routes = [
     Component: Profile,
   },
   {
-    path: '/roles/list/',
+    path: '/role/list/',
     Component: DvtRolesList,
   },
 ];
