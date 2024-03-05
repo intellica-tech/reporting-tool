@@ -135,19 +135,12 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [rolesDataPromise]);
 
-  // const handleAdd = () => {
-  //   if(meta?.isEdit){
-  //     setApiUrl(`rowlevelsecurity/${meta?.id}`)}
-  //     else if {setApiUrl('rowlevelsecurity/')}
-  // };
-
   useEffect(() => {
     if (rowLevelSecurityAddData?.id) {
       dispatch(dvtRowLevelSecurityAddStatus('Success'));
       onClose();
     }
   }, [rowLevelSecurityAddData]);
-  console.log('rowlevelsecurity:',rowLevelSecurityAddData);
 
   const handleCancel = () => {
     setValue(INITIAL_STATE);
@@ -161,7 +154,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
       setValue(INITIAL_STATE);
     };
   }, []);
-  console.log('meta', meta);
+
   return (
     <StyledRowLevelSecurity>
       <StyledHeadTitle>+ Add Rule</StyledHeadTitle>
