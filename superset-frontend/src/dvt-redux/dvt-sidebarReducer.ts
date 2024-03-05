@@ -184,11 +184,11 @@ interface DvtSidebarState {
       see_table_schema: any[];
     };
     usersList: {
-      userName: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-    },
+      userName: '';
+      firstName: '';
+      lastName: '';
+      email: '';
+    };
     rowLevelSecurity: {
       modifiedBy: any[];
     };
@@ -257,7 +257,7 @@ const INITIAL_STATE = {
     createdBy: '',
     search: '',
   },
-  sqlhub: { 
+  sqlhub: {
     database: '',
     schema: '',
     see_table_schema: [],

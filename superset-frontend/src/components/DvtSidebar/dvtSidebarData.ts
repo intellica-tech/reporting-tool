@@ -594,7 +594,6 @@ const DvtSidebarData: SidebarDataProps[] = [
   {
     pathname: '/user/list/',
     key:'usersList',
-
     data: [
       {
         placeholder: t('First Name'),
