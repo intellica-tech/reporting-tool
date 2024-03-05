@@ -25,6 +25,7 @@ import DvtButton from 'src/components/DvtButton';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtTextarea from 'src/components/DvtTextarea';
 import { useDispatch } from 'react-redux';
+import { t } from '@superset-ui/core';
 import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
 import {
   StyledDvtButtons,
@@ -58,25 +59,27 @@ interface InputProps {
   description: string;
 }
 
-const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
-  const [value, setValue] = useState<InputProps>({
-    ruleName: '',
-    filterType: { label: '', value: '' },
-    datasets: [],
-    roles: [],
-    groupKey: '',
-    clause: '',
-    description: '',
-  });
+const INITIAL_STATE = {
+  ruleName: '',
+  filterType: { label: '', value: '' },
+  datasets: [],
+  roles: [],
+  groupKey: '',
+  clause: '',
+  description: '',
+};
 
+const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
+  const [value, setValue] = useState<InputProps>(INITIAL_STATE);
+
   const [apiUrl, setApiUrl] = useState<string>('');
   const [datasetData, setDatasetData] = useState<any[]>([]);
   const [rolesData, setRolesData] = useState<any[]>([]);
 
   const rowLevelSecurityAddData = useFetch({
     url: apiUrl,
-    method: 'POST',
+    method: meta?.isEdit ? 'PUT' : 'POST',
     body: {
       name: value.ruleName,
       description: value.description,
@@ -132,9 +135,11 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [rolesDataPromise]);
 
-  const handleAdd = () => {
-    setApiUrl('rowlevelsecurity/');
-  };
+  // const handleAdd = () => {
+  //   if(meta?.isEdit){
+  //     setApiUrl(`rowlevelsecurity/${meta?.id}`)}
+  //     else if {setApiUrl('rowlevelsecurity/')}
+  // };
 
   useEffect(() => {
     if (rowLevelSecurityAddData?.id) {
@@ -142,28 +147,21 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
       onClose();
     }
   }, [rowLevelSecurityAddData]);
+  console.log('rowlevelsecurity:',rowLevelSecurityAddData);
 
   const handleCancel = () => {
-    setValue({
-      ruleName: '',
-      filterType: { label: '', value: '' },
-      datasets: [],
-      roles: [],
-      groupKey: '',
-      clause: '',
-      description: '',
-    });
+    setValue(INITIAL_STATE);
     onClose();
   };
 
   useEffect(() => {
-    if (apiUrl) {
-      setTimeout(() => {
-        setApiUrl('');
-      }, 2000);
-    }
-  }, [apiUrl]);
-
+    return () => {
+      setRolesData([]);
+      setDatasetData([]);
+      setValue(INITIAL_STATE);
+    };
+  }, []);
+  console.log('meta', meta);
   return (
     <StyledRowLevelSecurity>
       <StyledHeadTitle>+ Add Rule</StyledHeadTitle>
@@ -247,10 +245,14 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
           onClick={handleCancel}
         />
         <DvtButton
-          colour="grayscale"
+          colour={meta?.isEdit ? 'primary' : 'grayscale'}
           typeColour="basic"
-          label="ADD"
-          onClick={handleAdd}
+          label={meta?.isEdit ? t('SAVE') : t('ADD')}
+          onClick={() => {
+            meta?.isEdit
+              ? setApiUrl(`rowlevelsecurity/${meta?.id}`)
+              : setApiUrl('rowlevelsecurity/');
+          }}
         />
       </StyledDvtButtons>
     </StyledRowLevelSecurity>
