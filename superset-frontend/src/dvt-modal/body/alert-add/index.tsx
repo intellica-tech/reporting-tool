@@ -424,6 +424,7 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
                 setInput({ ...input, value: newValue });
               }}
               typeDesign="chartsForm"
+              number
             />
           </StyledAlertAddAlertConition>
           <StyledAlertAddAlertConditionSchedule>
