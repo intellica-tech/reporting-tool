@@ -13,7 +13,6 @@ import {
   StyledModal,
   StyledModalCard,
   StyledModalCardBody,
-  StyledModalCardClose,
 } from './dvt-modal.module';
 import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
 import DvtQueryPreview from './body/query-preview';
