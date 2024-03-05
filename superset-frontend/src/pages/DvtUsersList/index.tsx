@@ -14,9 +14,9 @@ function DvtUsersList() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
-        const userData = await fetchUserData();
+        const userData = fetchUserData;
         setData(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -24,29 +24,29 @@ function DvtUsersList() {
     };
     fetchData();
   }, []);
-  const fetchUserData = async () => {
-    return [
-      {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        username: 'johndoe',
-        email: 'john@example.com',
-        isActive: true,
-        role: 'Admin',
-      },
 
-      {
-        id: 2,
-        firstName: 'Jane',
-        lastName: 'Smith',
-        username: 'janesmith',
-        email: 'jane@example.com',
-        isActive: false,
-        role: 'User',
-      },
-    ];
-  };
+  const fetchUserData = [
+    {
+      id: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      username: 'johndoe',
+      email: 'john@example.com',
+      isActive: true,
+      role: 'Admin',
+    },
+
+    {
+      id: 2,
+      firstName: 'Jane',
+      lastName: 'Smith',
+      username: 'janesmith',
+      email: 'jane@example.com',
+      isActive: false,
+      role: 'User',
+    },
+  ];
+
   const usersListData = [
     {
       id: 1,
