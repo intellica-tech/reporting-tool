@@ -114,6 +114,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('Row Level Security');
       case '/traindata/':
         return t('New Trained Table');
+      case '/user/list/':
+        return t('List Users');
       default:
         return '';
     }

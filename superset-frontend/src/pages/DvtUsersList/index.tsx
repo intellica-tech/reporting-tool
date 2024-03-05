@@ -1,16 +1,17 @@
 import { t } from '@superset-ui/core';
 import React, { useState } from 'react';
 import DvtButton from 'src/components/DvtButton';
-import Icon from 'src/components/Icons/Icon';
+import { useHistory } from 'react-router-dom';
 import DvtTable from 'src/components/DvtTable';
-import {
-  StyledAddButton,
-  StyledRefreshButton,
-  StyledUsersList,
-} from './dvt-users-list.module';
+import { StyledAddButton, StyledUsersList } from './dvt-users-list.module';
 
 function DvtUsersList() {
+  const history = useHistory();
   const [data, setData] = useState<any[]>([]);
+
+  const addUser = () => {
+    history.push('/users/add');
+  };
 
   const usersListData = [
     {
@@ -67,18 +68,15 @@ function DvtUsersList() {
   return (
     <StyledUsersList>
       <StyledAddButton>
-        <Icon fileName="dvt-add_square" onClick={() => {}} />
-      </StyledAddButton>
-      <StyledRefreshButton>
         <DvtButton
-          label="REFRESH"
-          onClick={() => ({})}
+          label="Add"
+          onClick={addUser}
           iconToRight
           colour="primary"
           typeColour="powder"
-          icon="circle"
+          icon="dvt-add_square"
         />
-      </StyledRefreshButton>
+      </StyledAddButton>
       <div>
         <DvtTable data={data} header={usersListData} />
       </div>
