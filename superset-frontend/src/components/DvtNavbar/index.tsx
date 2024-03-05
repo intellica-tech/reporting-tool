@@ -79,6 +79,10 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const chartAddSidebarSelector = useAppSelector(
     state => state.dvtSidebar.chartAdd,
   );
+  const sqlQuerySelector = useAppSelector(state => state.dvtSqlhub);
+  const sqlLabSidebarSelector = useAppSelector(
+    state => state.dvtSidebar.sqlhub,
+  );
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
@@ -193,6 +197,32 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     dispatch(
       openModal({
         component: 'rowlevelsecurity-add-modal',
+      }),
+    );
+  };
+
+  const handleSaveQuery = () => {
+    dispatch(
+      openModal({
+        component: 'save-query',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
+      }),
+    );
+  };
+
+  const handleSaveDataset = () => {
+    dispatch(
+      openModal({
+        component: 'save-dataset',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
       }),
     );
   };
@@ -362,11 +392,29 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
             </NavbarBottom>
           )}
           {pathName === '/sqlhub/' && (
-            <DvtButtonTabs
-              active={viewListSelector}
-              data={activeData}
-              setActive={() => {}}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <DvtButton
+                label={t('Copy Link')}
+                typeColour="powder"
+                onClick={() => {}}
+                icon="link"
+              />
+              <DvtButton
+                label={t('Save')}
+                typeColour="powder"
+                onClick={handleSaveQuery}
+              />
+              <DvtDropdown
+                data={[
+                  {
+                    label: 'Save dataset',
+                    onClick: () => handleSaveDataset(),
+                  },
+                ]}
+                icon="caret_down"
+                direction="left"
+              />
+            </div>
           )}
         </NavbarBottom>
       )}
