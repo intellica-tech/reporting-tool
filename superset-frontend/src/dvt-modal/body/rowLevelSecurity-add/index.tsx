@@ -148,11 +148,9 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   };
 
   useEffect(() => {
-    return () => {
-      setRolesData([]);
-      setDatasetData([]);
-      setValue(INITIAL_STATE);
-    };
+    setRolesData([]);
+    setDatasetData([]);
+    setValue(INITIAL_STATE);
   }, []);
 
   return (
@@ -241,11 +239,11 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
           colour={meta?.isEdit ? 'primary' : 'grayscale'}
           typeColour="basic"
           label={meta?.isEdit ? t('SAVE') : t('ADD')}
-          onClick={() => {
+          onClick={() =>
             meta?.isEdit
               ? setApiUrl(`rowlevelsecurity/${meta?.id}`)
-              : setApiUrl('rowlevelsecurity/');
-          }}
+              : setApiUrl('rowlevelsecurity/')
+          }
         />
       </StyledDvtButtons>
     </StyledRowLevelSecurity>
