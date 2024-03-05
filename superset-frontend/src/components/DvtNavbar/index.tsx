@@ -112,7 +112,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('Annotation Layers');
       case '/traindata/':
         return t('New Trained Table');
-        case '/roles/list/':
+      case '/roles/list/':
         return t('Roles List');
       default:
         return '';
