@@ -170,9 +170,7 @@ function DvtRowLevelSecurity() {
   ];
 
   useEffect(() => {
-    return () => {
-      setData([]);
-    };
+    setData([]);
   }, []);
 
   return (
