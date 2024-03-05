@@ -56,7 +56,7 @@ const StyledModalCard = styled.div<StyledModalProps>`
       : size === 'large'
       ? '790px'
       : size === 'custom'
-      ? '430px'
+      ? '450px'
       : '250px'};
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
 `;

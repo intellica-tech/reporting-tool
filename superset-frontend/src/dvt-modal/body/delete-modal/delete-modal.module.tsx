@@ -26,17 +26,6 @@ const StyledDeleteModal = styled.div`
   gap: 15px;
 `;
 
-const StyledDeleteModalHeader = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 20px 27px 3px 27px;
-  height: 60px;
-  padding-left: 16px;
-  font-weight: 600;
-`;
-
 const StyledDeleteModalBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -58,7 +47,6 @@ const StyledDeleteModalButton = styled.div`
 
 export {
   StyledDeleteModal,
-  StyledDeleteModalHeader,
   StyledDeleteModalBody,
   StyledDeleteModalLabel,
   StyledDeleteModalButton,

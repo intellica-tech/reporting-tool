@@ -26,17 +26,6 @@ const StyledAlertAdd = styled.div`
   gap: 15px;
 `;
 
-const StyledAlertAddHeader = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 20px 27px 3px 27px;
-  height: 60px;
-  padding-left: 16px;
-  font-weight: 600;
-`;
-
 const StyledAlertAddBody = styled.div`
   display: flex;
   height: 100%;
@@ -130,7 +119,6 @@ const StyledAlertAddButtonGroup = styled.div`
 
 export {
   StyledAlertAdd,
-  StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
   StyledAlertAddSelectGroup,
