@@ -17,7 +17,7 @@
  * under the License.
  */
 import React, { useState } from 'react';
-import DvtConditionSchedule, { DvtConditionScheduleProps } from '.';
+import DvtConditionSchedule, { DvtConditionScheduleProps } from './index';
 
 export default {
   title: 'Dvt-Components/DvtConditionSchedule',
