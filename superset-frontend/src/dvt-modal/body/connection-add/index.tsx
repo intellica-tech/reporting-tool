@@ -251,12 +251,12 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     }
   };
 
-  const setInputValue = (property: string, value: string | boolean) => {
-    setInput(prevValues => ({
-      ...prevValues,
-      [property]: value,
-    }));
-  };
+  // const setInputValue = (property: string, value: string | boolean) => {
+  //   setInput(prevValues => ({
+  //     ...prevValues,
+  //     [property]: value,
+  //   }));
+  // };
 
   useEffect(() => {
     if (meta?.isEdit) {
