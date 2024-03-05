@@ -6,11 +6,11 @@ import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtTextarea from 'src/components/DvtTextarea';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledSaveQuery,
   StyledSaveQueryBody,
   StyledSaveQueryButton,
-  StyledSaveQueryHeader,
 } from './save-query.module';
 
 const DvtSaveQuery = ({ meta, onClose }: ModalProps) => {
@@ -40,7 +40,7 @@ const DvtSaveQuery = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledSaveQuery>
-      <StyledSaveQueryHeader>{t('SAVE QUERY')}</StyledSaveQueryHeader>
+      <DvtModalHeader title={t('SAVE QUERY')} onClose={onClose} />
       <StyledSaveQueryBody>
         <DvtInput label={t('NAME')} onChange={setLabel} value={label} />
         <DvtTextarea

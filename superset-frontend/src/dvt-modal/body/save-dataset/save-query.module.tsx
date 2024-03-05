@@ -24,17 +24,6 @@ const StyledSaveDataset = styled.div`
   height: 100%;
 `;
 
-const StyledSaveDatasetHeader = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 20px 27px 3px 27px;
-  height: 60px;
-  padding-left: 16px;
-  font-weight: 600;
-`;
-
 const StyledSaveDatasetBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,9 +40,4 @@ const StyledSaveDatasetButton = styled.div`
   gap: 15px;
 `;
 
-export {
-  StyledSaveDataset,
-  StyledSaveDatasetButton,
-  StyledSaveDatasetHeader,
-  StyledSaveDatasetBody,
-};
+export { StyledSaveDataset, StyledSaveDatasetButton, StyledSaveDatasetBody };

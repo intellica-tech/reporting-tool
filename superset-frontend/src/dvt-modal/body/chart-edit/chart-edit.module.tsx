@@ -26,16 +26,6 @@ const StyledChartEdit = styled.div`
   gap: 15px;
 `;
 
-const StyledChartEditHeader = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 16px 27px;
-  height: 60px;
-  padding-left: 16px;
-`;
-
 const StyledChartEditBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,7 +50,6 @@ const StyledChartEditGroup = styled.div`
 
 export {
   StyledChartEdit,
-  StyledChartEditHeader,
   StyledChartEditBody,
   StyledChartEditInput,
   StyledChartEditGroup,

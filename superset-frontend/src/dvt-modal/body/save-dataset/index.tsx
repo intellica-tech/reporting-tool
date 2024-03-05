@@ -5,10 +5,10 @@ import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledSaveDataset,
   StyledSaveDatasetButton,
-  StyledSaveDatasetHeader,
   StyledSaveDatasetBody,
 } from './save-query.module';
 
@@ -64,9 +64,10 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledSaveDataset>
-      <StyledSaveDatasetHeader>
-        {t('Save or Overwrite Dataset')}
-      </StyledSaveDatasetHeader>
+      <DvtModalHeader
+        title={t('Save or Overwrite Dataset')}
+        onClose={onClose}
+      />
       <StyledSaveDatasetBody>
         <DvtInput label={t('NAME')} onChange={setLabel} value={label} />
         <StyledSaveDatasetButton>
