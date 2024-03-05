@@ -14,8 +14,12 @@ const connectionCreateValidation = {
   },
   port: (value: string) => {
     const portNumber = parseInt(value, 10);
+    const onlyNumber = /^[0-9]+$/.test(value);
     if (!value) {
       return t('This is a required field');
+    }
+    if (!onlyNumber) {
+      return t('There should be no letters');
     }
     if (portNumber < 0 || portNumber > 65535) {
       return t('Port must be between 0 and 65535');

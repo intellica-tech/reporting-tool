@@ -16,6 +16,8 @@ import DvtPopper from 'src/components/DvtPopper';
 import DvtCollapse from 'src/components/DvtCollapse';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
+import useFormValidation from 'src/hooks/useFormValidation';
+import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
 import {
   StyledConnectionAdd,
   StyledConnectionAddHeader,
@@ -100,6 +102,23 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     engine_parameters: '',
     version: '',
   });
+
+  const initialValues = {
+    host: '', // validation gerekiyor
+    port: '',
+    database_name: '', // validation gerekiyor dersen
+    user_name: '',
+    password: '',
+    display_name: selectedConnectionType,
+    addittional_parameters: '',
+    switch: false,
+    select: '',
+  };
+
+  const { values, errors, handleChange, validateForm } = useFormValidation(
+    initialValues, // default values
+    connectionCreateValidation, // tümü validation error mesaj açıklaması için
+  );
 
   const [checkbox, setcheckbox] = useState<{
     expose: boolean;
@@ -187,18 +206,18 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
         selectedConnectionType === 'MySQL'
           ? 'dynamic_form'
           : 'sqlalchemy_form',
-      database_name: input.display_name,
+      database_name: values.display_name,
       driver: ConnectionDataFindType?.driver,
       engine: ConnectionDataFindType?.engine,
       engine_information: ConnectionDataFindType?.engine_information,
       expose_in_sqllab: true,
       parameters: {
-        database: input.database_name,
-        host: input.host,
-        username: input.user_name,
-        password: input.password,
-        port: input.port,
-        encryption: input.switch,
+        database: values.database_name,
+        host: values.host,
+        username: values.user_name,
+        password: values.password,
+        port: values.port,
+        encryption: values.switch,
       },
     },
   });
@@ -254,6 +273,19 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
       }));
     }
   }, [meta]);
+
+  const handleSubmit = () => {
+    const isValid = validateForm();
+    if (isValid) {
+      console.log('Form gönderildi:', values);
+      setApiUrl('database/validate_parameters/'); // error çıkarsa bu göndermesin diye
+      setTimeout(() => {
+        setApiUrl('');
+      }, 500);
+    } else {
+      console.log('Form hatalı, gönderilemedi.');
+    }
+  };
 
   return (
     <StyledConnectionAdd>
@@ -323,32 +355,34 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                     <React.Fragment key={index}>
                       {data.type === 'text' && (
                         <DvtInput
-                          value={input[data.value]}
-                          onChange={text => setInputValue(data.value, text)}
+                          value={values[data.value]}
+                          onChange={text => handleChange(data.value, text)}
                           label={data.title}
                           importantLabel={data.importantLabel}
                           placeholder={data.placeholder}
                           popoverLabel={data.popoverLabel}
                           popoverDirection="right"
+                          error={errors[data.value]}
                         />
                       )}
                       {data.type === 'password' && (
                         <DvtInput
-                          value={input[data.value]}
-                          onChange={text => setInputValue(data.value, text)}
+                          value={values[data.value]}
+                          onChange={text => handleChange(data.value, text)}
                           label={data.title}
                           importantLabel={data.importantLabel}
                           placeholder={data.placeholder}
                           popoverLabel={data.popoverLabel}
                           type="password"
+                          error={errors[data.value]}
                         />
                       )}
                       {data.type === 'switch' && (
                         <StyledConnectionAddSwitch>
                           <DvtCheckbox
                             label="SSL"
-                            checked={input.switch}
-                            onChange={bol => setInputValue(data.value, bol)}
+                            checked={values.switch}
+                            onChange={bol => handleChange(data.value, bol)}
                           />
                           <DvtPopper
                             label={data.importantLabel}
@@ -384,10 +418,11 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                               bold
                               label={t('CONNECT')}
                               onClick={() => {
-                                setApiUrl('database/validate_parameters/');
-                                setTimeout(() => {
-                                  setApiUrl('');
-                                }, 500);
+                                // setApiUrl('database/validate_parameters/');
+                                // setTimeout(() => {
+                                //   setApiUrl('');
+                                // }, 500);
+                                handleSubmit();
                               }}
                             />
                           </StyledConnectionAddButton>
@@ -850,10 +885,11 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                   bold
                   label={t('CONNECT')}
                   onClick={() => {
-                    setApiUrl('database/validate_parameters/');
-                    setTimeout(() => {
-                      setApiUrl('');
-                    }, 100);
+                    // setApiUrl('database/validate_parameters/');
+                    // setTimeout(() => {
+                    //   setApiUrl('');
+                    // }, 100);
+                    handleSubmit();
                   }}
                   size="small"
                 />

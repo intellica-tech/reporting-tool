@@ -92,6 +92,8 @@ const StyledModalCardClose = styled.div`
 
 const StyledModalCardBody = styled.div`
   height: 100%;
+  padding: 28px;
+  padding-top: 16px;
 `;
 
 export {
