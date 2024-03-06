@@ -320,17 +320,16 @@ function DvtSqllab() {
                     bold
                     onClick={() => {}}
                   />
-                  <Button
-                    style={{ display: 'contents' }}
-                    href={getExportCsvUrl(executePromiseApi.query.id)}
-                  >
-                    <DvtButton
-                      label={t('DOWNLOAD TO CSV')}
-                      size="small"
-                      bold
-                      onClick={() => {}}
-                    />
-                  </Button>
+                  <DvtButton
+                    label={t('DOWNLOAD TO CSV')}
+                    size="small"
+                    bold
+                    onClick={() => {
+                      window.location.href = getExportCsvUrl(
+                        executePromiseApi.query.id,
+                      );
+                    }}
+                  />
                   <DvtButton
                     label={t('COPY TO CLIPBOARD')}
                     icon="file"
