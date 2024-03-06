@@ -17,6 +17,7 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
@@ -26,6 +27,7 @@ import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtTextarea from 'src/components/DvtTextarea';
 import { useDispatch } from 'react-redux';
 import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledDvtButtons,
   StyledDvtDescription,
@@ -33,11 +35,9 @@ import {
   StyledDvtInputLabel,
   StyledDvtInputLabelUnneccessary,
   StyledDvtSelect,
-  StyledHeadTitle,
   StyledRowLevelSecurity,
   StyledRowLevelSecurityBody,
 } from './rowlevelsecurity-add.module';
-import DvtModalHeader from 'src/components/DvtModalHeader';
 
 const filterTypeData = [
   {
@@ -168,10 +168,10 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledRowLevelSecurity>
-      <DvtModalHeader title="+ Add Rule" onClose={onClose} />
+      <DvtModalHeader title={t('+ Add Rule')} onClose={onClose} />
       <StyledRowLevelSecurityBody>
         <StyledDvtInput>
-          <StyledDvtInputLabel>RULE NAME</StyledDvtInputLabel>
+          <StyledDvtInputLabel>{t('RULE NAME')}</StyledDvtInputLabel>
           <DvtInput
             onChange={newValue => setValue({ ...value, ruleName: newValue })}
             value={value.ruleName}
@@ -181,7 +181,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
         </StyledDvtInput>
         <StyledDvtSelect>
           <StyledDvtInputLabelUnneccessary>
-            FILTER TYPE
+            {t('FILTER TYPE')}
           </StyledDvtInputLabelUnneccessary>
           <DvtSelect
             data={filterTypeData}
@@ -193,7 +193,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
           />
         </StyledDvtSelect>
         <StyledDvtSelect>
-          <StyledDvtInputLabel>DATASETS</StyledDvtInputLabel>
+          <StyledDvtInputLabel>{t('DATASETS')}</StyledDvtInputLabel>
           <DvtInputSelect
             data={datasetData}
             selectedValues={value.datasets}
@@ -204,7 +204,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
         </StyledDvtSelect>
         <StyledDvtSelect>
           <StyledDvtInputLabelUnneccessary>
-            ROLES
+            {t('ROLES')}
           </StyledDvtInputLabelUnneccessary>
           <DvtInputSelect
             data={rolesData}
@@ -216,7 +216,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
         </StyledDvtSelect>
         <StyledDvtInput>
           <StyledDvtInputLabelUnneccessary>
-            GROUP KEY
+            {t('GROUP KEY')}
           </StyledDvtInputLabelUnneccessary>
           <DvtInput
             onChange={newValue => setValue({ ...value, groupKey: newValue })}
@@ -226,7 +226,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
           />
         </StyledDvtInput>
         <StyledDvtInput>
-          <StyledDvtInputLabel>CLAUSE</StyledDvtInputLabel>
+          <StyledDvtInputLabel>{t('CLAUSE')}</StyledDvtInputLabel>
           <DvtInput
             onChange={newValue => setValue({ ...value, clause: newValue })}
             value={value.clause}
@@ -236,7 +236,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
         </StyledDvtInput>
         <StyledDvtDescription>
           <StyledDvtInputLabelUnneccessary>
-            DESCRIPTION
+            {t('DESCRIPTION')}
           </StyledDvtInputLabelUnneccessary>
           <DvtTextarea
             onChange={newValue => setValue({ ...value, description: newValue })}
@@ -248,13 +248,13 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
           <DvtButton
             colour="primary"
             typeColour="powder"
-            label="CANCEL"
+            label={t('CANCEL')}
             onClick={handleCancel}
           />
           <DvtButton
             colour="grayscale"
             typeColour="basic"
-            label="ADD"
+            label={t('ADD')}
             onClick={handleAdd}
           />
         </StyledDvtButtons>

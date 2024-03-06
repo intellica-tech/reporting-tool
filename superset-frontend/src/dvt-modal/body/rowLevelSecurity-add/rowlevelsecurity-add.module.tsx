@@ -35,15 +35,6 @@ const StyledRowLevelSecurityBody = styled.div`
   gap: 15px;
 `;
 
-const StyledHeadTitle = styled.div`
-  font-size: 18px;
-  font-style: normal;
-  align-items: center;
-  font-weight: 700;
-  line-height: 160%;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-`;
-
 const StyledDvtInputLabel = styled.div`
   ::after {
     display: inline-block;
@@ -73,7 +64,6 @@ const StyledDvtButtons = styled.div`
 
 export {
   StyledRowLevelSecurity,
-  StyledHeadTitle,
   StyledDvtInputLabel,
   StyledDvtInput,
   StyledDvtSelect,

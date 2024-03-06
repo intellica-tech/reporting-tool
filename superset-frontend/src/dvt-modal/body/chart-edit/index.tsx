@@ -80,7 +80,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   return (
     <StyledChartEdit>
       <DvtModalHeader
-        buttonLabel="SAVE"
+        buttonLabel={t('SAVE')}
         onClick={() => setChartApi(`chart/${meta?.id}`)}
         onClose={onClose}
       />
