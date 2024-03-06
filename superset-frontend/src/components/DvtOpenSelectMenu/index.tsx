@@ -27,7 +27,6 @@ import Icon from '../Icons/Icon';
 import OpenSelectMenuData from './dvtOpenSelectMenuData';
 import {
   StyledOpenSelectMenu,
-  StyledOpenSelectMenuFilter,
   StyledOpenSelectMenuFilterButtonGroup,
   StyledOpenSelectMenuFilterInputGroup,
   StyledOpenSelectMenuFilterTabs,
@@ -96,151 +95,147 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
 
   return (
     <StyledOpenSelectMenu>
-      <StyledOpenSelectMenuFilter>
-        <StyledOpenSelectMenuFilterTabsGroup>
-          {type !== 'filters' && (
-            <StyledOpenSelectMenuFilterTabs
-              activeTab={activeTab === 'SAVED'}
-              onClick={() => setActiveTab('SAVED')}
-            >
-              SAVED
-            </StyledOpenSelectMenuFilterTabs>
-          )}
+      <StyledOpenSelectMenuFilterTabsGroup>
+        {type !== 'filters' && (
           <StyledOpenSelectMenuFilterTabs
-            activeTab={activeTab === 'SIMPLE'}
-            onClick={() => setActiveTab('SIMPLE')}
+            activeTab={activeTab === 'SAVED'}
+            onClick={() => setActiveTab('SAVED')}
           >
-            SIMPLE
+            SAVED
           </StyledOpenSelectMenuFilterTabs>
-          <StyledOpenSelectMenuFilterTabs
-            activeTab={activeTab === 'CUSTOM SQL'}
-            onClick={() => setActiveTab('CUSTOM SQL')}
-          >
-            CUSTOM SQL
-          </StyledOpenSelectMenuFilterTabs>
-        </StyledOpenSelectMenuFilterTabsGroup>
-        {activeTab === 'SAVED' && (
-          <>
-            {savedData.length ? (
-              <StyledOpenSelectMenuFilterInputGroup>
-                <DvtSelect
-                  selectedValue={values.saved}
-                  setSelectedValue={vl => setValues({ ...values, saved: vl })}
-                  placeholder={`${savedData.length} ${t('metric(s)')}`}
-                  data={savedData}
-                  typeDesign="navbar"
-                />
-              </StyledOpenSelectMenuFilterInputGroup>
-            ) : (
-              <StyledOpenSelectMenuSaved>
-                <StyledOpenSelectMenuIcon>
-                  <Icon fileName="dvt-file" style={{ fontSize: '55px' }} />
-                </StyledOpenSelectMenuIcon>
-                <StyledOpenSelectMenuTitle>
-                  {t('No temporal columns found')}
-                </StyledOpenSelectMenuTitle>
-                <StyledOpenSelectMenuLabel>
-                  {t(
-                    'Add calculated temporal columns to dataset in "Edit datasource" modal',
-                  )}
-                </StyledOpenSelectMenuLabel>
-              </StyledOpenSelectMenuSaved>
-            )}
-          </>
         )}
-        {activeTab === 'SIMPLE' && (
-          <StyledOpenSelectMenuFilterInputGroup>
-            <DvtSelect
-              selectedValue={values.column}
-              setSelectedValue={vl => setValues({ ...values, column: vl })}
-              placeholder={`${columnData.length} ${t('column(s)')}`}
-              data={columnData}
-              typeDesign="navbar"
-            />
-            {onAggregateTypes.includes(type) && (
+        <StyledOpenSelectMenuFilterTabs
+          activeTab={activeTab === 'SIMPLE'}
+          onClick={() => setActiveTab('SIMPLE')}
+        >
+          SIMPLE
+        </StyledOpenSelectMenuFilterTabs>
+        <StyledOpenSelectMenuFilterTabs
+          activeTab={activeTab === 'CUSTOM SQL'}
+          onClick={() => setActiveTab('CUSTOM SQL')}
+        >
+          CUSTOM SQL
+        </StyledOpenSelectMenuFilterTabs>
+      </StyledOpenSelectMenuFilterTabsGroup>
+      {activeTab === 'SAVED' && (
+        <>
+          {savedData.length ? (
+            <StyledOpenSelectMenuFilterInputGroup>
               <DvtSelect
-                selectedValue={values.aggregate}
-                setSelectedValue={vl => setValues({ ...values, aggregate: vl })}
-                placeholder={`${OpenSelectMenuData.aggregate.length} ${t(
-                  'aggregates(s)',
-                )}`}
-                data={OpenSelectMenuData.aggregate}
+                selectedValue={values.saved}
+                setSelectedValue={vl => setValues({ ...values, saved: vl })}
+                placeholder={`${savedData.length} ${t('metric(s)')}`}
+                data={savedData}
                 typeDesign="navbar"
               />
-            )}
-            {type === 'filters' && (
-              <>
-                <DvtSelect
-                  selectedValue={values.operator}
-                  setSelectedValue={vl =>
-                    setValues({ ...values, operator: vl })
-                  }
-                  placeholder={`${OpenSelectMenuData.operator.length} ${t(
-                    'operator(s)',
-                  )}`}
-                  data={OpenSelectMenuData.operator}
-                  typeDesign="navbar"
-                />
-                <DvtSelect
-                  selectedValue={values.option}
-                  setSelectedValue={vl => setValues({ ...values, option: vl })}
-                  placeholder={`${optionData.length} ${t('option(s)')}`}
-                  data={optionData}
-                  typeDesign="navbar"
-                />
-              </>
-            )}
-          </StyledOpenSelectMenuFilterInputGroup>
-        )}
-        {activeTab === 'CUSTOM SQL' && (
-          <StyledOpenSelectMenuFilterInputGroup>
-            {type === 'filters' && (
-              <CustomSqlWhereOrHaving>
-                <DvtSelect
-                  selectedValue={whereOrHaving}
-                  setSelectedValue={setWhereOrHaving}
-                  data={[
-                    { label: t('WHERE'), value: 'where' },
-                    { label: t('HAVING'), value: 'having' },
-                  ]}
-                  typeDesign="navbar"
-                  width={110}
-                />
-                <CustomSqlWhereOrHavingLabel>
-                  <p>
-                    <b>{t('WHERE')}</b>
-                    {` ${t('Filters by columns')}`}
-                  </p>
-                  <p>
-                    <b>{t('HAVING')}</b>
-                    {` ${t('Filters by metrics')}`}
-                  </p>
-                </CustomSqlWhereOrHavingLabel>
-              </CustomSqlWhereOrHaving>
-            )}
-            <DvtAceEditor
-              value={values.sql}
-              onChange={vl => setValues({ ...values, sql: vl })}
-              mode="sql"
-              height="100px"
+            </StyledOpenSelectMenuFilterInputGroup>
+          ) : (
+            <StyledOpenSelectMenuSaved>
+              <StyledOpenSelectMenuIcon>
+                <Icon fileName="dvt-file" style={{ fontSize: '55px' }} />
+              </StyledOpenSelectMenuIcon>
+              <StyledOpenSelectMenuTitle>
+                {t('No temporal columns found')}
+              </StyledOpenSelectMenuTitle>
+              <StyledOpenSelectMenuLabel>
+                {t(
+                  'Add calculated temporal columns to dataset in "Edit datasource" modal',
+                )}
+              </StyledOpenSelectMenuLabel>
+            </StyledOpenSelectMenuSaved>
+          )}
+        </>
+      )}
+      {activeTab === 'SIMPLE' && (
+        <StyledOpenSelectMenuFilterInputGroup>
+          <DvtSelect
+            selectedValue={values.column}
+            setSelectedValue={vl => setValues({ ...values, column: vl })}
+            placeholder={`${columnData.length} ${t('column(s)')}`}
+            data={columnData}
+            typeDesign="navbar"
+          />
+          {onAggregateTypes.includes(type) && (
+            <DvtSelect
+              selectedValue={values.aggregate}
+              setSelectedValue={vl => setValues({ ...values, aggregate: vl })}
+              placeholder={`${OpenSelectMenuData.aggregate.length} ${t(
+                'aggregates(s)',
+              )}`}
+              data={OpenSelectMenuData.aggregate}
+              typeDesign="navbar"
             />
-          </StyledOpenSelectMenuFilterInputGroup>
-        )}
-        <StyledOpenSelectMenuFilterButtonGroup>
-          <DvtButton
-            label="Cancel"
-            colour="primary"
-            onClick={() => {}}
-            size="small"
+          )}
+          {type === 'filters' && (
+            <>
+              <DvtSelect
+                selectedValue={values.operator}
+                setSelectedValue={vl => setValues({ ...values, operator: vl })}
+                placeholder={`${OpenSelectMenuData.operator.length} ${t(
+                  'operator(s)',
+                )}`}
+                data={OpenSelectMenuData.operator}
+                typeDesign="navbar"
+              />
+              <DvtSelect
+                selectedValue={values.option}
+                setSelectedValue={vl => setValues({ ...values, option: vl })}
+                placeholder={`${optionData.length} ${t('option(s)')}`}
+                data={optionData}
+                typeDesign="navbar"
+              />
+            </>
+          )}
+        </StyledOpenSelectMenuFilterInputGroup>
+      )}
+      {activeTab === 'CUSTOM SQL' && (
+        <StyledOpenSelectMenuFilterInputGroup>
+          {type === 'filters' && (
+            <CustomSqlWhereOrHaving>
+              <DvtSelect
+                selectedValue={whereOrHaving}
+                setSelectedValue={setWhereOrHaving}
+                data={[
+                  { label: t('WHERE'), value: 'where' },
+                  { label: t('HAVING'), value: 'having' },
+                ]}
+                typeDesign="navbar"
+                width={110}
+              />
+              <CustomSqlWhereOrHavingLabel>
+                <p>
+                  <b>{t('WHERE')}</b>
+                  {` ${t('Filters by columns')}`}
+                </p>
+                <p>
+                  <b>{t('HAVING')}</b>
+                  {` ${t('Filters by metrics')}`}
+                </p>
+              </CustomSqlWhereOrHavingLabel>
+            </CustomSqlWhereOrHaving>
+          )}
+          <DvtAceEditor
+            value={values.sql}
+            onChange={vl => setValues({ ...values, sql: vl })}
+            mode="sql"
+            height={type === 'filters' ? '100px' : '150px'}
           />
-          <DvtButton
-            label="Save"
-            colour="grayscale"
-            onClick={() => {}}
-            size="small"
-          />
-        </StyledOpenSelectMenuFilterButtonGroup>
-      </StyledOpenSelectMenuFilter>
+        </StyledOpenSelectMenuFilterInputGroup>
+      )}
+      <StyledOpenSelectMenuFilterButtonGroup>
+        <DvtButton
+          label="Cancel"
+          colour="primary"
+          onClick={() => {}}
+          size="small"
+        />
+        <DvtButton
+          label="Save"
+          colour="grayscale"
+          onClick={() => {}}
+          size="small"
+        />
+      </StyledOpenSelectMenuFilterButtonGroup>
     </StyledOpenSelectMenu>
   );
 };
