@@ -30,7 +30,9 @@ const StyledOpenSelectMenu = styled.div`
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
   padding: 0 11px;
 `;
+
 const StyledOpenSelectMenuFilter = styled.div``;
+
 const StyledOpenSelectMenuFilterTabs = styled.div<TabProps>`
   display: flex;
   flex: 1;
@@ -95,6 +97,16 @@ const StyledOpenSelectMenuIcon = styled.div`
   min-height: 100px;
 `;
 
+const CustomSqlWhereOrHaving = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const CustomSqlWhereOrHavingLabel = styled.div`
+  font-size: 10px;
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
+`;
+
 export {
   StyledOpenSelectMenu,
   StyledOpenSelectMenuFilter,
@@ -106,4 +118,6 @@ export {
   StyledOpenSelectMenuTitle,
   StyledOpenSelectMenuLabel,
   StyledOpenSelectMenuIcon,
+  CustomSqlWhereOrHaving,
+  CustomSqlWhereOrHavingLabel,
 };

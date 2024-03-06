@@ -17,7 +17,6 @@
  * under the License.
  */
 import React, { useState } from 'react';
-import { SupersetTheme } from '@superset-ui/core';
 import DvtOpenSelectMenu, { DvtOpenSelectMenuProps } from '.';
 
 export default {
@@ -26,37 +25,22 @@ export default {
 };
 
 export const Default = (args: DvtOpenSelectMenuProps) => {
-  const exampleData = {
-    savedData: {
-      column: 'exampleColumn',
-      aggregate: 'exampleAggregate',
-    },
-    metricData: {
-      column: 'exampleMetricColumn',
-      aggregate: 'exampleMetricAggregate',
-    },
-    filterData: {
-      column: 'exampleFilterColumn',
-      operator: 'exampleOperator',
-      filterValue: 'exampleFilterValue',
-    },
-    customSql: {
-      selectSql: 'SELECT * FROM your_table WHERE condition',
-      sqlQuery: 'SELECT column1, column2 FROM your_table WHERE condition',
-    },
-  };
+  const [values, setValues] = useState({
+    saved: '',
+    column: '',
+    operator: '',
+    aggregate: '',
+    option: '',
+    sql: '',
+  });
+
   return (
     <div>
-      <DvtOpenSelectMenu {...args} data={exampleData} />
+      <DvtOpenSelectMenu {...args} values={values} setValues={setValues} />
     </div>
   );
 };
 
 Default.args = {
-  label: 'State',
-  data: [
-    { value: 'failed', label: 'Failed' },
-    { value: 'success', label: 'Success' },
-  ],
-  placeholder: 'Select or type a value',
+  type: 'x-axis',
 };

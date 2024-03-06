@@ -18,6 +18,13 @@
  * under the License.
  */
 import React, { useState } from 'react';
+import { t } from '@superset-ui/core';
+import DvtSelect from '../DvtSelect';
+// import DvtInput from '../DvtInput';
+import DvtButton from '../DvtButton';
+import DvtAceEditor from '../DvtAceEditor';
+import Icon from '../Icons/Icon';
+import OpenSelectMenuData from './dvtOpenSelectMenuData';
 import {
   StyledOpenSelectMenu,
   StyledOpenSelectMenuFilter,
@@ -29,36 +36,69 @@ import {
   StyledOpenSelectMenuLabel,
   StyledOpenSelectMenuSaved,
   StyledOpenSelectMenuTitle,
+  CustomSqlWhereOrHaving,
+  CustomSqlWhereOrHavingLabel,
 } from './dvt-select.module';
-import DvtSelect from '../DvtSelect';
-import DvtInput from '../DvtInput';
-import DvtButton from '../DvtButton';
-import DvtAceEditor from '../DvtAceEditor';
-import { t } from '@superset-ui/core';
-import Icon from '../Icons/Icon';
 
-interface dataProps {
-  savedData?: { column: string; aggregate: string };
-  metricData?: { column: string; aggregate: string };
-  filterData?: { column: string; operator: string; filterValue: string };
-  customSql: { selectSql: string; sqlQuery: string };
+interface DataProps {
+  label: string;
+  value: string;
+}
+
+interface ValuesProps {
+  saved: any;
+  column: any;
+  operator: any;
+  aggregate: any;
+  option: any;
+  sql: string;
 }
 
 export interface DvtOpenSelectMenuProps {
-  apiUrl: string;
-  data: dataProps;
-  type: 'metric' | 'filters' | 'soruce_target';
+  type:
+    | 'x-axis'
+    | 'temporal_x-axis'
+    | 'breakdowns'
+    | 'metric'
+    | 'metrics'
+    | 'filters'
+    | 'dimensions'
+    | 'sort_by'
+    | 'percentage_metrics'
+    | 'soruce_target';
+  values: ValuesProps;
+  setValues: (values: ValuesProps) => void;
+  savedData?: DataProps[];
+  columnData: DataProps[];
+  optionData?: DataProps[];
 }
 
-const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({ data }) => {
-  const [activeTab, setActiveTab] = useState<string>(
-    data.savedData ? 'SAVED' : 'SIMPLE',
-  );
+const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
+  type = 'x-axis',
+  values,
+  setValues,
+  savedData = [],
+  columnData = [],
+  optionData = [],
+}) => {
+  const [activeTab, setActiveTab] = useState<string>('SIMPLE');
+  const [whereOrHaving, setWhereOrHaving] = useState({
+    label: t('WHERE'),
+    value: 'where',
+  });
+
+  const onAggregateTypes = [
+    'metric',
+    'metrics',
+    'sort_by',
+    'percentage_metrics',
+  ];
+
   return (
     <StyledOpenSelectMenu>
       <StyledOpenSelectMenuFilter>
         <StyledOpenSelectMenuFilterTabsGroup>
-          {data.savedData && (
+          {type !== 'filters' && (
             <StyledOpenSelectMenuFilterTabs
               activeTab={activeTab === 'SAVED'}
               onClick={() => setActiveTab('SAVED')}
@@ -79,96 +119,112 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({ data }) => {
             CUSTOM SQL
           </StyledOpenSelectMenuFilterTabs>
         </StyledOpenSelectMenuFilterTabsGroup>
-        {activeTab === 'SIMPLE' && data.metricData && (
-          <StyledOpenSelectMenuFilterInputGroup>
-            <DvtSelect
-              selectedValue=""
-              setSelectedValue={() => {}}
-              placeholder="8 column(s)"
-              data={[
-                { value: 'failed', label: 'Failed' },
-                { value: 'success', label: 'Success' },
-              ]}
-              typeDesign="navbar"
-              label="COLUMN"
-            />
-            <DvtSelect
-              selectedValue=""
-              setSelectedValue={() => {}}
-              placeholder="6 aggregates(s)"
-              data={[
-                { value: 'failed', label: 'Failed' },
-                { value: 'success', label: 'Success' },
-              ]}
-              typeDesign="navbar"
-              label="AGGREGATE"
-            />
-          </StyledOpenSelectMenuFilterInputGroup>
+        {activeTab === 'SAVED' && (
+          <>
+            {savedData.length ? (
+              <StyledOpenSelectMenuFilterInputGroup>
+                <DvtSelect
+                  selectedValue={values.saved}
+                  setSelectedValue={vl => setValues({ ...values, saved: vl })}
+                  placeholder={`${savedData.length} ${t('metric(s)')}`}
+                  data={savedData}
+                  typeDesign="navbar"
+                />
+              </StyledOpenSelectMenuFilterInputGroup>
+            ) : (
+              <StyledOpenSelectMenuSaved>
+                <StyledOpenSelectMenuIcon>
+                  <Icon fileName="dvt-file" style={{ fontSize: '55px' }} />
+                </StyledOpenSelectMenuIcon>
+                <StyledOpenSelectMenuTitle>
+                  {t('No temporal columns found')}
+                </StyledOpenSelectMenuTitle>
+                <StyledOpenSelectMenuLabel>
+                  {t(
+                    'Add calculated temporal columns to dataset in "Edit datasource" modal',
+                  )}
+                </StyledOpenSelectMenuLabel>
+              </StyledOpenSelectMenuSaved>
+            )}
+          </>
         )}
-        {activeTab === 'SIMPLE' && data.filterData && (
+        {activeTab === 'SIMPLE' && (
           <StyledOpenSelectMenuFilterInputGroup>
             <DvtSelect
-              selectedValue=""
-              setSelectedValue={() => {}}
-              placeholder="144 column(s)"
-              data={[
-                { value: 'failed', label: 'Failed' },
-                { value: 'success', label: 'Success' },
-              ]}
+              selectedValue={values.column}
+              setSelectedValue={vl => setValues({ ...values, column: vl })}
+              placeholder={`${columnData.length} ${t('column(s)')}`}
+              data={columnData}
               typeDesign="navbar"
             />
-            <DvtSelect
-              selectedValue=""
-              setSelectedValue={() => {}}
-              placeholder="12 operator(s)"
-              data={[
-                { value: 'failed', label: 'Failed' },
-                { value: 'success', label: 'Success' },
-              ]}
-              typeDesign="navbar"
-            />
-            <DvtInput
-              value=""
-              onChange={() => {}}
-              placeholder="Filter value (case sensitive)"
-            />
+            {onAggregateTypes.includes(type) && (
+              <DvtSelect
+                selectedValue={values.aggregate}
+                setSelectedValue={vl => setValues({ ...values, aggregate: vl })}
+                placeholder={`${OpenSelectMenuData.aggregate.length} ${t(
+                  'aggregates(s)',
+                )}`}
+                data={OpenSelectMenuData.aggregate}
+                typeDesign="navbar"
+              />
+            )}
+            {type === 'filters' && (
+              <>
+                <DvtSelect
+                  selectedValue={values.operator}
+                  setSelectedValue={vl =>
+                    setValues({ ...values, operator: vl })
+                  }
+                  placeholder={`${OpenSelectMenuData.operator.length} ${t(
+                    'operator(s)',
+                  )}`}
+                  data={OpenSelectMenuData.operator}
+                  typeDesign="navbar"
+                />
+                <DvtSelect
+                  selectedValue={values.option}
+                  setSelectedValue={vl => setValues({ ...values, option: vl })}
+                  placeholder={`${optionData.length} ${t('option(s)')}`}
+                  data={optionData}
+                  typeDesign="navbar"
+                />
+              </>
+            )}
           </StyledOpenSelectMenuFilterInputGroup>
         )}
         {activeTab === 'CUSTOM SQL' && (
           <StyledOpenSelectMenuFilterInputGroup>
-            <DvtSelect
-              selectedValue="where"
-              setSelectedValue={() => {}}
-              placeholder="WHERE Filters by columns
-                HAVING Filters by metrics"
-              data={[
-                { value: 'where', label: 'WHERE' },
-                { value: 'having', label: 'HAVING' },
-              ]}
-              typeDesign="navbar"
-            />
+            {type === 'filters' && (
+              <CustomSqlWhereOrHaving>
+                <DvtSelect
+                  selectedValue={whereOrHaving}
+                  setSelectedValue={setWhereOrHaving}
+                  data={[
+                    { label: t('WHERE'), value: 'where' },
+                    { label: t('HAVING'), value: 'having' },
+                  ]}
+                  typeDesign="navbar"
+                  width={110}
+                />
+                <CustomSqlWhereOrHavingLabel>
+                  <p>
+                    <b>{t('WHERE')}</b>
+                    {` ${t('Filters by columns')}`}
+                  </p>
+                  <p>
+                    <b>{t('HAVING')}</b>
+                    {` ${t('Filters by metrics')}`}
+                  </p>
+                </CustomSqlWhereOrHavingLabel>
+              </CustomSqlWhereOrHaving>
+            )}
             <DvtAceEditor
-              value=""
-              onChange={() => {}}
+              value={values.sql}
+              onChange={vl => setValues({ ...values, sql: vl })}
               mode="sql"
               height="100px"
             />
           </StyledOpenSelectMenuFilterInputGroup>
-        )}
-        {activeTab === 'SAVED' && (
-          <StyledOpenSelectMenuSaved>
-            <StyledOpenSelectMenuIcon>
-              <Icon fileName="dvt-file" style={{ fontSize: '55px' }} />
-            </StyledOpenSelectMenuIcon>
-            <StyledOpenSelectMenuTitle>
-              {t('No temporal columns found')}
-            </StyledOpenSelectMenuTitle>
-            <StyledOpenSelectMenuLabel>
-              {t(
-                'Add calculated temporal columns to dataset in "Edit datasource" modal',
-              )}
-            </StyledOpenSelectMenuLabel>
-          </StyledOpenSelectMenuSaved>
         )}
         <StyledOpenSelectMenuFilterButtonGroup>
           <DvtButton
