@@ -4,23 +4,6 @@ import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
-import {
-  StyledDatasetEdit,
-  StyledDatasetEditBody,
-  StyledDatasetEditHeader,
-  StyledDatasetEditButtonContainer,
-  StyledDatasetEditLabel,
-  StyledDatasetEditNavigationContainer,
-  ModalBreak,
-  InfoText,
-  SourceBody,
-  SourceLockContainer,
-  SourceCheckboxContainer,
-  SourceInputContainer,
-  SettingsBlock,
-  SettingsBody,
-  ModalInfoTextContainer,
-} from './dataset-edit.module';
 import Icon from 'src/components/Icons/Icon';
 import DvtButtonTabs, {
   ButtonTabsDataProps,
@@ -28,6 +11,27 @@ import DvtButtonTabs, {
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
+import {
+  StyledDatasetEdit,
+  ModalBreak,
+  SourceBody,
+  SourceLockContainer,
+  SourceCheckboxContainer,
+  SourceInputContainer,
+  SettingsBlock,
+  SettingsBody,
+  ModalInfoTextContainer,
+  MetricsButtonContainer,
+  MetricsBody,
+  ColumnsBody,
+  ColumnsButtonContainer,
+  ModalHeader,
+  ModalLabel,
+  ModalInfoText,
+  ModalButtonContainer,
+  ModalNavigationContainer,
+} from './dataset-edit.module';
 
 const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const [isWarningActive, setIsWarningActive] = useState<boolean>(true);
@@ -92,10 +96,12 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (databaseResponse) {
       setDatabaseList(
-        databaseResponse.result.map(database => ({
-          label: database.database_name,
-          value: database.id,
-        })),
+        databaseResponse.result.map(
+          (database: { database_name: any; id: any }) => ({
+            label: database.database_name,
+            value: database.id,
+          }),
+        ),
       );
     }
   }, [databaseResponse]);
@@ -109,7 +115,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (schemaResponse) {
       setSchemaList(
-        schemaResponse.result.map((item, index) => ({
+        schemaResponse.result.map((item: any, index: any) => ({
           label: item,
           value: index,
         })),
@@ -128,7 +134,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (tableResponse) {
       setTableList(
-        tableResponse.result.map((item, index) => ({
+        tableResponse.result.map((item: { value: any }, index: any) => ({
           label: item.value,
           value: index,
         })),
@@ -136,9 +142,42 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     }
   }, [tableResponse]);
 
+  // Metrics
+  const metricsHeader = [
+    { id: 1, title: t('Metric Key'), field: 'metric_name' },
+    { id: 2, title: t('Label'), field: 'verbose_name' },
+    { id: 3, title: t('SQL expression'), field: 'expression' },
+  ];
+
+  // Columns
+  const columnsHeader = [
+    { id: 1, title: t('Column'), field: 'column_name', sort: true },
+    { id: 2, title: t('Data Type'), field: 'type', sort: true },
+    { id: 3, title: t('Is Temporal'), field: 'is_dttm', sort: true },
+    { id: 4, title: t('Default Datetime'), field: 'is_dttm', sort: true },
+    { id: 5, title: t('Is Filterable'), field: 'filterable', sort: true },
+    { id: 6, title: t('Is Dimension'), field: 'is_active', sort: true },
+    {
+      id: 7,
+      title: t('Action'),
+      showHover: true,
+      clicks: [
+        {
+          icon: 'trash',
+          click: (item: any) => handleModalDelete(item),
+          popperLabel: t('Delete'),
+        },
+      ],
+    },
+  ];
+  const [sort, setSort] = useState<DvtTableSortProps>({
+    column: 'id',
+    direction: 'desc',
+  });
+
   // Settings
   const [owners, setOwners] = useState<string[]>(
-    meta.result.owners.map(owner => ({
+    meta.result.owners.map((owner: { first_name: any; id: any }) => ({
       label: owner.first_name,
       value: owner.id,
     })),
@@ -164,20 +203,20 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledDatasetEdit>
-      <StyledDatasetEditHeader>
-        <StyledDatasetEditLabel>
+      <ModalHeader>
+        <ModalLabel>
           {t('Edit Dataset')} - {meta.result.table_name}
-        </StyledDatasetEditLabel>
-      </StyledDatasetEditHeader>
+        </ModalLabel>
+      </ModalHeader>
       {isWarningActive && (
         <ModalInfoTextContainer>
           <Icon fileName="warning" />
-          <InfoText>
+          <ModalInfoText>
             <b>{t('Be careful.')}</b>
             {t(
               ' Changing these settings will affect all charts using this dataset, including charts owned by other people.',
             )}
-          </InfoText>
+          </ModalInfoText>
           <Icon
             fileName="close"
             onClick={() => {
@@ -186,7 +225,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           />
         </ModalInfoTextContainer>
       )}
-      <StyledDatasetEditNavigationContainer>
+      <ModalNavigationContainer>
         <DvtButtonTabs
           data={[
             { label: 'Source', value: 'source' },
@@ -198,7 +237,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           active={tabs}
           setActive={setTabs}
         />
-      </StyledDatasetEditNavigationContainer>
+      </ModalNavigationContainer>
       {tabs.value === 'source' ? (
         <SourceBody>
           <SourceLockContainer>
@@ -306,15 +345,33 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           )}
         </SourceBody>
       ) : tabs.value === 'metrics' ? (
-        <StyledDatasetEditBody>Metrics</StyledDatasetEditBody>
+        <MetricsBody>
+          <MetricsButtonContainer>
+            <DvtButton label={t('Add Item')} icon="dvt-add_filled" />
+          </MetricsButtonContainer>
+          <DvtTable data={modalData.metrics} header={metricsHeader} />
+        </MetricsBody>
       ) : tabs.value === 'columns' ? (
-        <StyledDatasetEditBody>Columns</StyledDatasetEditBody>
+        <ColumnsBody>
+          <ColumnsButtonContainer>
+            <DvtButton
+              label={t('Sync Columns from Source')}
+              icon="dvt-add_filled"
+            />
+          </ColumnsButtonContainer>
+          <DvtTable
+            data={[...modalData.columns]}
+            header={columnsHeader}
+            sort={sort}
+            setSort={setSort}
+          />
+        </ColumnsBody>
       ) : tabs.value === 'calculated_columns' ? (
-        <StyledDatasetEditBody>Calculated Columns</StyledDatasetEditBody>
+        <div>Calculated Columns</div>
       ) : tabs.value === 'settings' ? (
         <SettingsBody>
           <SettingsBlock>
-            <InfoText>{t('Basic')}</InfoText>
+            <ModalInfoText>{t('Basic')}</ModalInfoText>
             <DvtInput
               label="Description"
               value={modalData.description}
@@ -331,11 +388,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               }
               typeDesign="form"
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'Default URL to redirect to when accessing from the dataset list page',
               )}
-            </InfoText>
+            </ModalInfoText>
             <DvtCheckbox
               label="Whether to populate autocomplete filters option"
               checked={autocompleteSelected}
@@ -351,22 +408,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               clickRun={handleRunSettingsSQL}
               loading={settingsSqlLoading}
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'When using "Autocomplete filters", this can be used to improve performance of the query fetching the values. Use this option to apply a predicate (WHERE clause) to the query selecting the distinct values from the table. Typically the intent would be to limit the scan by applying a relative time filter on a partitioned or indexed time-related field.',
               )}
-            </InfoText>
+            </ModalInfoText>
             <DvtInput
               label="Extra"
               value={modalData.extra}
               onChange={value => setModalData({ ...modalData, extra: value })}
               typeDesign="form"
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'Extra data to specify table metadata. Currently supports metadata of the format: `{ "certification": { "certified_by": "Data Platform Team", "details": "This table is the source of truth." }, "warning_markdown": "This is a warning." }`.',
               )}
-            </InfoText>
+            </ModalInfoText>
             <DvtSelect
               data={owners}
               label="Owners"
@@ -376,7 +433,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             />
           </SettingsBlock>
           <SettingsBlock>
-            <InfoText>{t('Advanced')}</InfoText>
+            <ModalInfoText>{t('Advanced')}</ModalInfoText>
             <DvtInput
               label="Cache Timeout"
               value={modalData.cache_timeout}
@@ -385,22 +442,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               }
               typeDesign="form"
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'The duration of time in seconds before the cache is invalidated. Set to -1 to bypass the cache.',
               )}
-            </InfoText>
+            </ModalInfoText>
             <DvtInput
               label="Hours Offset"
               value={modalData.offset}
               onChange={value => setModalData({ ...modalData, offset: value })}
               typeDesign="form"
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'The number of hours, negative or positive, to shift the time column. This can be used to move UTC time to local time.',
               )}
-            </InfoText>
+            </ModalInfoText>
             <DvtInput
               label="Template Parameters"
               value={modalData.template_params}
@@ -409,12 +466,12 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               }
               typeDesign="form"
             />
-            <InfoText>
+            <ModalInfoText>
               {t(
                 'A set of parameters that become available in the query using Jinja templating syntax',
               )}
-            </InfoText>
-            <InfoText>{t('Normalize Column Names')}</InfoText>
+            </ModalInfoText>
+            <ModalInfoText>{t('Normalize Column Names')}</ModalInfoText>
             <DvtCheckbox
               label={t(
                 'Allow column names to be changed to case insensitive format, if supported (e.g. Oracle, Snowflake).',
@@ -424,7 +481,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
                 setModalData({ ...modalData, normalize_columns: selected })
               }
             />
-            <InfoText>{t('Always Filter Main Datetime Column')}</InfoText>
+            <ModalInfoText>
+              {t('Always Filter Main Datetime Column')}
+            </ModalInfoText>
             <DvtCheckbox
               label={t(
                 'When the secondary temporal columns are filtered, apply the same filter to the main datetime column.',
@@ -442,7 +501,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       ) : (
         <></>
       )}
-      <StyledDatasetEditButtonContainer>
+      <ModalButtonContainer>
         <DvtButton
           colour="primary"
           label={t('Cancel')}
@@ -457,7 +516,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           typeColour="powder"
           size="medium"
         />
-      </StyledDatasetEditButtonContainer>
+      </ModalButtonContainer>
     </StyledDatasetEdit>
   );
 };

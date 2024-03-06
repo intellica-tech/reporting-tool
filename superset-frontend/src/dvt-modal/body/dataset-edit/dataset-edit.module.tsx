@@ -25,7 +25,7 @@ const StyledDatasetEdit = styled.div`
   gap: 15px;
 `;
 
-const StyledDatasetEditHeader = styled.div`
+const ModalHeader = styled.div`
   display: flex;
   align-items: center;
   border-radius: 12px;
@@ -36,7 +36,7 @@ const StyledDatasetEditHeader = styled.div`
   margin-bottom: 0px;
 `;
 
-const StyledDatasetEditLabel = styled.div`
+const ModalLabel = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -47,16 +47,6 @@ const StyledDatasetEditLabel = styled.div`
   color: ${({ theme }) => theme.colors.dvt.grayscale.dark2};
 `;
 
-const StyledDatasetEditBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 0px 27px 16px 27px;
-  border-radius: 12px;
-  padding: 18px 28px;
-  gap: 15px;
-`;
-
 const ModalInfoTextContainer = styled.div`
   display: flex;
   gap: 10px;
@@ -64,15 +54,15 @@ const ModalInfoTextContainer = styled.div`
   margin-left: 27px;
 `;
 
-const InfoText = styled.div`
+const ModalInfoText = styled.div`
   color: ${({ theme }) => theme.colors.dvt.grayscale.dark2};
 `;
 
-const StyledDatasetEditNavigationContainer = styled.div`
+const ModalNavigationContainer = styled.div`
   margin-left: 27px;
 `;
 
-const StyledDatasetEditButtonContainer = styled.div`
+const ModalButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -97,6 +87,7 @@ const SourceBody = styled.div`
   padding: 18px 28px;
   gap: 15px;
 `;
+
 const SourceLockContainer = styled.div`
   display: flex;
   gap: 10px;
@@ -114,6 +105,32 @@ const SourceInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
+`;
+
+const MetricsBody = styled.div`
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  margin: 0px 27px 16px 27px;
+  border-radius: 12px;
+  padding: 18px 28px;
+  gap: 15px;
+`;
+
+const MetricsButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ColumnsBody = styled.div`
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  margin: 0px 27px 16px 27px;
+  border-radius: 12px;
+  padding: 18px 28px;
+  gap: 15px;
+`;
+
+const ColumnsButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const SettingsBody = styled.div`
@@ -135,18 +152,21 @@ const SettingsBlock = styled.div`
 
 export {
   StyledDatasetEdit,
-  StyledDatasetEditHeader,
-  StyledDatasetEditLabel,
-  StyledDatasetEditBody,
+  ModalHeader,
+  ModalLabel,
   ModalInfoTextContainer,
-  InfoText,
-  StyledDatasetEditNavigationContainer,
-  StyledDatasetEditButtonContainer,
+  ModalInfoText,
+  ModalNavigationContainer,
+  ModalButtonContainer,
   ModalBreak,
   SourceBody,
   SourceLockContainer,
   SourceCheckboxContainer,
   SourceInputContainer,
+  MetricsBody,
+  MetricsButtonContainer,
+  ColumnsBody,
+  ColumnsButtonContainer,
   SettingsBody,
   SettingsBlock,
 };
