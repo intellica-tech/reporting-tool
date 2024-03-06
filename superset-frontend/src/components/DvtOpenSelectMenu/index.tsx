@@ -38,7 +38,7 @@ import {
   StyledOpenSelectMenuTitle,
   CustomSqlWhereOrHaving,
   CustomSqlWhereOrHavingLabel,
-} from './dvt-select.module';
+} from './dvt-open-select-menu.module';
 
 interface DataProps {
   label: string;
