@@ -24,23 +24,13 @@ const StyledSaveQuery = styled.div`
   height: 100%;
 `;
 
-const StyledSaveQueryHeader = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 20px 27px 3px 27px;
-  height: 60px;
-  padding-left: 16px;
-  font-weight: 600;
-`;
-
 const StyledSaveQueryBody = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 20px;
   gap: 15px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
 `;
 
 const StyledSaveQueryButton = styled.div`
@@ -49,9 +39,4 @@ const StyledSaveQueryButton = styled.div`
   gap: 15px;
 `;
 
-export {
-  StyledSaveQuery,
-  StyledSaveQueryButton,
-  StyledSaveQueryHeader,
-  StyledSaveQueryBody,
-};
+export { StyledSaveQuery, StyledSaveQueryButton, StyledSaveQueryBody };

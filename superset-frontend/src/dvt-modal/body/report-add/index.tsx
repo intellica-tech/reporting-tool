@@ -11,11 +11,11 @@ import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
 import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 import DvtCheckbox from 'src/components/DvtCheckbox';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
-  StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
   StyledAlertAddSelectGroup,
@@ -226,17 +226,12 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledAlertAdd>
-      <StyledAlertAddHeader>
-        <DvtButton
-          bold
-          colour="primary"
-          icon="dvt-add_square"
-          label={t('Add Report')}
-          onClick={() => {}}
-          size="small"
-          typeColour="powder"
-        />
-      </StyledAlertAddHeader>
+      <DvtModalHeader
+        buttonIcon="dvt-add_square"
+        buttonLabel={t('Add Report')}
+        onClick={() => {}}
+        onClose={onClose}
+      />
       <StyledAlertAddBody>
         <StyledAlertAddLeftMenu>
           <DvtSwitch

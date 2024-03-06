@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
-import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledChartEdit,
   StyledChartEditBody,
   StyledChartEditGroup,
-  StyledChartEditHeader,
   StyledChartEditInput,
 } from './chart-edit.module';
 
@@ -80,15 +79,11 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledChartEdit>
-      <StyledChartEditHeader>
-        <DvtButton
-          colour="primary"
-          label={t('SAVE')}
-          typeColour="powder"
-          onClick={() => setChartApi(`chart/${meta?.id}`)}
-          size="small"
-        />
-      </StyledChartEditHeader>
+      <DvtModalHeader
+        buttonLabel={t('SAVE')}
+        onClick={() => setChartApi(`chart/${meta?.id}`)}
+        onClose={onClose}
+      />
       <StyledChartEditBody>
         <StyledChartEditGroup>
           <StyledChartEditInput>
