@@ -70,6 +70,8 @@ export interface DvtOpenSelectMenuProps {
   savedData?: DataProps[];
   columnData: DataProps[];
   optionData?: DataProps[];
+  closeOnClick: () => void;
+  saveOnClick: () => void;
 }
 
 const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
@@ -79,6 +81,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
   savedData = [],
   columnData = [],
   optionData = [],
+  closeOnClick,
+  saveOnClick,
 }) => {
   const [activeTab, setActiveTab] = useState<string>('SIMPLE');
   const [whereOrHaving, setWhereOrHaving] = useState({
@@ -150,7 +154,14 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
         <StyledOpenSelectMenuFilterInputGroup>
           <DvtSelect
             selectedValue={values.column}
-            setSelectedValue={vl => setValues({ ...values, column: vl })}
+            setSelectedValue={vl => {
+              const onAggregateAddSql = values.aggregate?.value
+                ? values.aggregate.value === 'COUNT_DISTINCT'
+                  ? `COUNT(DISTINCT ${vl.value})`
+                  : `${values.aggregate.value}(${vl.value})`
+                : `(${vl.value})`;
+              setValues({ ...values, column: vl, sql: onAggregateAddSql });
+            }}
             placeholder={`${columnData.length} ${t('column(s)')}`}
             data={columnData}
             typeDesign="navbar"
@@ -158,7 +169,14 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
           {onAggregateTypes.includes(type) && (
             <DvtSelect
               selectedValue={values.aggregate}
-              setSelectedValue={vl => setValues({ ...values, aggregate: vl })}
+              setSelectedValue={vl => {
+                const onColumnAddSql = values.column?.value
+                  ? vl.value === 'COUNT_DISTINCT'
+                    ? `COUNT(DISTINCT ${values.column.value})`
+                    : `${vl.value}(${values.column.value})`
+                  : vl.value;
+                setValues({ ...values, aggregate: vl, sql: onColumnAddSql });
+              }}
               placeholder={`${OpenSelectMenuData.aggregate.length} ${t(
                 'aggregates(s)',
               )}`}
@@ -227,13 +245,23 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
         <DvtButton
           label="Cancel"
           colour="primary"
-          onClick={() => {}}
+          onClick={() => {
+            setValues({
+              saved: '',
+              column: '',
+              operator: '',
+              aggregate: '',
+              option: '',
+              sql: '',
+            });
+            closeOnClick();
+          }}
           size="small"
         />
         <DvtButton
           label="Save"
           colour="grayscale"
-          onClick={() => {}}
+          onClick={saveOnClick}
           size="small"
         />
       </StyledOpenSelectMenuFilterButtonGroup>

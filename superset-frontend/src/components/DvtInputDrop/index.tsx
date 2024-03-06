@@ -221,6 +221,8 @@ const DvtInputDrop = ({
             values={values}
             setValues={setValues}
             columnData={[]}
+            closeOnClick={() => setIsOpen(false)}
+            saveOnClick={() => {}}
           />
         </StyledInputDropMenu>
       )}

@@ -24,19 +24,47 @@ export default {
   component: DvtOpenSelectMenu,
 };
 
+const initialValues = {
+  saved: '',
+  column: '',
+  operator: '',
+  aggregate: '',
+  option: '',
+  sql: '',
+};
+
+const columnData = [
+  {
+    label: 'name',
+    value: 'name',
+  },
+  {
+    label: 'color',
+    value: 'color',
+  },
+  {
+    label: 'path_json',
+    value: 'path_json',
+  },
+  {
+    label: 'polyline',
+    value: 'polyline',
+  },
+];
+
 export const Default = (args: DvtOpenSelectMenuProps) => {
-  const [values, setValues] = useState({
-    saved: '',
-    column: '',
-    operator: '',
-    aggregate: '',
-    option: '',
-    sql: '',
-  });
+  const [values, setValues] = useState(initialValues);
 
   return (
     <div>
-      <DvtOpenSelectMenu {...args} values={values} setValues={setValues} />
+      <DvtOpenSelectMenu
+        {...args}
+        values={values}
+        setValues={setValues}
+        columnData={columnData}
+        closeOnClick={() => {}}
+        saveOnClick={() => console.log(values)}
+      />
     </div>
   );
 };
