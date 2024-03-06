@@ -30,6 +30,7 @@ const StyledSaveDatasetBody = styled.div`
   height: 100%;
   padding: 20px;
   gap: 20px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
 `;
 
 const StyledSaveDatasetButton = styled.div`

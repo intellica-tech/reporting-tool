@@ -21,10 +21,20 @@ import { styled } from '@superset-ui/core';
 const StyledRowLevelSecurity = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
   padding: 10px;
 `;
+
+const StyledRowLevelSecurityBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  border-radius: 12px;
+  height: 100%;
+  padding: 18px 28px;
+  gap: 15px;
+`;
+
 const StyledHeadTitle = styled.div`
   font-size: 18px;
   font-style: normal;
@@ -46,23 +56,18 @@ const StyledDvtInputLabel = styled.div`
 const StyledDvtInputLabelUnneccessary = styled.div``;
 
 const StyledDvtInput = styled.div`
-  flex: auto;
-  width: 404px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
-const StyledDvtSelect = styled.div`
-  flex: auto;
-`;
+const StyledDvtSelect = styled.div``;
 
-const StyledDvtDescription = styled.div`
-  flex: auto;
-  width: 404px;
-  height: 90px;
-`;
+const StyledDvtDescription = styled.div``;
 
 const StyledDvtButtons = styled.div`
   display: flex;
-  flex-direction: row;
+  justify-content: end;
   gap: 10px;
 `;
 
@@ -75,4 +80,5 @@ export {
   StyledDvtInputLabelUnneccessary,
   StyledDvtDescription,
   StyledDvtButtons,
+  StyledRowLevelSecurityBody,
 };

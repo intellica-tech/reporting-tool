@@ -66,18 +66,6 @@ const StyledAlertAddItemGroup = styled.div`
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
   gap: 10px;
   padding: 18px 21px 18px 28px;
-  overflow-x: auto;
-
-  &::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-    width: 6px;
-    border-radius: 12px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-    width: 4px;
-    border-radius: 12px;
-  }
 `;
 
 const StyledAlertAddScheduleSettings = styled.div`

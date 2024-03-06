@@ -30,6 +30,7 @@ const StyledSaveQueryBody = styled.div`
   height: 100%;
   padding: 20px;
   gap: 15px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
 `;
 
 const StyledSaveQueryButton = styled.div`
