@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import DvtButton from 'src/components/DvtButton';
+import { useHistory } from 'react-router-dom';
 import DvtAddFormFields from 'src/components/DvtAddFormFields';
 import {
   StyledAddFormFields,
@@ -6,8 +8,6 @@ import {
   StyledForms,
   StyledHeader,
 } from './dvt-list-roles-add.module';
-import DvtButton from 'src/components/DvtButton';
-import { useHistory } from 'react-router-dom';
 
 const DvtListRolesAdd = () => {
   const history = useHistory();

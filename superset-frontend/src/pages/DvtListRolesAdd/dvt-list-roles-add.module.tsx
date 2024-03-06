@@ -30,11 +30,10 @@ const StyledForms = styled.div`
   padding: 0;
   width: 100%;
   height: calc(100vh - 250px);
-  `;
+`;
 
 const StyledHeader = styled.header`
-  color: #000;
-  font-family: Inter;
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
