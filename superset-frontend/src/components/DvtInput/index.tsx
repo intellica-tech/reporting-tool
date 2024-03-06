@@ -46,6 +46,7 @@ export interface DvtInputProps {
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   onShowClear?: boolean;
   error?: string;
+  number?: boolean;
 }
 
 const DvtInput = ({
@@ -63,11 +64,15 @@ const DvtInput = ({
   popoverLabel,
   onShowClear = false,
   error,
+  number = false,
 }: DvtInputProps) => {
   const [show, setShow] = useState<boolean>(false);
   const [onHover, setOnHover] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (number && !/^\d*$/.test(e.target.value)) {
+      return;
+    }
     onChange(e.target.value);
   };
 
@@ -130,7 +135,7 @@ const DvtInput = ({
           $size={size}
           placeholder={placeholder}
           type={show ? 'text' : type}
-          value={value}
+          value={Number.isNaN(value) ? '' : value}
           onChange={handleChange}
           disabled={disabled}
           onMouseOver={() => setOnHover(true)}
