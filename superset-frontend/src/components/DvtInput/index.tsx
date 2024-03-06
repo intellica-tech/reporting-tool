@@ -135,7 +135,7 @@ const DvtInput = ({
           $size={size}
           placeholder={placeholder}
           type={show ? 'text' : type}
-          value={value}
+          value={Number.isNaN(value) ? '' : value}
           onChange={handleChange}
           disabled={disabled}
           onMouseOver={() => setOnHover(true)}
