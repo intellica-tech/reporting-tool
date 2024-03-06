@@ -21,7 +21,6 @@ import DvtButtonTabs, {
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtSpinner from 'src/components/DvtSpinner';
 import DvtButton from 'src/components/DvtButton';
-import { Button } from 'antd';
 import DvtInput from 'src/components/DvtInput';
 import { prepareCopyToClipboardTabularData } from 'src/utils/common';
 import {
