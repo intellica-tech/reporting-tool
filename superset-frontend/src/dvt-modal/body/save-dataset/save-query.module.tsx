@@ -16,24 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
-import DvtConditionSchedule, { DvtConditionScheduleProps } from '.';
+import { styled } from '@superset-ui/core';
 
-export default {
-  title: 'Dvt-Components/DvtConditionSchedule',
-  component: DvtConditionSchedule,
-};
+const StyledSaveDataset = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 
-export const Default = (args: DvtConditionScheduleProps) => {
-  const [schedule, setSchedule] = useState<string>('');
+const StyledSaveDatasetBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  gap: 20px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+`;
 
-  return (
-    <div style={{ width: '220px' }}>
-      <DvtConditionSchedule
-        {...args}
-        schedule={schedule}
-        setSchedule={setSchedule}
-      />
-    </div>
-  );
-};
+const StyledSaveDatasetButton = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: end;
+  align-items: end;
+  gap: 15px;
+`;
+
+export { StyledSaveDataset, StyledSaveDatasetButton, StyledSaveDatasetBody };

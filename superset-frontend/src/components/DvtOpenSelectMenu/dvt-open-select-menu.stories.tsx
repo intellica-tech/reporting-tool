@@ -17,47 +17,58 @@
  * under the License.
  */
 import React, { useState } from 'react';
-import DvtInputDrop, { DvtInputDropProps } from './index';
-import DvtDargCard from '../DvtDragCard';
+import DvtOpenSelectMenu, { DvtOpenSelectMenuProps } from '.';
 
 export default {
-  title: 'Dvt-Components/DvtInputDrop',
-  component: DvtInputDrop,
+  title: 'Dvt-Components/DvtOpenSelectMenu',
+  component: DvtOpenSelectMenu,
 };
 
-export const Default = (args: DvtInputDropProps) => {
-  const [droppedData, setDroppedData] = useState<any[] | null>(null);
+const initialValues = {
+  saved: '',
+  column: '',
+  operator: '',
+  aggregate: '',
+  option: '',
+  sql: '',
+};
+
+const columnData = [
+  {
+    label: 'name',
+    value: 'name',
+  },
+  {
+    label: 'color',
+    value: 'color',
+  },
+  {
+    label: 'path_json',
+    value: 'path_json',
+  },
+  {
+    label: 'polyline',
+    value: 'polyline',
+  },
+];
+
+export const Default = (args: DvtOpenSelectMenuProps) => {
+  const [values, setValues] = useState(initialValues);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: 500,
-        gap: 20,
-        padding: 20,
-      }}
-    >
-      <DvtInputDrop
+    <div>
+      <DvtOpenSelectMenu
         {...args}
-        droppedData={droppedData}
-        setDroppedData={setDroppedData}
-      />
-      <DvtDargCard
-        label="arac"
-        value={{ id: 1, name: 'arac' }}
-        icon="dvt-hashtag"
-      />
-      <DvtDargCard
-        label="arac2"
-        value={{ id: 2, name: 'arac2' }}
-        icon="dvt-hashtag"
+        values={values}
+        setValues={setValues}
+        columnData={columnData}
+        closeOnClick={() => {}}
+        saveOnClick={() => console.log(values)}
       />
     </div>
   );
 };
+
 Default.args = {
-  placeholder: 'Drop columns here or click',
-  label: 'Metrics',
-  popoverLabel: 'Info',
+  type: 'x-axis',
 };

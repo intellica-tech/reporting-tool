@@ -94,6 +94,35 @@ function DvtDashboardList() {
     })}`;
 
   const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
+  const [dashboardAddApiUrl, setDashboardAddApiUrl] = useState<string>('');
+
+  const dashboardAdd = useFetch({
+    url: dashboardAddApiUrl,
+    method: 'POST',
+    body: {
+      certification_details: '',
+      certified_by: '',
+      css: '',
+      dashboard_title: '',
+      external_url: '',
+      is_managed_externally: true,
+      json_metadata: '{}',
+      owners: [1],
+      position_json: '{}',
+      published: true,
+      roles: [1],
+      slug: null,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  useEffect(() => {
+    if (dashboardAdd?.id) {
+      history.push(`/dashboard/${dashboardAdd.id}/?edit=true`);
+    }
+  }, [dashboardAdd]);
 
   const dashboardApi = useFetch({
     url: dashboardApiUrl,
@@ -217,7 +246,8 @@ function DvtDashboardList() {
       field: 'dashboard_title',
       flex: 3,
       checkbox: true,
-      urlField: 'url',
+      urlField: '/dashboard/',
+      urlFieldEnd: '/?edit=true',
       sort: true,
     },
     { id: 2, title: t('Status'), field: 'published', sort: true },
@@ -323,7 +353,7 @@ function DvtDashboardList() {
             colour="grayscale"
             bold
             typeColour="basic"
-            onClick={() => history.push('/superset/dashboard')}
+            onClick={() => setDashboardAddApiUrl('dashboard/')}
           />
         </StyledDashboardCreateDashboard>
         <StyledDashboardPagination>

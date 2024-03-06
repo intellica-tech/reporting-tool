@@ -17,6 +17,7 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
@@ -26,6 +27,7 @@ import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtTextarea from 'src/components/DvtTextarea';
 import { useDispatch } from 'react-redux';
 import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledDvtButtons,
   StyledDvtDescription,
@@ -33,8 +35,8 @@ import {
   StyledDvtInputLabel,
   StyledDvtInputLabelUnneccessary,
   StyledDvtSelect,
-  StyledHeadTitle,
   StyledRowLevelSecurity,
+  StyledRowLevelSecurityBody,
 } from './rowlevelsecurity-add.module';
 
 const filterTypeData = [
@@ -166,93 +168,97 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledRowLevelSecurity>
-      <StyledHeadTitle>+ Add Rule</StyledHeadTitle>
-      <StyledDvtInput>
-        <StyledDvtInputLabel>RULE NAME</StyledDvtInputLabel>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, ruleName: newValue })}
-          value={value.ruleName}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtSelect>
-        <StyledDvtInputLabelUnneccessary>
-          FILTER TYPE
-        </StyledDvtInputLabelUnneccessary>
-        <DvtSelect
-          data={filterTypeData}
-          selectedValue={value.filterType}
-          setSelectedValue={selected =>
-            setValue({ ...value, filterType: selected })
-          }
-          width={404}
-        />
-      </StyledDvtSelect>
-      <StyledDvtSelect>
-        <StyledDvtInputLabel>DATASETS</StyledDvtInputLabel>
-        <DvtInputSelect
-          data={datasetData}
-          selectedValues={value.datasets}
-          setSelectedValues={selected =>
-            setValue({ ...value, datasets: selected })
-          }
-        />
-      </StyledDvtSelect>
-      <StyledDvtSelect>
-        <StyledDvtInputLabelUnneccessary>ROLES</StyledDvtInputLabelUnneccessary>
-        <DvtInputSelect
-          data={rolesData}
-          selectedValues={value.roles}
-          setSelectedValues={selected =>
-            setValue({ ...value, roles: selected })
-          }
-        />
-      </StyledDvtSelect>
-      <StyledDvtInput>
-        <StyledDvtInputLabelUnneccessary>
-          GROUP KEY
-        </StyledDvtInputLabelUnneccessary>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, groupKey: newValue })}
-          value={value.groupKey}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtInput>
-        <StyledDvtInputLabel>CLAUSE</StyledDvtInputLabel>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, clause: newValue })}
-          value={value.clause}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtDescription>
-        <StyledDvtInputLabelUnneccessary>
-          DESCRIPTION
-        </StyledDvtInputLabelUnneccessary>
-        <DvtTextarea
-          onChange={newValue => setValue({ ...value, description: newValue })}
-          value={value.description}
-          typeDesign="form"
-        />
-      </StyledDvtDescription>
-      <StyledDvtButtons>
-        <DvtButton
-          colour="primary"
-          typeColour="powder"
-          label="CANCEL"
-          onClick={handleCancel}
-        />
-        <DvtButton
-          colour="grayscale"
-          typeColour="basic"
-          label="ADD"
-          onClick={handleAdd}
-        />
-      </StyledDvtButtons>
+      <DvtModalHeader title={t('+ Add Rule')} onClose={onClose} />
+      <StyledRowLevelSecurityBody>
+        <StyledDvtInput>
+          <StyledDvtInputLabel>{t('RULE NAME')}</StyledDvtInputLabel>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, ruleName: newValue })}
+            value={value.ruleName}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtSelect>
+          <StyledDvtInputLabelUnneccessary>
+            {t('FILTER TYPE')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtSelect
+            data={filterTypeData}
+            selectedValue={value.filterType}
+            setSelectedValue={selected =>
+              setValue({ ...value, filterType: selected })
+            }
+            maxWidth
+          />
+        </StyledDvtSelect>
+        <StyledDvtSelect>
+          <StyledDvtInputLabel>{t('DATASETS')}</StyledDvtInputLabel>
+          <DvtInputSelect
+            data={datasetData}
+            selectedValues={value.datasets}
+            setSelectedValues={selected =>
+              setValue({ ...value, datasets: selected })
+            }
+          />
+        </StyledDvtSelect>
+        <StyledDvtSelect>
+          <StyledDvtInputLabelUnneccessary>
+            {t('ROLES')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtInputSelect
+            data={rolesData}
+            selectedValues={value.roles}
+            setSelectedValues={selected =>
+              setValue({ ...value, roles: selected })
+            }
+          />
+        </StyledDvtSelect>
+        <StyledDvtInput>
+          <StyledDvtInputLabelUnneccessary>
+            {t('GROUP KEY')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, groupKey: newValue })}
+            value={value.groupKey}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtInput>
+          <StyledDvtInputLabel>{t('CLAUSE')}</StyledDvtInputLabel>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, clause: newValue })}
+            value={value.clause}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtDescription>
+          <StyledDvtInputLabelUnneccessary>
+            {t('DESCRIPTION')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtTextarea
+            onChange={newValue => setValue({ ...value, description: newValue })}
+            value={value.description}
+            typeDesign="form"
+          />
+        </StyledDvtDescription>
+        <StyledDvtButtons>
+          <DvtButton
+            colour="primary"
+            typeColour="powder"
+            label={t('CANCEL')}
+            onClick={handleCancel}
+          />
+          <DvtButton
+            colour="grayscale"
+            typeColour="basic"
+            label={t('ADD')}
+            onClick={handleAdd}
+          />
+        </StyledDvtButtons>
+      </StyledRowLevelSecurityBody>
     </StyledRowLevelSecurity>
   );
 };

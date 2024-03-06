@@ -18,6 +18,7 @@
  */
 import React from 'react';
 import AceEditor from 'react-ace';
+import { supersetTheme } from '@superset-ui/core';
 import { StyledDvtAceEditor } from './dvt-ace-editor.module';
 
 import 'brace/mode/json';
@@ -34,6 +35,7 @@ export interface DvtAceEditorProps {
   name?: string;
   fontSize?: number;
   borderRadius?: number;
+  border?: boolean;
 }
 
 const DvtAceEditor: React.FC<DvtAceEditorProps> = ({
@@ -45,29 +47,44 @@ const DvtAceEditor: React.FC<DvtAceEditorProps> = ({
   name = '',
   fontSize = 12,
   borderRadius = 4,
-}) => (
-  <StyledDvtAceEditor style={{ height, flex: 'auto' }}>
-    <AceEditor
-      mode={mode}
-      theme="xcode"
+  border = false,
+}) => {
+  const onBorder = border
+    ? {
+        boxShadow: `0 0 1px ${supersetTheme.colors.dvt.backgroundColor.opacity}`,
+      }
+    : {};
+
+  return (
+    <StyledDvtAceEditor
       style={{
-        borderRadius,
-        fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
+        height,
+        flex: 'auto',
       }}
-      name={name}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      fontSize={fontSize}
-      tabSize={2}
-      showGutter={false}
-      width="100%"
-      height="100%"
-      enableLiveAutocompletion
-      highlightActiveLine
-      showPrintMargin={false}
-    />
-  </StyledDvtAceEditor>
-);
+    >
+      <AceEditor
+        mode={mode}
+        theme="xcode"
+        style={{
+          borderRadius,
+          fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
+          ...onBorder,
+        }}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        fontSize={fontSize}
+        tabSize={2}
+        showGutter={false}
+        width="100%"
+        height="100%"
+        enableLiveAutocompletion
+        highlightActiveLine
+        showPrintMargin={false}
+      />
+    </StyledDvtAceEditor>
+  );
+};
 
 export default DvtAceEditor;

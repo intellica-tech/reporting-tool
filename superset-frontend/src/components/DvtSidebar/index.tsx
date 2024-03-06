@@ -837,6 +837,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       }),
                     )
                   }
+                  icon={false}
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&

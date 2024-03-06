@@ -79,9 +79,25 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const chartAddSidebarSelector = useAppSelector(
     state => state.dvtSidebar.chartAdd,
   );
+  const sqlQuerySelector = useAppSelector(state => state.dvtSqlhub);
+  const sqlLabSidebarSelector = useAppSelector(
+    state => state.dvtSidebar.sqlhub,
+  );
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
+
+  const extractDashboardId = (pathName: string) => {
+    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
+    const isDashboardPage = dashboardRegex.test(pathName);
+
+    if (isDashboardPage) {
+      const dashboardId = pathName.match(dashboardRegex)?.[1];
+      return dashboardId ?? null;
+    }
+
+    return null;
+  };
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -116,6 +132,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Trained Table');
       case '/user/list/':
         return t('List Users');
+      case `/dashboard/${extractDashboardId(pathName)}/`:
+        return t('Dashboards');
       default:
         return '';
     }
@@ -181,6 +199,32 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     dispatch(
       openModal({
         component: 'rowlevelsecurity-add-modal',
+      }),
+    );
+  };
+
+  const handleSaveQuery = () => {
+    dispatch(
+      openModal({
+        component: 'save-query',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
+      }),
+    );
+  };
+
+  const handleSaveDataset = () => {
+    dispatch(
+      openModal({
+        component: 'save-dataset',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
       }),
     );
   };
@@ -334,12 +378,45 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
+          {pathName === `/dashboard/${extractDashboardId(pathName)}/` && (
+            <NavbarBottom>
+              <div />
+              <NavbarBottomRight>
+                <DvtButton
+                  label="CANCEL"
+                  onClick={() => {
+                    history.push('/dashboard/list/');
+                  }}
+                  colour="grayscale"
+                />
+                <DvtButton label="SAVE" onClick={() => {}} />
+              </NavbarBottomRight>
+            </NavbarBottom>
+          )}
           {pathName === '/sqlhub/' && (
-            <DvtButtonTabs
-              active={viewListSelector}
-              data={activeData}
-              setActive={() => {}}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <DvtButton
+                label={t('Copy Link')}
+                typeColour="powder"
+                onClick={() => {}}
+                icon="link"
+              />
+              <DvtButton
+                label={t('Save')}
+                typeColour="powder"
+                onClick={handleSaveQuery}
+              />
+              <DvtDropdown
+                data={[
+                  {
+                    label: 'Save dataset',
+                    onClick: () => handleSaveDataset(),
+                  },
+                ]}
+                icon="caret_down"
+                direction="left"
+              />
+            </div>
           )}
         </NavbarBottom>
       )}

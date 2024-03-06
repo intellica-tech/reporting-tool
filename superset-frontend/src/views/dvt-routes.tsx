@@ -66,7 +66,8 @@ const DashboardList = lazy(
 );
 
 const Dashboard = lazy(
-  () => import(/* webpackChunkName: "Dashboard" */ 'src/pages/Dashboard'),
+  () =>
+    import(/* webpackChunkName: "Dashboard" */ 'src/pages/DvtDashboardEdit'),
 );
 
 const DatabaseList = lazy(
@@ -263,22 +264,4 @@ if (isFeatureEnabled(FeatureFlag.TAGGING_SYSTEM)) {
     path: '/tags/',
     Component: Tags,
   });
-}
-
-const frontEndRoutes = routes
-  .map(r => r.path)
-  .reduce(
-    (acc, curr) => ({
-      ...acc,
-      [curr]: true,
-    }),
-    {},
-  );
-
-export function isFrontendRoute(path?: string) {
-  if (path) {
-    const basePath = path.split(/[?#]/)[0];
-    return !!frontEndRoutes[basePath];
-  }
-  return false;
 }

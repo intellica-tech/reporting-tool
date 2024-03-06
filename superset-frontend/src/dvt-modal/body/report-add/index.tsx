@@ -9,12 +9,13 @@ import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
+import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 import DvtCheckbox from 'src/components/DvtCheckbox';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
-  StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
   StyledAlertAddSelectGroup,
@@ -23,15 +24,12 @@ import {
   StyledAlertAddScheduleSettings,
   StyledAlertAddTitle,
   StyledAlertAddReportSchedule,
-  StyledAlertAddSelectFlex,
   StyledAlertAddMessageContent,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
 } from './report-add-modal.module';
 
 interface InputProps {
-  hour: { label: string; value: string };
-  minute: { label: string; value: string };
   timezone: { label: string; value: string };
   logRetention: { label: string; value: number };
   workingTimeout: number;
@@ -41,19 +39,12 @@ interface InputProps {
   description: string;
   ignore: boolean;
   schedule: string;
-  year: string;
-  month: string;
-  week: string;
-  day: string;
   email: string;
-  timeSelected: { label: string; value: string };
   active: boolean;
 }
 
 const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
   const [input, setInput] = useState<InputProps>({
-    hour: { label: '', value: '' },
-    minute: { label: '', value: '' },
     timezone: {
       label: t('GMT +03:00 (Antarctica/Syowa)'),
       value: t('Antarctica/Syowa'),
@@ -69,11 +60,6 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
     description: '',
     ignore: false,
     schedule: '',
-    year: '',
-    month: '',
-    week: '',
-    day: '',
-    timeSelected: { label: 'Year', value: 'year' },
     email: '',
     active: false,
   });
@@ -81,7 +67,6 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [value, setValue] = useState('Dashboard');
   const [chartType, setChartType] = useState('PNG');
-  const [timeSchedule, setTimeSchedule] = useState('Every');
   const [apiUrl, setApiUrl] = useState<string>('');
 
   useEffect(() => {
@@ -96,7 +81,7 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
       chart: value === 'Chart' ? input.messageContent.value : null,
       context_markdown: 'string',
       creation_method: 'alerts_reports',
-      crontab: timeSchedule === 'Cron' ? input.schedule : '* * * * *',
+      crontab: input.schedule,
       dashboard: value === 'Dashboard' ? input.messageContent.value : null,
       description: input.description,
       force_screenshot: input.ignore,
@@ -160,39 +145,6 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
       value: item.value,
     }));
 
-  const dayOptions = [];
-  let dayIndex = 0;
-
-  while (dayIndex < 31) {
-    dayIndex += 1;
-    dayOptions.push({
-      label: `Day ${dayIndex}`,
-      value: `${dayIndex}`,
-    });
-  }
-
-  const hourOptions = [];
-  let hourIndex = 0;
-
-  while (hourIndex < 24) {
-    hourOptions.push({
-      label: `Hour ${hourIndex}`,
-      value: `${hourIndex}`,
-    });
-    hourIndex += 1;
-  }
-
-  const minuteOptions = [];
-  let minuteIndex = 0;
-
-  while (minuteIndex < 60) {
-    minuteOptions.push({
-      label: `Minute ${minuteIndex}`,
-      value: `${minuteIndex}`,
-    });
-    minuteIndex += 1;
-  }
-
   useEffect(() => {
     if (apiUrl) {
       setTimeout(() => {
@@ -240,6 +192,7 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
         owners: owner,
         reportName: meta.editedAlertReportData.result.name,
         description: meta.editedAlertReportData.result.description,
+        schedule: meta.editedAlertReportData.result.crontab,
         ignore: meta.editedAlertReportData.result.force_screenshot,
         email: JSON.parse(
           meta.editedAlertReportData.result.recipients[0].recipient_config_json,
@@ -273,17 +226,12 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledAlertAdd>
-      <StyledAlertAddHeader>
-        <DvtButton
-          bold
-          colour="primary"
-          icon="dvt-add_square"
-          label={t('Add Report')}
-          onClick={() => {}}
-          size="small"
-          typeColour="powder"
-        />
-      </StyledAlertAddHeader>
+      <DvtModalHeader
+        buttonIcon="dvt-add_square"
+        buttonLabel={t('Add Report')}
+        onClick={() => {}}
+        onClose={onClose}
+      />
       <StyledAlertAddBody>
         <StyledAlertAddLeftMenu>
           <DvtSwitch
@@ -328,114 +276,14 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
         <StyledAlertAddItemGroup>
           <StyledAlertAddReportSchedule>
             <StyledAlertAddTitle>{t('Report Schedule')}</StyledAlertAddTitle>
-            <DvtRadioList
-              data={
-                DvtAlertReportData.find(item => item.name === 'everyOrCron')
-                  ?.data || []
-              }
-              active={timeSchedule}
-              setActive={setTimeSchedule}
+            <DvtConditionSchedule
+              schedule={input.schedule}
+              setSchedule={(selected: string) => {
+                const newValue =
+                  selected === '' ? '0 * * * *' : String(selected);
+                setInput({ ...input, schedule: newValue });
+              }}
             />
-            {timeSchedule === 'Every' && (
-              <>
-                <StyledAlertAddSelectFlex>
-                  <DvtSelect
-                    data={
-                      DvtAlertReportData.find(item => item.name === 'time')
-                        ?.data || []
-                    }
-                    selectedValue={input.timeSelected}
-                    setSelectedValue={selected => {
-                      setInput({ ...input, timeSelected: selected });
-                    }}
-                    typeDesign="form"
-                    width={110}
-                  />
-                  {input.timeSelected.value === 'year' && (
-                    <DvtSelect
-                      data={
-                        DvtAlertReportData.find(item => item.name === 'month')
-                          ?.data || []
-                      }
-                      selectedValue={input.month}
-                      placeholder={t('month')}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, month: selected });
-                      }}
-                      typeDesign="form"
-                      width={110}
-                    />
-                  )}
-                  {['year', 'month'].includes(input.timeSelected.value) && (
-                    <DvtSelect
-                      data={dayOptions}
-                      placeholder={t('day')}
-                      selectedValue={input.day}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, day: selected });
-                      }}
-                      typeDesign="form"
-                      width={110}
-                    />
-                  )}
-                  {['year', 'month', 'week'].includes(
-                    input.timeSelected.value,
-                  ) && (
-                    <DvtSelect
-                      data={
-                        DvtAlertReportData.find(item => item.name === 'day')
-                          ?.data || []
-                      }
-                      placeholder={t('week')}
-                      selectedValue={input.week}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, week: selected });
-                      }}
-                      typeDesign="form"
-                      width={110}
-                    />
-                  )}
-                  {['year', 'month', 'week', 'day'].includes(
-                    input.timeSelected.value,
-                  ) && (
-                    <DvtSelect
-                      data={hourOptions}
-                      placeholder={t('hour')}
-                      selectedValue={input.hour}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, hour: selected });
-                      }}
-                      typeDesign="form"
-                      width={110}
-                    />
-                  )}
-                  {['year', 'month', 'week', 'day', 'hour'].includes(
-                    input.timeSelected.value,
-                  ) && (
-                    <DvtSelect
-                      data={minuteOptions}
-                      placeholder={t('minute')}
-                      selectedValue={input.minute}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, minute: selected });
-                      }}
-                      typeDesign="form"
-                      width={110}
-                    />
-                  )}
-                </StyledAlertAddSelectFlex>
-              </>
-            )}
-            {timeSchedule === 'Cron' && (
-              <DvtInput
-                placeholder="0 * * * * *"
-                value={input.schedule}
-                onChange={selected => {
-                  setInput({ ...input, schedule: selected });
-                }}
-                typeDesign="chartsForm"
-              />
-            )}
             <DvtSelect
               data={DvtTimezoneData}
               label={t('Timezone')}
