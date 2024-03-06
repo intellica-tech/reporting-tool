@@ -135,6 +135,9 @@ const RowLevelSecurityList = lazy(
       /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/DvtRowLevelSecurity'
     ),
 );
+const UsersList = lazy(
+  () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
+);
 
 type Routes = {
   path: string;
@@ -237,6 +240,10 @@ export const routes: Routes = [
   {
     path: '/rowlevelsecurity/list/',
     Component: RowLevelSecurityList,
+  },
+  {
+    path: '/user/list/',
+    Component: UsersList,
   },
   {
     path: '/sqlhub/',

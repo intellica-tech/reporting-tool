@@ -74,6 +74,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const annotationLayerSelector = useAppSelector(
     state => state.dvtSidebar.annotationLayer,
   );
+  const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
@@ -127,6 +128,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'rowLevelSecurity';
       case '/traindata/':
         return 'newTrainedTable';
+      case '/user/list/':
+        return 'usersList';
       default:
         return '';
     }
@@ -508,6 +511,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chartAdd',
     'sqlhubHistory',
     'chart',
+    'usersList',
     'rowLevelSecurity',
   ];
 
@@ -706,6 +710,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? datasetAddSelector[data.name]
                             : pathTitles(pathName) === 'rowLevelSecurity'
                             ? rowLevelSecuritySelector[data.name]
+                            : pathTitles(pathName) === 'usersList'
+                            ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
                             : undefined
@@ -745,6 +751,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
+                            : pathTitles(pathName) === 'usersList'
+                            ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'rowLevelSecurity'
                             ? rowLevelSecuritySelector[data.name]
                             : undefined

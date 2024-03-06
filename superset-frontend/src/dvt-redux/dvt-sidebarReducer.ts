@@ -36,6 +36,12 @@ interface DvtSidebarState {
     status: any;
     search: string;
   };
+  usersList: {
+    userName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   connection: {
     expose_in_sqllab: any;
     allow_run_async: any;
@@ -177,6 +183,12 @@ interface DvtSidebarState {
       schema: any[];
       see_table_schema: any[];
     };
+    usersList: {
+      userName: '';
+      firstName: '';
+      lastName: '';
+      email: '';
+    };
     rowLevelSecurity: {
       modifiedBy: any[];
     };
@@ -249,6 +261,12 @@ const INITIAL_STATE = {
     database: '',
     schema: '',
     see_table_schema: [],
+  },
+  usersList: {
+    userName: '',
+    firstName: '',
+    lastName: '',
+    email: '',
   },
   rowLevelSecurity: {
     name: '',
@@ -344,6 +362,12 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       see_table_schema: [],
+    },
+    usersList: {
+      userName: '',
+      firstName: '',
+      lastName: '',
+      email: '',
     },
     rowLevelSecurity: {
       modifiedBy: [],
