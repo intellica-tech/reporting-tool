@@ -20,6 +20,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import DvtSelect from '../DvtSelect';
+import DvtInputSelect from '../DvtInputSelect';
 // import DvtInput from '../DvtInput';
 import DvtButton from '../DvtButton';
 import DvtAceEditor from '../DvtAceEditor';
@@ -44,6 +45,11 @@ interface DataProps {
   value: string;
 }
 
+interface OptionDataProps {
+  label: string;
+  value: number;
+}
+
 interface ValuesProps {
   saved: any;
   column: any;
@@ -64,12 +70,13 @@ export interface DvtOpenSelectMenuProps {
     | 'dimensions'
     | 'sort_by'
     | 'percentage_metrics'
-    | 'soruce_target';
+    | 'soruce_target'
+    | 'columns';
   values: ValuesProps;
   setValues: (values: ValuesProps) => void;
   savedData?: DataProps[];
   columnData: DataProps[];
-  optionData?: DataProps[];
+  optionData?: OptionDataProps[];
   closeOnClick: () => void;
   saveOnClick: () => void;
 }
@@ -119,6 +126,10 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
     'sort_by',
     'percentage_metrics',
   ];
+
+  const filtersOptionOnInputSelect = ['IN', 'NOT IN'];
+
+  const filtersOptionWithoutForm = ['IS NOT NULL', 'IS NULL'];
 
   return (
     <StyledOpenSelectMenu>
@@ -207,11 +218,17 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                 });
               }
 
+              const onOptionValue =
+                values.option?.value || values.option?.length
+                  ? { option: '' }
+                  : {};
+
               setValues({
                 ...values,
                 column: vl,
                 sql: autoAddSql,
                 ...filtersAutoAddOperator,
+                ...onOptionValue,
               });
             }}
             placeholder={`${columnData.length} ${t('column(s)')}`}
@@ -242,21 +259,95 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                 selectedValue={values.operator}
                 setSelectedValue={vl => {
                   const onColumnAddSql = values.column?.value
-                    ? `${values.column.value} ${vl.value}`
+                    ? values.option &&
+                      !filtersOptionWithoutForm.includes(vl.value)
+                      ? filtersOptionOnInputSelect.includes(vl.value)
+                        ? `${values.column.value} ${vl.value} (${
+                            values.option?.value
+                              ? `'${
+                                  optionData.find(
+                                    fi => fi.value === values.option.value,
+                                  )?.label
+                                }'`
+                              : optionData
+                                  .filter(fi =>
+                                    values.option.includes(fi.value),
+                                  )
+                                  .map(vm => `'${vm.label}'`)
+                                  .join(', ')
+                          })`
+                        : values.option?.length
+                        ? `${values.column.value} ${vl.value} '${
+                            optionData.find(fi => fi.value === values.option[0])
+                              ?.label
+                          }'`
+                        : `${values.column.value} ${vl.value} '${values.option.label}'`
+                      : `${values.column.value} ${vl.value}`
                     : '';
-                  setValues({ ...values, operator: vl, sql: onColumnAddSql });
+                  const optionMultipleOrSelect =
+                    filtersOptionWithoutForm.includes(vl.value)
+                      ? { option: '' }
+                      : values.option
+                      ? filtersOptionOnInputSelect.includes(vl.value)
+                        ? {
+                            option: values.option?.value
+                              ? [values.option.value]
+                              : values.option,
+                          }
+                        : {
+                            option: values.option?.length
+                              ? optionData.find(
+                                  fi => fi.value === values.option[0],
+                                )
+                              : values.option,
+                          }
+                      : {};
+
+                  setValues({
+                    ...values,
+                    operator: vl,
+                    sql: onColumnAddSql,
+                    ...optionMultipleOrSelect,
+                  });
                 }}
                 placeholder={`${operatorData.length} ${t('operator(s)')}`}
                 data={operatorData}
                 typeDesign="navbar"
               />
-              <DvtSelect
-                selectedValue={values.option}
-                setSelectedValue={vl => setValues({ ...values, option: vl })}
-                placeholder={`${optionData.length} ${t('option(s)')}`}
-                data={optionData}
-                typeDesign="navbar"
-              />
+              {!filtersOptionWithoutForm.includes(values.operator?.value) && (
+                <>
+                  {filtersOptionOnInputSelect.includes(
+                    values.operator?.value,
+                  ) ? (
+                    <DvtInputSelect
+                      selectedValues={values.option ? values.option : []}
+                      setSelectedValues={vl => {
+                        const autoAddSql = `${values.column?.value} ${
+                          values.operator?.value
+                        } (${optionData
+                          .filter(fi => vl.includes(fi.value))
+                          .map(vm => `'${vm.label}'`)
+                          .join(', ')})`;
+                        setValues({ ...values, option: vl, sql: autoAddSql });
+                      }}
+                      placeholder={`${optionData.length} ${t('option(s)')}`}
+                      data={optionData}
+                      // typeDesign="navbar"
+                    />
+                  ) : (
+                    <DvtSelect
+                      selectedValue={values.option}
+                      setSelectedValue={vl => {
+                        const autoAddSql = `${values.column?.value} ${values.operator?.value} '${vl.label}'`;
+                        setValues({ ...values, option: vl, sql: autoAddSql });
+                      }}
+                      placeholder={`${optionData.length} ${t('option(s)')}`}
+                      data={optionData}
+                      typeDesign="navbar"
+                    />
+                  )}
+                </>
+              )}
             </>
           )}
         </StyledOpenSelectMenuFilterInputGroup>

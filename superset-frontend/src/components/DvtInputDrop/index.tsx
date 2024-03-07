@@ -37,7 +37,8 @@ export interface DvtInputDropProps {
     | 'dimensions'
     | 'sort_by'
     | 'percentage_metrics'
-    | 'soruce_target';
+    | 'soruce_target'
+    | 'columns';
 }
 
 const DvtInputDrop = ({

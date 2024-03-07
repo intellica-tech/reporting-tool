@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DvtOpenSelectMenu, { DvtOpenSelectMenuProps } from '.';
 
 export default {
@@ -52,10 +53,69 @@ const columnData = [
   },
 ];
 
+const apiNameOptionData = [
+  {
+    label: 'From Home',
+    value: 1,
+  },
+  {
+    label: 'No Perefence',
+    value: 2,
+  },
+  {
+    label: 'No Answer',
+    value: 3,
+  },
+  {
+    label: 'In an Office (with Other Developers)',
+    value: 4,
+  },
+];
+
+const apiColorOptionData = [
+  {
+    label: '<NULL>',
+    value: 1,
+  },
+  {
+    label: 'A. No high school (secondary school)',
+    value: 2,
+  },
+  {
+    label: "F. Bachelor's degree",
+    value: 3,
+  },
+  {
+    label: 'C. High school diploma or equivalent (GED)',
+    value: 4,
+  },
+  {
+    label: 'I. Ph.D.',
+    value: 5,
+  },
+];
+
 export const Default = (args: DvtOpenSelectMenuProps) => {
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState<any>(initialValues);
+  const [optionData, setOptionData] = useState<any[]>([]);
 
   console.log(values);
+
+  useEffect(() => {
+    if (args.type === 'filters') {
+      if (values.column) {
+        if (values.column?.value === 'name') {
+          setOptionData(apiNameOptionData);
+        } else if (values.column?.value === 'color') {
+          setOptionData(apiColorOptionData);
+        } else {
+          setOptionData([]);
+        }
+      }
+    } else {
+      setOptionData([]);
+    }
+  }, [values.column]);
 
   return (
     <div>
@@ -64,6 +124,7 @@ export const Default = (args: DvtOpenSelectMenuProps) => {
         values={values}
         setValues={setValues}
         columnData={columnData}
+        optionData={optionData}
         closeOnClick={() => {}}
         saveOnClick={() => console.log(values)}
       />
