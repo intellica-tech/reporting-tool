@@ -592,6 +592,32 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
+    pathname: '/user/list/',
+    key: 'usersList',
+    data: [
+      {
+        placeholder: t('First Name'),
+        name: 'firstName',
+        status: 'input',
+      },
+      {
+        placeholder: t('Last Name'),
+        name: 'lastName',
+        status: 'input',
+      },
+      {
+        placeholder: t('User Name'),
+        name: 'userName',
+        status: 'input',
+      },
+      {
+        placeholder: t('E Mail'),
+        name: 'email',
+        status: 'input',
+      },
+    ],
+  },
+  {
     pathname: '/rowlevelsecurity/list/',
     key: 'rowLevelSecurity',
     data: [

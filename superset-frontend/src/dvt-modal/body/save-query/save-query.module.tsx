@@ -18,57 +18,25 @@
  */
 import { styled } from '@superset-ui/core';
 
-const StyledRowLevelSecurity = styled.div`
+const StyledSaveQuery = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 10px;
+  height: 100%;
 `;
 
-const StyledRowLevelSecurityBody = styled.div`
+const StyledSaveQueryBody = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  border-radius: 12px;
   height: 100%;
-  padding: 18px 28px;
+  padding: 20px;
+  gap: 15px;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+`;
+
+const StyledSaveQueryButton = styled.div`
+  display: flex;
+  justify-content: end;
   gap: 15px;
 `;
 
-const StyledDvtInputLabel = styled.div`
-  ::after {
-    display: inline-block;
-    margin-left: 4px;
-    color: ${({ theme }) => theme.colors.dvt.error.base};
-    content: '*';
-  }
-`;
-
-const StyledDvtInputLabelUnneccessary = styled.div``;
-
-const StyledDvtInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const StyledDvtSelect = styled.div``;
-
-const StyledDvtDescription = styled.div``;
-
-const StyledDvtButtons = styled.div`
-  display: flex;
-  justify-content: end;
-  gap: 10px;
-`;
-
-export {
-  StyledRowLevelSecurity,
-  StyledDvtInputLabel,
-  StyledDvtInput,
-  StyledDvtSelect,
-  StyledDvtInputLabelUnneccessary,
-  StyledDvtDescription,
-  StyledDvtButtons,
-  StyledRowLevelSecurityBody,
-};
+export { StyledSaveQuery, StyledSaveQueryButton, StyledSaveQueryBody };

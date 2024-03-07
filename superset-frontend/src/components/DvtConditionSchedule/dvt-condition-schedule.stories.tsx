@@ -16,27 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { styled } from '@superset-ui/core';
+import React, { useState } from 'react';
+import DvtConditionSchedule, { DvtConditionScheduleProps } from './index';
 
-const StyledDvtCardDetailChartList = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 430px);
-  gap: 20px;
-  overflow-y: auto;
-  padding-right: 20px;
+export default {
+  title: 'Dvt-Components/DvtConditionSchedule',
+  component: DvtConditionSchedule,
+};
 
-  &::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-    width: 6px;
-    border-radius: 12px;
-  }
+export const Default = (args: DvtConditionScheduleProps) => {
+  const [schedule, setSchedule] = useState<string>('');
 
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-    width: 4px;
-    border-radius: 12px;
-  }
-`;
-
-export { StyledDvtCardDetailChartList };
+  return (
+    <div style={{ width: '220px' }}>
+      <DvtConditionSchedule
+        {...args}
+        schedule={schedule}
+        setSchedule={setSchedule}
+      />
+    </div>
+  );
+};

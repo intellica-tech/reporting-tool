@@ -16,8 +16,6 @@ import {
   StyledDvtNewTainedTable,
   StyledNewTainedTableButtons,
   StyledNewTainedTableIconLabel,
-  StyledAlertInfo,
-  StyledAlertInfoLink,
 } from './dvt-new-trained-table.module';
 
 const header = [
@@ -120,10 +118,6 @@ function DvtNewTainedTable() {
 
   useEffect(() => {
     if (getSchemaDataAlready) {
-      // if (getSchemaDataAlready.count > 20) {
-      //   setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(1));
-      // }
-
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
@@ -188,35 +182,7 @@ function DvtNewTainedTable() {
   return (
     <StyledDvtNewTainedTable>
       {data.length > 0 ? (
-        <>
-          {newTainedTableAddSelector.selectDatabase?.explore_url && (
-            <StyledAlertInfo
-              closable={false}
-              type="warning"
-              showIcon
-              message={t('This table already has a dataset')}
-              description={
-                <>
-                  {t(
-                    'This table already has a dataset associated with it. You can only associate one dataset with a table.',
-                  )}
-                  <StyledAlertInfoLink
-                    role="button"
-                    onClick={() =>
-                      history.push(
-                        newTainedTableAddSelector.selectDatabase.explore_url,
-                      )
-                    }
-                    tabIndex={0}
-                  >
-                    {t('View Dataset')}
-                  </StyledAlertInfoLink>
-                </>
-              }
-            />
-          )}
-          <DvtTable header={header} data={data} />
-        </>
+        <DvtTable header={header} data={data} />
       ) : (
         <StyledNewTainedTableIconLabel>
           <DvtIconDataLabel

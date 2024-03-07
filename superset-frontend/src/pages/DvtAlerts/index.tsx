@@ -98,7 +98,7 @@ function AlertList() {
         owners: item.owners.length
           ? `${item.owners[0].first_name} ${item.owners[0].last_name}`
           : '',
-        modified: `${item.changed_by.first_name} ${item.changed_by.last_name}`,
+        modified: `${item.changed_by?.first_name} ${item.changed_by?.last_name}`,
         status: item.last_state,
         active: item.active.toString(),
       }));

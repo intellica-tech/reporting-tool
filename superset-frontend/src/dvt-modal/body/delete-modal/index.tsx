@@ -6,9 +6,9 @@ import useFetch from 'src/hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledDeleteModal,
-  StyledDeleteModalHeader,
   StyledDeleteModalBody,
   StyledDeleteModalLabel,
   StyledDeleteModalButton,
@@ -43,7 +43,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledDeleteModal>
-      <StyledDeleteModalHeader>{t('Please confirm')}</StyledDeleteModalHeader>
+      <DvtModalHeader title={t('Please confirm')} onClose={onClose} />
       <StyledDeleteModalBody>
         <StyledDeleteModalLabel>
           {t('Are you sure you want to delete ?')}

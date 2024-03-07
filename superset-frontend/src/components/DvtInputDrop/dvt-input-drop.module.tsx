@@ -21,10 +21,8 @@ import { styled } from '@superset-ui/core';
 const StyledInputDrop = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
-  width: 100%;
-  height: 100%;
   gap: 12px;
+  position: relative;
 `;
 
 const StyledInputDropField = styled.input`
@@ -87,6 +85,31 @@ const StyledInputDropFieldColumn = styled.div`
   width: 100%;
 `;
 
+interface StyledInputDropMenuProps {
+  menuRight: number;
+  menuTopCalc: string;
+  menuTopCalcArrow: string;
+}
+
+const StyledInputDropMenu = styled.div<StyledInputDropMenuProps>`
+  position: absolute;
+  left: ${({ menuRight }) => menuRight + 8}px;
+  bottom: ${({ menuTopCalc }) => menuTopCalc};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: ${({ menuTopCalcArrow }) => menuTopCalcArrow};
+    left: -8px;
+    height: 16px;
+    width: 16px;
+    border: 8px solid ${({ theme }) => theme.colors.dvt.primary.light2};
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    transform: rotate(-45deg);
+  }
+`;
+
 const StyledError = styled.div`
   color: ${({ theme }) => theme.colors.dvt.error.base};
   font-size: 12px;
@@ -103,5 +126,6 @@ export {
   StyledInputDropInputGroup,
   StyledInputDropFieldIcon,
   StyledInputDropFieldColumn,
+  StyledInputDropMenu,
   StyledError,
 };

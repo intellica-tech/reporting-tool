@@ -10,6 +10,7 @@ import {
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
+  dvtSqlhubSetSqlQuery,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { t } from '@superset-ui/core';
@@ -280,6 +281,7 @@ function DvtSqllab() {
       )
     : [];
 
+
   const getExportCsvUrl = (clientId: string) =>
     `/api/v1/sqllab/export/${clientId}/`;
 
@@ -287,6 +289,11 @@ function DvtSqllab() {
     addDangerToast(t('Copied to CSV!'));
     navigator.clipboard.writeText(text);
   };
+
+  useEffect(() => {
+    dispatch(dvtSqlhubSetSqlQuery(sqlValue));
+  }, [sqlValue]);
+
 
   return (
     <StyledSqlhub>
