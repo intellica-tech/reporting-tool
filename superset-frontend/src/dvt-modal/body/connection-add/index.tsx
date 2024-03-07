@@ -104,14 +104,18 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   const initialValues = {
-    host: '', // validation gerekiyor
-    port: '',
-    database_name: '', // validation gerekiyor dersen
-    user_name: '',
-    password: '',
-    display_name: selectedConnectionType,
-    addittional_parameters: '',
-    switch: false,
+    host: meta?.isEdit ? meta.result.parameters.host : '',
+    port: meta?.isEdit ? meta.result.parameters.port : '',
+    database_name: meta?.isEdit ? meta.result.parameters.database : '', // Add validation if needed
+    user_name: meta?.isEdit ? meta.result.parameters.username : '',
+    password: meta?.isEdit ? meta.result.parameters.password : '',
+    display_name: meta?.isEdit
+      ? meta.result.database_name
+      : selectedConnectionType,
+    addittional_parameters: meta?.isEdit
+      ? JSON.stringify(meta.result.parameters.query)
+      : '',
+    switch: meta.result.parameters.encryption,
     select: '',
   };
 
@@ -261,16 +265,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (meta?.isEdit) {
       setStep(2);
-      setInput(prevState => ({
-        ...prevState,
-        host: meta.result.parameters.host,
-        port: meta.result.parameters.port,
-        database_name: meta.result.parameters.database,
-        user_name: meta.result.parameters.username,
-        password: meta.result.parameters.password,
-        display_name: meta.result.database_name,
-        addittional_parameters: JSON.stringify(meta.result.parameters.query),
-      }));
     }
   }, [meta]);
 
