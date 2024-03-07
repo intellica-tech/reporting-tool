@@ -31,16 +31,17 @@ import {
 } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
+import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
+import DvtButton from '../DvtButton';
+import DvtDotTitle from '../DvtDotTitle';
+import DvtDropdown from '../DvtDropdown';
 import {
   sqlTabsData,
   DvtNavbarTabsData,
   WithNavbarBottom,
 } from './dvt-navbar-tabs-data';
-import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
-import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
-import DvtButton from '../DvtButton';
-import DvtDotTitle from '../DvtDotTitle';
-
 // import DvtInput from '../DvtInput';
 // import DvtSelect from '../DvtSelect';
 import DvtProfileMenu from '../DvtProfileMenu';
@@ -55,7 +56,6 @@ import {
   NavbarProfileIcon,
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
-import DvtDropdown from '../DvtDropdown';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -79,9 +79,25 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const chartAddSidebarSelector = useAppSelector(
     state => state.dvtSidebar.chartAdd,
   );
+  const sqlQuerySelector = useAppSelector(state => state.dvtSqlhub);
+  const sqlLabSidebarSelector = useAppSelector(
+    state => state.dvtSidebar.sqlhub,
+  );
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
+
+  const extractDashboardId = (pathName: string) => {
+    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
+    const isDashboardPage = dashboardRegex.test(pathName);
+
+    if (isDashboardPage) {
+      const dashboardId = pathName.match(dashboardRegex)?.[1];
+      return dashboardId ?? null;
+    }
+
+    return null;
+  };
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -110,10 +126,16 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('New Dataset');
       case '/annotationlayer/list/':
         return t('Annotation Layers');
+      case '/rowlevelsecurity/list/':
+        return t('Row Level Security');
       case '/traindata/':
         return t('New Trained Table');
       case '/role/list/':
         return t('Roles List');
+      case '/user/list/':
+        return t('List Users');
+      case `/dashboard/${extractDashboardId(pathName)}/`:
+        return t('Dashboards');
       default:
         return '';
     }
@@ -174,6 +196,40 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       history.push(viewListSelector.sqlhub.value);
     }
   }, [pathName, viewListSelector]);
+
+  const handleRowLevelSecurityOpenModal = () => {
+    dispatch(
+      openModal({
+        component: 'rowlevelsecurity-add-modal',
+      }),
+    );
+  };
+
+  const handleSaveQuery = () => {
+    dispatch(
+      openModal({
+        component: 'save-query',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
+      }),
+    );
+  };
+
+  const handleSaveDataset = () => {
+    dispatch(
+      openModal({
+        component: 'save-dataset',
+        meta: {
+          query: sqlQuerySelector.sqlQuery,
+          db_id: sqlLabSidebarSelector.database.value,
+          schema: sqlLabSidebarSelector.schema.value,
+        },
+      }),
+    );
+  };
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
@@ -271,6 +327,18 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               </NavbarBottomRight>
             </>
           )}
+          {pathName === '/rowlevelsecurity/list/' && (
+            <>
+              <div />
+              <NavbarBottomRight>
+                <DvtButton
+                  label="Rule"
+                  onClick={handleRowLevelSecurityOpenModal}
+                  icon="dvt-add_square"
+                />
+              </NavbarBottomRight>
+            </>
+          )}
           {sqlPathname.includes(pathName) && (
             <DvtButtonTabs
               active={viewListSelector.sqlhub}
@@ -312,12 +380,45 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
+          {pathName === `/dashboard/${extractDashboardId(pathName)}/` && (
+            <NavbarBottom>
+              <div />
+              <NavbarBottomRight>
+                <DvtButton
+                  label="CANCEL"
+                  onClick={() => {
+                    history.push('/dashboard/list/');
+                  }}
+                  colour="grayscale"
+                />
+                <DvtButton label="SAVE" onClick={() => {}} />
+              </NavbarBottomRight>
+            </NavbarBottom>
+          )}
           {pathName === '/sqlhub/' && (
-            <DvtButtonTabs
-              active={viewListSelector}
-              data={activeData}
-              setActive={() => {}}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <DvtButton
+                label={t('Copy Link')}
+                typeColour="powder"
+                onClick={() => {}}
+                icon="link"
+              />
+              <DvtButton
+                label={t('Save')}
+                typeColour="powder"
+                onClick={handleSaveQuery}
+              />
+              <DvtDropdown
+                data={[
+                  {
+                    label: 'Save dataset',
+                    onClick: () => handleSaveDataset(),
+                  },
+                ]}
+                icon="caret_down"
+                direction="left"
+              />
+            </div>
           )}
         </NavbarBottom>
       )}

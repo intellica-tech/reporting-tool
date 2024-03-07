@@ -66,7 +66,8 @@ const DashboardList = lazy(
 );
 
 const Dashboard = lazy(
-  () => import(/* webpackChunkName: "Dashboard" */ 'src/pages/Dashboard'),
+  () =>
+    import(/* webpackChunkName: "Dashboard" */ 'src/pages/DvtDashboardEdit'),
 );
 
 const DatabaseList = lazy(
@@ -131,11 +132,16 @@ const TrainData = lazy(
 const RowLevelSecurityList = lazy(
   () =>
     import(
-      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/RowLevelSecurityList'
+      /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/DvtRowLevelSecurity'
     ),
 );
+
 const DvtRolesList = lazy(
   () => import(/* webpackChunkName: "RolesList" */ 'src/pages/DvtRolesList'),
+);
+
+const UsersList = lazy(
+  () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
 );
 
 type Routes = {
@@ -237,8 +243,12 @@ export const routes: Routes = [
     Component: DatasetCreation,
   },
   {
-    path: '/rowlevelsecurity/list',
+    path: '/rowlevelsecurity/list/',
     Component: RowLevelSecurityList,
+  },
+  {
+    path: '/user/list/',
+    Component: UsersList,
   },
   {
     path: '/sqlhub/',
@@ -263,22 +273,4 @@ if (isFeatureEnabled(FeatureFlag.TAGGING_SYSTEM)) {
     path: '/tags/',
     Component: Tags,
   });
-}
-
-const frontEndRoutes = routes
-  .map(r => r.path)
-  .reduce(
-    (acc, curr) => ({
-      ...acc,
-      [curr]: true,
-    }),
-    {},
-  );
-
-export function isFrontendRoute(path?: string) {
-  if (path) {
-    const basePath = path.split(/[?#]/)[0];
-    return !!frontEndRoutes[basePath];
-  }
-  return false;
 }

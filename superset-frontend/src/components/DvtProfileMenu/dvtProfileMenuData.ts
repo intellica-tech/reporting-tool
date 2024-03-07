@@ -18,7 +18,7 @@ const DvtProfileMenuData: DvtProfileMenuDataProps[] = [
       { label: t('List Roles'), link: '/role/list/' },
       {
         label: t('Row Level Security'),
-        link: '/rowlevelsecurityfiltersmodelview/list/',
+        link: '/rowlevelsecurity/list/',
       },
       { label: t('Action Log'), link: '/logmodelview/list/' },
     ],

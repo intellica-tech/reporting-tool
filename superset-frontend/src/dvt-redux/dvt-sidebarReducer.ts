@@ -36,6 +36,12 @@ interface DvtSidebarState {
     status: any;
     search: string;
   };
+  usersList: {
+    userName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   connection: {
     expose_in_sqllab: any;
     allow_run_async: any;
@@ -86,6 +92,12 @@ interface DvtSidebarState {
     schema: any;
     see_table_schema: any[string];
   };
+  rowLevelSecurity: {
+    name: any;
+    modifiedBy: any;
+    groupKey: any;
+    filterType: any;
+  };
   profile: {
     tabs: any;
   };
@@ -130,6 +142,9 @@ interface DvtSidebarState {
       sqlhub: {
         database: boolean;
       };
+      rowLevelSecurity: {
+        modifiedBy: boolean;
+      };
     };
     alerts: {
       createdBy: any[];
@@ -172,6 +187,15 @@ interface DvtSidebarState {
       database: any[];
       schema: any[];
       see_table_schema: any[];
+    };
+    usersList: {
+      userName: '';
+      firstName: '';
+      lastName: '';
+      email: '';
+    };
+    rowLevelSecurity: {
+      modifiedBy: any[];
     };
   };
 }
@@ -243,6 +267,18 @@ const INITIAL_STATE = {
     schema: '',
     see_table_schema: [],
   },
+  usersList: {
+    userName: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+  },
+  rowLevelSecurity: {
+    name: '',
+    modifiedBy: '',
+    groupKey: '',
+    filterType: '',
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -291,6 +327,9 @@ const initialState: DvtSidebarState = {
       sqlhub: {
         database: false,
       },
+      rowLevelSecurity: {
+        modifiedBy: false,
+      },
     },
     alerts: {
       createdBy: [],
@@ -333,6 +372,15 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       see_table_schema: [],
+    },
+    usersList: {
+      userName: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+    },
+    rowLevelSecurity: {
+      modifiedBy: [],
     },
   },
 };

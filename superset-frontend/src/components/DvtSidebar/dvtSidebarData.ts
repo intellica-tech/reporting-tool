@@ -592,6 +592,72 @@ const DvtSidebarData: SidebarDataProps[] = [
     ],
   },
   {
+    pathname: '/rowlevelsecurity/list/',
+    key: 'rowLevelSecurity',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
+      },
+      {
+        placeholder: t('Group Key'),
+        name: 'groupKey',
+        status: 'input',
+      },
+      {
+        placeholder: t('Filter Type'),
+        name: 'filterType',
+        values: [
+          {
+            label: 'Regular',
+            value: 'Regular',
+          },
+          {
+            label: 'Base',
+            value: 'Base',
+          },
+        ],
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'modifiedBy',
+        url: 'rowlevelsecurity/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
+      },
+    ],
+  },
+  {
+    pathname: '/user/list/',
+    key: 'usersList',
+    data: [
+      {
+        placeholder: t('First Name'),
+        name: 'firstName',
+        status: 'input',
+      },
+      {
+        placeholder: t('Last Name'),
+        name: 'lastName',
+        status: 'input',
+      },
+      {
+        placeholder: t('User Name'),
+        name: 'userName',
+        status: 'input',
+      },
+      {
+        placeholder: t('E Mail'),
+        name: 'email',
+        status: 'input',
+      },
+    ],
+  },
+  {
     pathname: '/role/list/',
     key: 'rolesList',
     data: [

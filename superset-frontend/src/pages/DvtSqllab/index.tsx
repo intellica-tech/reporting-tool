@@ -9,6 +9,7 @@ import {
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
+  dvtSqlhubSetSqlQuery,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { t } from '@superset-ui/core';
@@ -17,11 +18,14 @@ import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
 import DvtButtonTabs, {
   ButtonTabsDataProps,
 } from 'src/components/DvtButtonTabs';
-import DvtTable from 'src/components/DvtTable';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtSpinner from 'src/components/DvtSpinner';
+import DvtButton from 'src/components/DvtButton';
+import DvtInput from 'src/components/DvtInput';
 import {
   StyledSqlhub,
   StyledSqlhubBottom,
+  ResultButtonContainer,
   SqlhubTableScroll,
   SpinnerContainer,
 } from './dvt-sqlhub.module';
@@ -49,6 +53,11 @@ function DvtSqllab() {
   const [loading, setLoading] = useState<boolean>(false);
   const [resultHeader, setResultHeader] = useState<any[]>([]);
   const [resultData, setResultData] = useState<any[]>([]);
+  const [resultSort, setResultSort] = useState<DvtTableSortProps>({
+    column: '',
+    direction: 'desc',
+  });
+  const [resultSearch, setResultSearch] = useState<string>('');
 
   const [getSchemaApiUrl, setGetSchemaApiUrl] = useState('');
   const [getSeeTableSchemaApiUrl, setGetSeeTableSchemaApiUrl] = useState('');
@@ -209,7 +218,7 @@ function DvtSqllab() {
   }, [selectedSeeTableSchemaApi]);
 
   useEffect(() => {
-    if (executePromiseApi) {
+    if (executePromiseApi?.status === 'success') {
       if (executePromiseApi.data.length) {
         const firstObjectItem = Object.keys(executePromiseApi.data[0]);
         const headerFormation = firstObjectItem.map((v, i) => ({
@@ -224,6 +233,23 @@ function DvtSqllab() {
       setLoading(false);
     }
   }, [executePromiseApi]);
+
+  useEffect(() => {
+    if (resultSort.column) {
+      setResultData(
+        resultData.sort((a, b) => {
+          if (typeof a[resultSort.column] === 'string') {
+            return resultSort.direction === 'asc'
+              ? a[resultSort.column].localeCompare(b[resultSort.column])
+              : b[resultSort.column].localeCompare(a[resultSort.column]);
+          }
+          return resultSort.direction === 'asc'
+            ? a[resultSort.column] - b[resultSort.column]
+            : b[resultSort.column] - a[resultSort.column];
+        }),
+      );
+    }
+  }, [resultSort]);
 
   const handleRun = () => {
     setLoading(true);
@@ -241,6 +267,20 @@ function DvtSqllab() {
     },
     [],
   );
+
+  const filteredResultData = resultData?.length
+    ? resultData.filter((obj: any) =>
+        Object.keys(resultData[0]).some(objKey =>
+          String(obj[objKey])
+            .toLowerCase()
+            .includes(resultSearch.toLowerCase()),
+        ),
+      )
+    : [];
+
+  useEffect(() => {
+    dispatch(dvtSqlhubSetSqlQuery(sqlValue));
+  }, [sqlValue]);
 
   return (
     <StyledSqlhub>
@@ -260,14 +300,47 @@ function DvtSqllab() {
         />
         {loading ? (
           <SpinnerContainer>
-            <DvtSpinner size="xlarge" />
+            <DvtSpinner type="grow" size="xlarge" />
           </SpinnerContainer>
         ) : (
           <>
             {tabActive.value === 'results' && resultHeader.length !== 0 && (
-              <SqlhubTableScroll>
-                <DvtTable header={resultHeader} data={resultData} />
-              </SqlhubTableScroll>
+              <>
+                <ResultButtonContainer>
+                  <DvtButton
+                    label={t('CREATE CHART')}
+                    size="small"
+                    bold
+                    onClick={() => {}}
+                  />
+                  <DvtButton
+                    label={t('DOWNLOAD TO CSV')}
+                    size="small"
+                    bold
+                    onClick={() => {}}
+                  />
+                  <DvtButton
+                    label={t('COPY TO CLIPBOARD')}
+                    icon="file"
+                    bold
+                    size="small"
+                    onClick={() => {}}
+                  />
+                  <DvtInput
+                    placeholder={t('Filter results')}
+                    value={resultSearch}
+                    onChange={setResultSearch}
+                  />
+                </ResultButtonContainer>
+                <SqlhubTableScroll>
+                  <DvtTable
+                    header={resultHeader}
+                    data={filteredResultData}
+                    sort={resultSort}
+                    setSort={setResultSort}
+                  />
+                </SqlhubTableScroll>
+              </>
             )}
           </>
         )}

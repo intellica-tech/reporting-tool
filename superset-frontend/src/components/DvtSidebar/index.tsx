@@ -75,12 +75,16 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     state => state.dvtSidebar.annotationLayer,
   );
   const rolesListSelector = useAppSelector(state => state.dvtSidebar.rolesList);
+  const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
   const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
   const fetchedSelector = useAppSelector(
     state => state.dvtSidebar.data.fetched,
+  );
+  const rowLevelSecuritySelector = useAppSelector(
+    state => state.dvtSidebar.rowLevelSecurity,
   );
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -121,8 +125,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'datasetAdd';
       case '/annotationlayer/list/':
         return 'annotationLayer';
+      case '/rowlevelsecurity/list/':
+        return 'rowLevelSecurity';
       case '/traindata/':
         return 'newTrainedTable';
+      case '/user/list/':
+        return 'usersList';
       case '/role/list/':
         return 'rolesList';
       default:
@@ -273,6 +281,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           keyNames: ['database'],
         },
         {
+          key: 'rowLevelSecurity',
+          keyNames: ['modifiedBy'],
+        },
+        {
           key: 'newTrainedTable',
           keyNames: ['database'],
         },
@@ -309,6 +321,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'rowLevelSecurity-modifiedBy':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   case 'newTrainedTable-database':
                     return {
@@ -456,6 +473,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'annotationLayer',
         keyNames: ['createdBy'],
       },
+      {
+        key: 'rowLevelSecurity',
+        keyNames: ['modifiedBy'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -494,6 +515,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'sqlhubHistory',
     'chart',
     'rolesList',
+    'usersList',
+    'rowLevelSecurity',
   ];
 
   const getAlgorithmOptions = () => {
@@ -660,6 +683,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     datePicker?: boolean;
                     name: string;
                     status: string;
+                    data: [];
                   },
                   index: number,
                 ) => (
@@ -688,6 +712,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? sqlhubSelector[data.name]
                             : pathTitles(pathName) === 'datasetAdd'
                             ? datasetAddSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
+                            : pathTitles(pathName) === 'usersList'
+                            ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
                             : pathTitles(pathName) === 'rolesList'
@@ -731,6 +759,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? annotationLayerSelector[data.name]
                             : pathTitles(pathName) === 'rolesList'
                             ? rolesListSelector[data.name]
+                            : pathTitles(pathName) === 'usersList'
+                            ? usersListSelector[data.name]
+                            : pathTitles(pathName) === 'rowLevelSecurity'
+                            ? rowLevelSecuritySelector[data.name]
                             : undefined
                         }
                         onChange={value => {
@@ -813,6 +845,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       }),
                     )
                   }
+                  icon={false}
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&

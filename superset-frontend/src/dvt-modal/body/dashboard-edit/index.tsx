@@ -3,17 +3,16 @@ import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
 import useFetch from 'src/hooks/useFetch';
-import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import DvtCollapse from 'src/components/DvtCollapse';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledDashboardEdit,
   StyledDashboardEditBody,
   StyledDashboardEditGroup,
-  StyledDashboardEditHeader,
   StyledDashboardEditInput,
 } from './dashboard-edit.module';
 
@@ -100,15 +99,11 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledDashboardEdit>
-      <StyledDashboardEditHeader>
-        <DvtButton
-          colour="primary"
-          label={t('SAVE')}
-          typeColour="powder"
-          onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
-          size="small"
-        />
-      </StyledDashboardEditHeader>
+      <DvtModalHeader
+        buttonLabel={t('SAVE')}
+        onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
+        onClose={onClose}
+      />
       <StyledDashboardEditBody>
         <StyledDashboardEditGroup>
           <StyledDashboardEditInput>

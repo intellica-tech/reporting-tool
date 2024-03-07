@@ -49,15 +49,18 @@ const StyledCollapseGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
 `;
 
 const StyledCollapseLabel = styled.div`
+  flex: 1;
+  min-height: 28px;
+  max-height: 28px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
 `;
 
 const StyledCollapseDeleteIcon = styled.button`
@@ -95,6 +98,7 @@ const StyledCollapseDeleteIcon = styled.button`
 const StyledCollapseIcon = styled.div<StyledCollapseIconProps>`
   transition: transform 0.3s ease-in-out;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(-180deg)' : 'none')};
+  cursor: pointer;
 `;
 
 const StyledCollapseChildren = styled.div<StyledCollapseChildrenProps>`

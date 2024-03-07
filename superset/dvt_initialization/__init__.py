@@ -96,6 +96,8 @@ class DVTAppInitializer(SupersetAppInitializer):
         )
         from superset.views.tags import TagView
         from superset.views.users.api import CurrentUserRestApi
+        from superset.views.dvt_users import DVTUserView
+        from superset.views.dvt_roles import DVTRoleView
 
         #
         # Setup API views
@@ -216,6 +218,8 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(ProfileView)
         appbuilder.add_view_no_menu(SavedQueryView)
         appbuilder.add_view_no_menu(TrainDataView)
+        appbuilder.add_view_no_menu(DVTUserView)
+        appbuilder.add_view_no_menu(DVTRoleView)
         appbuilder.add_view_no_menu(SavedQueryViewApi)
         appbuilder.add_view_no_menu(SliceAsync)
         appbuilder.add_view_no_menu(SqlLab)
@@ -282,6 +286,24 @@ class DVTAppInitializer(SupersetAppInitializer):
             icon="fa-flask",
             category="Train Data",
             category_label=__("Train Data"),
+        )
+        appbuilder.add_link(
+            "User",
+            label=__("User"),
+            href="/user/list/",
+            category_icon="fa-flask",
+            icon="fa-flask",
+            category="User",
+            category_label=__("User"),
+        )
+        appbuilder.add_link(
+            "Role",
+            label=__("Role"),
+            href="/role/list/",
+            category_icon="fa-flask",
+            icon="fa-flask",
+            category="Role",
+            category_label=__("Role"),
         )
         appbuilder.add_view(
             DVTTagModelView,
