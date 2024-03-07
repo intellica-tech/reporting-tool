@@ -250,7 +250,7 @@ const INITIAL_STATE = {
     permissions: '',
     name: '',
     user: '',
-  }
+  },
 };
 
 const initialState: DvtSidebarState = {
