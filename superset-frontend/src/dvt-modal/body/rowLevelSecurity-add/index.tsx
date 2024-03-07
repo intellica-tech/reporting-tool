@@ -61,6 +61,7 @@ interface InputProps {
 }
 
 const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState<InputProps>({
     ruleName: '',
     filterType: { label: '', value: '' },
@@ -70,15 +71,13 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     clause: '',
     description: '',
   });
-
-  const dispatch = useDispatch();
   const [apiUrl, setApiUrl] = useState<string>('');
   const [datasetData, setDatasetData] = useState<any[]>([]);
   const [rolesData, setRolesData] = useState<any[]>([]);
 
   const rowLevelSecurityAddData = useFetch({
     url: apiUrl,
-    method: 'POST',
+    method: meta?.isEdit ? 'PUT' : 'POST',
     body: {
       name: value.ruleName,
       description: value.description,
@@ -94,15 +93,15 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     if (meta?.isEdit) {
       setValue({
         ruleName: meta.name,
-        filterType: { label: '', value: '' },
-        datasets: [],
-        roles: [],
-        groupKey: '',
-        clause: '',
-        description: '',
+        filterType: { label: meta.filter_type, value: meta.value },
+        datasets: meta.tables.map((item: any) => item.id),
+        roles: meta.roles.map((item: any) => item.id),
+        groupKey: meta.group_key,
+        clause: meta.clause,
+        description: meta.description,
       });
     }
-  }, [meta?.isEdit]);
+  }, [meta]);
 
   const tablesData = useFetch({
     url: 'rowlevelsecurity/related/tables?q=(filter:%27%27,page:0,page_size:100)',
@@ -134,37 +133,12 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [rolesDataPromise]);
 
-  const handleAdd = () => {
-    setApiUrl('rowlevelsecurity/');
-  };
-
   useEffect(() => {
     if (rowLevelSecurityAddData?.id) {
       dispatch(dvtRowLevelSecurityAddStatus('Success'));
       onClose();
     }
   }, [rowLevelSecurityAddData]);
-
-  const handleCancel = () => {
-    setValue({
-      ruleName: '',
-      filterType: { label: '', value: '' },
-      datasets: [],
-      roles: [],
-      groupKey: '',
-      clause: '',
-      description: '',
-    });
-    onClose();
-  };
-
-  useEffect(() => {
-    if (apiUrl) {
-      setTimeout(() => {
-        setApiUrl('');
-      }, 2000);
-    }
-  }, [apiUrl]);
 
   return (
     <StyledRowLevelSecurity>
@@ -189,6 +163,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
             setSelectedValue={selected =>
               setValue({ ...value, filterType: selected })
             }
+            typeDesign="form"
             maxWidth
           />
         </StyledDvtSelect>
@@ -249,13 +224,17 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
             colour="primary"
             typeColour="powder"
             label={t('CANCEL')}
-            onClick={handleCancel}
+            onClick={onClose}
           />
           <DvtButton
-            colour="grayscale"
+            colour={meta?.isEdit ? 'primary' : 'grayscale'}
             typeColour="basic"
-            label={t('ADD')}
-            onClick={handleAdd}
+            label={meta?.isEdit ? t('SAVE') : t('ADD')}
+            onClick={() =>
+              meta?.isEdit
+                ? setApiUrl(`rowlevelsecurity/${meta?.id}`)
+                : setApiUrl('rowlevelsecurity/')
+            }
           />
         </StyledDvtButtons>
       </StyledRowLevelSecurityBody>
