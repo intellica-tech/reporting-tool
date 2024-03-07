@@ -281,7 +281,6 @@ function DvtSqllab() {
       )
     : [];
 
-
   const getExportCsvUrl = (clientId: string) =>
     `/api/v1/sqllab/export/${clientId}/`;
 
@@ -293,7 +292,6 @@ function DvtSqllab() {
   useEffect(() => {
     dispatch(dvtSqlhubSetSqlQuery(sqlValue));
   }, [sqlValue]);
-
 
   return (
     <StyledSqlhub>
