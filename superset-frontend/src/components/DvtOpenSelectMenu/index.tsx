@@ -390,7 +390,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
             value={values.sql}
             onChange={vl => setValues({ ...values, sql: vl })}
             mode="sql"
-            height={type === 'filters' ? '100px' : '150px'}
+            height={type === 'filters' ? '140px' : '200px'}
             border
           />
         </StyledOpenSelectMenuFilterInputGroup>

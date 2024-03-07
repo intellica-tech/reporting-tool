@@ -102,7 +102,7 @@ const DvtInputDrop = ({
     });
   };
 
-  const openMenuHeight = type === 'filters' ? 328 : 315;
+  const openMenuHeight = 360;
   const inputHeight = 47;
   const borderHeight = 16;
   const topMaxHeight = (window.innerHeight - openMenuHeight) / 2;

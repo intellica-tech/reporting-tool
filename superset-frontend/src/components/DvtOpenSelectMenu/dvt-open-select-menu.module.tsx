@@ -23,8 +23,8 @@ interface TabProps {
 }
 
 const StyledOpenSelectMenu = styled.div`
-  width: 308px;
-  min-height: 315px;
+  width: 340px;
+  min-height: 360px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
   box-shadow: 0 0 8px ${({ theme }) => theme.colors.dvt.boxShadow.base};
