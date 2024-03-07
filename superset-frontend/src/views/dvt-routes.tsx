@@ -143,6 +143,14 @@ const DvtListRolesAdd = lazy(
     ),
 );
 
+const DvtRolesList = lazy(
+  () => import(/* webpackChunkName: "RolesList" */ 'src/pages/DvtRolesList'),
+);
+
+const UsersList = lazy(
+  () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
+);
+
 type Routes = {
   path: string;
   Component: React.ComponentType;
@@ -246,6 +254,10 @@ export const routes: Routes = [
     Component: RowLevelSecurityList,
   },
   {
+    path: '/user/list/',
+    Component: UsersList,
+  },
+  {
     path: '/sqlhub/',
     Component: SqlLab,
   },
@@ -256,6 +268,10 @@ export const routes: Routes = [
   {
     path: '/role/add',
     Component: DvtListRolesAdd,
+  },
+  {
+    path: '/role/list/',
+    Component: DvtRolesList,
   },
 ];
 

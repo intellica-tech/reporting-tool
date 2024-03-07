@@ -17,6 +17,7 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
@@ -26,6 +27,7 @@ import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtTextarea from 'src/components/DvtTextarea';
 import { useDispatch } from 'react-redux';
 import { dvtRowLevelSecurityAddStatus } from 'src/dvt-redux/dvt-rowlevelsecurityReducer';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
   StyledDvtButtons,
   StyledDvtDescription,
@@ -33,8 +35,8 @@ import {
   StyledDvtInputLabel,
   StyledDvtInputLabelUnneccessary,
   StyledDvtSelect,
-  StyledHeadTitle,
   StyledRowLevelSecurity,
+  StyledRowLevelSecurityBody,
 } from './rowlevelsecurity-add.module';
 
 const filterTypeData = [
@@ -59,6 +61,7 @@ interface InputProps {
 }
 
 const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState<InputProps>({
     ruleName: '',
     filterType: { label: '', value: '' },
@@ -68,15 +71,13 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     clause: '',
     description: '',
   });
-
-  const dispatch = useDispatch();
   const [apiUrl, setApiUrl] = useState<string>('');
   const [datasetData, setDatasetData] = useState<any[]>([]);
   const [rolesData, setRolesData] = useState<any[]>([]);
 
   const rowLevelSecurityAddData = useFetch({
     url: apiUrl,
-    method: 'POST',
+    method: meta?.isEdit ? 'PUT' : 'POST',
     body: {
       name: value.ruleName,
       description: value.description,
@@ -92,15 +93,15 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     if (meta?.isEdit) {
       setValue({
         ruleName: meta.name,
-        filterType: { label: '', value: '' },
-        datasets: [],
-        roles: [],
-        groupKey: '',
-        clause: '',
-        description: '',
+        filterType: { label: meta.filter_type, value: meta.value },
+        datasets: meta.tables.map((item: any) => item.id),
+        roles: meta.roles.map((item: any) => item.id),
+        groupKey: meta.group_key,
+        clause: meta.clause,
+        description: meta.description,
       });
     }
-  }, [meta?.isEdit]);
+  }, [meta]);
 
   const tablesData = useFetch({
     url: 'rowlevelsecurity/related/tables?q=(filter:%27%27,page:0,page_size:100)',
@@ -132,10 +133,6 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [rolesDataPromise]);
 
-  const handleAdd = () => {
-    setApiUrl('rowlevelsecurity/');
-  };
-
   useEffect(() => {
     if (rowLevelSecurityAddData?.id) {
       dispatch(dvtRowLevelSecurityAddStatus('Success'));
@@ -143,116 +140,104 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [rowLevelSecurityAddData]);
 
-  const handleCancel = () => {
-    setValue({
-      ruleName: '',
-      filterType: { label: '', value: '' },
-      datasets: [],
-      roles: [],
-      groupKey: '',
-      clause: '',
-      description: '',
-    });
-    onClose();
-  };
-
-  useEffect(() => {
-    if (apiUrl) {
-      setTimeout(() => {
-        setApiUrl('');
-      }, 2000);
-    }
-  }, [apiUrl]);
-
   return (
     <StyledRowLevelSecurity>
-      <StyledHeadTitle>+ Add Rule</StyledHeadTitle>
-      <StyledDvtInput>
-        <StyledDvtInputLabel>RULE NAME</StyledDvtInputLabel>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, ruleName: newValue })}
-          value={value.ruleName}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtSelect>
-        <StyledDvtInputLabelUnneccessary>
-          FILTER TYPE
-        </StyledDvtInputLabelUnneccessary>
-        <DvtSelect
-          data={filterTypeData}
-          selectedValue={value.filterType}
-          setSelectedValue={selected =>
-            setValue({ ...value, filterType: selected })
-          }
-          width={404}
-        />
-      </StyledDvtSelect>
-      <StyledDvtSelect>
-        <StyledDvtInputLabel>DATASETS</StyledDvtInputLabel>
-        <DvtInputSelect
-          data={datasetData}
-          selectedValues={value.datasets}
-          setSelectedValues={selected =>
-            setValue({ ...value, datasets: selected })
-          }
-        />
-      </StyledDvtSelect>
-      <StyledDvtSelect>
-        <StyledDvtInputLabelUnneccessary>ROLES</StyledDvtInputLabelUnneccessary>
-        <DvtInputSelect
-          data={rolesData}
-          selectedValues={value.roles}
-          setSelectedValues={selected =>
-            setValue({ ...value, roles: selected })
-          }
-        />
-      </StyledDvtSelect>
-      <StyledDvtInput>
-        <StyledDvtInputLabelUnneccessary>
-          GROUP KEY
-        </StyledDvtInputLabelUnneccessary>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, groupKey: newValue })}
-          value={value.groupKey}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtInput>
-        <StyledDvtInputLabel>CLAUSE</StyledDvtInputLabel>
-        <DvtInput
-          onChange={newValue => setValue({ ...value, clause: newValue })}
-          value={value.clause}
-          typeDesign="form"
-          size="small"
-        />
-      </StyledDvtInput>
-      <StyledDvtDescription>
-        <StyledDvtInputLabelUnneccessary>
-          DESCRIPTION
-        </StyledDvtInputLabelUnneccessary>
-        <DvtTextarea
-          onChange={newValue => setValue({ ...value, description: newValue })}
-          value={value.description}
-          typeDesign="form"
-        />
-      </StyledDvtDescription>
-      <StyledDvtButtons>
-        <DvtButton
-          colour="primary"
-          typeColour="powder"
-          label="CANCEL"
-          onClick={handleCancel}
-        />
-        <DvtButton
-          colour="grayscale"
-          typeColour="basic"
-          label="ADD"
-          onClick={handleAdd}
-        />
-      </StyledDvtButtons>
+      <DvtModalHeader title={t('+ Add Rule')} onClose={onClose} />
+      <StyledRowLevelSecurityBody>
+        <StyledDvtInput>
+          <StyledDvtInputLabel>{t('RULE NAME')}</StyledDvtInputLabel>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, ruleName: newValue })}
+            value={value.ruleName}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtSelect>
+          <StyledDvtInputLabelUnneccessary>
+            {t('FILTER TYPE')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtSelect
+            data={filterTypeData}
+            selectedValue={value.filterType}
+            setSelectedValue={selected =>
+              setValue({ ...value, filterType: selected })
+            }
+            typeDesign="form"
+            maxWidth
+          />
+        </StyledDvtSelect>
+        <StyledDvtSelect>
+          <StyledDvtInputLabel>{t('DATASETS')}</StyledDvtInputLabel>
+          <DvtInputSelect
+            data={datasetData}
+            selectedValues={value.datasets}
+            setSelectedValues={selected =>
+              setValue({ ...value, datasets: selected })
+            }
+          />
+        </StyledDvtSelect>
+        <StyledDvtSelect>
+          <StyledDvtInputLabelUnneccessary>
+            {t('ROLES')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtInputSelect
+            data={rolesData}
+            selectedValues={value.roles}
+            setSelectedValues={selected =>
+              setValue({ ...value, roles: selected })
+            }
+          />
+        </StyledDvtSelect>
+        <StyledDvtInput>
+          <StyledDvtInputLabelUnneccessary>
+            {t('GROUP KEY')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, groupKey: newValue })}
+            value={value.groupKey}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtInput>
+          <StyledDvtInputLabel>{t('CLAUSE')}</StyledDvtInputLabel>
+          <DvtInput
+            onChange={newValue => setValue({ ...value, clause: newValue })}
+            value={value.clause}
+            typeDesign="form"
+            size="small"
+          />
+        </StyledDvtInput>
+        <StyledDvtDescription>
+          <StyledDvtInputLabelUnneccessary>
+            {t('DESCRIPTION')}
+          </StyledDvtInputLabelUnneccessary>
+          <DvtTextarea
+            onChange={newValue => setValue({ ...value, description: newValue })}
+            value={value.description}
+            typeDesign="form"
+          />
+        </StyledDvtDescription>
+        <StyledDvtButtons>
+          <DvtButton
+            colour="primary"
+            typeColour="powder"
+            label={t('CANCEL')}
+            onClick={onClose}
+          />
+          <DvtButton
+            colour={meta?.isEdit ? 'primary' : 'grayscale'}
+            typeColour="basic"
+            label={meta?.isEdit ? t('SAVE') : t('ADD')}
+            onClick={() =>
+              meta?.isEdit
+                ? setApiUrl(`rowlevelsecurity/${meta?.id}`)
+                : setApiUrl('rowlevelsecurity/')
+            }
+          />
+        </StyledDvtButtons>
+      </StyledRowLevelSecurityBody>
     </StyledRowLevelSecurity>
   );
 };

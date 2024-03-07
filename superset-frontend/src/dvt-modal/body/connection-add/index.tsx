@@ -10,6 +10,7 @@ import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import Icon from 'src/components/Icons/Icon';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtPopper from 'src/components/DvtPopper';
@@ -20,7 +21,6 @@ import useFormValidation from 'src/hooks/useFormValidation';
 import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
 import {
   StyledConnectionAdd,
-  StyledConnectionAddHeader,
   StyledConnectionAddBody,
   StyledConnectionAddDatabaseIcon,
   StyledConnectionAddDatabaseIcons,
@@ -289,9 +289,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledConnectionAdd>
-      <StyledConnectionAddHeader>
-        <StyledConnectionAddLabel>Connect a database</StyledConnectionAddLabel>
-      </StyledConnectionAddHeader>
+      <DvtModalHeader title={t('Connect a database')} onClose={onClose} />
       <StyledConnectionAddBody>
         {step === 1 && (
           <StyledConnectionAddDatabaseIconGroup>

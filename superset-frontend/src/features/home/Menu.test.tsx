@@ -219,7 +219,7 @@ const mockedProps = {
             name: 'List Users',
             icon: 'fa-user',
             label: 'List Users',
-            url: '/users/list/',
+            url: '/user/list/',
             index: 1,
           },
         ],

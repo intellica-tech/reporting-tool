@@ -30,7 +30,13 @@ export const Default = (args: DvtInputDropProps) => {
 
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', width: 404, gap: 20 }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 500,
+        gap: 20,
+        padding: 20,
+      }}
     >
       <DvtInputDrop
         {...args}

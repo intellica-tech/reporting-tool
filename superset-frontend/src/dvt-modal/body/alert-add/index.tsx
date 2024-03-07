@@ -13,10 +13,10 @@ import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 import DvtInput from 'src/components/DvtInput';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
-  StyledAlertAddHeader,
   StyledAlertAddBody,
   StyledAlertAddLeftMenu,
   StyledAlertAddSelectGroup,
@@ -286,17 +286,12 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledAlertAdd>
-      <StyledAlertAddHeader>
-        <DvtButton
-          bold
-          colour="primary"
-          icon="dvt-add_square"
-          label={t('Add Alert')}
-          onClick={() => {}}
-          size="small"
-          typeColour="powder"
-        />
-      </StyledAlertAddHeader>
+      <DvtModalHeader
+        buttonLabel={t('Add Alert')}
+        buttonIcon="dvt-add_square"
+        onClick={() => {}}
+        onClose={onClose}
+      />
       <StyledAlertAddBody>
         <StyledAlertAddLeftMenu>
           <DvtSwitch
@@ -381,6 +376,7 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
                 setInput({ ...input, value: newValue });
               }}
               typeDesign="chartsForm"
+              number
             />
           </StyledAlertAddAlertConition>
           <StyledAlertAddAlertConditionSchedule>
