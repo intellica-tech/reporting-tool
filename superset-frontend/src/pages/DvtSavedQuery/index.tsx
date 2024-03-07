@@ -5,6 +5,7 @@ import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
 import useFetch from 'src/hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import { SavedQueryPagination } from './dvt-saved-query.module';
 
 const SavedQueriesHeader = [
   { id: 1, title: t('Name'), field: 'label', flex: 3 },
@@ -18,9 +19,19 @@ const SavedQueriesHeader = [
     title: t('Actions'),
     clicks: [
       {
+        icon: 'binoculars',
+        click: () => {},
+        popperLabel: t('Query Preview'),
+      },
+      {
         icon: 'edit_alt',
         click: () => {},
         popperLabel: t('Edit'),
+      },
+      {
+        icon: 'file',
+        click: () => {},
+        popperLabel: t('Copy query URL'),
       },
       {
         icon: 'share',
@@ -63,12 +74,14 @@ function DvtSavedQuery() {
   return (
     <div>
       <DvtTable data={data} header={SavedQueriesHeader} />
-      <DvtPagination
-        page={page}
-        setPage={setPage}
-        itemSize={count}
-        pageItemSize={10}
-      />
+      <SavedQueryPagination>
+        <DvtPagination
+          page={page}
+          setPage={setPage}
+          itemSize={count}
+          pageItemSize={10}
+        />
+      </SavedQueryPagination>
     </div>
   );
 }

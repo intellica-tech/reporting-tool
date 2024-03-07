@@ -101,6 +101,12 @@ interface DvtSidebarState {
   profile: {
     tabs: any;
   };
+  savedQuery: {
+    name: any;
+    modifiedBy: any;
+    database: any;
+    schema: any;
+  };
   data: {
     fetched: {
       alerts: {
@@ -139,6 +145,11 @@ interface DvtSidebarState {
       };
       rowLevelSecurity: {
         modifiedBy: boolean;
+      };
+      savedQuery: {
+        modifiedBy: boolean;
+        database: boolean;
+        schema: boolean;
       };
     };
     alerts: {
@@ -191,6 +202,11 @@ interface DvtSidebarState {
     };
     rowLevelSecurity: {
       modifiedBy: any[];
+    };
+    savedQuery: {
+      modifiedBy: any[];
+      database: any[];
+      schema: any[];
     };
   };
 }
@@ -274,6 +290,12 @@ const INITIAL_STATE = {
     groupKey: '',
     filterType: '',
   },
+  savedQuery: {
+    name: '',
+    modifiedBy: '',
+    database: '',
+    schema: '',
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -319,6 +341,11 @@ const initialState: DvtSidebarState = {
       },
       rowLevelSecurity: {
         modifiedBy: false,
+      },
+      savedQuery: {
+        modifiedBy: false,
+        database: false,
+        schema: false,
       },
     },
     alerts: {
@@ -371,6 +398,11 @@ const initialState: DvtSidebarState = {
     },
     rowLevelSecurity: {
       modifiedBy: [],
+    },
+    savedQuery: {
+      modifiedBy: [],
+      database: [],
+      schema: [],
     },
   },
 };
