@@ -105,9 +105,9 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   const initialValues = {
-    host: '', // validation gerekiyor
+    host: '',
     port: '',
-    database_name: '', // validation gerekiyor dersen
+    database_name: '',
     user_name: '',
     password: '',
     display_name: selectedConnectionType,
@@ -117,8 +117,8 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   };
 
   const { values, errors, handleChange, validateForm } = useFormValidation(
-    initialValues, // default values
-    connectionCreateValidation, // tümü validation error mesaj açıklaması için
+    initialValues,
+    connectionCreateValidation,
   );
 
   const [checkbox, setcheckbox] = useState<{
@@ -252,13 +252,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     }
   };
 
-  // const setInputValue = (property: string, value: string | boolean) => {
-  //   setInput(prevValues => ({
-  //     ...prevValues,
-  //     [property]: value,
-  //   }));
-  // };
-
   useEffect(() => {
     if (meta?.isEdit) {
       setStep(2);
@@ -278,13 +271,10 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
-      console.log('Form gönderildi:', values);
-      setApiUrl('database/validate_parameters/'); // error çıkarsa bu göndermesin diye
+      setApiUrl('database/validate_parameters/');
       setTimeout(() => {
         setApiUrl('');
       }, 500);
-    } else {
-      console.log('Form hatalı, gönderilemedi.');
     }
   };
 
@@ -417,10 +407,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                               bold
                               label={t('CONNECT')}
                               onClick={() => {
-                                // setApiUrl('database/validate_parameters/');
-                                // setTimeout(() => {
-                                //   setApiUrl('');
-                                // }, 500);
                                 handleSubmit();
                               }}
                             />
@@ -595,10 +581,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                   bold
                   label={t('CONNECT')}
                   onClick={() => {
-                    // setApiUrl('database/validate_parameters/');
-                    // setTimeout(() => {
-                    //   setApiUrl('');
-                    // }, 100);
                     handleSubmit();
                   }}
                   size="small"
