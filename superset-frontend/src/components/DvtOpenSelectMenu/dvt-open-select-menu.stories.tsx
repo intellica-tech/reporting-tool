@@ -55,6 +55,8 @@ const columnData = [
 export const Default = (args: DvtOpenSelectMenuProps) => {
   const [values, setValues] = useState(initialValues);
 
+  console.log(values);
+
   return (
     <div>
       <DvtOpenSelectMenu

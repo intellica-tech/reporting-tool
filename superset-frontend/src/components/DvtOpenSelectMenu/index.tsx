@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import DvtSelect from '../DvtSelect';
 // import DvtInput from '../DvtInput';
@@ -89,6 +89,29 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
     label: t('WHERE'),
     value: 'where',
   });
+  const [operatorData, setOperatorData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (whereOrHaving.value === 'having') {
+      setOperatorData(OpenSelectMenuData.operator.having);
+    } else {
+      setOperatorData([
+        ...OpenSelectMenuData.operator.having,
+        ...OpenSelectMenuData.operator.where,
+      ]);
+    }
+  }, [whereOrHaving]);
+
+  const resetValues = () => {
+    setValues({
+      saved: '',
+      column: '',
+      operator: '',
+      aggregate: '',
+      option: '',
+      sql: '',
+    });
+  };
 
   const onAggregateTypes = [
     'metric',
@@ -155,12 +178,41 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
           <DvtSelect
             selectedValue={values.column}
             setSelectedValue={vl => {
-              const onAggregateAddSql = values.aggregate?.value
+              const filtersAutoAddOperator =
+                type === 'filters'
+                  ? values.operator?.value
+                    ? {}
+                    : {
+                        operator: OpenSelectMenuData.operator.where.find(
+                          fi => fi.value === 'IN',
+                        ),
+                      }
+                  : {};
+              const autoAddSql = values.aggregate?.value
                 ? values.aggregate.value === 'COUNT_DISTINCT'
                   ? `COUNT(DISTINCT ${vl.value})`
                   : `${values.aggregate.value}(${vl.value})`
-                : `(${vl.value})`;
-              setValues({ ...values, column: vl, sql: onAggregateAddSql });
+                : onAggregateTypes.includes(type)
+                ? `(${vl.value})`
+                : type === 'filters'
+                ? filtersAutoAddOperator?.operator?.value
+                  ? `${vl.value} ${filtersAutoAddOperator.operator.value}`
+                  : `${vl.value} ${values.operator.value}`
+                : vl.value;
+
+              if (filtersAutoAddOperator?.operator?.value) {
+                setWhereOrHaving({
+                  label: t('WHERE'),
+                  value: 'where',
+                });
+              }
+
+              setValues({
+                ...values,
+                column: vl,
+                sql: autoAddSql,
+                ...filtersAutoAddOperator,
+              });
             }}
             placeholder={`${columnData.length} ${t('column(s)')}`}
             data={columnData}
@@ -188,11 +240,14 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
             <>
               <DvtSelect
                 selectedValue={values.operator}
-                setSelectedValue={vl => setValues({ ...values, operator: vl })}
-                placeholder={`${OpenSelectMenuData.operator.length} ${t(
-                  'operator(s)',
-                )}`}
-                data={OpenSelectMenuData.operator}
+                setSelectedValue={vl => {
+                  const onColumnAddSql = values.column?.value
+                    ? `${values.column.value} ${vl.value}`
+                    : '';
+                  setValues({ ...values, operator: vl, sql: onColumnAddSql });
+                }}
+                placeholder={`${operatorData.length} ${t('operator(s)')}`}
+                data={operatorData}
                 typeDesign="navbar"
               />
               <DvtSelect
@@ -212,7 +267,15 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
             <CustomSqlWhereOrHaving>
               <DvtSelect
                 selectedValue={whereOrHaving}
-                setSelectedValue={setWhereOrHaving}
+                setSelectedValue={vl => {
+                  if (
+                    whereOrHaving.value !== vl.value &&
+                    (values.column || values.operator)
+                  ) {
+                    resetValues();
+                  }
+                  setWhereOrHaving(vl);
+                }}
                 data={[
                   { label: t('WHERE'), value: 'where' },
                   { label: t('HAVING'), value: 'having' },
@@ -246,14 +309,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
           label="Cancel"
           colour="primary"
           onClick={() => {
-            setValues({
-              saved: '',
-              column: '',
-              operator: '',
-              aggregate: '',
-              option: '',
-              sql: '',
-            });
+            resetValues();
             closeOnClick();
           }}
           size="small"
