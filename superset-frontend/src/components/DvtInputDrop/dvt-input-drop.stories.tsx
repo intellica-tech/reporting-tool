@@ -45,7 +45,7 @@ const columnData = [
 ];
 
 export const Default = (args: DvtInputDropProps) => {
-  const [droppedData, setDroppedData] = useState<any[] | null>(null);
+  const [droppedData, setDroppedData] = useState<any[]>([]);
 
   console.log(droppedData);
 
@@ -66,10 +66,14 @@ export const Default = (args: DvtInputDropProps) => {
         columnData={columnData}
         datasourceApi="datasource/table/7"
       />
-      <DvtDargCard label="arac" value={{ label: 'arac' }} icon="dvt-hashtag" />
       <DvtDargCard
-        label="arac2"
-        value={{ label: 'arac2' }}
+        label="color"
+        value={{ label: 'color' }}
+        icon="dvt-hashtag"
+      />
+      <DvtDargCard
+        label="path_json"
+        value={{ label: 'path_json' }}
         icon="dvt-hashtag"
       />
     </div>
@@ -78,5 +82,7 @@ export const Default = (args: DvtInputDropProps) => {
 Default.args = {
   placeholder: 'Drop columns here or click',
   label: 'Metrics',
+  type: 'metric',
+  multiple: true,
   popoverLabel: 'Info',
 };

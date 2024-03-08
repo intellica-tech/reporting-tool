@@ -44,7 +44,7 @@ export interface DvtInputDropProps {
   placeholder?: string;
   onDrop?: (data: any) => void;
   multiple?: boolean;
-  droppedData: any[] | null;
+  droppedData: any[];
   setDroppedData: (newDroppedData: any[] | any) => void;
   error?: string;
   type:
@@ -71,7 +71,7 @@ const DvtInputDrop = ({
   placeholder,
   onDrop,
   multiple,
-  droppedData,
+  droppedData = [],
   setDroppedData,
   error,
   type = 'x-axis',
@@ -90,38 +90,6 @@ const DvtInputDrop = ({
   const [optionApiUrl, setOptionApiUrl] = useState<string>('');
 
   const [values, setValues] = useState<any>(initialValues);
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    const droppedDataString = e.dataTransfer.getData('drag-drop');
-    const droppedData = JSON.parse(droppedDataString);
-
-    if (droppedData) {
-      setDroppedData((prevData: any | any[]) => {
-        const newData = multiple
-          ? Array.isArray(prevData)
-            ? [...prevData, droppedData]
-            : [droppedData]
-          : [droppedData];
-        return newData;
-      });
-
-      onDrop?.([droppedData]);
-    }
-  };
-
-  const handleRemoveItem = (index: number) => {
-    setDroppedData((prevData: any[]) => {
-      const newData = [...prevData];
-      newData.splice(index, 1);
-      return newData;
-    });
-  };
 
   const openMenuHeight = 360;
   const inputHeight = 47;
@@ -159,6 +127,48 @@ const DvtInputDrop = ({
       );
       setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
     }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const droppedDataString = e.dataTransfer.getData('drag-drop');
+    const jsonDropData = JSON.parse(droppedDataString);
+
+    const getValues = {
+      ...initialValues,
+      column: { label: jsonDropData.label, value: jsonDropData.label },
+      sql: jsonDropData.label,
+    };
+
+    const frmtDropData = {
+      id: droppedData.length,
+      ...jsonDropData,
+      values: getValues,
+    };
+
+    if (jsonDropData) {
+      setDroppedData((prevData: any | any[]) => {
+        const newData = multiple ? [...prevData, frmtDropData] : [frmtDropData];
+        return newData;
+      });
+
+      onDrop?.([frmtDropData]);
+      setValues(getValues);
+      handleAddClickPositionTop(multiple ? droppedData.length - 1 : null);
+    }
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setDroppedData((prevData: any[]) => {
+      const newData = [...prevData];
+      newData.splice(index, 1);
+      return newData;
+    });
   };
 
   useEffect(() => {
@@ -200,6 +210,24 @@ const DvtInputDrop = ({
     }
   }, [datasourceApi, values.column]);
 
+  const handleSaveClick = () => {
+    const onlyCountDistinct =
+      values.aggregate?.value === 'COUNT_DISTINCT'
+        ? `${values.aggregate.value}(${values.column?.value})`
+        : values.sql;
+    const newAddItem = {
+      id: droppedData.length,
+      label: onlyCountDistinct,
+      values,
+    };
+    setDroppedData((prevData: any | any[]) => {
+      const newData = multiple ? [...prevData, newAddItem] : [newAddItem];
+      return newData;
+    });
+    setIsOpen(false);
+    setValues(initialValues);
+  };
+
   return (
     <StyledInputDrop ref={ref} onMouseMove={e => setWindowHeightTop(e.clientY)}>
       <StyledInputDropLabel>
@@ -224,24 +252,43 @@ const DvtInputDrop = ({
         {droppedData?.map((item, index) => (
           <StyledInputDropGroupItem key={index} bgOnItem>
             <StyledInputDropGroupItemRemove
-              onClick={() =>
-                multiple ? handleRemoveItem(index) : setDroppedData(null)
-              }
+              onClick={() => {
+                if (multiple) {
+                  handleRemoveItem(index);
+                } else {
+                  setDroppedData([]);
+                }
+                if (isOpen) {
+                  setIsOpen(false);
+                }
+              }}
             />
             <StyledInputDropGroupItemLabel
-              onClick={() => handleAddClickPositionTop(index)}
+              onClick={() => {
+                setValues(item.values);
+                handleAddClickPositionTop(index);
+              }}
             >
               {item.label}
             </StyledInputDropGroupItemLabel>
           </StyledInputDropGroupItem>
         ))}
-        {(multiple || !droppedData) && (
+        {(multiple || droppedData.length === 0) && (
           <StyledInputDropGroupItem marginTop={!!droppedData?.length}>
-            <StyledInputDropGroupItemLabel textOnPlaceholder>
+            <StyledInputDropGroupItemLabel
+              textOnPlaceholder
+              onClick={() => {
+                setValues(initialValues);
+                handleAddClickPositionTop(null);
+              }}
+            >
               {placeholder}
             </StyledInputDropGroupItemLabel>
             <StyledInputDropIcon
-              onClick={() => handleAddClickPositionTop(null)}
+              onClick={() => {
+                setValues(initialValues);
+                handleAddClickPositionTop(null);
+              }}
             >
               <Icon
                 fileName="dvt-add_square"
@@ -266,23 +313,7 @@ const DvtInputDrop = ({
             columnData={columnData}
             optionData={optionData}
             closeOnClick={() => setIsOpen(false)}
-            saveOnClick={() => {
-              const onlyCountDistinct =
-                values.aggregate?.value === 'COUNT_DISTINCT'
-                  ? `${values.aggregate.value}(${values.column?.value})`
-                  : values.sql;
-              const newAddItem = { label: onlyCountDistinct };
-              setDroppedData((prevData: any | any[]) => {
-                const newData = multiple
-                  ? Array.isArray(prevData)
-                    ? [...prevData, newAddItem]
-                    : [newAddItem]
-                  : [newAddItem];
-                return newData;
-              });
-              setIsOpen(false);
-              setValues(initialValues);
-            }}
+            saveOnClick={handleSaveClick}
           />
         </StyledInputDropMenu>
       )}
