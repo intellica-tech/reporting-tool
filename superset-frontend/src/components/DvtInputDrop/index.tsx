@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import useFetch from 'src/hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import moment from 'moment';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';
 import {
@@ -88,8 +89,8 @@ const DvtInputDrop = ({
   const [menuTopCalcArrow, setMenuTopCalcArrow] = useState('null');
   const [optionData, setOptionData] = useState<OptionDataProps[]>([]);
   const [optionApiUrl, setOptionApiUrl] = useState<string>('');
-
   const [values, setValues] = useState<any>(initialValues);
+  const [getId, setGetId] = useState<number | null>(null);
 
   const openMenuHeight = 360;
   const inputHeight = 47;
@@ -146,7 +147,7 @@ const DvtInputDrop = ({
     };
 
     const frmtDropData = {
-      id: droppedData.length,
+      id: moment().unix(),
       ...jsonDropData,
       values: getValues,
     };
@@ -154,7 +155,9 @@ const DvtInputDrop = ({
     if (jsonDropData) {
       setDroppedData((prevData: any | any[]) => {
         const newData = multiple ? [...prevData, frmtDropData] : [frmtDropData];
-        return newData;
+        return newData.sort(
+          (a: { id: number }, b: { id: number }) => a.id - b.id,
+        );
       });
 
       onDrop?.([frmtDropData]);
@@ -167,7 +170,9 @@ const DvtInputDrop = ({
     setDroppedData((prevData: any[]) => {
       const newData = [...prevData];
       newData.splice(index, 1);
-      return newData;
+      return newData.sort(
+        (a: { id: number }, b: { id: number }) => a.id - b.id,
+      );
     });
   };
 
@@ -216,16 +221,23 @@ const DvtInputDrop = ({
         ? `${values.aggregate.value}(${values.column?.value})`
         : values.sql;
     const newAddItem = {
-      id: droppedData.length,
+      id: getId === null ? moment().unix() : getId,
       label: onlyCountDistinct,
       values,
     };
     setDroppedData((prevData: any | any[]) => {
-      const newData = multiple ? [...prevData, newAddItem] : [newAddItem];
-      return newData;
+      const selectedItem =
+        getId === null
+          ? prevData
+          : prevData.filter((it: { id: number }) => it.id !== getId);
+      const newData = multiple ? [...selectedItem, newAddItem] : [newAddItem];
+      return newData.sort(
+        (a: { id: number }, b: { id: number }) => a.id - b.id,
+      );
     });
     setIsOpen(false);
     setValues(initialValues);
+    setGetId(null);
   };
 
   return (
@@ -265,6 +277,7 @@ const DvtInputDrop = ({
             />
             <StyledInputDropGroupItemLabel
               onClick={() => {
+                setGetId(item.id);
                 setValues(item.values);
                 handleAddClickPositionTop(index);
               }}
@@ -279,6 +292,7 @@ const DvtInputDrop = ({
               textOnPlaceholder
               onClick={() => {
                 setValues(initialValues);
+                setGetId(null);
                 handleAddClickPositionTop(null);
               }}
             >
@@ -287,6 +301,7 @@ const DvtInputDrop = ({
             <StyledInputDropIcon
               onClick={() => {
                 setValues(initialValues);
+                setGetId(null);
                 handleAddClickPositionTop(null);
               }}
             >
