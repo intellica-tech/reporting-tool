@@ -25,8 +25,29 @@ export default {
   component: DvtInputDrop,
 };
 
+const columnData = [
+  {
+    label: 'name',
+    value: 'name',
+  },
+  {
+    label: 'color',
+    value: 'color',
+  },
+  {
+    label: 'path_json',
+    value: 'path_json',
+  },
+  {
+    label: 'polyline',
+    value: 'polyline',
+  },
+];
+
 export const Default = (args: DvtInputDropProps) => {
   const [droppedData, setDroppedData] = useState<any[] | null>(null);
+
+  console.log(droppedData);
 
   return (
     <div
@@ -42,15 +63,13 @@ export const Default = (args: DvtInputDropProps) => {
         {...args}
         droppedData={droppedData}
         setDroppedData={setDroppedData}
+        columnData={columnData}
+        datasourceApi="datasource/table/7"
       />
-      <DvtDargCard
-        label="arac"
-        value={{ id: 1, name: 'arac' }}
-        icon="dvt-hashtag"
-      />
+      <DvtDargCard label="arac" value={{ label: 'arac' }} icon="dvt-hashtag" />
       <DvtDargCard
         label="arac2"
-        value={{ id: 2, name: 'arac2' }}
+        value={{ label: 'arac2' }}
         icon="dvt-hashtag"
       />
     </div>

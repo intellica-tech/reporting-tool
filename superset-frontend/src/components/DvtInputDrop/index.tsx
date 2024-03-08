@@ -1,21 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
+import useFetch from 'src/hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';
 import {
   StyledInputDrop,
-  StyledInputDropField,
-  StyledInputDropFieldColumn,
-  StyledInputDropFieldIcon,
   StyledInputDropIcon,
-  StyledInputDropInputGroup,
+  StyledInputDropGroup,
+  StyledInputDropGroupItem,
+  StyledInputDropGroupItemLabel,
+  StyledInputDropGroupItemRemove,
   StyledInputDropLabel,
   StyledInputDropMenu,
   StyledError,
 } from './dvt-input-drop.module';
 import DvtOpenSelectMenu from '../DvtOpenSelectMenu';
+
+interface DataProps {
+  label: string;
+  value: string;
+}
+
+interface OptionDataProps {
+  label: string;
+  value: number;
+}
+
+const initialValues = {
+  saved: '',
+  column: '',
+  operator: '',
+  aggregate: '',
+  option: '',
+  sql: '',
+};
 
 export interface DvtInputDropProps {
   label?: string;
@@ -39,6 +59,9 @@ export interface DvtInputDropProps {
     | 'percentage_metrics'
     | 'soruce_target'
     | 'columns';
+  savedData?: DataProps[];
+  columnData: DataProps[];
+  datasourceApi: string;
 }
 
 const DvtInputDrop = ({
@@ -52,6 +75,9 @@ const DvtInputDrop = ({
   setDroppedData,
   error,
   type = 'x-axis',
+  savedData = [],
+  columnData = [],
+  datasourceApi = '',
 }: DvtInputDropProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,15 +86,10 @@ const DvtInputDrop = ({
   const [menuRight, setMenuRight] = useState(0);
   const [menuTopCalc, setMenuTopCalc] = useState('null');
   const [menuTopCalcArrow, setMenuTopCalcArrow] = useState('null');
+  const [optionData, setOptionData] = useState<OptionDataProps[]>([]);
+  const [optionApiUrl, setOptionApiUrl] = useState<string>('');
 
-  const [values, setValues] = useState({
-    saved: '',
-    column: '',
-    operator: '',
-    aggregate: '',
-    option: '',
-    sql: '',
-  });
+  const [values, setValues] = useState<any>(initialValues);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -105,21 +126,37 @@ const DvtInputDrop = ({
   const openMenuHeight = 360;
   const inputHeight = 47;
   const borderHeight = 16;
-  const topMaxHeight = (window.innerHeight - openMenuHeight) / 2;
+  const itemHeight = 28;
+  const topMaxHeight = (window.innerHeight - openMenuHeight) / 2 + 50;
   const bottomMaxHeight =
-    window.innerHeight - (window.innerHeight - openMenuHeight) / 2;
+    window.innerHeight - (window.innerHeight - openMenuHeight) / 2 - 50;
 
-  const handleAddClickPositionTop = () => {
+  const handleAddClickPositionTop = (index: number | null) => {
+    const droppedDataLength = droppedData?.length ? droppedData.length : 0;
+    const indexItemTotal = index === null ? null : droppedDataLength - index;
+
+    const itemPixels = multiple
+      ? `${
+          indexItemTotal === null
+            ? '0px'
+            : `${indexItemTotal * itemHeight}px + 5px`
+        }`
+      : '0px';
+
     if (windowHeightTop < topMaxHeight) {
-      setMenuTopCalc(`calc(-${openMenuHeight}px + ${inputHeight}px)`);
+      setMenuTopCalc(
+        `calc(-${openMenuHeight}px + ${inputHeight}px + ${itemPixels})`,
+      );
       setMenuTopCalcArrow(`${inputHeight / 2 - borderHeight / 2}px`);
     } else if (windowHeightTop > bottomMaxHeight) {
-      setMenuTopCalc('0px');
+      setMenuTopCalc(`calc(0px + ${itemPixels})`);
       setMenuTopCalcArrow(
         `${openMenuHeight - (inputHeight / 2 + borderHeight / 2)}px`,
       );
     } else {
-      setMenuTopCalc(`calc(-${openMenuHeight}px / 2 + ${inputHeight}px / 2)`);
+      setMenuTopCalc(
+        `calc(-${openMenuHeight}px / 2 + ${inputHeight}px / 2 + ${itemPixels})`,
+      );
       setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
     }
   };
@@ -142,6 +179,27 @@ const DvtInputDrop = ({
     }
   }, [isOpen]);
 
+  const optionDataPromise = useFetch({
+    url: optionApiUrl,
+  });
+
+  useEffect(() => {
+    if (optionDataPromise) {
+      setOptionData(
+        optionDataPromise.result.map((rv: string, ri: number) => ({
+          label: rv,
+          value: ri + 1,
+        })),
+      );
+    }
+  }, [optionDataPromise]);
+
+  useEffect(() => {
+    if (datasourceApi && values.column && type === 'filters') {
+      setOptionApiUrl(`${datasourceApi}/column/${values.column?.value}/values`);
+    }
+  }, [datasourceApi, values.column]);
+
   return (
     <StyledInputDrop ref={ref} onMouseMove={e => setWindowHeightTop(e.clientY)}>
       <StyledInputDropLabel>
@@ -162,55 +220,38 @@ const DvtInputDrop = ({
           </DvtPopper>
         )}
       </StyledInputDropLabel>
-      <StyledInputDropInputGroup
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <StyledInputDropFieldColumn>
-          {droppedData?.map((item, index) => (
-            <StyledInputDropFieldIcon key={index}>
-              <StyledInputDropIcon
-                onClick={() =>
-                  multiple ? handleRemoveItem(index) : setDroppedData(null)
-                }
-              >
-                <Icon fileName="close" iconSize="l" style={{ marginTop: 9 }} />
-              </StyledInputDropIcon>
-              <StyledInputDropField
-                placeholder={placeholder}
-                type="text"
-                readOnly
-                value={item?.name}
+      <StyledInputDropGroup onDragOver={handleDragOver} onDrop={handleDrop}>
+        {droppedData?.map((item, index) => (
+          <StyledInputDropGroupItem key={index} bgOnItem>
+            <StyledInputDropGroupItemRemove
+              onClick={() =>
+                multiple ? handleRemoveItem(index) : setDroppedData(null)
+              }
+            />
+            <StyledInputDropGroupItemLabel
+              onClick={() => handleAddClickPositionTop(index)}
+            >
+              {item.label}
+            </StyledInputDropGroupItemLabel>
+          </StyledInputDropGroupItem>
+        ))}
+        {(multiple || !droppedData) && (
+          <StyledInputDropGroupItem marginTop={!!droppedData?.length}>
+            <StyledInputDropGroupItemLabel textOnPlaceholder>
+              {placeholder}
+            </StyledInputDropGroupItemLabel>
+            <StyledInputDropIcon
+              onClick={() => handleAddClickPositionTop(null)}
+            >
+              <Icon
+                fileName="dvt-add_square"
+                iconSize="xl"
+                style={{ marginTop: 2 }}
               />
-            </StyledInputDropFieldIcon>
-          ))}
-          {multiple ? (
-            <StyledInputDropFieldIcon>
-              <StyledInputDropField
-                placeholder={placeholder}
-                type="text"
-                readOnly
-              />
-              <StyledInputDropIcon onClick={handleAddClickPositionTop}>
-                <Icon fileName="dvt-add_square" iconSize="xl" />
-              </StyledInputDropIcon>
-            </StyledInputDropFieldIcon>
-          ) : (
-            !droppedData && (
-              <StyledInputDropFieldIcon>
-                <StyledInputDropField
-                  placeholder={placeholder}
-                  type="text"
-                  readOnly
-                />
-                <StyledInputDropIcon onClick={handleAddClickPositionTop}>
-                  <Icon fileName="dvt-add_square" iconSize="xl" />
-                </StyledInputDropIcon>
-              </StyledInputDropFieldIcon>
-            )
-          )}
-        </StyledInputDropFieldColumn>
-      </StyledInputDropInputGroup>
+            </StyledInputDropIcon>
+          </StyledInputDropGroupItem>
+        )}
+      </StyledInputDropGroup>
       {isOpen && (
         <StyledInputDropMenu
           menuRight={menuRight}
@@ -221,9 +262,27 @@ const DvtInputDrop = ({
             type={type}
             values={values}
             setValues={setValues}
-            columnData={[]}
+            savedData={savedData}
+            columnData={columnData}
+            optionData={optionData}
             closeOnClick={() => setIsOpen(false)}
-            saveOnClick={() => {}}
+            saveOnClick={() => {
+              const onlyCountDistinct =
+                values.aggregate?.value === 'COUNT_DISTINCT'
+                  ? `${values.aggregate.value}(${values.column?.value})`
+                  : values.sql;
+              const newAddItem = { label: onlyCountDistinct };
+              setDroppedData((prevData: any | any[]) => {
+                const newData = multiple
+                  ? Array.isArray(prevData)
+                    ? [...prevData, newAddItem]
+                    : [newAddItem]
+                  : [newAddItem];
+                return newData;
+              });
+              setIsOpen(false);
+              setValues(initialValues);
+            }}
           />
         </StyledInputDropMenu>
       )}

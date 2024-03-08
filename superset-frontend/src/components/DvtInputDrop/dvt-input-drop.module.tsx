@@ -25,27 +25,6 @@ const StyledInputDrop = styled.div`
   position: relative;
 `;
 
-const StyledInputDropField = styled.input`
-  width: 100%;
-  height: 100%;
-  color: ${({ theme }) => theme.colors.dvt.text.bold};
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  border: none;
-  cursor: default;
-  &:focus {
-    outline: none;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.dvt.text.help};
-  }
-
-  ::-ms-reveal,
-  ::-ms-clear {
-    display: none;
-  }
-`;
-
 const StyledInputDropPlaceholder = styled.div`
   width: 100%;
   height: 100%;
@@ -66,23 +45,72 @@ const StyledInputDropLabel = styled.div`
   align-items: center;
 `;
 
-const StyledInputDropInputGroup = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  padding: 12px 14px;
-`;
-
-const StyledInputDropFieldIcon = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
-const StyledInputDropFieldColumn = styled.div`
+const StyledInputDropGroup = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  padding: 12px 14px;
+  gap: 2px;
+`;
+
+interface StyledInputDropGroupItemProps {
+  bgOnItem?: boolean;
+  marginTop?: boolean;
+}
+
+const StyledInputDropGroupItem = styled.div<StyledInputDropGroupItemProps>`
+  display: flex;
+  align-items: center;
+  ${({ bgOnItem, theme }) =>
+    bgOnItem && `background-color: ${theme.colors.dvt.primary.light2}`};
+  border-radius: 4px;
+  ${({ marginTop }) => marginTop && `margin-top: 4px`};
+`;
+
+interface StyledInputDropGroupItemLabelProps {
+  textOnPlaceholder?: boolean;
+}
+
+const StyledInputDropGroupItemLabel = styled.div<StyledInputDropGroupItemLabelProps>`
+  font-size: 14px;
+  color: ${({ theme, textOnPlaceholder }) =>
+    textOnPlaceholder
+      ? theme.colors.dvt.text.help
+      : theme.colors.dvt.text.bold};
+  flex: 1;
+  min-height: 26px;
+  padding: 2px 4px;
+`;
+
+const StyledInputDropGroupItemRemove = styled.button`
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-right: 2px solid ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  padding: 0;
+  max-width: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 1px;
+    width: 12px;
+    background-color: ${({ theme }) => theme.colors.dvt.text.bold};
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
 `;
 
 interface StyledInputDropMenuProps {
@@ -119,13 +147,13 @@ const StyledError = styled.div`
 
 export {
   StyledInputDrop,
-  StyledInputDropField,
   StyledInputDropIcon,
   StyledInputDropPlaceholder,
   StyledInputDropLabel,
-  StyledInputDropInputGroup,
-  StyledInputDropFieldIcon,
-  StyledInputDropFieldColumn,
+  StyledInputDropGroup,
+  StyledInputDropGroupItem,
+  StyledInputDropGroupItemLabel,
+  StyledInputDropGroupItemRemove,
   StyledInputDropMenu,
   StyledError,
 };
