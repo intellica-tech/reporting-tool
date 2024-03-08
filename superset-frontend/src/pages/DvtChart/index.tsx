@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import withToasts from 'src/components/MessageToasts/withToasts';
+import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import DvtButton from 'src/components/DvtButton';
 import DvtSelectButton from 'src/components/DvtSelectButton';
 import DvtCheckbox from 'src/components/DvtCheckbox';
@@ -20,23 +23,23 @@ import {
 } from './dvt-chart.module';
 
 const selectBars = [
+  // {
+  //   popoverLabel: 'Big Number with Trendline',
+  //   status: 'big_number',
+  //   icon: 'dvt-linear_chart',
+  // },
   {
-    popoverLabel: 'Big Number with Trendline',
-    status: 'big_number',
-    icon: 'dvt-linear_chart',
-  },
-  {
-    popoverLabel: 'Time-Series Line Chart',
+    popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',
     icon: 'dvt-diagram',
   },
   {
-    popoverLabel: 'Time-Series Bar Chart V2',
+    popoverLabel: 'Bar Chart',
     status: 'echarts_timeseries_bar',
     icon: 'dvt-chart',
   },
   {
-    popoverLabel: 'Time-Series Area Chart',
+    popoverLabel: 'Area Chart',
     status: 'echarts_area',
     icon: 'dvt-status_up',
   },
@@ -54,12 +57,20 @@ const selectBars = [
 ];
 
 const DvtChart = () => {
+  const dispatch = useDispatch();
   const [active, setActive] = useState<string>('');
   const [checked, setChecked] = useState<boolean>(false);
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Results',
     value: 'results',
   });
+
+  useEffect(
+    () => () => {
+      dispatch(dvtChartSetSelectedChart({}));
+    },
+    [],
+  );
 
   return (
     <StyledChart>
@@ -74,6 +85,7 @@ const DvtChart = () => {
             activeButton={active}
             setActiveButton={setActive}
             data={selectBars}
+            nowrap
           />
           <DvtButton
             label={t('View all charts')}

@@ -44,6 +44,7 @@ import { usePluginContext } from '../DynamicPlugins';
 import DvtInput from '../DvtInput';
 import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 import DvtInputSelect from '../DvtInputSelect';
+import DvtDargCardList from '../DvtDragCardList';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -86,6 +87,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const rowLevelSecuritySelector = useAppSelector(
     state => state.dvtSidebar.rowLevelSecurity,
   );
+  const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectCategories, setSelectCategories] =
@@ -94,6 +96,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
+  const [chartColumns, setChartColumns] = useState<any[]>([]);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -564,6 +567,27 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     changeAlgorithmName();
   }, [selectCategories]);
 
+  useEffect(() => {
+    if (chartSelector?.dataset?.columns) {
+      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock';
+      const iconQuestions = ['BOOLEAN'];
+      const iconHashtags = ['BIGINT'];
+      const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
+
+      setChartColumns(
+        chartSelector.dataset.columns.map((ci: any) => ({
+          label: ci.column_name,
+          value: ci,
+          icon:
+            (iconQuestions.includes(ci.type) && 'question') ||
+            (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
+            (iconClocks.includes(ci.type) && 'clock') ||
+            'field_abc',
+        })),
+      );
+    }
+  }, [chartAddSelector]);
+
   return (
     <StyledDvtSidebar minWidth={minWidth}>
       <StyledDvtSidebarHeader>
@@ -863,6 +887,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     );
                   }}
                 />
+              )}
+            {pathTitles(pathName) === 'chart' &&
+              chartSelector?.dataset?.columns?.length && (
+                <DvtDargCardList data={chartColumns} />
               )}
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
