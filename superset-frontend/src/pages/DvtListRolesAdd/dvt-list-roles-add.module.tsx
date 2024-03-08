@@ -16,24 +16,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState } from 'react';
-import DvtConditionSchedule, { DvtConditionScheduleProps } from '.';
+import { styled } from '@superset-ui/core';
 
-export default {
-  title: 'Dvt-Components/DvtConditionSchedule',
-  component: DvtConditionSchedule,
-};
+const StyledAddFormFields = styled.div`
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
-export const Default = (args: DvtConditionScheduleProps) => {
-  const [schedule, setSchedule] = useState<string>('');
+const StyledForms = styled.div`
+  margin-top: 39px;
+  padding: 0;
+  width: 100%;
+  height: calc(100vh - 250px);
+`;
 
-  return (
-    <div style={{ width: '220px' }}>
-      <DvtConditionSchedule
-        {...args}
-        schedule={schedule}
-        setSchedule={setSchedule}
-      />
-    </div>
-  );
-};
+const StyledHeader = styled.header`
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+  letter-spacing: 0.2px;
+  margin-left: 5px;
+`;
+
+const StyledButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 14px;
+`;
+
+export { StyledForms, StyledButtons, StyledAddFormFields, StyledHeader };

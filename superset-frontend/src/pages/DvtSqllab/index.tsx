@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useToasts } from 'src/components/MessageToasts/withToasts';
 import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetPropertyClear,
@@ -9,6 +10,7 @@ import {
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
+  dvtSqlhubSetSqlQuery,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { t } from '@superset-ui/core';
@@ -21,6 +23,7 @@ import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtSpinner from 'src/components/DvtSpinner';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
+import { prepareCopyToClipboardTabularData } from 'src/utils/common';
 import {
   StyledSqlhub,
   StyledSqlhubBottom,
@@ -37,6 +40,7 @@ const tabs = [
 const UNTITLED_QUERY = 'Untitled Query';
 
 function DvtSqllab() {
+  const { addDangerToast } = useToasts();
   const dispatch = useDispatch();
   const sqlhubSidebarSelector = useAppSelector(
     state => state.dvtSidebar.sqlhub,
@@ -277,6 +281,18 @@ function DvtSqllab() {
       )
     : [];
 
+  const getExportCsvUrl = (clientId: string) =>
+    `/api/v1/sqllab/export/${clientId}/`;
+
+  const handleCopyToClick = (text: string) => {
+    addDangerToast(t('Copied to CSV!'));
+    navigator.clipboard.writeText(text);
+  };
+
+  useEffect(() => {
+    dispatch(dvtSqlhubSetSqlQuery(sqlValue));
+  }, [sqlValue]);
+
   return (
     <StyledSqlhub>
       <DvtTextareaSelectRun
@@ -312,14 +328,25 @@ function DvtSqllab() {
                     label={t('DOWNLOAD TO CSV')}
                     size="small"
                     bold
-                    onClick={() => {}}
+                    onClick={() => {
+                      window.location.href = getExportCsvUrl(
+                        executePromiseApi.query.id,
+                      );
+                    }}
                   />
                   <DvtButton
                     label={t('COPY TO CLIPBOARD')}
                     icon="file"
                     bold
                     size="small"
-                    onClick={() => {}}
+                    onClick={() =>
+                      handleCopyToClick(
+                        prepareCopyToClipboardTabularData(
+                          executePromiseApi.data,
+                          executePromiseApi.columns,
+                        ),
+                      )
+                    }
                   />
                   <DvtInput
                     placeholder={t('Filter results')}

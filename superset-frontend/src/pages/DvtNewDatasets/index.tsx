@@ -144,14 +144,14 @@ function DvtNewDatasets() {
   }, [getTableData]);
 
   const handleCreateDataset = () => {
-    setPostDataSetUrl('dataset/');
+    setPostDataSetUrl('');
     setTimeout(() => {
-      setPostDataSetUrl('');
+      setPostDataSetUrl('dataset/');
     }, 200);
   };
 
   useEffect(() => {
-    if (postDataset) {
+    if (postDataset?.id) {
       dispatch(
         dvtSidebarSetProperty({
           pageKey: 'chartAdd',

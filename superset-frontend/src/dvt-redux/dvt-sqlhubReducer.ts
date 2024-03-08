@@ -21,10 +21,12 @@ import { SelectedTablesProps } from 'src/components/DvtList';
 
 interface DvtSqlhubState {
   selectedTables: SelectedTablesProps[];
+  sqlQuery: string;
 }
 
 const initialState: DvtSqlhubState = {
   selectedTables: [],
+  sqlQuery: '',
 };
 
 const dvtSqlhubSlice = createSlice({
@@ -48,6 +50,10 @@ const dvtSqlhubSlice = createSlice({
       ...state,
       selectedTables: [],
     }),
+    dvtSqlhubSetSqlQuery: (state, action: PayloadAction<string>) => ({
+      ...state,
+      sqlQuery: action.payload,
+    }),
   },
 });
 
@@ -55,6 +61,7 @@ export const {
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTablesClear,
+  dvtSqlhubSetSqlQuery,
 } = dvtSqlhubSlice.actions;
 
 export default dvtSqlhubSlice.reducer;

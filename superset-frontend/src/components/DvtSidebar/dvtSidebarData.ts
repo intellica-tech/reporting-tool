@@ -631,6 +631,63 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/user/list/',
+    key: 'usersList',
+    data: [
+      {
+        placeholder: t('First Name'),
+        name: 'firstName',
+        status: 'input',
+      },
+      {
+        placeholder: t('Last Name'),
+        name: 'lastName',
+        status: 'input',
+      },
+      {
+        placeholder: t('User Name'),
+        name: 'userName',
+        status: 'input',
+      },
+      {
+        placeholder: t('E Mail'),
+        name: 'email',
+        status: 'input',
+      },
+    ],
+  },
+  {
+    pathname: '/role/list/',
+    key: 'rolesList',
+    data: [
+      {
+        placeholder: t('Permissions'),
+        name: 'permissions',
+        values: [
+          {
+            label: 'ex',
+            value: 'ex',
+          },
+        ],
+      },
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('User'),
+        name: 'user',
+        values: [
+          {
+            label: 'Superset Admin',
+            value: 'supersetAdmin',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [

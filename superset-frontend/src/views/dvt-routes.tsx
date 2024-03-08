@@ -66,7 +66,8 @@ const DashboardList = lazy(
 );
 
 const Dashboard = lazy(
-  () => import(/* webpackChunkName: "Dashboard" */ 'src/pages/Dashboard'),
+  () =>
+    import(/* webpackChunkName: "Dashboard" */ 'src/pages/DvtDashboardEdit'),
 );
 
 const DatabaseList = lazy(
@@ -140,6 +141,21 @@ const DvtUsersListAdd = lazy(
     import(
       /* webpackChunkName: "DvtUsersListAdd" */ 'src/pages/DvtUsersListAdd'
     ),
+);
+
+const DvtListRolesAdd = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "DvtListRolesAdd" */ 'src/pages/DvtListRolesAdd'
+    ),
+);
+
+const DvtRolesList = lazy(
+  () => import(/* webpackChunkName: "RolesList" */ 'src/pages/DvtRolesList'),
+);
+
+const UsersList = lazy(
+  () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
 );
 
 type Routes = {
@@ -245,6 +261,10 @@ export const routes: Routes = [
     Component: RowLevelSecurityList,
   },
   {
+    path: '/user/list/',
+    Component: UsersList,
+  },
+  {
     path: '/sqlhub/',
     Component: SqlLab,
   },
@@ -255,6 +275,14 @@ export const routes: Routes = [
   {
     path: '/users/add',
     Component: DvtUsersListAdd,
+  },
+  {
+    path: '/role/add',
+    Component: DvtListRolesAdd,
+  },
+  {
+    path: '/role/list/',
+    Component: DvtRolesList,
   },
 ];
 

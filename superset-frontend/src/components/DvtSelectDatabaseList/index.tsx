@@ -39,12 +39,14 @@ export interface DvtSelectDatabaseListProps {
   data: CardProps[];
   active: CardProps;
   setActive: (item: CardProps) => void;
+  icon?: boolean;
 }
 
 const DvtSelectDatabaseList = ({
   data,
   active,
   setActive,
+  icon = true,
 }: DvtSelectDatabaseListProps) => {
   const [search, setSearch] = useState<string>('');
 
@@ -76,7 +78,7 @@ const DvtSelectDatabaseList = ({
             >
               {item.value}
             </StyledDvtSelectDatabaseListItemLabel>
-            {item.explore_url && (
+            {item.explore_url && icon && (
               <Icon
                 fileName="warning"
                 css={(theme: SupersetTheme) => ({
