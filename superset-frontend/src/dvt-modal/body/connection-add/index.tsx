@@ -106,7 +106,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const initialValues = {
     host: meta?.isEdit ? meta.result.parameters.host : '',
     port: meta?.isEdit ? meta.result.parameters.port : '',
-    database_name: meta?.isEdit ? meta.result.parameters.database : '', // Add validation if needed
+    database_name: meta?.isEdit ? meta.result.parameters.database : '',
     user_name: meta?.isEdit ? meta.result.parameters.username : '',
     password: meta?.isEdit ? meta.result.parameters.password : '',
     display_name: meta?.isEdit
@@ -115,7 +115,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     addittional_parameters: meta?.isEdit
       ? JSON.stringify(meta.result.parameters.query)
       : '',
-    switch: meta.result.parameters.encryption,
+    switch: meta?.isEdit ? meta.result.parameters.encryption : '',
     select: '',
   };
 
