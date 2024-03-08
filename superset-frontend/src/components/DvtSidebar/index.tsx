@@ -74,6 +74,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const annotationLayerSelector = useAppSelector(
     state => state.dvtSidebar.annotationLayer,
   );
+  const rolesListSelector = useAppSelector(state => state.dvtSidebar.rolesList);
   const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
@@ -130,6 +131,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'newTrainedTable';
       case '/user/list/':
         return 'usersList';
+      case '/role/list/':
+        return 'rolesList';
       default:
         return '';
     }
@@ -511,6 +514,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'chartAdd',
     'sqlhubHistory',
     'chart',
+    'rolesList',
     'usersList',
     'rowLevelSecurity',
   ];
@@ -714,6 +718,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
+                            : pathTitles(pathName) === 'rolesList'
+                            ? rolesListSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -751,6 +757,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? dashboardSelector[data.name]
                             : pathTitles(pathName) === 'annotationLayer'
                             ? annotationLayerSelector[data.name]
+                            : pathTitles(pathName) === 'rolesList'
+                            ? rolesListSelector[data.name]
                             : pathTitles(pathName) === 'usersList'
                             ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'rowLevelSecurity'

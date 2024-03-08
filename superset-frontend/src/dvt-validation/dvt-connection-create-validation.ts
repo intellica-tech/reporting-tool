@@ -38,6 +38,12 @@ const connectionCreateValidation = {
     }
     return undefined;
   },
+  display_name: (value: string) => {
+    if (!(value.length >= 1 && value.length <= 250)) {
+      return t('Length must be between 1 and 250.');
+    }
+    return undefined;
+  },
 };
 
 export default connectionCreateValidation;
