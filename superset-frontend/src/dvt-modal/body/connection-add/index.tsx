@@ -5,6 +5,7 @@ import useFetch from 'src/hooks/useFetch';
 import {
   DvtConnectionData,
   OtherOptions,
+  advancedData,
 } from 'src/dvt-modal/dvtConnectionData';
 import { SupersetTheme, t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
@@ -104,9 +105,9 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   const initialValues = {
-    host: '', // validation gerekiyor
+    host: '',
     port: '',
-    database_name: '', // validation gerekiyor dersen
+    database_name: '',
     user_name: '',
     password: '',
     display_name: selectedConnectionType,
@@ -116,8 +117,8 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   };
 
   const { values, errors, handleChange, validateForm } = useFormValidation(
-    initialValues, // default values
-    connectionCreateValidation, // tümü validation error mesaj açıklaması için
+    initialValues,
+    connectionCreateValidation,
   );
 
   const [checkbox, setcheckbox] = useState<{
@@ -251,13 +252,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     }
   };
 
-  // const setInputValue = (property: string, value: string | boolean) => {
-  //   setInput(prevValues => ({
-  //     ...prevValues,
-  //     [property]: value,
-  //   }));
-  // };
-
   useEffect(() => {
     if (meta?.isEdit) {
       setStep(2);
@@ -277,13 +271,10 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
-      console.log('Form gönderildi:', values);
-      setApiUrl('database/validate_parameters/'); // error çıkarsa bu göndermesin diye
+      setApiUrl('database/validate_parameters/');
       setTimeout(() => {
         setApiUrl('');
       }, 500);
-    } else {
-      console.log('Form hatalı, gönderilemedi.');
     }
   };
 
@@ -416,10 +407,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                               bold
                               label={t('CONNECT')}
                               onClick={() => {
-                                // setApiUrl('database/validate_parameters/');
-                                // setTimeout(() => {
-                                //   setApiUrl('');
-                                // }, 500);
                                 handleSubmit();
                               }}
                             />
@@ -482,392 +469,103 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                     <StyledConnectionAddLabel>
                       {t('ADVANCED')}
                     </StyledConnectionAddLabel>
-                    <DvtCollapse
-                      label="SQL Lab"
-                      isOpen={collapseValues.sql}
-                      setIsOpen={() => setCollapseValue('sql')}
-                    >
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.expose}
-                          onChange={bol =>
-                            setcheckbox({ ...checkbox, expose: bol })
-                          }
-                          label={t('Expose database in SQL Lab')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'Allow this database to be queried in SQL Lab',
-                          )}
-                          direction="right"
-                          size="small"
+                    {advancedData.map((item, index) => (
+                      <div key={index}>
+                        <DvtCollapse
+                          label={item.title}
+                          isOpen={collapseValues[item.value]}
+                          setIsOpen={() => setCollapseValue(item.value)}
                         >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      {checkbox.expose && (
-                        <StyledConnectionAddCheckboxGroup>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.createTable}
-                              onChange={bol =>
-                                setcheckbox({ ...checkbox, createTable: bol })
-                              }
-                              label={t('Allow CREATE TABLE AS')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'Allow creation of new tables based on queries',
+                          {item.data.map((dataItem, dataIndex) => (
+                            <>
+                              {dataItem.type === 'checkbox' && (
+                                <StyledConnectionAddSwitch key={dataIndex}>
+                                  <DvtCheckbox
+                                    checked={checkbox[dataItem.value]}
+                                    onChange={bol =>
+                                      setcheckbox({
+                                        ...checkbox,
+                                        [dataItem.value]: bol,
+                                      })
+                                    }
+                                    label={dataItem.label}
+                                  />
+                                  <DvtPopper
+                                    label={dataItem.popoverLabel || ''}
+                                    direction="right"
+                                    size="small"
+                                  >
+                                    <Icon
+                                      fileName="warning"
+                                      css={(theme: SupersetTheme) => ({
+                                        color: theme.colors.alert.base,
+                                      })}
+                                      iconSize="l"
+                                    />
+                                  </DvtPopper>
+                                </StyledConnectionAddSwitch>
                               )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.createView}
-                              onChange={bol =>
-                                setcheckbox({ ...checkbox, createView: bol })
-                              }
-                              label={t('Allow CREATE VIEW AS')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'Allow creation of new views based on queries',
+                              {dataItem.type === 'subcheckbox' &&
+                                checkbox.expose && (
+                                  <StyledConnectionAddCheckboxGroup>
+                                    <StyledConnectionAddSwitch key={dataIndex}>
+                                      <DvtCheckbox
+                                        checked={checkbox[dataItem.value]}
+                                        onChange={bol =>
+                                          setcheckbox({
+                                            ...checkbox,
+                                            [dataItem.value]: bol,
+                                          })
+                                        }
+                                        label={dataItem.label}
+                                      />
+                                      <DvtPopper
+                                        label={dataItem.popoverLabel || ''}
+                                        direction="right"
+                                        size="small"
+                                      >
+                                        <Icon
+                                          fileName="warning"
+                                          css={(theme: SupersetTheme) => ({
+                                            color: theme.colors.alert.base,
+                                          })}
+                                          iconSize="l"
+                                        />
+                                      </DvtPopper>
+                                    </StyledConnectionAddSwitch>
+                                  </StyledConnectionAddCheckboxGroup>
+                                )}
+                              {dataItem.type === 'input' && (
+                                <StyledConnectionAddInputGroup>
+                                  <DvtInput
+                                    label={dataItem.label}
+                                    value={input[dataItem.value]}
+                                    onChange={text =>
+                                      setInput({
+                                        ...input,
+                                        [dataItem.value]: text,
+                                      })
+                                    }
+                                    placeholder={dataItem.placeholder}
+                                    popoverDirection="right"
+                                    popoverLabel={dataItem.popoverLabel}
+                                  />
+                                </StyledConnectionAddInputGroup>
                               )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.DML}
-                              onChange={bol =>
-                                setcheckbox({ ...checkbox, DML: bol })
-                              }
-                              label={t('Allow DML')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'Allow manipulation of the database using non-SELECT statements such as UPDATE, DELETE, CREATE, etc.',
+                              {dataItem.type === 'jsoneditor' && (
+                                <DvtJsonEditor
+                                  label={dataItem.label}
+                                  placeholder={dataItem.placeholder}
+                                  value=""
+                                  onChange={() => {}}
+                                  height="120px"
+                                />
                               )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.enableQuery}
-                              onChange={bol =>
-                                setcheckbox({ ...checkbox, enableQuery: bol })
-                              }
-                              label={t('Enable query cost estimation')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'For Bigquery, Presto and Postgres, shows a button to compute cost before running a query.',
-                              )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.databaseExplored}
-                              onChange={bol =>
-                                setcheckbox({
-                                  ...checkbox,
-                                  databaseExplored: bol,
-                                })
-                              }
-                              label={t('Allow this database to be explored')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'When enabled, users are able to visualize SQL Lab results in Explore.',
-                              )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                          <StyledConnectionAddSwitch>
-                            <DvtCheckbox
-                              checked={checkbox.disabledSqlLab}
-                              onChange={bol =>
-                                setcheckbox({
-                                  ...checkbox,
-                                  disabledSqlLab: bol,
-                                })
-                              }
-                              label={t('Disable SQL Lab data preview queries')}
-                            />
-                            <DvtPopper
-                              label={t(
-                                'Disable data preview when fetching table metadata in SQL Lab. Useful to avoid browser performance issues when using databases with very wide tables.',
-                              )}
-                              direction="right"
-                              size="small"
-                            >
-                              <Icon
-                                fileName="warning"
-                                css={(theme: SupersetTheme) => ({
-                                  color: theme.colors.alert.base,
-                                })}
-                                iconSize="l"
-                              />
-                            </DvtPopper>
-                          </StyledConnectionAddSwitch>
-                        </StyledConnectionAddCheckboxGroup>
-                      )}
-                    </DvtCollapse>
-                    <DvtCollapse
-                      label="Performance"
-                      isOpen={collapseValues.performance}
-                      setIsOpen={() => setCollapseValue('performance')}
-                    >
-                      <StyledConnectionAddInputGroup>
-                        <DvtInput
-                          label={t('CHART CACHE TIMEOUT')}
-                          value={input.chart_cache_timeout}
-                          onChange={text =>
-                            setInput({ ...input, chart_cache_timeout: text })
-                          }
-                          placeholder={t('Enter duration in seconds')}
-                          popoverDirection="right"
-                          popoverLabel={t(
-                            'Duration (in seconds) of the caching timeout for charts of this database. A timeout of 0 indicates that the cache never expires. Note this defaults to the global timeout if undefined.',
-                          )}
-                        />
-                        <DvtInput
-                          label={t('SCHEMA CACHE TIMEOUT')}
-                          value={input.scheme_cache_timeout}
-                          onChange={text =>
-                            setInput({ ...input, scheme_cache_timeout: text })
-                          }
-                          placeholder={t('Enter duration in seconds')}
-                          popoverDirection="right"
-                          popoverLabel={t(
-                            'Duration (in seconds) of the metadata caching timeout for schemas of this database. If left unset, the cache never expires.',
-                          )}
-                        />
-                        <DvtInput
-                          label={t('TABLE CACHE TIMEOUT')}
-                          value={input.table_cache_timeout}
-                          onChange={text =>
-                            setInput({ ...input, table_cache_timeout: text })
-                          }
-                          placeholder={t('Enter duration in seconds')}
-                          popoverDirection="right"
-                          popoverLabel={t(
-                            'Duration (in seconds) of the metadata caching timeout for tables of this database. If left unset, the cache never expires.',
-                          )}
-                        />
-                        <StyledConnectionAddSwitch>
-                          <DvtCheckbox
-                            checked={checkbox.asynchronous_query_execution}
-                            onChange={bol =>
-                              setcheckbox({
-                                ...checkbox,
-                                asynchronous_query_execution: bol,
-                              })
-                            }
-                            label={t('Asynchronous query execution')}
-                          />
-                          <DvtPopper
-                            label={t(
-                              'Operate the database in asynchronous mode, meaning that the queries are executed on remote workers as opposed to on the web server itself. This assumes that you have a Celery worker setup as well as a results backend. Refer to the installation docs for more information.',
-                            )}
-                            direction="right"
-                            size="small"
-                          >
-                            <Icon
-                              fileName="warning"
-                              css={(theme: SupersetTheme) => ({
-                                color: theme.colors.alert.base,
-                              })}
-                              iconSize="l"
-                            />
-                          </DvtPopper>
-                        </StyledConnectionAddSwitch>
-                        <StyledConnectionAddSwitch>
-                          <DvtCheckbox
-                            checked={
-                              checkbox.cancel_query_on_window_unload_event
-                            }
-                            onChange={bol =>
-                              setcheckbox({
-                                ...checkbox,
-                                cancel_query_on_window_unload_event: bol,
-                              })
-                            }
-                            label={t('Cancel query on window unload event')}
-                          />
-                          <DvtPopper
-                            label={t(
-                              'Terminate running queries when browser window closed or navigated to another page. Available for Presto, Hive, MySQL, Postgres and Snowflake databases.',
-                            )}
-                            direction="right"
-                            size="small"
-                          >
-                            <Icon
-                              fileName="warning"
-                              css={(theme: SupersetTheme) => ({
-                                color: theme.colors.alert.base,
-                              })}
-                              iconSize="l"
-                            />
-                          </DvtPopper>
-                        </StyledConnectionAddSwitch>
-                      </StyledConnectionAddInputGroup>
-                    </DvtCollapse>
-                    <DvtCollapse
-                      label="Security"
-                      isOpen={collapseValues.security}
-                      setIsOpen={() => setCollapseValue('security')}
-                    >
-                      <DvtJsonEditor
-                        label={t('SECURE EXTRA')}
-                        placeholder={t('Secure extra')}
-                        value=""
-                        onChange={() => {}}
-                        height="120px"
-                      />
-
-                      <DvtJsonEditor
-                        label={t('ROOT CERTIFICATE')}
-                        placeholder={t('Secure extra')}
-                        value=""
-                        onChange={() => {}}
-                        height="120px"
-                      />
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.impersonate_logged_in_user}
-                          onChange={bol =>
-                            setcheckbox({
-                              ...checkbox,
-                              impersonate_logged_in_user: bol,
-                            })
-                          }
-                          label={t(
-                            'Impersonate logged in user (Presto, Trino, Drill, Hive, and GSheets)',
-                          )}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'If Presto or Trino, all the queries in SQL Lab are going to be executed as the currently logged on user who must have permission to run them. If Hive and hive.server2.enable.doAs is enabled, will run the queries as service account, but impersonate the currently logged on user via hive.server2.proxy.user property.',
-                          )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <DvtCheckbox
-                        checked={checkbox.allow_file_uploads_to_database}
-                        onChange={bol =>
-                          setcheckbox({
-                            ...checkbox,
-                            allow_file_uploads_to_database: bol,
-                          })
-                        }
-                        label={t('Allow file uploads to database')}
-                      />
-                      <DvtInput
-                        label={t('SCHEMAS ALLOWED FOR FILE UPLOAD')}
-                        value={input.schemes_allowed_for_file}
-                        onChange={text =>
-                          setInput({ ...input, schemes_allowed_for_file: text })
-                        }
-                        placeholder={t('schema1,schema2')}
-                        popoverDirection="right"
-                        popoverLabel={t(
-                          'A comma-separated list of schemas that files are allowed to upload to.',
-                        )}
-                      />
-                    </DvtCollapse>
-                    <DvtCollapse
-                      label="Other"
-                      isOpen={collapseValues.other}
-                      setIsOpen={() => setCollapseValue('other')}
-                    >
-                      <DvtJsonEditor
-                        label={t('METADATA PARAMETERS')}
-                        placeholder={t('Metadata Parameters')}
-                        value=""
-                        onChange={() => {}}
-                        height="120px"
-                      />
-                      <DvtJsonEditor
-                        label={t('ENGINE PARAMETERS')}
-                        placeholder={t('Engine Parameters')}
-                        value=""
-                        onChange={() => {}}
-                        height="120px"
-                      />
-                      <DvtInput
-                        label={t('VERSION')}
-                        value={input.version}
-                        onChange={text => setInput({ ...input, version: text })}
-                        placeholder={t('Version Number')}
-                        popoverDirection="right"
-                        popoverLabel={t(
-                          'Specify the database version. This should be used with Presto in order to enable query cost estimation.',
-                        )}
-                      />
-                    </DvtCollapse>
+                            </>
+                          ))}
+                        </DvtCollapse>
+                      </div>
+                    ))}
                   </StyledConnectionAddCollapse>
                 </StyledConnectionAddGroup>
               </StyledConnectionAddGroups>
@@ -883,10 +581,6 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                   bold
                   label={t('CONNECT')}
                   onClick={() => {
-                    // setApiUrl('database/validate_parameters/');
-                    // setTimeout(() => {
-                    //   setApiUrl('');
-                    // }, 100);
                     handleSubmit();
                   }}
                   size="small"
@@ -904,388 +598,102 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                 {t(
                   'Create a dataset to begin visualizing your data as a chart or go to SQL Lab to query your data.',
                 )}
-                <DvtCollapse
-                  label="SQL Lab"
-                  isOpen={collapseValues.sql}
-                  setIsOpen={() => setCollapseValue('sql')}
-                >
-                  <StyledConnectionAddSwitch>
-                    <DvtCheckbox
-                      checked={checkbox.expose}
-                      onChange={bol =>
-                        setcheckbox({ ...checkbox, expose: bol })
-                      }
-                      label={t('Expose database in SQL Lab')}
-                    />
-                    <DvtPopper
-                      label={t('Allow this database to be queried in SQL Lab')}
-                      direction="right"
-                      size="small"
+                {advancedData.map((item, index) => (
+                  <div key={index}>
+                    <DvtCollapse
+                      label={item.title}
+                      isOpen={collapseValues[item.value]}
+                      setIsOpen={() => setCollapseValue(item.value)}
                     >
-                      <Icon
-                        fileName="warning"
-                        css={(theme: SupersetTheme) => ({
-                          color: theme.colors.alert.base,
-                        })}
-                        iconSize="l"
-                      />
-                    </DvtPopper>
-                  </StyledConnectionAddSwitch>
-                  {checkbox.expose && (
-                    <StyledConnectionAddCheckboxGroup>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.createTable}
-                          onChange={bol =>
-                            setcheckbox({ ...checkbox, createTable: bol })
-                          }
-                          label={t('Allow CREATE TABLE AS')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'Allow creation of new tables based on queries',
+                      {item.data.map((dataItem, dataIndex) => (
+                        <>
+                          {dataItem.type === 'checkbox' && (
+                            <StyledConnectionAddSwitch key={dataIndex}>
+                              <DvtCheckbox
+                                checked={checkbox[dataItem.value]}
+                                onChange={bol =>
+                                  setcheckbox({
+                                    ...checkbox,
+                                    [dataItem.value]: bol,
+                                  })
+                                }
+                                label={dataItem.label}
+                              />
+                              <DvtPopper
+                                label={dataItem.popoverLabel || ''}
+                                direction="right"
+                                size="small"
+                              >
+                                <Icon
+                                  fileName="warning"
+                                  css={(theme: SupersetTheme) => ({
+                                    color: theme.colors.alert.base,
+                                  })}
+                                  iconSize="l"
+                                />
+                              </DvtPopper>
+                            </StyledConnectionAddSwitch>
                           )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.createView}
-                          onChange={bol =>
-                            setcheckbox({ ...checkbox, createView: bol })
-                          }
-                          label={t('Allow CREATE VIEW AS')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'Allow creation of new views based on queries',
+                          {dataItem.type === 'subcheckbox' && checkbox.expose && (
+                            <StyledConnectionAddCheckboxGroup>
+                              <StyledConnectionAddSwitch key={dataIndex}>
+                                <DvtCheckbox
+                                  checked={checkbox[dataItem.value]}
+                                  onChange={bol =>
+                                    setcheckbox({
+                                      ...checkbox,
+                                      [dataItem.value]: bol,
+                                    })
+                                  }
+                                  label={dataItem.label}
+                                />
+                                <DvtPopper
+                                  label={dataItem.popoverLabel || ''}
+                                  direction="right"
+                                  size="small"
+                                >
+                                  <Icon
+                                    fileName="warning"
+                                    css={(theme: SupersetTheme) => ({
+                                      color: theme.colors.alert.base,
+                                    })}
+                                    iconSize="l"
+                                  />
+                                </DvtPopper>
+                              </StyledConnectionAddSwitch>
+                            </StyledConnectionAddCheckboxGroup>
                           )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.DML}
-                          onChange={bol =>
-                            setcheckbox({ ...checkbox, DML: bol })
-                          }
-                          label={t('Allow DML')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'Allow manipulation of the database using non-SELECT statements such as UPDATE, DELETE, CREATE, etc.',
+                          {dataItem.type === 'input' && (
+                            <StyledConnectionAddInputGroup>
+                              <DvtInput
+                                label={dataItem.label}
+                                value={input[dataItem.value]}
+                                onChange={text =>
+                                  setInput({
+                                    ...input,
+                                    [dataItem.value]: text,
+                                  })
+                                }
+                                placeholder={dataItem.placeholder}
+                                popoverDirection="right"
+                                popoverLabel={dataItem.popoverLabel}
+                              />
+                            </StyledConnectionAddInputGroup>
                           )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.enableQuery}
-                          onChange={bol =>
-                            setcheckbox({ ...checkbox, enableQuery: bol })
-                          }
-                          label={t('Enable query cost estimation')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'For Bigquery, Presto and Postgres, shows a button to compute cost before running a query.',
+                          {dataItem.type === 'jsoneditor' && (
+                            <DvtJsonEditor
+                              label={dataItem.label}
+                              placeholder={dataItem.placeholder}
+                              value=""
+                              onChange={() => {}}
+                              height="120px"
+                            />
                           )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.databaseExplored}
-                          onChange={bol =>
-                            setcheckbox({
-                              ...checkbox,
-                              databaseExplored: bol,
-                            })
-                          }
-                          label={t('Allow this database to be explored')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'When enabled, users are able to visualize SQL Lab results in Explore.',
-                          )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                      <StyledConnectionAddSwitch>
-                        <DvtCheckbox
-                          checked={checkbox.disabledSqlLab}
-                          onChange={bol =>
-                            setcheckbox({
-                              ...checkbox,
-                              disabledSqlLab: bol,
-                            })
-                          }
-                          label={t('Disable SQL Lab data preview queries')}
-                        />
-                        <DvtPopper
-                          label={t(
-                            'Disable data preview when fetching table metadata in SQL Lab. Useful to avoid browser performance issues when using databases with very wide tables.',
-                          )}
-                          direction="right"
-                          size="small"
-                        >
-                          <Icon
-                            fileName="warning"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.alert.base,
-                            })}
-                            iconSize="l"
-                          />
-                        </DvtPopper>
-                      </StyledConnectionAddSwitch>
-                    </StyledConnectionAddCheckboxGroup>
-                  )}
-                </DvtCollapse>
-                <DvtCollapse
-                  label="Performance"
-                  isOpen={collapseValues.performance}
-                  setIsOpen={() => setCollapseValue('performance')}
-                >
-                  <StyledConnectionAddInputGroup>
-                    <DvtInput
-                      label={t('CHART CACHE TIMEOUT')}
-                      value={input.chart_cache_timeout}
-                      onChange={text =>
-                        setInput({ ...input, chart_cache_timeout: text })
-                      }
-                      placeholder={t('Enter duration in seconds')}
-                      popoverDirection="right"
-                      popoverLabel={t(
-                        'Duration (in seconds) of the caching timeout for charts of this database. A timeout of 0 indicates that the cache never expires. Note this defaults to the global timeout if undefined.',
-                      )}
-                    />
-                    <DvtInput
-                      label={t('SCHEMA CACHE TIMEOUT')}
-                      value={input.scheme_cache_timeout}
-                      onChange={text =>
-                        setInput({ ...input, scheme_cache_timeout: text })
-                      }
-                      placeholder={t('Enter duration in seconds')}
-                      popoverDirection="right"
-                      popoverLabel={t(
-                        'Duration (in seconds) of the metadata caching timeout for schemas of this database. If left unset, the cache never expires.',
-                      )}
-                    />
-                    <DvtInput
-                      label={t('TABLE CACHE TIMEOUT')}
-                      value={input.table_cache_timeout}
-                      onChange={text =>
-                        setInput({ ...input, table_cache_timeout: text })
-                      }
-                      placeholder={t('Enter duration in seconds')}
-                      popoverDirection="right"
-                      popoverLabel={t(
-                        'Duration (in seconds) of the metadata caching timeout for tables of this database. If left unset, the cache never expires.',
-                      )}
-                    />
-                    <StyledConnectionAddSwitch>
-                      <DvtCheckbox
-                        checked={checkbox.asynchronous_query_execution}
-                        onChange={bol =>
-                          setcheckbox({
-                            ...checkbox,
-                            asynchronous_query_execution: bol,
-                          })
-                        }
-                        label={t('Asynchronous query execution')}
-                      />
-                      <DvtPopper
-                        label={t(
-                          'Operate the database in asynchronous mode, meaning that the queries are executed on remote workers as opposed to on the web server itself. This assumes that you have a Celery worker setup as well as a results backend. Refer to the installation docs for more information.',
-                        )}
-                        direction="right"
-                        size="small"
-                      >
-                        <Icon
-                          fileName="warning"
-                          css={(theme: SupersetTheme) => ({
-                            color: theme.colors.alert.base,
-                          })}
-                          iconSize="l"
-                        />
-                      </DvtPopper>
-                    </StyledConnectionAddSwitch>
-                    <StyledConnectionAddSwitch>
-                      <DvtCheckbox
-                        checked={checkbox.cancel_query_on_window_unload_event}
-                        onChange={bol =>
-                          setcheckbox({
-                            ...checkbox,
-                            cancel_query_on_window_unload_event: bol,
-                          })
-                        }
-                        label={t('Cancel query on window unload event')}
-                      />
-                      <DvtPopper
-                        label={t(
-                          'Terminate running queries when browser window closed or navigated to another page. Available for Presto, Hive, MySQL, Postgres and Snowflake databases.',
-                        )}
-                        direction="right"
-                        size="small"
-                      >
-                        <Icon
-                          fileName="warning"
-                          css={(theme: SupersetTheme) => ({
-                            color: theme.colors.alert.base,
-                          })}
-                          iconSize="l"
-                        />
-                      </DvtPopper>
-                    </StyledConnectionAddSwitch>
-                  </StyledConnectionAddInputGroup>
-                </DvtCollapse>
-                <DvtCollapse
-                  label="Security"
-                  isOpen={collapseValues.security}
-                  setIsOpen={() => setCollapseValue('security')}
-                >
-                  <DvtJsonEditor
-                    label={t('SECURE EXTRA')}
-                    placeholder={t('Secure extra')}
-                    value=""
-                    onChange={() => {}}
-                    height="120px"
-                  />
-
-                  <DvtJsonEditor
-                    label={t('ROOT CERTIFICATE')}
-                    placeholder={t('Secure extra')}
-                    value=""
-                    onChange={() => {}}
-                    height="120px"
-                  />
-                  <StyledConnectionAddSwitch>
-                    <DvtCheckbox
-                      checked={checkbox.impersonate_logged_in_user}
-                      onChange={bol =>
-                        setcheckbox({
-                          ...checkbox,
-                          impersonate_logged_in_user: bol,
-                        })
-                      }
-                      label={t(
-                        'Impersonate logged in user (Presto, Trino, Drill, Hive, and GSheets)',
-                      )}
-                    />
-                    <DvtPopper
-                      label={t(
-                        'If Presto or Trino, all the queries in SQL Lab are going to be executed as the currently logged on user who must have permission to run them. If Hive and hive.server2.enable.doAs is enabled, will run the queries as service account, but impersonate the currently logged on user via hive.server2.proxy.user property.',
-                      )}
-                      direction="right"
-                      size="small"
-                    >
-                      <Icon
-                        fileName="warning"
-                        css={(theme: SupersetTheme) => ({
-                          color: theme.colors.alert.base,
-                        })}
-                        iconSize="l"
-                      />
-                    </DvtPopper>
-                  </StyledConnectionAddSwitch>
-                  <DvtCheckbox
-                    checked={checkbox.allow_file_uploads_to_database}
-                    onChange={bol =>
-                      setcheckbox({
-                        ...checkbox,
-                        allow_file_uploads_to_database: bol,
-                      })
-                    }
-                    label={t('Allow file uploads to database')}
-                  />
-                  <DvtInput
-                    label={t('SCHEMAS ALLOWED FOR FILE UPLOAD')}
-                    value={input.schemes_allowed_for_file}
-                    onChange={text =>
-                      setInput({ ...input, schemes_allowed_for_file: text })
-                    }
-                    placeholder={t('schema1,schema2')}
-                    popoverDirection="right"
-                    popoverLabel={t(
-                      'A comma-separated list of schemas that files are allowed to upload to.',
-                    )}
-                  />
-                </DvtCollapse>
-                <DvtCollapse
-                  label="Other"
-                  isOpen={collapseValues.other}
-                  setIsOpen={() => setCollapseValue('other')}
-                >
-                  <DvtJsonEditor
-                    label={t('METADATA PARAMETERS')}
-                    placeholder={t('Metadata Parameters')}
-                    value=""
-                    onChange={() => {}}
-                    height="120px"
-                  />
-                  <DvtJsonEditor
-                    label={t('ENGINE PARAMETERS')}
-                    placeholder={t('Engine Parameters')}
-                    value=""
-                    onChange={() => {}}
-                    height="120px"
-                  />
-                  <DvtInput
-                    label={t('VERSION')}
-                    value={input.version}
-                    onChange={text => setInput({ ...input, version: text })}
-                    placeholder={t('Version Number')}
-                    popoverDirection="right"
-                    popoverLabel={t(
-                      'Specify the database version. This should be used with Presto in order to enable query cost estimation.',
-                    )}
-                  />
-                </DvtCollapse>
+                        </>
+                      ))}
+                    </DvtCollapse>
+                  </div>
+                ))}
               </StyledConnectionAddCollapse>
             </StyledConnectionAddGroupStep3>
             <StyledConnectionAddButtons>
