@@ -47,8 +47,6 @@ const columnData = [
 export const Default = (args: DvtInputDropProps) => {
   const [droppedData, setDroppedData] = useState<any[]>([]);
 
-  console.log(droppedData);
-
   return (
     <div
       style={{

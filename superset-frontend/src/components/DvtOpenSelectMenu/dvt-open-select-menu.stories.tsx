@@ -99,8 +99,6 @@ export const Default = (args: DvtOpenSelectMenuProps) => {
   const [values, setValues] = useState<any>(initialValues);
   const [optionData, setOptionData] = useState<any[]>([]);
 
-  console.log(values);
-
   useEffect(() => {
     if (args.type === 'filters') {
       if (values.column) {
