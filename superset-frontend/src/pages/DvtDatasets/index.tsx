@@ -42,6 +42,9 @@ function DvtDatasets() {
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
   );
+  const editSuccessStatus = useAppSelector(
+    state => state.dvtHome.editSuccessStatus,
+  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [sort, setSort] = useState<DvtTableSortProps>({
@@ -91,9 +94,14 @@ function DvtDatasets() {
     })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
+  const [datasetEditApiUrl, setDatasetEditApiUrl] = useState<string>('');
 
   const datasetApi = useFetch({
     url: datasetApiUrl,
+  });
+
+  const datasetEditPromise = useFetch({
+    url: datasetEditApiUrl,
   });
 
   useEffect(() => {
@@ -114,8 +122,13 @@ function DvtDatasets() {
       );
       setCount(datasetApi.count);
       setSelectedRows([]);
+      if (editSuccessStatus) {
+        setData(datasetApi.result);
+        setCount(datasetApi.count);
+        setSelectedRows([]);
+      }
     }
-  }, [datasetApi]);
+  }, [datasetApi, editSuccessStatus]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
@@ -154,6 +167,13 @@ function DvtDatasets() {
     handleResourceExport('dataset', selectedIds, () => {});
   };
 
+  const handleEditDataset = (item: any) => {
+    setDatasetEditApiUrl(`dataset/${item.id}`);
+    setTimeout(() => {
+      setDatasetApiUrl('');
+    }, 500);
+  };
+
   const header = [
     {
       id: 1,
@@ -186,7 +206,7 @@ function DvtDatasets() {
       clicks: [
         {
           icon: 'edit_alt',
-          click: () => {},
+          click: (item: any) => handleEditDataset(item),
           popperLabel: t('Edit'),
         },
         {
@@ -202,6 +222,17 @@ function DvtDatasets() {
       ],
     },
   ];
+
+  useEffect(() => {
+    if (datasetEditPromise) {
+      dispatch(
+        openModal({
+          component: 'dataset-edit-modal',
+          meta: { ...datasetEditPromise, isEdit: true },
+        }),
+      );
+    }
+  }, [datasetEditPromise]);
 
   useEffect(
     () => () => {
