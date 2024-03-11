@@ -98,6 +98,13 @@ interface DvtSidebarState {
     groupKey: any;
     filterType: any;
   };
+  queryHistory: {
+    database: any;
+    state: any;
+    user: any;
+    timeRange: any;
+    search: any;
+  };
   profile: {
     tabs: any;
   };
@@ -144,6 +151,11 @@ interface DvtSidebarState {
       };
       rowLevelSecurity: {
         modifiedBy: boolean;
+      };
+      queryHistory: {
+        database: boolean;
+        state: boolean;
+        user: boolean;
       };
     };
     alerts: {
@@ -196,6 +208,11 @@ interface DvtSidebarState {
     };
     rowLevelSecurity: {
       modifiedBy: any[];
+    };
+    queryHistory: {
+      database: any[];
+      state: any[];
+      user: any[];
     };
   };
 }
@@ -279,6 +296,13 @@ const INITIAL_STATE = {
     groupKey: '',
     filterType: '',
   },
+  queryHistory: {
+    database: '',
+    state: '',
+    user: '',
+    timeRange: '',
+    search: '',
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -329,6 +353,11 @@ const initialState: DvtSidebarState = {
       },
       rowLevelSecurity: {
         modifiedBy: false,
+      },
+      queryHistory: {
+        database: false,
+        state: false,
+        user: false,
       },
     },
     alerts: {
@@ -381,6 +410,11 @@ const initialState: DvtSidebarState = {
     },
     rowLevelSecurity: {
       modifiedBy: [],
+    },
+    queryHistory: {
+      database: [],
+      state: [],
+      user: [],
     },
   },
 };
