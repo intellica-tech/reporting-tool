@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import { t } from '@superset-ui/core';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
 import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
@@ -20,7 +21,6 @@ import {
   StyledSyntaxHighlighter,
   SqlCopyButton,
 } from './query-preview.module';
-import DvtModalHeader from 'src/components/DvtModalHeader';
 
 SyntaxHighlighter.registerLanguage('sql', sqlSyntax);
 

@@ -1,11 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
-import DvtPagination from 'src/components/DvtPagination';
-import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
-import useFetch from 'src/hooks/useFetch';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { SavedQueryPagination } from './dvt-saved-query.module';
 import { useDispatch } from 'react-redux';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
@@ -16,6 +11,11 @@ import { dvtSqlhubSetSqlQuery } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useHistory } from 'react-router-dom';
 import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtSidebarSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
+import DvtPagination from 'src/components/DvtPagination';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import { SavedQueryPagination } from './dvt-saved-query.module';
 
 function DvtSavedQuery() {
   const dispatch = useDispatch();
