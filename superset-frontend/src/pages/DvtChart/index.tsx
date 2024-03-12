@@ -8,13 +8,21 @@ import DvtButton from 'src/components/DvtButton';
 import DvtSelectButton from 'src/components/DvtSelectButton';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
+import DvtCollapse from 'src/components/DvtCollapse';
+import DvtInput from 'src/components/DvtInput';
 import DvtButtonTabs, {
   ButtonTabsDataProps,
 } from 'src/components/DvtButtonTabs';
+import DvtSelect from 'src/components/DvtSelect';
+import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtInputDrop from 'src/components/DvtInputDrop';
+import DvtChartData from './dvtChartData';
 import {
   StyledChart,
   CreateChart,
   CreateChartTop,
+  CreateChartCenter,
+  CreateChartCenterCollapseInGap,
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,
@@ -58,11 +66,52 @@ const selectBars = [
 
 const DvtChart = () => {
   const dispatch = useDispatch();
-  const [active, setActive] = useState<string>('');
-  const [checked, setChecked] = useState<boolean>(false);
+  const [active, setActive] = useState<string>('echarts_timeseries_line');
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Results',
     value: 'results',
+  });
+  const [collapsesIsOpen, setCollapsesIsOpen] = useState<any[]>(['query']);
+  const [values, setValues] = useState({
+    x_axis: [],
+    time_grain_sqla: '',
+    metrics: [],
+    groupby: [],
+    contributionMode: '',
+    adhoc_filters: [],
+    limit: '',
+    timeseries_limit_metric: [],
+    order_desc: true,
+    row_limit: {
+      label: '10000',
+      value: '10000',
+    },
+    truncate_metric: true,
+    show_empty_columns: true,
+    rolling_type: {
+      label: t('None'),
+      value: 'null',
+    },
+    time_compare: [],
+    comparison_type: '',
+    resample_rule: '',
+    resample_method: '',
+    annotation_layers: [],
+    forecastEnabled: false,
+    forecastPeriods: '10',
+    forecastInterval: '0.8',
+    forecastSeasonalityYearly: {
+      label: t('default'),
+      value: 'null',
+    },
+    forecastSeasonalityWeekly: {
+      label: t('default'),
+      value: 'null',
+    },
+    forecastSeasonalityDaily: {
+      label: t('default'),
+      value: 'null',
+    },
   });
 
   useEffect(
@@ -76,11 +125,6 @@ const DvtChart = () => {
     <StyledChart>
       <CreateChart>
         <CreateChartTop>
-          <DvtCheckbox
-            label={t('Bar Chart')}
-            checked={checked}
-            onChange={setChecked}
-          />
           <DvtSelectButton
             activeButton={active}
             setActiveButton={setActive}
@@ -93,6 +137,104 @@ const DvtChart = () => {
             typeColour="outline"
           />
         </CreateChartTop>
+        <CreateChartCenter>
+          {DvtChartData.find(
+            cItem => cItem.chart_name === active,
+          )?.collapses.map(item => (
+            <DvtCollapse
+              label={item.collapse_label}
+              popoverLabel={item.collapse_popper}
+              popoverDirection="bottom"
+              isOpen={collapsesIsOpen.includes(item.collapse_active)}
+              setIsOpen={bln =>
+                bln
+                  ? setCollapsesIsOpen([
+                      ...collapsesIsOpen,
+                      item.collapse_active,
+                    ])
+                  : collapsesIsOpen.includes(item.collapse_active)
+                  ? setCollapsesIsOpen(
+                      collapsesIsOpen.filter(f => f !== item.collapse_active),
+                    )
+                  : setCollapsesIsOpen([
+                      ...collapsesIsOpen,
+                      item.collapse_active,
+                    ])
+              }
+            >
+              <CreateChartCenterCollapseInGap>
+                {item.forms.map(fItem => (
+                  <>
+                    {fItem.status === 'input' && (
+                      <DvtInput
+                        label={fItem.label}
+                        placeholder={fItem.placeholder}
+                        popoverLabel={fItem.popper}
+                        number={fItem.number}
+                        value={values[fItem.name]}
+                        onChange={v =>
+                          setValues({ ...values, [fItem.name]: v })
+                        }
+                      />
+                    )}
+                    {fItem.status === 'select' && (
+                      <DvtSelect
+                        label={fItem.label}
+                        placeholder={fItem.placeholder}
+                        popoverLabel={fItem.popper}
+                        selectedValue={values[fItem.name]}
+                        setSelectedValue={v =>
+                          setValues({ ...values, [fItem.name]: v })
+                        }
+                        data={fItem.options || []}
+                        typeDesign="form"
+                        maxWidth
+                      />
+                    )}
+                    {fItem.status === 'multiple-select' && (
+                      <DvtInputSelect
+                        label={fItem.label}
+                        placeholder={fItem.placeholder}
+                        // popoverLabel={fItem.popper}
+                        selectedValues={values[fItem.name]}
+                        setSelectedValues={v =>
+                          setValues({ ...values, [fItem.name]: v })
+                        }
+                        data={fItem.options}
+                        typeDesign="form"
+                      />
+                    )}
+                    {fItem.status === 'input-drop' && (
+                      <DvtInputDrop
+                        label={fItem.label}
+                        placeholder={fItem.placeholder}
+                        popoverLabel={fItem.popper}
+                        droppedData={values[fItem.name]}
+                        setDroppedData={v =>
+                          setValues({ ...values, [fItem.name]: v })
+                        }
+                        type={fItem?.type || 'x-axis'}
+                        multiple={fItem.multiple}
+                        savedData={[]}
+                        columnData={[]}
+                        datasourceApi="datasource/table/7"
+                      />
+                    )}
+                    {fItem.status === 'checkbox' && (
+                      <DvtCheckbox
+                        label={fItem.label}
+                        checked={values[fItem.name]}
+                        onChange={v =>
+                          setValues({ ...values, [fItem.name]: v })
+                        }
+                      />
+                    )}
+                  </>
+                ))}
+              </CreateChartCenterCollapseInGap>
+            </DvtCollapse>
+          ))}
+        </CreateChartCenter>
         <CreateChartBottom>
           <DvtButton
             label={t('Create Chart')}

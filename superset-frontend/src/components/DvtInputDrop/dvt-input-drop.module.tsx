@@ -43,6 +43,9 @@ const StyledInputDropLabel = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
 `;
 
 const StyledInputDropGroup = styled.div`
