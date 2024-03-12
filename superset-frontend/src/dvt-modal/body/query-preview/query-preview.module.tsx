@@ -24,7 +24,6 @@ const StyledQueryPreview = styled.div`
   flex-direction: column;
   height: 100%;
   padding: 20px;
-  padding-top: 50px;
   gap: 15px;
 `;
 
@@ -35,7 +34,7 @@ const StyledQueryPreviewButtonContainer = styled.div`
 
 const SqlContainer = styled.div`
   position: relative;
-  height: 100%;
+  height: 483px;
   display: flex;
 `;
 

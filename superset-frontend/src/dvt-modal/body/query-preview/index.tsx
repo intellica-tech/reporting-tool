@@ -20,6 +20,7 @@ import {
   StyledSyntaxHighlighter,
   SqlCopyButton,
 } from './query-preview.module';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 
 SyntaxHighlighter.registerLanguage('sql', sqlSyntax);
 
@@ -54,14 +55,17 @@ const DvtQueryPreview = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledQueryPreview>
-      <DvtButtonTabs
-        data={[
-          { label: t('User query'), value: 'user_query' },
-          { label: t('Executed query'), value: 'executed_query' },
-        ]}
-        active={active}
-        setActive={setActive}
-      />
+      <DvtModalHeader title="Query Preview" onClose={onClose} />
+      {meta?.queryHistory && (
+        <DvtButtonTabs
+          data={[
+            { label: t('User query'), value: 'user_query' },
+            { label: t('Executed query'), value: 'executed_query' },
+          ]}
+          active={active}
+          setActive={setActive}
+        />
+      )}
       <SqlContainer
         onMouseLeave={() => setOnHover(false)}
         onMouseOver={() => setOnHover(true)}

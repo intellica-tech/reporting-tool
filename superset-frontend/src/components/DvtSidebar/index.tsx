@@ -208,6 +208,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.datasets,
     fetchedSelector.reports,
     fetchedSelector.alerts,
+    fetchedSelector.savedQuery,
     pathName,
   ]);
 
