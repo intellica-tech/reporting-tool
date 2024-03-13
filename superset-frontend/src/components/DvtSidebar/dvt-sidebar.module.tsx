@@ -130,13 +130,14 @@ const StyledDvtSidebarRotateIcon = styled.div<SidebarRotateIcon>`
 `;
 
 const StyledCollapseScroll = styled.div`
-  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding-right: 10px;
+  max-height: 74vh;
+  margin-top: 10px;
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};

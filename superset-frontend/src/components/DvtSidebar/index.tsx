@@ -616,6 +616,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
               'field_abc',
         })),
       );
+
+      setChartCollapses(['metrics', 'columns']);
     }
   }, [chartAddSelector]);
 
