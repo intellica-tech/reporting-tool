@@ -37,6 +37,7 @@ import {
   StyledDvtSidebarIcon,
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
+  StyledCollapseScroll,
 } from './dvt-sidebar.module';
 import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
@@ -45,6 +46,7 @@ import DvtInput from '../DvtInput';
 import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 import DvtInputSelect from '../DvtInputSelect';
 import DvtDargCardList from '../DvtDragCardList';
+import DvtCollapse from '../DvtCollapse';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -99,7 +101,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
+  const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
+  const [chartCollapses, setChartCollapses] = useState<any[]>([]);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -586,25 +590,44 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   }, [selectCategories]);
 
   useEffect(() => {
-    if (chartSelector?.dataset?.columns) {
-      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock';
+    if (chartSelector?.dataset) {
+      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
       const iconQuestions = ['BOOLEAN'];
       const iconHashtags = ['BIGINT'];
       const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
+
+      setChartMetrics(
+        chartSelector.dataset.metrics.map((ci: any) => ({
+          label: ci.expression,
+          value: ci,
+          icon: 'function_x',
+        })),
+      );
 
       setChartColumns(
         chartSelector.dataset.columns.map((ci: any) => ({
           label: ci.column_name,
           value: ci,
-          icon:
-            (iconQuestions.includes(ci.type) && 'question') ||
-            (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
-            (iconClocks.includes(ci.type) && 'clock') ||
-            'field_abc',
+          icon: ci.expression
+            ? 'function_x'
+            : (iconQuestions.includes(ci.type) && 'question') ||
+              (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
+              (iconClocks.includes(ci.type) && 'clock') ||
+              'field_abc',
         })),
       );
     }
   }, [chartAddSelector]);
+
+  const handleChartCollapseSetOpen = (bln: boolean, active: string) => {
+    if (bln) {
+      setChartCollapses([...chartCollapses, active]);
+    } else if (chartCollapses.includes(active)) {
+      setChartCollapses(chartCollapses.filter(f => f !== active));
+    } else {
+      setChartCollapses([...chartCollapses, active]);
+    }
+  };
 
   return (
     <StyledDvtSidebar minWidth={minWidth}>
@@ -910,10 +933,32 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   }}
                 />
               )}
-            {pathTitles(pathName) === 'chart' &&
-              chartSelector?.dataset?.columns?.length && (
-                <DvtDargCardList data={chartColumns} />
-              )}
+            {pathTitles(pathName) === 'chart' && (
+              <StyledCollapseScroll>
+                {chartSelector?.dataset?.metrics?.length && (
+                  <DvtCollapse
+                    label="Metrics"
+                    isOpen={chartCollapses.includes('metrics')}
+                    setIsOpen={bln =>
+                      handleChartCollapseSetOpen(bln, 'metrics')
+                    }
+                  >
+                    <DvtDargCardList data={chartMetrics} />
+                  </DvtCollapse>
+                )}
+                {chartSelector?.dataset?.columns?.length && (
+                  <DvtCollapse
+                    label="Columns"
+                    isOpen={chartCollapses.includes('columns')}
+                    setIsOpen={bln =>
+                      handleChartCollapseSetOpen(bln, 'columns')
+                    }
+                  >
+                    <DvtDargCardList data={chartColumns} />
+                  </DvtCollapse>
+                )}
+              </StyledCollapseScroll>
+            )}
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
