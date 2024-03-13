@@ -30,7 +30,9 @@ import {
   RightPreviewTop,
   RightPreviewBottom,
   RightPreviewBottomTabItem,
+  RightPreviewBottomTableScroll,
 } from './dvt-chart.module';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 
 const selectBars = [
   // {
@@ -77,7 +79,10 @@ const DvtChart = () => {
   const [collapsesIsOpen, setCollapsesIsOpen] = useState<any[]>(['query']);
   const [values, setValues] = useState<any>({
     x_axis: [],
-    time_grain_sqla: '',
+    time_grain_sqla: {
+      label: t('Day'),
+      value: 'P1D',
+    },
     metrics: [],
     groupby: [],
     contributionMode: '',
@@ -96,7 +101,10 @@ const DvtChart = () => {
       value: 'null',
     },
     time_compare: [],
-    comparison_type: '',
+    comparison_type: {
+      label: t('Actual values'),
+      value: 'values',
+    },
     resample_rule: '',
     resample_method: '',
     annotation_layers: [],
@@ -117,10 +125,53 @@ const DvtChart = () => {
     },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartDataLoading, setChartDataLoading] = useState<boolean>(false);
+  const [resultHeader, setResultHeader] = useState<any[]>([]);
+  const [resultData, setResultData] = useState<any[]>([]);
+  const [resultSort, setResultSort] = useState<DvtTableSortProps>({
+    column: '',
+    direction: 'desc',
+  });
+  const [resultLoading, setResultLoading] = useState<boolean>(false);
+  const [sampleApiUrl, setSampleApiUrl] = useState('');
+  const [sampleHeader, setSampleHeader] = useState<any[]>([]);
+  const [sampleData, setSampleData] = useState<any[]>([]);
+  const [sampleLoading, setSampleLoading] = useState<boolean>(false);
+  const [sampleSort, setSampleSort] = useState<DvtTableSortProps>({
+    column: '',
+    direction: 'desc',
+  });
 
   console.log(values);
 
   const formData = new FormData();
+
+  const metricsFormation = values.metrics.map((v: any) =>
+    v.values.saved?.value
+      ? v.values.saved.value
+      : {
+          expressionType: v.values.expressionType,
+          column: selectedChart?.dataset?.columns.some(
+            (f: any) => f.column_name === v.values?.column?.value,
+          )
+            ? selectedChart?.dataset?.columns.find(
+                (f: any) => f.column_name === v.values?.column?.value,
+              )
+            : null,
+          aggregate: v.values.aggregate?.value
+            ? v.values.aggregate.value
+            : null,
+          sqlExpression:
+            v.values.column?.value || v.values.saved?.value
+              ? null
+              : v.values.sql,
+          datasourceWarning: false,
+          hasCustomLabel: false,
+          label: v.label,
+          // optionName: 'metric_sckb5exnnc_o3yc8l9itvd',
+        },
+  );
 
   const formDataObj = {
     datasource: {
@@ -137,7 +188,7 @@ const DvtChart = () => {
       x_axis_sort_asc: true,
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
-      metrics: values.metrics,
+      metrics: metricsFormation,
       groupby: values.groupby,
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: 'SIMPLE',
@@ -181,19 +232,71 @@ const DvtChart = () => {
       extra_form_data: {},
       force: false,
       result_format: 'json',
-      result_type: 'results',
-      timeseries_limit_metric: {
-        expressionType: 'SIMPLE',
-        column: {},
-        aggregate: values.timeseries_limit_metric[0]?.values?.aggregate?.value,
-        sqlExpression: null,
-        datasourceWarning: false,
-        hasCustomLabel: false,
-        label: values.timeseries_limit_metric[0]?.label,
-        // optionName: 'metric_e718zbxhzxp_d07oowpmqs4',
-      },
+      result_type: 'full',
+      // timeseries_limit_metric: {
+      //   expressionType: 'SIMPLE',
+      //   column: {},
+      //   aggregate: values.timeseries_limit_metric[0]?.values?.aggregate?.value,
+      //   sqlExpression: null,
+      //   datasourceWarning: false,
+      //   hasCustomLabel: false,
+      //   label: values.timeseries_limit_metric[0]?.label,
+      //   // optionName: 'metric_e718zbxhzxp_d07oowpmqs4',
+      // },
     },
-    queries: [],
+    queries: [
+      {
+        filters: [
+          {
+            col: 'year',
+            op: 'TEMPORAL_RANGE',
+            val: 'No filter',
+          },
+        ],
+        extras: {
+          time_grain_sqla: values.time_grain_sqla?.value,
+          having: '',
+          where: '',
+        },
+        applied_time_extras: {},
+        columns: values.x_axis.map((c: any) => ({
+          timeGrain: values.time_grain_sqla?.value,
+          columnType: 'BASE_AXIS',
+          sqlExpression: c.label,
+          label: c.label,
+          expressionType: 'SQL',
+        })),
+        metrics: metricsFormation,
+        orderby: [[metricsFormation[0], false]],
+        annotation_layers: [],
+        row_limit: Number(values.row_limit.value),
+        series_columns: [],
+        series_limit: 0,
+        order_desc: true,
+        url_params: selectedChart?.form_data?.url_params,
+        custom_params: {},
+        custom_form_data: {},
+        time_offsets: [],
+        post_processing: [
+          {
+            operation: 'pivot',
+            options: {
+              index: [values.x_axis[0]?.label],
+              columns: [],
+              aggregates: {
+                count: {
+                  operator: 'mean',
+                },
+              },
+              drop_missing_columns: false,
+            },
+          },
+          {
+            operation: 'flatten',
+          },
+        ],
+      },
+    ],
     result_format: 'json',
     result_type: 'full',
   };
@@ -216,7 +319,16 @@ const DvtChart = () => {
   const chartResultsPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
-    body: { ...formDataObj, result_type: 'results' },
+    body: {
+      ...formDataObj,
+      form_data: { ...formDataObj.form_data, result_type: 'results' },
+      result_type: 'results',
+    },
+  });
+
+  const chartSamplePromise = useFetch({
+    url: sampleApiUrl,
+    method: 'POST',
   });
 
   useEffect(() => {
@@ -227,9 +339,65 @@ const DvtChart = () => {
 
   useEffect(() => {
     if (chartResultsPromise) {
-      console.log(chartResultsPromise);
+      const firstObjectItem = chartResultsPromise.result[0].colnames;
+      const headerFormation = firstObjectItem.map((v: any, i: number) => ({
+        id: i,
+        title: v,
+        field: v,
+        sort: true,
+      }));
+      setResultHeader(headerFormation);
+      setResultData(chartResultsPromise.result[0].data);
+      setResultLoading(false);
     }
   }, [chartResultsPromise]);
+
+  useEffect(() => {
+    if (resultData.length && tabs.value === 'samples') {
+      setSampleApiUrl(
+        `datasource/samples?force=false&datasource_type=${selectedChart?.form_data?.url_params?.datasource_type}&datasource_id=${selectedChart?.form_data?.url_params?.datasource_id}`,
+      );
+    }
+  }, [resultData.length, tabs.value]);
+
+  useEffect(() => {
+    if (chartSamplePromise) {
+      const firstObjectItem = chartSamplePromise.result.colnames;
+      const headerFormation = firstObjectItem.map((v: any, i: number) => ({
+        id: i,
+        title: v,
+        field: v,
+        sort: true,
+      }));
+      setSampleHeader(headerFormation);
+      setSampleData(chartResultsPromise.result.data);
+      setSampleLoading(false);
+    }
+  }, [chartSamplePromise]);
+
+  const sortFormationForTable = (data: any[], sort: any) =>
+    data.sort((a, b) => {
+      if (typeof a[sort.column] === 'string') {
+        return sort.direction === 'asc'
+          ? a[sort.column].localeCompare(b[sort.column])
+          : b[sort.column].localeCompare(a[sort.column]);
+      }
+      return sort.direction === 'asc'
+        ? a[sort.column] - b[sort.column]
+        : b[sort.column] - a[sort.column];
+    });
+
+  useEffect(() => {
+    if (resultSort.column) {
+      setResultData(sortFormationForTable(resultData, resultSort));
+    }
+  }, [resultSort]);
+
+  useEffect(() => {
+    if (sampleSort.column) {
+      setResultData(sortFormationForTable(sampleData, sampleSort));
+    }
+  }, [sampleSort]);
 
   useEffect(
     () => () => {
@@ -410,10 +578,30 @@ const DvtChart = () => {
             setActive={setTabs}
           />
           <RightPreviewBottomTabItem>
-            <DvtIconDataLabel
-              label={t('Run a query to display results')}
-              icon="file"
-            />
+            {resultData.length || sampleData.length ? (
+              <RightPreviewBottomTableScroll>
+                {tabs.value === 'results' ? (
+                  <DvtTable
+                    header={resultHeader}
+                    data={resultData}
+                    sort={resultSort}
+                    setSort={setResultSort}
+                  />
+                ) : (
+                  <DvtTable
+                    header={sampleHeader}
+                    data={sampleData}
+                    sort={sampleSort}
+                    setSort={setSampleSort}
+                  />
+                )}
+              </RightPreviewBottomTableScroll>
+            ) : (
+              <DvtIconDataLabel
+                label={t('Run a query to display results')}
+                icon="file"
+              />
+            )}
           </RightPreviewBottomTabItem>
         </RightPreviewBottom>
       </RightPreview>

@@ -85,6 +85,56 @@ const RightPreviewBottomTabItem = styled.div`
   margin-top: 6px;
 `;
 
+const RightPreviewBottomTableScroll = styled.div`
+  margin-top: 10px;
+  overflow-x: auto;
+  overflow-y: auto;
+  white-space: nowrap;
+  max-height: 32vh;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 8px;
+    height: 8px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 8px;
+    height: 8px;
+    border-radius: 12px;
+  }
+
+  & table {
+    thead th {
+      padding-bottom: 10px;
+
+      &:not(:last-of-type) {
+        padding-right: 20px;
+      }
+      &:first-of-type {
+        padding-left: 20px;
+      }
+    }
+    tbody {
+      & tr {
+        height: 32px;
+        margin-bottom: 0px;
+      }
+
+      & td {
+        &:not(:last-of-type) {
+          padding-right: 20px;
+        }
+        &:first-of-type {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+`;
+
 export {
   StyledChart,
   CreateChart,
@@ -96,4 +146,5 @@ export {
   RightPreviewTop,
   RightPreviewBottom,
   RightPreviewBottomTabItem,
+  RightPreviewBottomTableScroll,
 };
