@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useFetch from 'src/hooks/useFetch';
+import useFetchDvt from 'src/hooks/useFetchDvt';
 import { t } from '@superset-ui/core';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import DvtSelectButton from 'src/components/DvtSelectButton';
 import DvtCheckbox from 'src/components/DvtCheckbox';
@@ -18,6 +20,7 @@ import DvtButtonTabs, {
 import DvtSelect from 'src/components/DvtSelect';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtInputDrop from 'src/components/DvtInputDrop';
+import DvtSpinner from 'src/components/DvtSpinner';
 import DvtChartData from './dvtChartData';
 import {
   StyledChart,
@@ -31,8 +34,8 @@ import {
   RightPreviewBottom,
   RightPreviewBottomTabItem,
   RightPreviewBottomTableScroll,
+  SpinnerContainer,
 } from './dvt-chart.module';
-import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 
 const selectBars = [
   // {
@@ -143,7 +146,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  console.log(values);
+  // console.log(values);
 
   const formData = new FormData();
 
@@ -308,7 +311,7 @@ const DvtChart = () => {
   formData.append('result_format', JSON.stringify(formDataObj.result_format));
   formData.append('result_type', JSON.stringify(formDataObj.result_type));
 
-  const chartFullPromise = useFetch({
+  const chartFullPromise = useFetchDvt({
     url: chartApiUrl,
     method: 'POST',
     body: formDataObj,
@@ -316,7 +319,7 @@ const DvtChart = () => {
 
   formData.append('result_type', JSON.stringify('results'));
 
-  const chartResultsPromise = useFetch({
+  const chartResultsPromise = useFetchDvt({
     url: chartApiUrl,
     method: 'POST',
     body: {
@@ -326,20 +329,29 @@ const DvtChart = () => {
     },
   });
 
-  const chartSamplePromise = useFetch({
+  const chartSamplePromise = useFetchDvt({
     url: sampleApiUrl,
     method: 'POST',
   });
 
   useEffect(() => {
-    if (chartFullPromise) {
-      console.log(chartFullPromise);
+    if (chartFullPromise.data) {
+      setChartData(chartFullPromise.data.data);
     }
-  }, [chartFullPromise]);
+    if (chartFullPromise.error || chartFullPromise.data) {
+      setChartDataLoading(false);
+    }
+  }, [chartFullPromise.error, chartFullPromise.data]);
 
   useEffect(() => {
-    if (chartResultsPromise) {
-      const firstObjectItem = chartResultsPromise.result[0].colnames;
+    if (!chartDataLoading && !resultLoading) {
+      setChartApiUrl('');
+    }
+  }, [chartDataLoading, resultLoading]);
+
+  useEffect(() => {
+    if (chartResultsPromise.data) {
+      const firstObjectItem = chartResultsPromise.data.result[0].colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
         title: v,
@@ -347,13 +359,22 @@ const DvtChart = () => {
         sort: true,
       }));
       setResultHeader(headerFormation);
-      setResultData(chartResultsPromise.result[0].data);
+      setResultData(chartResultsPromise.data.result[0].data);
+    }
+    if (chartFullPromise.error || chartFullPromise.data) {
       setResultLoading(false);
     }
-  }, [chartResultsPromise]);
+  }, [chartResultsPromise.error, chartResultsPromise.data]);
+
+  useEffect(() => {
+    if (!sampleLoading) {
+      setSampleApiUrl('');
+    }
+  }, [sampleLoading]);
 
   useEffect(() => {
     if (resultData.length && tabs.value === 'samples') {
+      setSampleLoading(true);
       setSampleApiUrl(
         `datasource/samples?force=false&datasource_type=${selectedChart?.form_data?.url_params?.datasource_type}&datasource_id=${selectedChart?.form_data?.url_params?.datasource_id}`,
       );
@@ -361,8 +382,8 @@ const DvtChart = () => {
   }, [resultData.length, tabs.value]);
 
   useEffect(() => {
-    if (chartSamplePromise) {
-      const firstObjectItem = chartSamplePromise.result.colnames;
+    if (chartSamplePromise.data) {
+      const firstObjectItem = chartSamplePromise.data.result.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
         title: v,
@@ -370,10 +391,12 @@ const DvtChart = () => {
         sort: true,
       }));
       setSampleHeader(headerFormation);
-      setSampleData(chartResultsPromise.result.data);
+      setSampleData(chartResultsPromise.data.result.data);
+    }
+    if (chartSamplePromise.error || chartSamplePromise.data) {
       setSampleLoading(false);
     }
-  }, [chartSamplePromise]);
+  }, [chartSamplePromise.data, chartSamplePromise.error]);
 
   const sortFormationForTable = (data: any[], sort: any) =>
     data.sort((a, b) => {
@@ -554,19 +577,29 @@ const DvtChart = () => {
           <DvtButton
             label={t('Create Chart')}
             colour="grayscale"
-            onClick={() => setChartApiUrl('chart/data')}
+            onClick={() => {
+              setChartDataLoading(true);
+              setResultLoading(true);
+              setChartApiUrl('chart/data');
+            }}
           />
         </CreateChartBottom>
       </CreateChart>
       <RightPreview>
         <RightPreviewTop>
-          <DvtIconDataLabel
-            label={t('Add required control values to preview chart')}
-            description={t(
-              'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
-            )}
-            icon="square"
-          />
+          {chartDataLoading ? (
+            <SpinnerContainer>
+              <DvtSpinner type="grow" size="xlarge" />
+            </SpinnerContainer>
+          ) : (
+            <DvtIconDataLabel
+              label={t('Add required control values to preview chart')}
+              description={t(
+                'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
+              )}
+              icon="square"
+            />
+          )}
         </RightPreviewTop>
         <RightPreviewBottom>
           <DvtButtonTabs
@@ -578,29 +611,38 @@ const DvtChart = () => {
             setActive={setTabs}
           />
           <RightPreviewBottomTabItem>
-            {resultData.length || sampleData.length ? (
-              <RightPreviewBottomTableScroll>
-                {tabs.value === 'results' ? (
-                  <DvtTable
-                    header={resultHeader}
-                    data={resultData}
-                    sort={resultSort}
-                    setSort={setResultSort}
-                  />
+            {resultLoading || sampleLoading ? (
+              <SpinnerContainer>
+                <DvtSpinner type="grow" size="xlarge" />
+              </SpinnerContainer>
+            ) : (
+              <>
+                {(tabs.value === 'results' && resultData.length) ||
+                (tabs.value === 'samples' && sampleData.length) ? (
+                  <RightPreviewBottomTableScroll>
+                    {tabs.value === 'results' ? (
+                      <DvtTable
+                        header={resultHeader}
+                        data={resultData}
+                        sort={resultSort}
+                        setSort={setResultSort}
+                      />
+                    ) : (
+                      <DvtTable
+                        header={sampleHeader}
+                        data={sampleData}
+                        sort={sampleSort}
+                        setSort={setSampleSort}
+                      />
+                    )}
+                  </RightPreviewBottomTableScroll>
                 ) : (
-                  <DvtTable
-                    header={sampleHeader}
-                    data={sampleData}
-                    sort={sampleSort}
-                    setSort={setSampleSort}
+                  <DvtIconDataLabel
+                    label={t('Run a query to display results')}
+                    icon="file"
                   />
                 )}
-              </RightPreviewBottomTableScroll>
-            ) : (
-              <DvtIconDataLabel
-                label={t('Run a query to display results')}
-                icon="file"
-              />
+              </>
             )}
           </RightPreviewBottomTabItem>
         </RightPreviewBottom>

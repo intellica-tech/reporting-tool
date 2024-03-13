@@ -135,6 +135,13 @@ const RightPreviewBottomTableScroll = styled.div`
   }
 `;
 
+const SpinnerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 32vh;
+  justify-content: center;
+`;
+
 export {
   StyledChart,
   CreateChart,
@@ -147,4 +154,5 @@ export {
   RightPreviewBottom,
   RightPreviewBottomTabItem,
   RightPreviewBottomTableScroll,
+  SpinnerContainer,
 };
