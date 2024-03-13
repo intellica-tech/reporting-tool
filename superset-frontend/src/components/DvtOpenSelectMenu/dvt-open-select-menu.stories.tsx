@@ -32,6 +32,8 @@ const initialValues = {
   aggregate: '',
   option: '',
   sql: '',
+  expressionType: '',
+  clause: '',
 };
 
 const columnData = [
@@ -124,12 +126,12 @@ export const Default = (args: DvtOpenSelectMenuProps) => {
         columnData={columnData}
         optionData={optionData}
         closeOnClick={() => {}}
-        saveOnClick={() => console.log(values)}
+        saveOnClick={args => console.log({ ...values, ...args })}
       />
     </div>
   );
 };
 
 Default.args = {
-  type: 'x-axis',
+  type: 'normal',
 };

@@ -61,17 +61,18 @@ export const Default = (args: DvtInputDropProps) => {
         {...args}
         droppedData={droppedData}
         setDroppedData={setDroppedData}
+        savedData={[{ label: 'COUNT (*)', value: 'count' }]}
         columnData={columnData}
         datasourceApi="datasource/table/7"
       />
       <DvtDargCard
         label="color"
-        value={{ label: 'color' }}
+        value={{ column_name: 'color' }}
         icon="dvt-hashtag"
       />
       <DvtDargCard
         label="path_json"
-        value={{ label: 'path_json' }}
+        value={{ column_name: 'path_json' }}
         icon="dvt-hashtag"
       />
     </div>
@@ -80,7 +81,7 @@ export const Default = (args: DvtInputDropProps) => {
 Default.args = {
   placeholder: 'Drop columns here or click',
   label: 'Metrics',
-  type: 'metric',
+  type: 'aggregates',
   multiple: true,
   popoverLabel: 'Info',
 };

@@ -17,18 +17,8 @@ interface FormsProps {
   name: string;
   popper?: string;
   placeholder?: string;
-  type?:
-    | 'x-axis'
-    | 'temporal_x-axis'
-    | 'breakdowns'
-    | 'metric'
-    | 'metrics'
-    | 'filters'
-    | 'dimensions'
-    | 'sort_by'
-    | 'percentage_metrics'
-    | 'soruce_target'
-    | 'columns';
+  type?: 'normal' | 'aggregates' | 'filters';
+  savedType?: 'metric' | 'expressions';
   multiple?: boolean;
   options?: OptionsData[];
   number?: boolean;
@@ -344,7 +334,8 @@ const DvtChartData: DvtChartDataProps[] = [
             popper: t('Dimension to use on x-axis.'),
             status: 'input-drop',
             multiple: false,
-            type: 'x-axis',
+            type: 'normal',
+            savedType: 'expressions',
           },
           {
             label: t('TIME GRAIN'),
@@ -362,7 +353,8 @@ const DvtChartData: DvtChartDataProps[] = [
             popper: t('cannot be empty'),
             status: 'input-drop',
             multiple: true,
-            type: 'metrics',
+            type: 'aggregates',
+            savedType: 'metric',
           },
           {
             label: t('DIMENSIONS'),
@@ -372,7 +364,8 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             status: 'input-drop',
             multiple: true,
-            type: 'dimensions',
+            type: 'normal',
+            savedType: 'expressions',
           },
           {
             label: t('CONTRIBUTION MODE'),
@@ -407,7 +400,8 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             status: 'input-drop',
             multiple: false,
-            type: 'sort_by',
+            type: 'aggregates',
+            savedType: 'metric',
           },
           {
             label: t('SORT DESCENDING'),
@@ -554,6 +548,45 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.forecastSeasonalityDaily,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'big_number_total',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('METRIC'),
+            name: 'metric',
+            popper: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('FILTERS'),
+            name: 'adhoc_filters',
+            status: 'input-drop',
+            multiple: true,
+            type: 'filters',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Display settings'),
+        collapse_active: 'display_settings',
+        forms: [
+          {
+            name: 'subheader',
+            label: t('SUBHEADER'),
+            status: 'input',
           },
         ],
       },

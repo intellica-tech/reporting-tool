@@ -13,6 +13,7 @@ interface OperatorDataProps {
 interface OpenSelectMenuDataProps {
   operator: OperatorDataProps;
   aggregate: DataProps[];
+  whereOrHaving: DataProps[];
 }
 
 const openSelectMenuData: OpenSelectMenuDataProps = {
@@ -95,6 +96,10 @@ const openSelectMenuData: OpenSelectMenuDataProps = {
       label: t('SUM'),
       value: 'SUM',
     },
+  ],
+  whereOrHaving: [
+    { label: t('WHERE'), value: 'WHERE' },
+    { label: t('HAVING'), value: 'HAVING' },
   ],
 };
 

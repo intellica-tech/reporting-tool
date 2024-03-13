@@ -123,9 +123,10 @@ interface StyledInputDropMenuProps {
 }
 
 const StyledInputDropMenu = styled.div<StyledInputDropMenuProps>`
-  position: absolute;
-  left: ${({ menuRight }) => menuRight + 8}px;
-  bottom: ${({ menuTopCalc }) => menuTopCalc};
+  position: fixed;
+  left: ${({ menuRight }) => menuRight + 20}px;
+  top: ${({ menuTopCalc }) => menuTopCalc};
+  z-index: 1000;
 
   &::before {
     content: '';

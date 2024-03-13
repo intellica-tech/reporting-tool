@@ -36,6 +36,8 @@ const initialValues = {
   aggregate: '',
   option: '',
   sql: '',
+  expressionType: 'SIMPLE',
+  clause: 'WHERE',
 };
 
 export interface DvtInputDropProps {
@@ -48,18 +50,8 @@ export interface DvtInputDropProps {
   droppedData: any[];
   setDroppedData: (newDroppedData: any[] | any) => void;
   error?: string;
-  type:
-    | 'x-axis'
-    | 'temporal_x-axis'
-    | 'breakdowns'
-    | 'metric'
-    | 'metrics'
-    | 'filters'
-    | 'dimensions'
-    | 'sort_by'
-    | 'percentage_metrics'
-    | 'soruce_target'
-    | 'columns';
+  type: 'normal' | 'aggregates' | 'filters';
+  savedType: 'metric' | 'expressions';
   savedData?: DataProps[];
   columnData: DataProps[];
   datasourceApi: string;
@@ -75,7 +67,8 @@ const DvtInputDrop = ({
   droppedData = [],
   setDroppedData,
   error,
-  type = 'x-axis',
+  type = 'normal',
+  savedType = 'metric',
   savedData = [],
   columnData = [],
   datasourceApi = '',
@@ -83,7 +76,10 @@ const DvtInputDrop = ({
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   useOnClickOutside(ref, () => setIsOpen(false));
-  const [windowHeightTop, setWindowHeightTop] = useState(0);
+  const [windowScreen, setWindowScreen] = useState({
+    top: 0,
+    left: 0,
+  });
   const [menuRight, setMenuRight] = useState(0);
   const [menuTopCalc, setMenuTopCalc] = useState('null');
   const [menuTopCalcArrow, setMenuTopCalcArrow] = useState('null');
@@ -91,40 +87,73 @@ const DvtInputDrop = ({
   const [optionApiUrl, setOptionApiUrl] = useState<string>('');
   const [values, setValues] = useState<any>(initialValues);
   const [getId, setGetId] = useState<number | null>(null);
+  const [tab, setTab] = useState<'SAVED' | 'SIMPLE' | 'SQL'>('SIMPLE');
+  const [clause, setClause] = useState<'WHERE' | 'HAVING'>('WHERE');
+  const [tabFetched, setTabFetched] = useState<boolean>(false);
 
   const openMenuHeight = 360;
-  const inputHeight = 47;
+  const inputHeight = 50;
   const borderHeight = 16;
-  const itemHeight = 28;
+  // const itemHeight = 28.8;
+  const arrowTop = 25;
   const topMaxHeight = (window.innerHeight - openMenuHeight) / 2 + 50;
   const bottomMaxHeight =
     window.innerHeight - (window.innerHeight - openMenuHeight) / 2 - 50;
 
-  const handleAddClickPositionTop = (index: number | null) => {
-    const droppedDataLength = droppedData?.length ? droppedData.length : 0;
-    const indexItemTotal = index === null ? null : droppedDataLength - index;
+  const handleAddClickPositionTop = (
+    index: number | null,
+    bounding: any,
+    leftAdd: number,
+  ) => {
+    // const droppedDataLength = droppedData?.length ? droppedData.length : 0;
+    // const indexItemTotal = index === null ? null : droppedDataLength - index;
 
-    const itemPixels = multiple
-      ? `${
-          indexItemTotal === null
-            ? '0px'
-            : `${indexItemTotal * itemHeight}px + 5px`
-        }`
-      : '0px';
+    // const itemPixels = multiple
+    //   ? `${
+    //       indexItemTotal === null
+    //         ? '0px'
+    //         : `${indexItemTotal * itemHeight}px + 5px`
+    //     }`
+    //   : '0px';
 
-    if (windowHeightTop < topMaxHeight) {
+    // if (windowScreen.top < topMaxHeight) {
+    //   setMenuTopCalc(
+    //     `calc(-${openMenuHeight}px + ${inputHeight}px + ${itemPixels})`,
+    //   );
+    //   setMenuTopCalcArrow(`${inputHeight / 2 - borderHeight / 2}px`);
+    // } else if (windowScreen.top > bottomMaxHeight) {
+    //   setMenuTopCalc(`calc(0px + ${itemPixels})`);
+    //   setMenuTopCalcArrow(
+    //     `${openMenuHeight - (inputHeight / 2 + borderHeight / 2)}px`,
+    //   );
+    // } else {
+    //   setMenuTopCalc(
+    //     `calc(-${openMenuHeight}px / 2 + ${inputHeight}px / 2 + ${itemPixels})`,
+    //   );
+    //   setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
+    // }
+
+    setMenuRight(bounding.right + leftAdd);
+
+    if (windowScreen.top < topMaxHeight) {
       setMenuTopCalc(
-        `calc(-${openMenuHeight}px + ${inputHeight}px + ${itemPixels})`,
+        `calc(${bounding.bottom}px - ${bounding.height / 2}px - ${arrowTop}px)`,
       );
       setMenuTopCalcArrow(`${inputHeight / 2 - borderHeight / 2}px`);
-    } else if (windowHeightTop > bottomMaxHeight) {
-      setMenuTopCalc(`calc(0px + ${itemPixels})`);
+    } else if (windowScreen.top > bottomMaxHeight) {
+      setMenuTopCalc(
+        `calc(${bounding.bottom}px - ${openMenuHeight}px - ${
+          bounding.height / 2
+        }px + ${arrowTop}px)`,
+      );
       setMenuTopCalcArrow(
         `${openMenuHeight - (inputHeight / 2 + borderHeight / 2)}px`,
       );
     } else {
       setMenuTopCalc(
-        `calc(-${openMenuHeight}px / 2 + ${inputHeight}px / 2 + ${itemPixels})`,
+        `calc(${bounding.bottom}px - ${
+          openMenuHeight / 2 + bounding.height / 2
+        }px)`,
       );
       setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
     }
@@ -142,45 +171,47 @@ const DvtInputDrop = ({
 
     const getValues = {
       ...initialValues,
-      column: { label: jsonDropData.label, value: jsonDropData.label },
-      sql: jsonDropData.label,
+      column: {
+        label: jsonDropData.column_name,
+        value: jsonDropData.column_name,
+      },
+      sql: jsonDropData.column_name,
     };
 
     const frmtDropData = {
       id: moment().unix(),
-      ...jsonDropData,
+      label: jsonDropData.column_name,
       values: getValues,
+      getColumn: jsonDropData,
     };
 
     if (jsonDropData) {
-      setDroppedData((prevData: any | any[]) => {
-        const newData = multiple ? [...prevData, frmtDropData] : [frmtDropData];
-        return newData.sort(
-          (a: { id: number }, b: { id: number }) => a.id - b.id,
-        );
-      });
+      const newData = multiple
+        ? [...droppedData, frmtDropData]
+        : [frmtDropData];
+      setDroppedData(
+        newData.sort((a: { id: number }, b: { id: number }) => a.id - b.id),
+      );
 
       onDrop?.([frmtDropData]);
       setValues(getValues);
-      handleAddClickPositionTop(multiple ? droppedData.length - 1 : null);
+      // handleAddClickPositionTop(multiple ? droppedData.length - 1 : null);
     }
   };
 
   const handleRemoveItem = (index: number) => {
-    setDroppedData((prevData: any[]) => {
-      const newData = [...prevData];
-      newData.splice(index, 1);
-      return newData.sort(
-        (a: { id: number }, b: { id: number }) => a.id - b.id,
-      );
-    });
+    const newData = [...droppedData];
+    newData.splice(index, 1);
+    setDroppedData(
+      newData.sort((a: { id: number }, b: { id: number }) => a.id - b.id),
+    );
   };
 
-  useEffect(() => {
-    if (ref.current) {
-      setMenuRight(ref.current.clientWidth);
-    }
-  }, [ref.current]);
+  // useEffect(() => {
+  //   if (ref.current) {
+  //     setMenuRight(ref.current.clientWidth);
+  //   }
+  // }, [ref.current]);
 
   useEffect(() => {
     if (menuTopCalc !== 'null') {
@@ -215,33 +246,46 @@ const DvtInputDrop = ({
     }
   }, [datasourceApi, values.column]);
 
-  const handleSaveClick = () => {
-    const onlyCountDistinct =
-      values.aggregate?.value === 'COUNT_DISTINCT'
-        ? `${values.aggregate.value}(${values.column?.value})`
-        : values.sql;
+  const handleSaveClick = (args: any) => {
+    const onlyCountDistinct = values.saved?.label
+      ? values.saved.label
+      : values.aggregate?.value === 'COUNT_DISTINCT'
+      ? `${values.aggregate.value}(${values.column?.value})`
+      : values.sql;
     const newAddItem = {
       id: getId === null ? moment().unix() : getId,
       label: onlyCountDistinct,
-      values,
+      values: { ...values, ...args },
     };
-    setDroppedData((prevData: any | any[]) => {
-      const selectedItem =
-        getId === null
-          ? prevData
-          : prevData.filter((it: { id: number }) => it.id !== getId);
-      const newData = multiple ? [...selectedItem, newAddItem] : [newAddItem];
-      return newData.sort(
-        (a: { id: number }, b: { id: number }) => a.id - b.id,
-      );
-    });
+    const selectedItem =
+      getId === null
+        ? droppedData
+        : droppedData.filter((it: { id: number }) => it.id !== getId);
+    const newData = multiple ? [...selectedItem, newAddItem] : [newAddItem];
+    setDroppedData(
+      newData.sort((a: { id: number }, b: { id: number }) => a.id - b.id),
+    );
     setIsOpen(false);
     setValues(initialValues);
     setGetId(null);
   };
 
+  useEffect(() => {
+    if (tabFetched) {
+      setTabFetched(false);
+    }
+  }, [tabFetched]);
+
   return (
-    <StyledInputDrop ref={ref} onMouseMove={e => setWindowHeightTop(e.clientY)}>
+    <StyledInputDrop
+      ref={ref}
+      onMouseMove={e => {
+        setWindowScreen({
+          top: e.clientY,
+          left: e.clientX,
+        });
+      }}
+    >
       <StyledInputDropLabel>
         {label}
         {popoverLabel && (
@@ -276,10 +320,17 @@ const DvtInputDrop = ({
               }}
             />
             <StyledInputDropGroupItemLabel
-              onClick={() => {
+              onClick={(e: any) => {
                 setGetId(item.id);
                 setValues(item.values);
-                handleAddClickPositionTop(index);
+                setTabFetched(true);
+                setTab(item.values.expressionType);
+                setClause(item.values.clause);
+                handleAddClickPositionTop(
+                  index,
+                  e.target.getBoundingClientRect(),
+                  0,
+                );
               }}
             >
               {item.label}
@@ -290,19 +341,27 @@ const DvtInputDrop = ({
           <StyledInputDropGroupItem marginTop={!!droppedData?.length}>
             <StyledInputDropGroupItemLabel
               textOnPlaceholder
-              onClick={() => {
+              onClick={(e: any) => {
                 setValues(initialValues);
                 setGetId(null);
-                handleAddClickPositionTop(null);
+                handleAddClickPositionTop(
+                  null,
+                  e.target.getBoundingClientRect(),
+                  21,
+                );
               }}
             >
               {placeholder}
             </StyledInputDropGroupItemLabel>
             <StyledInputDropIcon
-              onClick={() => {
+              onClick={(e: any) => {
                 setValues(initialValues);
                 setGetId(null);
-                handleAddClickPositionTop(null);
+                handleAddClickPositionTop(
+                  null,
+                  e.target.getBoundingClientRect(),
+                  0,
+                );
               }}
             >
               <Icon
@@ -314,7 +373,7 @@ const DvtInputDrop = ({
           </StyledInputDropGroupItem>
         )}
       </StyledInputDropGroup>
-      {isOpen && (
+      {isOpen && !tabFetched && (
         <StyledInputDropMenu
           menuRight={menuRight}
           menuTopCalc={menuTopCalc}
@@ -322,6 +381,7 @@ const DvtInputDrop = ({
         >
           <DvtOpenSelectMenu
             type={type}
+            savedType={savedType}
             values={values}
             setValues={setValues}
             savedData={savedData}
@@ -329,6 +389,8 @@ const DvtInputDrop = ({
             optionData={optionData}
             closeOnClick={() => setIsOpen(false)}
             saveOnClick={handleSaveClick}
+            tab={tab}
+            clause={clause}
           />
         </StyledInputDropMenu>
       )}
