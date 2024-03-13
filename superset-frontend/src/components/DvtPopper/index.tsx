@@ -29,6 +29,7 @@ export interface DvtPopperProps {
   children: ReactNode;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   size?: 'small' | 'medium';
+  nowrap?: boolean;
 }
 
 const DvtPopper: React.FC<DvtPopperProps> = ({
@@ -36,6 +37,7 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
   children,
   direction = 'bottom',
   size = 'medium',
+  nowrap = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -71,7 +73,10 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
         <StyledPopperAbsolute direction={direction} childWidth={childWidth}>
           <StyledPopperBody
             fontSize={size}
-            style={{ minWidth: setMinWidth(label.length) }}
+            style={{
+              minWidth: setMinWidth(label.length),
+              whiteSpace: nowrap ? 'nowrap' : 'inherit',
+            }}
           >
             {label}
           </StyledPopperBody>

@@ -22,7 +22,7 @@ import Icon from '../Icons/Icon';
 import DvtSpinner from '../DvtSpinner';
 
 export interface DvtButtonProps {
-  label: string;
+  label?: string;
   icon?: string;
   size?: 'small' | 'medium' | 'large';
   onClick: () => void;

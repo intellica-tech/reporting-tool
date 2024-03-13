@@ -107,6 +107,11 @@ interface DvtSidebarState {
     database: any;
     schema: any;
   };
+  rolesList: {
+    permissions: any;
+    name: any;
+    user: any;
+  };
   data: {
     fetched: {
       alerts: {
@@ -298,6 +303,11 @@ const INITIAL_STATE = {
   },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
+  },
+  rolesList: {
+    permissions: '',
+    name: '',
+    user: '',
   },
 };
 

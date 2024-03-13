@@ -135,6 +135,25 @@ const RowLevelSecurityList = lazy(
       /* webpackChunkName: "RowLevelSecurityList" */ 'src/pages/DvtRowLevelSecurity'
     ),
 );
+
+const DvtUsersListAdd = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "DvtUsersListAdd" */ 'src/pages/DvtUsersListAdd'
+    ),
+);
+
+const DvtListRolesAdd = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "DvtListRolesAdd" */ 'src/pages/DvtListRolesAdd'
+    ),
+);
+
+const DvtRolesList = lazy(
+  () => import(/* webpackChunkName: "RolesList" */ 'src/pages/DvtRolesList'),
+);
+
 const UsersList = lazy(
   () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
 );
@@ -252,6 +271,18 @@ export const routes: Routes = [
   {
     path: '/profile/',
     Component: Profile,
+  },
+  {
+    path: '/users/add',
+    Component: DvtUsersListAdd,
+  },
+  {
+    path: '/role/add',
+    Component: DvtListRolesAdd,
+  },
+  {
+    path: '/role/list/',
+    Component: DvtRolesList,
   },
 ];
 

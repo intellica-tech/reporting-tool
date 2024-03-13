@@ -25,8 +25,27 @@ export default {
   component: DvtInputDrop,
 };
 
+const columnData = [
+  {
+    label: 'name',
+    value: 'name',
+  },
+  {
+    label: 'color',
+    value: 'color',
+  },
+  {
+    label: 'path_json',
+    value: 'path_json',
+  },
+  {
+    label: 'polyline',
+    value: 'polyline',
+  },
+];
+
 export const Default = (args: DvtInputDropProps) => {
-  const [droppedData, setDroppedData] = useState<any[] | null>(null);
+  const [droppedData, setDroppedData] = useState<any[]>([]);
 
   return (
     <div
@@ -42,15 +61,18 @@ export const Default = (args: DvtInputDropProps) => {
         {...args}
         droppedData={droppedData}
         setDroppedData={setDroppedData}
+        savedData={[{ label: 'COUNT (*)', value: 'count' }]}
+        columnData={columnData}
+        datasourceApi="datasource/table/7"
       />
       <DvtDargCard
-        label="arac"
-        value={{ id: 1, name: 'arac' }}
+        label="color"
+        value={{ column_name: 'color' }}
         icon="dvt-hashtag"
       />
       <DvtDargCard
-        label="arac2"
-        value={{ id: 2, name: 'arac2' }}
+        label="path_json"
+        value={{ column_name: 'path_json' }}
         icon="dvt-hashtag"
       />
     </div>
@@ -59,5 +81,7 @@ export const Default = (args: DvtInputDropProps) => {
 Default.args = {
   placeholder: 'Drop columns here or click',
   label: 'Metrics',
+  type: 'aggregates',
+  multiple: true,
   popoverLabel: 'Info',
 };

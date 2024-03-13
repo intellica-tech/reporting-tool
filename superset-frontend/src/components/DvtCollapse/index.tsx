@@ -66,7 +66,11 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
           {popoverLabel && (
             <StyledCollapsePopover>
               {popoverLabel ? (
-                <DvtPopper label={popoverLabel} direction={popoverDirection}>
+                <DvtPopper
+                  label={popoverLabel}
+                  size="small"
+                  direction={popoverDirection}
+                >
                   <Icon
                     fileName="warning"
                     css={(theme: SupersetTheme) => ({

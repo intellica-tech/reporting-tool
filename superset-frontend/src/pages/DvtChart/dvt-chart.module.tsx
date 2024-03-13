@@ -21,6 +21,37 @@ const CreateChartTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
+  padding-left: 10px;
+`;
+
+const CreateChartCenter = styled.div`
+  flex: 1;
+  margin-bottom: 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
+`;
+
+const CreateChartCenterCollapseInGap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const CreateChartBottom = styled.div`
@@ -58,6 +89,8 @@ export {
   StyledChart,
   CreateChart,
   CreateChartTop,
+  CreateChartCenter,
+  CreateChartCenterCollapseInGap,
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,

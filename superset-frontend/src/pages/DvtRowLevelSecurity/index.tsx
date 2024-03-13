@@ -169,6 +169,10 @@ function DvtRowLevelSecurity() {
     },
   ];
 
+  useEffect(() => {
+    setData([]);
+  }, []);
+
   return (
     <StyledRowLevelSecurity>
       <StyledRowLevelSecurityButton>

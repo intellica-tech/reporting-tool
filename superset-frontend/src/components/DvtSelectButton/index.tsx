@@ -33,6 +33,7 @@ export interface DvtSelectButtonProps {
   activeButton: string;
   setActiveButton: (newActive: string) => void;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
+  nowrap?: boolean;
 }
 
 const DvtSelectButton: React.FC<DvtSelectButtonProps> = ({
@@ -40,6 +41,7 @@ const DvtSelectButton: React.FC<DvtSelectButtonProps> = ({
   activeButton,
   setActiveButton,
   popoverDirection = 'top',
+  nowrap = false,
 }) => (
   <StyledSelectButton>
     {data.map((buttonData, index) => (
@@ -48,6 +50,7 @@ const DvtSelectButton: React.FC<DvtSelectButtonProps> = ({
         label={buttonData.popoverLabel}
         direction={popoverDirection}
         size="small"
+        nowrap={nowrap}
       >
         <Icon
           fileName={buttonData.icon}
