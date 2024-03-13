@@ -77,6 +77,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const rolesListSelector = useAppSelector(state => state.dvtSidebar.rolesList);
   const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
+  const savedQuerySelector = useAppSelector(
+    state => state.dvtSidebar.savedQuery,
+  );
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
@@ -211,6 +214,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.datasets,
     fetchedSelector.reports,
     fetchedSelector.alerts,
+    fetchedSelector.savedQuery,
     pathName,
   ]);
 
@@ -291,6 +295,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'newTrainedTable',
           keyNames: ['database'],
         },
+        {
+          key: 'savedQuery',
+          keyNames: ['database', 'schema', 'modifiedBy'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -334,6 +342,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'savedQuery':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   default:
                     return {
@@ -480,6 +493,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'rowLevelSecurity',
         keyNames: ['modifiedBy'],
       },
+      {
+        key: 'savedQuery',
+        keyNames: ['database', 'schema', 'modifiedBy'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -520,6 +537,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'rolesList',
     'usersList',
     'rowLevelSecurity',
+    'savedQuery',
   ];
 
   const getAlgorithmOptions = () => {
@@ -742,6 +760,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
+                            : pathTitles(pathName) === 'savedQuery'
+                            ? savedQuerySelector[data.name]
                             : pathTitles(pathName) === 'rolesList'
                             ? rolesListSelector[data.name]
                             : undefined
@@ -787,6 +807,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'rowLevelSecurity'
                             ? rowLevelSecuritySelector[data.name]
+                            : pathTitles(pathName) === 'savedQuery'
+                            ? savedQuerySelector[data.name]
                             : undefined
                         }
                         onChange={value => {

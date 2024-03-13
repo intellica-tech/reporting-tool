@@ -688,6 +688,43 @@ const DvtSidebarData: SidebarDataProps[] = [
       },
     ],
   },
+  {
+    pathname: '/savedqueryview/list/',
+    key: 'savedQuery',
+    data: [
+      {
+        placeholder: t('Name'),
+        name: 'name',
+        status: 'input',
+      },
+      {
+        placeholder: t('Modified By'),
+        name: 'modifiedBy',
+      },
+      {
+        placeholder: t('Schema'),
+        name: 'schema',
+      },
+      {
+        placeholder: t('Database'),
+        name: 'database',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'modifiedBy',
+        url: 'saved_query/related/changed_by?q=(filter:%27%27,page:0,page_size:100)',
+      },
+      {
+        name: 'database',
+        url: 'saved_query/related/database?q=(filter:%27%27,page:0,page_size:100)',
+      },
+      {
+        name: 'schema',
+        url: 'saved_query/distinct/schema?q=(filter:%27%27,page:0,page_size:100)',
+      },
+    ],
+  },
 ];
 
 const DefaultOrder = [

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import DvtModalHeader from 'src/components/DvtModalHeader';
 import { t } from '@superset-ui/core';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
 import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
@@ -54,14 +55,17 @@ const DvtQueryPreview = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledQueryPreview>
-      <DvtButtonTabs
-        data={[
-          { label: t('User query'), value: 'user_query' },
-          { label: t('Executed query'), value: 'executed_query' },
-        ]}
-        active={active}
-        setActive={setActive}
-      />
+      <DvtModalHeader title="Query Preview" onClose={onClose} />
+      {!meta?.withoutTabs && (
+        <DvtButtonTabs
+          data={[
+            { label: t('User query'), value: 'user_query' },
+            { label: t('Executed query'), value: 'executed_query' },
+          ]}
+          active={active}
+          setActive={setActive}
+        />
+      )}
       <SqlContainer
         onMouseLeave={() => setOnHover(false)}
         onMouseOver={() => setOnHover(true)}
