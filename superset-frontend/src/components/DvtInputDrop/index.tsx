@@ -169,18 +169,32 @@ const DvtInputDrop = ({
     const droppedDataString = e.dataTransfer.getData('drag-drop');
     const jsonDropData = JSON.parse(droppedDataString);
 
+    const onExpression = jsonDropData?.expression
+      ? {
+          saved: {
+            label: jsonDropData.expression,
+            value: jsonDropData.metric_name,
+          },
+          expressionType: 'SAVED',
+        }
+      : {
+          column: {
+            label: jsonDropData.column_name,
+            value: jsonDropData.column_name,
+          },
+          sql: jsonDropData.column_name,
+        };
+
     const getValues = {
       ...initialValues,
-      column: {
-        label: jsonDropData.column_name,
-        value: jsonDropData.column_name,
-      },
-      sql: jsonDropData.column_name,
+      ...onExpression,
     };
 
     const frmtDropData = {
       id: moment().unix(),
-      label: jsonDropData.column_name,
+      label: jsonDropData?.expression
+        ? jsonDropData.expression
+        : jsonDropData.column_name,
       values: getValues,
       getColumn: jsonDropData,
     };

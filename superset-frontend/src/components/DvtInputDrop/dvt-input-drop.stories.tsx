@@ -75,6 +75,24 @@ export const Default = (args: DvtInputDropProps) => {
         value={{ column_name: 'path_json' }}
         icon="dvt-hashtag"
       />
+      <DvtDargCard
+        label="COUNT(*)"
+        value={{
+          certification_details: null,
+          certified_by: null,
+          currency: null,
+          d3format: null,
+          description: null,
+          expression: 'COUNT(*)',
+          id: 14,
+          is_certified: false,
+          metric_name: 'count',
+          verbose_name: 'COUNT(*)',
+          warning_markdown: null,
+          warning_text: null,
+        }}
+        icon="dvt-hashtag"
+      />
     </div>
   );
 };

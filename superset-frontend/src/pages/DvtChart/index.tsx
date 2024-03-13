@@ -195,7 +195,7 @@ const DvtChart = () => {
     },
     queries: [],
     result_format: 'json',
-    result_type: 'results',
+    result_type: 'full',
   };
 
   formData.append('datasource', JSON.stringify(formDataObj.datasource));
@@ -203,13 +203,12 @@ const DvtChart = () => {
   formData.append('form_data', JSON.stringify(formDataObj.form_data));
   formData.append('queries', JSON.stringify(formDataObj.queries));
   formData.append('result_format', JSON.stringify(formDataObj.result_format));
-  formData.append('result_type', JSON.stringify('full'));
+  formData.append('result_type', JSON.stringify(formDataObj.result_type));
 
   const chartFullPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
     body: formDataObj,
-    // formData: true,
   });
 
   formData.append('result_type', JSON.stringify('results'));
@@ -217,8 +216,7 @@ const DvtChart = () => {
   const chartResultsPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
-    body: formData,
-    formData: true,
+    body: { ...formDataObj, result_type: 'results' },
   });
 
   useEffect(() => {
@@ -259,8 +257,9 @@ const DvtChart = () => {
         <CreateChartCenter>
           {DvtChartData.find(
             cItem => cItem.chart_name === active,
-          )?.collapses.map(item => (
+          )?.collapses.map((item, index) => (
             <DvtCollapse
+              key={index}
               label={item.collapse_label}
               popoverLabel={item.collapse_popper}
               popoverDirection="bottom"
@@ -282,8 +281,8 @@ const DvtChart = () => {
               }
             >
               <CreateChartCenterCollapseInGap>
-                {item.forms.map(fItem => (
-                  <>
+                {item.forms.map((fItem, fIndex) => (
+                  <div key={fIndex}>
                     {fItem.status === 'input' && (
                       <DvtInput
                         label={fItem.label}
@@ -377,7 +376,7 @@ const DvtChart = () => {
                         }
                       />
                     )}
-                  </>
+                  </div>
                 ))}
               </CreateChartCenterCollapseInGap>
             </DvtCollapse>
