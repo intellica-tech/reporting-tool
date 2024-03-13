@@ -56,7 +56,7 @@ const DvtQueryPreview = ({ meta, onClose }: ModalProps) => {
   return (
     <StyledQueryPreview>
       <DvtModalHeader title="Query Preview" onClose={onClose} />
-      {meta?.queryHistory && (
+      {!meta?.withoutTabs && (
         <DvtButtonTabs
           data={[
             { label: t('User query'), value: 'user_query' },

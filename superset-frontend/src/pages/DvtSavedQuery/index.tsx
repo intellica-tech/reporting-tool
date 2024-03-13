@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useDispatch } from 'react-redux';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { useToasts } from 'src/components/MessageToasts/withToasts';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import handleResourceExport from 'src/utils/export';
 import { useAppSelector } from 'src/hooks/useAppSelector';
@@ -20,6 +21,7 @@ import { SavedQueryPagination } from './dvt-saved-query.module';
 function DvtSavedQuery() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { addDangerToast } = useToasts();
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const savedQuerySelector = useAppSelector(
@@ -56,7 +58,7 @@ function DvtSavedQuery() {
         {
           col: 'changed_by',
           opr: 'rel_o_m',
-          value: savedQuerySelector.changedBy?.value,
+          value: savedQuerySelector.modifiedBy?.value,
         },
       ],
       page: gPage,
@@ -110,7 +112,6 @@ function DvtSavedQuery() {
           item,
           type: 'saved_query',
           title: selected.length > 1 ? 'saved querie' : 'saved query',
-          withoutThey: true,
         },
       }),
     );
@@ -143,7 +144,7 @@ function DvtSavedQuery() {
             dispatch(
               openModal({
                 component: 'query-preview',
-                meta: row,
+                meta: { ...row, withoutTabs: true },
               }),
             );
           },
@@ -169,7 +170,6 @@ function DvtSavedQuery() {
                 },
               }),
             );
-            console.log('row', item);
             history.push('/sqlhub/');
           },
           popperLabel: t('Edit'),
@@ -181,10 +181,10 @@ function DvtSavedQuery() {
             navigator.clipboard
               .writeText(url)
               .then(() => {
-                console.log('URL copied to clipboard.');
+                addDangerToast(t('URL copied to clipboard.'));
               })
               .catch(error => {
-                console.error('Copy failed:', error);
+                addDangerToast(`${t('Copy failed:')} ${error}`);
               });
           },
           popperLabel: t('Copy query URL'),
