@@ -117,5 +117,9 @@ const StyledDvtButton = styled.button<DvtButtonProps>`
       ${!$iconToRight && 'flex-direction: row-reverse;'}
     `;
   }};
+
+  &:disabled {
+    cursor: no-drop;
+  }
 `;
 export { StyledDvtButton };

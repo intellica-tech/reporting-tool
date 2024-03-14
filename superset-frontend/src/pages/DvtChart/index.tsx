@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
@@ -81,7 +81,7 @@ const DvtChart = () => {
     value: 'results',
   });
   const [collapsesIsOpen, setCollapsesIsOpen] = useState<any[]>(['query']);
-  // const [buttonLabel, setButtonLabel] = useState<string>(t('Create Cart'));
+  const [firstChartCreated, setFirstChartCreated] = useState<boolean>(false);
   const [values, setValues] = useState<any>({
     x_axis: [],
     time_grain_sqla: {
@@ -134,14 +134,12 @@ const DvtChart = () => {
   const [chartStatus, setChartStatus] = useState<
     null | 'failed' | 'loading' | 'success' | 'rendered'
   >(null);
-  const [chartDataLoading, setChartDataLoading] = useState<boolean>(false);
   const [resultHeader, setResultHeader] = useState<any[]>([]);
   const [resultData, setResultData] = useState<any[]>([]);
   const [resultSort, setResultSort] = useState<DvtTableSortProps>({
     column: '',
     direction: 'desc',
   });
-  const [resultLoading, setResultLoading] = useState<boolean>(false);
   const [sampleApiUrl, setSampleApiUrl] = useState('');
   const [sampleHeader, setSampleHeader] = useState<any[]>([]);
   const [sampleData, setSampleData] = useState<any[]>([]);
@@ -150,8 +148,6 @@ const DvtChart = () => {
     column: '',
     direction: 'desc',
   });
-
-  // console.log(values);
 
   const formData = new FormData();
 
@@ -350,23 +346,28 @@ const DvtChart = () => {
       setChartStatus('success');
     }
     if (chartFullPromise.error) {
-      setChartDataLoading(false);
       setChartStatus('failed');
+      if (chartFullPromise.error?.errors) {
+        setChartData(chartFullPromise.error.errors);
+      } else if (chartFullPromise.error?.message) {
+        setChartData([
+          {
+            error: chartFullPromise.error.message,
+            message: chartFullPromise.error.message,
+          },
+        ]);
+      }
+    }
+    if (!firstChartCreated) {
+      setFirstChartCreated(true);
     }
   }, [chartFullPromise.error, chartFullPromise.data]);
 
   useEffect(() => {
     if (chartStatus === 'success') {
       setChartStatus('rendered');
-      setChartDataLoading(false);
     }
   }, [chartStatus]);
-
-  useEffect(() => {
-    if (!chartDataLoading && !resultLoading) {
-      setChartApiUrl('');
-    }
-  }, [chartDataLoading, resultLoading]);
 
   useEffect(() => {
     if (chartResultsPromise.data) {
@@ -380,10 +381,13 @@ const DvtChart = () => {
       setResultHeader(headerFormation);
       setResultData(chartResultsPromise.data.result[0].data);
     }
-    if (chartFullPromise.error || chartFullPromise.data) {
-      setResultLoading(false);
+  }, [chartResultsPromise.data]);
+
+  useEffect(() => {
+    if (!chartFullPromise.loading && !chartResultsPromise.loading) {
+      setChartApiUrl('');
     }
-  }, [chartResultsPromise.error, chartResultsPromise.data]);
+  }, [chartFullPromise.loading, chartResultsPromise.loading]);
 
   useEffect(() => {
     if (!sampleLoading) {
@@ -601,11 +605,11 @@ const DvtChart = () => {
         </CreateChartCenter>
         <CreateChartBottom>
           <DvtButton
-            label={t('Create Chart')}
-            colour="grayscale"
+            label={firstChartCreated ? t('Update Chart') : t('Create Chart')}
+            loading={chartFullPromise.loading}
+            colour={chartFullPromise.loading ? 'grayscale' : 'primary'}
+            bold
             onClick={() => {
-              setChartDataLoading(true);
-              setResultLoading(true);
               setChartStatus('loading');
               setChartApiUrl('chart/data');
             }}
@@ -626,8 +630,6 @@ const DvtChart = () => {
             //   )}
             //   icon="square"
             // />
-
-            
           )} */}
           <div style={{ width: '100%', height: '100%' }} ref={chartPanelRef}>
             <ChartContainer
@@ -648,7 +650,6 @@ const DvtChart = () => {
               onQuery={() => {}}
               queriesResponse={chartData}
               chartIsStale={false}
-              // setControlValue={actions.setControlValue}
               timeout={60}
               triggerQuery={false}
               vizType={active}
@@ -665,7 +666,7 @@ const DvtChart = () => {
             setActive={setTabs}
           />
           <RightPreviewBottomTabItem>
-            {resultLoading || sampleLoading ? (
+            {chartResultsPromise.loading || sampleLoading ? (
               <SpinnerContainer>
                 <DvtSpinner type="grow" size="xlarge" />
               </SpinnerContainer>

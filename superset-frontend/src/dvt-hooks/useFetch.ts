@@ -53,18 +53,19 @@ const useFetch = ({
                 : undefined,
           });
 
+          const result = await response.json();
+
           if (!response.ok) {
+            setData(null);
+            setError(result);
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
-          const result = await response.json();
           if (isMounted) {
             setData(result);
             setLoading(false);
           }
         } catch (error) {
-          setData(null);
-          setError(error);
           addDangerToast(error.message);
           setLoading(false);
         }

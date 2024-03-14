@@ -56,7 +56,7 @@ const CreateChartCenterCollapseInGap = styled.div`
 
 const CreateChartBottom = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 `;
 
 const RightPreview = styled.div`
