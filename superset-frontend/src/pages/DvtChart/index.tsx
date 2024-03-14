@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import useFetch from 'src/hooks/useFetch';
-import useFetchDvt from 'src/hooks/useFetchDvt';
+import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
@@ -21,6 +21,7 @@ import DvtSelect from 'src/components/DvtSelect';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtSpinner from 'src/components/DvtSpinner';
+import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtChartData from './dvtChartData';
 import {
   StyledChart,
@@ -80,6 +81,7 @@ const DvtChart = () => {
     value: 'results',
   });
   const [collapsesIsOpen, setCollapsesIsOpen] = useState<any[]>(['query']);
+  // const [buttonLabel, setButtonLabel] = useState<string>(t('Create Cart'));
   const [values, setValues] = useState<any>({
     x_axis: [],
     time_grain_sqla: {
@@ -128,7 +130,10 @@ const DvtChart = () => {
     },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<any[] | any>([]);
+  const [chartStatus, setChartStatus] = useState<
+    null | 'failed' | 'loading' | 'success' | 'rendered'
+  >(null);
   const [chartDataLoading, setChartDataLoading] = useState<boolean>(false);
   const [resultHeader, setResultHeader] = useState<any[]>([]);
   const [resultData, setResultData] = useState<any[]>([]);
@@ -183,6 +188,7 @@ const DvtChart = () => {
     },
     force: false,
     form_data: {
+      // hepsi tek bir chart dönüştürüyor
       datasource: selectedChart?.form_data?.datasource,
       viz_type: active,
       url_params: selectedChart?.form_data?.url_params,
@@ -194,12 +200,12 @@ const DvtChart = () => {
       metrics: metricsFormation,
       groupby: values.groupby,
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
-        expressionType: 'SIMPLE',
+        expressionType: v.values.expressionType,
         subject: v.values.column.value,
         operator: v.values.operator.value,
         operatorId: v.values.operator.value,
         comparator: v.values.operator.options,
-        clause: 'WHERE',
+        clause: v.values.clause,
         sqlExpression: null,
         isExtra: false,
         isNew: false,
@@ -236,16 +242,20 @@ const DvtChart = () => {
       force: false,
       result_format: 'json',
       result_type: 'full',
-      // timeseries_limit_metric: {
-      //   expressionType: 'SIMPLE',
-      //   column: {},
-      //   aggregate: values.timeseries_limit_metric[0]?.values?.aggregate?.value,
-      //   sqlExpression: null,
-      //   datasourceWarning: false,
-      //   hasCustomLabel: false,
-      //   label: values.timeseries_limit_metric[0]?.label,
-      //   // optionName: 'metric_e718zbxhzxp_d07oowpmqs4',
-      // },
+      timeseries_limit_metric: values.timeseries_limit_metric.length
+        ? {
+            expressionType:
+              values.timeseries_limit_metric[0]?.values?.expressionType,
+            column: {},
+            aggregate:
+              values.timeseries_limit_metric[0]?.values?.aggregate?.value,
+            sqlExpression: null,
+            datasourceWarning: false,
+            hasCustomLabel: false,
+            label: values.timeseries_limit_metric[0]?.label,
+            // optionName: 'metric_e718zbxhzxp_d07oowpmqs4',
+          }
+        : undefined,
     },
     queries: [
       {
@@ -311,7 +321,7 @@ const DvtChart = () => {
   formData.append('result_format', JSON.stringify(formDataObj.result_format));
   formData.append('result_type', JSON.stringify(formDataObj.result_type));
 
-  const chartFullPromise = useFetchDvt({
+  const chartFullPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
     body: formDataObj,
@@ -319,7 +329,7 @@ const DvtChart = () => {
 
   formData.append('result_type', JSON.stringify('results'));
 
-  const chartResultsPromise = useFetchDvt({
+  const chartResultsPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
     body: {
@@ -329,19 +339,28 @@ const DvtChart = () => {
     },
   });
 
-  const chartSamplePromise = useFetchDvt({
+  const chartSamplePromise = useFetch({
     url: sampleApiUrl,
     method: 'POST',
   });
 
   useEffect(() => {
     if (chartFullPromise.data) {
-      setChartData(chartFullPromise.data.data);
+      setChartData(chartFullPromise.data.result);
+      setChartStatus('success');
     }
-    if (chartFullPromise.error || chartFullPromise.data) {
+    if (chartFullPromise.error) {
       setChartDataLoading(false);
+      setChartStatus('failed');
     }
   }, [chartFullPromise.error, chartFullPromise.data]);
+
+  useEffect(() => {
+    if (chartStatus === 'success') {
+      setChartStatus('rendered');
+      setChartDataLoading(false);
+    }
+  }, [chartStatus]);
 
   useEffect(() => {
     if (!chartDataLoading && !resultLoading) {
@@ -428,6 +447,13 @@ const DvtChart = () => {
     },
     [],
   );
+
+  const {
+    ref: chartPanelRef,
+    observerRef: resizeObserverRef,
+    width: chartPanelWidth,
+    height: chartPanelHeight,
+  } = useResizeDetectorByObserver();
 
   return (
     <StyledChart>
@@ -580,26 +606,54 @@ const DvtChart = () => {
             onClick={() => {
               setChartDataLoading(true);
               setResultLoading(true);
+              setChartStatus('loading');
               setChartApiUrl('chart/data');
             }}
           />
         </CreateChartBottom>
       </CreateChart>
       <RightPreview>
-        <RightPreviewTop>
-          {chartDataLoading ? (
+        <RightPreviewTop ref={resizeObserverRef}>
+          {/* {chartDataLoading ? (
             <SpinnerContainer>
               <DvtSpinner type="grow" size="xlarge" />
             </SpinnerContainer>
           ) : (
-            <DvtIconDataLabel
-              label={t('Add required control values to preview chart')}
-              description={t(
-                'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
-              )}
-              icon="square"
+            // <DvtIconDataLabel
+            //   label={t('Add required control values to preview chart')}
+            //   description={t(
+            //     'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
+            //   )}
+            //   icon="square"
+            // />
+
+            
+          )} */}
+          <div style={{ width: '100%', height: '100%' }} ref={chartPanelRef}>
+            <ChartContainer
+              width={chartPanelWidth}
+              height={chartPanelHeight}
+              ownState={undefined}
+              annotationData={undefined}
+              chartAlert={null}
+              chartStackTrace={null}
+              chartId={0}
+              chartStatus={chartStatus} // failed, loading, success, rendered
+              triggerRender={false}
+              force={false}
+              datasource={selectedChart?.dataset}
+              errorMessage={<div>Error</div>}
+              formData={formDataObj.form_data}
+              // latestQueryFormData={latestQueryFormData}
+              onQuery={() => {}}
+              queriesResponse={chartData}
+              chartIsStale={false}
+              // setControlValue={actions.setControlValue}
+              timeout={60}
+              triggerQuery={false}
+              vizType={active}
             />
-          )}
+          </div>
         </RightPreviewTop>
         <RightPreviewBottom>
           <DvtButtonTabs
