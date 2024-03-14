@@ -38,20 +38,75 @@ const initialValues = {
 
 const columnData = [
   {
-    label: 'name',
-    value: 'name',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'year',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 1617,
+    is_certified: false,
+    is_dttm: true,
+    python_date_format: '%Y',
+    type: 'BIGINT',
+    type_generic: 2,
+    verbose_name: null,
+    warning_markdown: null,
   },
   {
-    label: 'color',
-    value: 'color',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'publisher',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 428,
+    is_certified: false,
+    is_dttm: false,
+    python_date_format: null,
+    type: 'STRING',
+    type_generic: 1,
+    verbose_name: null,
+    warning_markdown: null,
   },
   {
-    label: 'path_json',
-    value: 'path_json',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'global_sales',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 421,
+    is_certified: false,
+    is_dttm: false,
+    python_date_format: null,
+    type: 'FLOAT64',
+    type_generic: 0,
+    verbose_name: null,
+    warning_markdown: null,
   },
+];
+
+const savedData = [
   {
-    label: 'polyline',
-    value: 'polyline',
+    certification_details: null,
+    certified_by: null,
+    currency: null,
+    d3format: null,
+    description: null,
+    expression: 'COUNT(*)',
+    id: 14,
+    is_certified: false,
+    metric_name: 'count',
+    verbose_name: 'COUNT(*)',
+    warning_markdown: null,
+    warning_text: null,
   },
 ];
 
@@ -104,9 +159,9 @@ export const Default = (args: DvtOpenSelectMenuProps) => {
   useEffect(() => {
     if (args.type === 'filters') {
       if (values.column) {
-        if (values.column?.value === 'name') {
+        if (values.column?.column_name === 'global_sales') {
           setOptionData(apiNameOptionData);
-        } else if (values.column?.value === 'color') {
+        } else if (values.column?.column_name === 'publisher') {
           setOptionData(apiColorOptionData);
         } else {
           setOptionData([]);
@@ -123,6 +178,7 @@ export const Default = (args: DvtOpenSelectMenuProps) => {
         {...args}
         values={values}
         setValues={setValues}
+        savedData={savedData}
         columnData={columnData}
         optionData={optionData}
         closeOnClick={() => {}}

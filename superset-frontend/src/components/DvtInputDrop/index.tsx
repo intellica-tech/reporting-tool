@@ -17,12 +17,10 @@ import {
   StyledInputDropMenu,
   StyledError,
 } from './dvt-input-drop.module';
-import DvtOpenSelectMenu from '../DvtOpenSelectMenu';
-
-interface DataProps {
-  label: string;
-  value: string;
-}
+import DvtOpenSelectMenu, {
+  ColumnDataProps,
+  MetricDataProps,
+} from '../DvtOpenSelectMenu';
 
 interface OptionDataProps {
   label: string;
@@ -35,6 +33,7 @@ const initialValues = {
   operator: '',
   aggregate: '',
   option: '',
+  comparator: '',
   sql: '',
   expressionType: 'SIMPLE',
   clause: 'WHERE',
@@ -52,8 +51,8 @@ export interface DvtInputDropProps {
   error?: string;
   type: 'normal' | 'aggregates' | 'filters';
   savedType: 'metric' | 'expressions';
-  savedData?: DataProps[];
-  columnData: DataProps[];
+  savedData?: MetricDataProps[];
+  columnData: ColumnDataProps[];
   datasourceApi: string;
 }
 
@@ -100,39 +99,7 @@ const DvtInputDrop = ({
   const bottomMaxHeight =
     window.innerHeight - (window.innerHeight - openMenuHeight) / 2 - 50;
 
-  const handleAddClickPositionTop = (
-    index: number | null,
-    bounding: any,
-    leftAdd: number,
-  ) => {
-    // const droppedDataLength = droppedData?.length ? droppedData.length : 0;
-    // const indexItemTotal = index === null ? null : droppedDataLength - index;
-
-    // const itemPixels = multiple
-    //   ? `${
-    //       indexItemTotal === null
-    //         ? '0px'
-    //         : `${indexItemTotal * itemHeight}px + 5px`
-    //     }`
-    //   : '0px';
-
-    // if (windowScreen.top < topMaxHeight) {
-    //   setMenuTopCalc(
-    //     `calc(-${openMenuHeight}px + ${inputHeight}px + ${itemPixels})`,
-    //   );
-    //   setMenuTopCalcArrow(`${inputHeight / 2 - borderHeight / 2}px`);
-    // } else if (windowScreen.top > bottomMaxHeight) {
-    //   setMenuTopCalc(`calc(0px + ${itemPixels})`);
-    //   setMenuTopCalcArrow(
-    //     `${openMenuHeight - (inputHeight / 2 + borderHeight / 2)}px`,
-    //   );
-    // } else {
-    //   setMenuTopCalc(
-    //     `calc(-${openMenuHeight}px / 2 + ${inputHeight}px / 2 + ${itemPixels})`,
-    //   );
-    //   setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
-    // }
-
+  const handleAddClickPositionTop = (bounding: any, leftAdd: number) => {
     setMenuRight(bounding.right + leftAdd);
 
     if (windowScreen.top < topMaxHeight) {
@@ -171,32 +138,37 @@ const DvtInputDrop = ({
 
     const onExpression = jsonDropData?.expression
       ? {
-          saved: {
-            label: jsonDropData.expression,
-            value: jsonDropData.metric_name,
-          },
+          saved: jsonDropData,
           expressionType: 'SAVED',
         }
       : {
-          column: {
-            label: jsonDropData.column_name,
-            value: jsonDropData.column_name,
-          },
+          column: jsonDropData,
           sql: jsonDropData.column_name,
         };
 
+    const onFilterAndClock =
+      type === 'filters' && jsonDropData?.python_date_format
+        ? {
+            column: jsonDropData,
+            operator: { label: 'No filter', value: 'TEMPORAL_RANGE' },
+            comparator: 'No filter',
+          }
+        : onExpression;
+
     const getValues = {
       ...initialValues,
-      ...onExpression,
+      ...onFilterAndClock,
     };
 
     const frmtDropData = {
       id: moment().unix(),
-      label: jsonDropData?.expression
-        ? jsonDropData.expression
-        : jsonDropData.column_name,
+      label:
+        type === 'filters' && jsonDropData.python_date_format
+          ? `${jsonDropData.column_name} (No filter)`
+          : jsonDropData?.expression
+          ? jsonDropData.expression
+          : jsonDropData.column_name,
       values: getValues,
-      getColumn: jsonDropData,
     };
 
     if (jsonDropData) {
@@ -209,7 +181,7 @@ const DvtInputDrop = ({
 
       onDrop?.([frmtDropData]);
       setValues(getValues);
-      // handleAddClickPositionTop(multiple ? droppedData.length - 1 : null);
+      // handleAddClickPositionTop();
     }
   };
 
@@ -220,12 +192,6 @@ const DvtInputDrop = ({
       newData.sort((a: { id: number }, b: { id: number }) => a.id - b.id),
     );
   };
-
-  // useEffect(() => {
-  //   if (ref.current) {
-  //     setMenuRight(ref.current.clientWidth);
-  //   }
-  // }, [ref.current]);
 
   useEffect(() => {
     if (menuTopCalc !== 'null') {
@@ -256,15 +222,17 @@ const DvtInputDrop = ({
 
   useEffect(() => {
     if (datasourceApi && values.column && type === 'filters') {
-      setOptionApiUrl(`${datasourceApi}/column/${values.column?.value}/values`);
+      setOptionApiUrl(
+        `${datasourceApi}/column/${values.column?.column_name}/values`,
+      );
     }
   }, [datasourceApi, values.column]);
 
   const handleSaveClick = (args: any) => {
-    const onlyCountDistinct = values.saved?.label
-      ? values.saved.label
+    const onlyCountDistinct = values.saved?.metric_name
+      ? values.saved.metric_name
       : values.aggregate?.value === 'COUNT_DISTINCT'
-      ? `${values.aggregate.value}(${values.column?.value})`
+      ? `${values.aggregate.value}(${values.column?.column_name})`
       : values.sql;
     const newAddItem = {
       id: getId === null ? moment().unix() : getId,
@@ -340,11 +308,7 @@ const DvtInputDrop = ({
                 setTabFetched(true);
                 setTab(item.values.expressionType);
                 setClause(item.values.clause);
-                handleAddClickPositionTop(
-                  index,
-                  e.target.getBoundingClientRect(),
-                  0,
-                );
+                handleAddClickPositionTop(e.target.getBoundingClientRect(), 0);
               }}
             >
               {item.label}
@@ -358,11 +322,7 @@ const DvtInputDrop = ({
               onClick={(e: any) => {
                 setValues(initialValues);
                 setGetId(null);
-                handleAddClickPositionTop(
-                  null,
-                  e.target.getBoundingClientRect(),
-                  21,
-                );
+                handleAddClickPositionTop(e.target.getBoundingClientRect(), 21);
               }}
             >
               {placeholder}
@@ -371,11 +331,7 @@ const DvtInputDrop = ({
               onClick={(e: any) => {
                 setValues(initialValues);
                 setGetId(null);
-                handleAddClickPositionTop(
-                  null,
-                  e.target.getBoundingClientRect(),
-                  0,
-                );
+                handleAddClickPositionTop(e.target.getBoundingClientRect(), 0);
               }}
             >
               <Icon

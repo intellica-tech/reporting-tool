@@ -27,20 +27,75 @@ export default {
 
 const columnData = [
   {
-    label: 'name',
-    value: 'name',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'year',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 1617,
+    is_certified: false,
+    is_dttm: true,
+    python_date_format: '%Y',
+    type: 'BIGINT',
+    type_generic: 2,
+    verbose_name: null,
+    warning_markdown: null,
   },
   {
-    label: 'color',
-    value: 'color',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'publisher',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 428,
+    is_certified: false,
+    is_dttm: false,
+    python_date_format: null,
+    type: 'STRING',
+    type_generic: 1,
+    verbose_name: null,
+    warning_markdown: null,
   },
   {
-    label: 'path_json',
-    value: 'path_json',
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'global_sales',
+    description: null,
+    expression: null,
+    filterable: true,
+    groupby: true,
+    id: 421,
+    is_certified: false,
+    is_dttm: false,
+    python_date_format: null,
+    type: 'FLOAT64',
+    type_generic: 0,
+    verbose_name: null,
+    warning_markdown: null,
   },
+];
+
+const savedData = [
   {
-    label: 'polyline',
-    value: 'polyline',
+    certification_details: null,
+    certified_by: null,
+    currency: null,
+    d3format: null,
+    description: null,
+    expression: 'COUNT(*)',
+    id: 14,
+    is_certified: false,
+    metric_name: 'count',
+    verbose_name: 'COUNT(*)',
+    warning_markdown: null,
+    warning_text: null,
   },
 ];
 
@@ -61,18 +116,74 @@ export const Default = (args: DvtInputDropProps) => {
         {...args}
         droppedData={droppedData}
         setDroppedData={setDroppedData}
-        savedData={[{ label: 'COUNT (*)', value: 'count' }]}
+        savedData={savedData}
         columnData={columnData}
         datasourceApi="datasource/table/7"
       />
       <DvtDargCard
-        label="color"
-        value={{ column_name: 'color' }}
-        icon="dvt-hashtag"
+        label="year"
+        value={{
+          advanced_data_type: null,
+          certification_details: null,
+          certified_by: null,
+          column_name: 'year',
+          description: null,
+          expression: null,
+          filterable: true,
+          groupby: true,
+          id: 1617,
+          is_certified: false,
+          is_dttm: true,
+          python_date_format: '%Y',
+          type: 'BIGINT',
+          type_generic: 2,
+          verbose_name: null,
+          warning_markdown: null,
+        }}
+        icon="clock"
       />
       <DvtDargCard
-        label="path_json"
-        value={{ column_name: 'path_json' }}
+        label="publisher"
+        value={{
+          advanced_data_type: null,
+          certification_details: null,
+          certified_by: null,
+          column_name: 'publisher',
+          description: null,
+          expression: null,
+          filterable: true,
+          groupby: true,
+          id: 428,
+          is_certified: false,
+          is_dttm: false,
+          python_date_format: null,
+          type: 'STRING',
+          type_generic: 1,
+          verbose_name: null,
+          warning_markdown: null,
+        }}
+        icon="field_abc"
+      />
+      <DvtDargCard
+        label="global_sales"
+        value={{
+          advanced_data_type: null,
+          certification_details: null,
+          certified_by: null,
+          column_name: 'global_sales',
+          description: null,
+          expression: null,
+          filterable: true,
+          groupby: true,
+          id: 421,
+          is_certified: false,
+          is_dttm: false,
+          python_date_format: null,
+          type: 'FLOAT64',
+          type_generic: 0,
+          verbose_name: null,
+          warning_markdown: null,
+        }}
         icon="dvt-hashtag"
       />
       <DvtDargCard
@@ -91,7 +202,7 @@ export const Default = (args: DvtInputDropProps) => {
           warning_markdown: null,
           warning_text: null,
         }}
-        icon="dvt-hashtag"
+        icon="function_x"
       />
     </div>
   );

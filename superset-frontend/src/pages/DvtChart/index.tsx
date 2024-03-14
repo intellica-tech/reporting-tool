@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
@@ -152,28 +152,24 @@ const DvtChart = () => {
   const formData = new FormData();
 
   const metricsFormation = values.metrics.map((v: any) =>
-    v.values.saved?.value
-      ? v.values.saved.value
+    v.values.saved?.metric_name
+      ? v.values.saved.metric_name
       : {
           expressionType: v.values.expressionType,
-          column: selectedChart?.dataset?.columns.some(
-            (f: any) => f.column_name === v.values?.column?.value,
-          )
-            ? selectedChart?.dataset?.columns.find(
-                (f: any) => f.column_name === v.values?.column?.value,
-              )
-            : null,
+          column: v.values.column?.column_name ? v.values.column : null,
           aggregate: v.values.aggregate?.value
             ? v.values.aggregate.value
             : null,
           sqlExpression:
-            v.values.column?.value || v.values.saved?.value
+            v.values.column?.column_name || v.values.saved?.metric_name
               ? null
               : v.values.sql,
           datasourceWarning: false,
           hasCustomLabel: false,
           label: v.label,
-          // optionName: 'metric_sckb5exnnc_o3yc8l9itvd',
+          optionName: `metric_${Math.random()
+            .toString(36)
+            .substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`,
         },
   );
 
@@ -184,7 +180,6 @@ const DvtChart = () => {
     },
     force: false,
     form_data: {
-      // hepsi tek bir chart dönüştürüyor
       datasource: selectedChart?.form_data?.datasource,
       viz_type: active,
       url_params: selectedChart?.form_data?.url_params,
@@ -197,16 +192,20 @@ const DvtChart = () => {
       groupby: values.groupby,
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
-        subject: v.values.column.value,
+        subject: v.values.column.column_name,
         operator: v.values.operator.value,
-        operatorId: v.values.operator.value,
-        comparator: v.values.operator.options,
+        operatorId: v.values.column.python_date_format
+          ? undefined
+          : v.values.operator.value,
+        comparator: v.values.comparator,
         clause: v.values.clause,
         sqlExpression: null,
         isExtra: false,
         isNew: false,
         datasourceWarning: false,
-        // filterOptionName: 'filter_3pgxj4rlyoz_ud5rg9462gb',
+        filterOptionName: `filter_${Math.random()
+          .toString(36)
+          .substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`,
       })),
       order_desc: values.order_desc,
       row_limit: Number(values.row_limit.value),
@@ -249,19 +248,21 @@ const DvtChart = () => {
             datasourceWarning: false,
             hasCustomLabel: false,
             label: values.timeseries_limit_metric[0]?.label,
-            // optionName: 'metric_e718zbxhzxp_d07oowpmqs4',
+            optionName: `metric_${Math.random()
+              .toString(36)
+              .substring(2, 15)}_${Math.random()
+              .toString(36)
+              .substring(2, 15)}`,
           }
         : undefined,
     },
     queries: [
       {
-        filters: [
-          // {
-          //   col: 'year',
-          //   op: 'TEMPORAL_RANGE',
-          //   val: 'No filter',
-          // },
-        ],
+        filters: values.adhoc_filters.map((v: any) => ({
+          col: v.values.column.column_name,
+          op: v.values.operator.value,
+          val: v.values.comparator,
+        })),
         extras: {
           time_grain_sqla: values.time_grain_sqla?.value,
           having: '',
@@ -566,25 +567,11 @@ const DvtChart = () => {
                                   (fi: { expression: any }) => fi.expression,
                                 )
                                 .map((item: { column_name: string }) => ({
-                                  label: item.column_name,
-                                  value: item.column_name,
+                                  metric_name: item.column_name,
                                 }))
-                            : selectedChart?.dataset?.metrics.map(
-                                (item: {
-                                  metric_name: string;
-                                  expression: any;
-                                }) => ({
-                                  label: item.expression,
-                                  value: item.metric_name,
-                                }),
-                              )
+                            : selectedChart?.dataset?.metrics
                         }
-                        columnData={selectedChart?.dataset?.columns.map(
-                          (item: { column_name: string }) => ({
-                            label: item.column_name,
-                            value: item.column_name,
-                          }),
-                        )}
+                        columnData={selectedChart?.dataset?.columns}
                         datasourceApi={`datasource/${selectedChart?.form_data?.url_params?.datasource_type}/${selectedChart?.form_data?.url_params?.datasource_id}`}
                       />
                     )}
