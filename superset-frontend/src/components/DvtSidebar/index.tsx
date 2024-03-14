@@ -593,7 +593,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     if (chartSelector?.dataset) {
       // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
       const iconQuestions = ['BOOLEAN'];
-      const iconHashtags = ['BIGINT'];
+      const iconHashtags = ['BIGINT', 'FLOAT64'];
       const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
 
       setChartMetrics(
@@ -608,7 +608,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         chartSelector.dataset.columns.map((ci: any) => ({
           label: ci.column_name,
           value: ci,
-          icon: ci.expression
+          icon: ci.python_date_format
+            ? 'clock'
+            : ci.expression
             ? 'function_x'
             : (iconQuestions.includes(ci.type) && 'question') ||
               (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||

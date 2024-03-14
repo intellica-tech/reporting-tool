@@ -256,11 +256,11 @@ const DvtChart = () => {
     queries: [
       {
         filters: [
-          {
-            col: 'year',
-            op: 'TEMPORAL_RANGE',
-            val: 'No filter',
-          },
+          // {
+          //   col: 'year',
+          //   op: 'TEMPORAL_RANGE',
+          //   val: 'No filter',
+          // },
         ],
         extras: {
           time_grain_sqla: values.time_grain_sqla?.value,
