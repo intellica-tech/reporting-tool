@@ -19,7 +19,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtButton from 'src/components/DvtButton';
@@ -108,37 +108,43 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (tablesData) {
+    if (tablesData.data) {
       setDatasetData(
-        tablesData.result.map((item: any) => ({
+        tablesData.data.result.map((item: any) => ({
           label: item.text,
           value: item.value,
         })),
       );
     }
-  }, [tablesData]);
+  }, [tablesData.data]);
 
   const rolesDataPromise = useFetch({
     url: 'rowlevelsecurity/related/roles?q=(filter:%27%27,page:0,page_size:100)',
   });
 
   useEffect(() => {
-    if (rolesDataPromise) {
+    if (rolesDataPromise.data) {
       setRolesData(
-        rolesDataPromise.result.map((item: any) => ({
+        rolesDataPromise.data.result.map((item: any) => ({
           label: item.text,
           value: item.value,
         })),
       );
     }
-  }, [rolesDataPromise]);
+  }, [rolesDataPromise.data]);
 
   useEffect(() => {
-    if (rowLevelSecurityAddData?.id) {
+    if (rowLevelSecurityAddData.data?.id) {
       dispatch(dvtRowLevelSecurityAddStatus('Success'));
       onClose();
     }
-  }, [rowLevelSecurityAddData]);
+  }, [rowLevelSecurityAddData.data]);
+
+  useEffect(() => {
+    if (!rowLevelSecurityAddData.loading) {
+      setApiUrl('');
+    }
+  }, [rowLevelSecurityAddData.loading]);
 
   return (
     <StyledRowLevelSecurity>
@@ -230,6 +236,7 @@ const DvtRowLevelSecurityAdd = ({ meta, onClose }: ModalProps) => {
             colour={meta?.isEdit ? 'primary' : 'grayscale'}
             typeColour="basic"
             label={meta?.isEdit ? t('SAVE') : t('ADD')}
+            loading={rowLevelSecurityAddData.loading}
             onClick={() =>
               meta?.isEdit
                 ? setApiUrl(`rowlevelsecurity/${meta?.id}`)
