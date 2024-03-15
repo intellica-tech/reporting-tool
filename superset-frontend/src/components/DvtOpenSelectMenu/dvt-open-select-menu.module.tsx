@@ -111,6 +111,19 @@ const CustomSqlWhereOrHavingLabel = styled.div`
   color: ${({ theme }) => theme.colors.grayscale.dark2};
 `;
 
+const FilterTimeRangeOpen = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  height: 48px;
+  width: 100%;
+  border-radius: 12px;
+  padding: 2px 12px;
+  border: 1px solid ${({ theme }) => theme.colors.dvt.primary.light2};
+  cursor: pointer;
+`;
+
 export {
   StyledOpenSelectMenu,
   StyledOpenSelectMenuFilterTabs,
@@ -123,4 +136,5 @@ export {
   StyledOpenSelectMenuIcon,
   CustomSqlWhereOrHaving,
   CustomSqlWhereOrHavingLabel,
+  FilterTimeRangeOpen,
 };

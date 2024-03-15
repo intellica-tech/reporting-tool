@@ -1,11 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-import { SupersetTheme } from '@superset-ui/core';
+import { SupersetTheme, t } from '@superset-ui/core';
 import useFetch from 'src/hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import moment from 'moment';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';
+import DvtOpenSelectMenu, {
+  ColumnDataProps,
+  MetricDataProps,
+} from '../DvtOpenSelectMenu';
+import openSelectMenuData from '../DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import {
   StyledInputDrop,
   StyledInputDropIcon,
@@ -17,10 +22,6 @@ import {
   StyledInputDropMenu,
   StyledError,
 } from './dvt-input-drop.module';
-import DvtOpenSelectMenu, {
-  ColumnDataProps,
-  MetricDataProps,
-} from '../DvtOpenSelectMenu';
 
 interface OptionDataProps {
   label: string;
@@ -139,24 +140,86 @@ const DvtInputDrop = ({
     const droppedDataString = e.dataTransfer.getData('drag-drop');
     const jsonDropData = JSON.parse(droppedDataString);
 
+    const aggregateSwitch = (type: string) => {
+      let aggregate = 'AVG';
+      const sums = ['BIGINT', 'FLOAT64'];
+
+      if (sums.includes(type)) {
+        aggregate = 'SUM';
+      }
+
+      return aggregate;
+    };
+
+    const aggregateOnlyCountDistinctTypes = [
+      'STRING',
+      'VARCHAR',
+      'VARCHAR(255)',
+      'TEXT',
+    ];
+    const aggregateOnlyCountDistinct =
+      jsonDropData.python_date_format ||
+      aggregateOnlyCountDistinctTypes.includes(jsonDropData.type);
+
+    const onColumnAndAggregateAddSql = aggregateOnlyCountDistinct
+      ? `COUNT(DISTINCT ${jsonDropData.column_name})`
+      : `${aggregateSwitch(jsonDropData.type)}(${jsonDropData.column_name})`;
+
+    const onAggregate =
+      type === 'aggregates'
+        ? {
+            aggregate: !jsonDropData.type
+              ? ''
+              : openSelectMenuData.aggregate.find(f =>
+                  aggregateOnlyCountDistinct
+                    ? f.value === 'COUNT_DISTINCT'
+                    : f.value === aggregateSwitch(jsonDropData.type),
+                ),
+            column: jsonDropData,
+            sql: !jsonDropData.type
+              ? jsonDropData.column_name
+              : onColumnAndAggregateAddSql,
+          }
+        : {
+            column: jsonDropData,
+            sql: jsonDropData.column_name,
+          };
+
     const onExpression = jsonDropData?.expression
       ? {
           saved: jsonDropData,
           expressionType: 'SAVED',
         }
-      : {
-          column: jsonDropData,
-          sql: jsonDropData.column_name,
-        };
+      : onAggregate;
 
-    const onFilterAndClock =
-      type === 'filters' && jsonDropData?.python_date_format
+    const onlyFilterNoFilter =
+      type === 'filters' &&
+      (jsonDropData?.python_date_format || !jsonDropData.type) &&
+      !jsonDropData.expression;
+
+    const onFilterAndClock = onlyFilterNoFilter
+      ? {
+          column: jsonDropData,
+          operator: { label: t('No filter'), value: 'TEMPORAL_RANGE' },
+          comparator: 'No filter',
+          filterType: 'time_range',
+          sql: jsonDropData.column_name,
+        }
+      : type === 'filters'
+      ? jsonDropData.expression
         ? {
-            column: jsonDropData,
-            operator: { label: 'No filter', value: 'TEMPORAL_RANGE' },
-            comparator: 'No filter',
+            clause: 'HAVING',
+            sql: jsonDropData.expression,
+            expressionType: 'SQL',
           }
-        : onExpression;
+        : {
+            column: jsonDropData,
+            operator: {
+              label: t('In'),
+              value: 'IN',
+            },
+          }
+      : onExpression;
 
     const getValues = {
       ...initialValues,
@@ -165,12 +228,15 @@ const DvtInputDrop = ({
 
     const frmtDropData = {
       id: moment().unix(),
-      label:
-        type === 'filters' && jsonDropData.python_date_format
-          ? `${jsonDropData.column_name} (No filter)`
-          : jsonDropData?.expression
-          ? jsonDropData.expression
-          : jsonDropData.column_name,
+      label: onlyFilterNoFilter
+        ? `${jsonDropData.column_name} (No filter)`
+        : jsonDropData?.expression
+        ? jsonDropData.expression
+        : type === 'aggregates'
+        ? onColumnAndAggregateAddSql
+        : type === 'filters'
+        ? `${jsonDropData.column_name} IN`
+        : jsonDropData.column_name,
       values: getValues,
     };
 
@@ -237,9 +303,13 @@ const DvtInputDrop = ({
       : values.aggregate?.value === 'COUNT_DISTINCT'
       ? `${values.aggregate.value}(${values.column?.column_name})`
       : values.sql;
+    const onlyFilterTimeRange =
+      values.filterType === 'time_range'
+        ? `${values.column?.column_name} (${values.comparator})`
+        : onlyCountDistinct;
     const newAddItem = {
       id: getId === null ? moment().unix() : getId,
-      label: onlyCountDistinct,
+      label: onlyFilterTimeRange,
       values: { ...values, ...args },
     };
     const selectedItem =

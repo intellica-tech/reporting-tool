@@ -96,6 +96,7 @@ const RightPreviewBottomTableScroll = styled.div`
   overflow-y: auto;
   white-space: nowrap;
   max-height: 32vh;
+  max-width: calc(100vw - 940px);
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};

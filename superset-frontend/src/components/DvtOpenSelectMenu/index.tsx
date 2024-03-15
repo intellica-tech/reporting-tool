@@ -38,6 +38,7 @@ import {
   StyledOpenSelectMenuTitle,
   CustomSqlWhereOrHaving,
   CustomSqlWhereOrHavingLabel,
+  FilterTimeRangeOpen,
 } from './dvt-open-select-menu.module';
 
 export interface MetricDataProps {
@@ -89,6 +90,7 @@ interface ValuesProps {
   sql: string;
   expressionType: string;
   clause: string;
+  filterType?: string;
 }
 
 export interface DvtOpenSelectMenuProps {
@@ -147,6 +149,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
       sql: '',
       expressionType: '',
       clause: '',
+      filterType: '',
     });
   };
 
@@ -229,11 +232,37 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
               const filtersAutoAddOperator =
                 type === 'filters'
                   ? values.operator?.value
-                    ? {}
+                    ? vl.python_date_format
+                      ? {
+                          operator: {
+                            label: t('No filter'),
+                            value: 'TEMPORAL_RANGE',
+                          },
+                          comparator: 'No filter',
+                          filterType: 'time_range',
+                        }
+                      : values.filterType === 'time_range'
+                      ? {
+                          operator: OpenSelectMenuData.operator.where.find(
+                            fi => fi.value === 'IN',
+                          ),
+                          filterType: '',
+                        }
+                      : {}
+                    : vl.python_date_format
+                    ? {
+                        operator: {
+                          label: t('No filter'),
+                          value: 'TEMPORAL_RANGE',
+                        },
+                        comparator: 'No filter',
+                        filterType: 'time_range',
+                      }
                     : {
                         operator: OpenSelectMenuData.operator.where.find(
                           fi => fi.value === 'IN',
                         ),
+                        filterType: '',
                       }
                   : {};
               const autoAddSql = values.aggregate?.value
@@ -244,7 +273,9 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                 ? `(${vl.column_name})`
                 : type === 'filters'
                 ? filtersAutoAddOperator?.operator?.value
-                  ? `${vl.column_name} ${filtersAutoAddOperator.operator.value}`
+                  ? filtersAutoAddOperator.filterType === 'time_range'
+                    ? vl.column_name
+                    : `${vl.column_name} ${filtersAutoAddOperator.operator.value}`
                   : `${vl.column_name} ${values.operator.value}`
                 : vl.column_name;
 
@@ -299,105 +330,121 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
           )}
           {type === 'filters' && (
             <>
-              <DvtSelect
-                selectedValue={values.operator}
-                setSelectedValue={vl => {
-                  const onColumnAddSql = values.column?.column_name
-                    ? values.option &&
-                      !filtersOptionWithoutForm.includes(vl.value)
-                      ? filtersOptionOnInputSelect.includes(vl.value)
-                        ? `${values.column.column_name} ${vl.value} (${
-                            values.option?.value
-                              ? `'${
-                                  optionData.find(
-                                    fi => fi.value === values.option.value,
-                                  )?.label
-                                }'`
-                              : optionData
-                                  .filter(fi =>
-                                    values.option.includes(fi.value),
-                                  )
-                                  .map(vm => `'${vm.label}'`)
-                                  .join(', ')
-                          })`
-                        : values.option?.length
-                        ? `${values.column.column_name} ${vl.value} '${
-                            optionData.find(fi => fi.value === values.option[0])
-                              ?.label
-                          }'`
-                        : `${values.column.column_name} ${vl.value} '${values.option.label}'`
-                      : `${values.column.column_name} ${vl.value}`
-                    : '';
-                  const optionMultipleOrSelect =
-                    filtersOptionWithoutForm.includes(vl.value)
-                      ? { option: '' }
-                      : values.option
-                      ? filtersOptionOnInputSelect.includes(vl.value)
-                        ? {
-                            option: values.option?.value
-                              ? [values.option.value]
-                              : values.option,
-                          }
-                        : {
-                            option: values.option?.length
-                              ? optionData.find(
-                                  fi => fi.value === values.option[0],
-                                )
-                              : values.option,
-                          }
-                      : {};
-
-                  setValues({
-                    ...values,
-                    operator: vl,
-                    sql: onColumnAddSql,
-                    ...optionMultipleOrSelect,
-                  });
-                }}
-                placeholder={`${operatorData.length} ${t('operator(s)')}`}
-                data={operatorData}
-                typeDesign="navbar"
-              />
-              {!filtersOptionWithoutForm.includes(values.operator?.value) && (
+              {values?.filterType === 'time_range' ? (
+                <FilterTimeRangeOpen>
+                  {values.operator?.label}
+                  <Icon fileName="clock" iconSize="xl" />
+                </FilterTimeRangeOpen>
+              ) : (
                 <>
-                  {filtersOptionOnInputSelect.includes(
-                    values.operator?.value,
-                  ) ? (
-                    <DvtInputSelect
-                      selectedValues={values.option ? values.option : []}
-                      setSelectedValues={vl => {
-                        const autoAddSql = `${values.column?.column_name} ${
-                          values.operator?.value
-                        } (${optionData
-                          .filter(fi => vl.includes(fi.value))
-                          .map(vm => `'${vm.label}'`)
-                          .join(', ')})`;
-                        const comparators = optionData
-                          .filter(fi => vl.includes(fi.value))
-                          .map(vm => vm.label);
+                  <DvtSelect
+                    selectedValue={values.operator}
+                    setSelectedValue={vl => {
+                      const onColumnAddSql = values.column?.column_name
+                        ? values.option &&
+                          !filtersOptionWithoutForm.includes(vl.value)
+                          ? filtersOptionOnInputSelect.includes(vl.value)
+                            ? `${values.column.column_name} ${vl.value} (${
+                                values.option?.value
+                                  ? `'${
+                                      optionData.find(
+                                        fi => fi.value === values.option.value,
+                                      )?.label
+                                    }'`
+                                  : optionData
+                                      .filter(fi =>
+                                        values.option.includes(fi.value),
+                                      )
+                                      .map(vm => `'${vm.label}'`)
+                                      .join(', ')
+                              })`
+                            : values.option?.length
+                            ? `${values.column.column_name} ${vl.value} '${
+                                optionData.find(
+                                  fi => fi.value === values.option[0],
+                                )?.label
+                              }'`
+                            : `${values.column.column_name} ${vl.value} '${values.option.label}'`
+                          : `${values.column.column_name} ${vl.value}`
+                        : '';
+                      const optionMultipleOrSelect =
+                        filtersOptionWithoutForm.includes(vl.value)
+                          ? { option: '' }
+                          : values.option
+                          ? filtersOptionOnInputSelect.includes(vl.value)
+                            ? {
+                                option: values.option?.value
+                                  ? [values.option.value]
+                                  : values.option,
+                              }
+                            : {
+                                option: values.option?.length
+                                  ? optionData.find(
+                                      fi => fi.value === values.option[0],
+                                    )
+                                  : values.option,
+                              }
+                          : {};
 
-                        setValues({
-                          ...values,
-                          option: vl,
-                          comparator: comparators,
-                          sql: autoAddSql,
-                        });
-                      }}
-                      placeholder={`${optionData.length} ${t('option(s)')}`}
-                      data={optionData}
-                      // typeDesign="navbar"
-                    />
-                  ) : (
-                    <DvtSelect
-                      selectedValue={values.option}
-                      setSelectedValue={vl => {
-                        const autoAddSql = `${values.column?.column_name} ${values.operator?.value} '${vl.label}'`;
-                        setValues({ ...values, option: vl, sql: autoAddSql });
-                      }}
-                      placeholder={`${optionData.length} ${t('option(s)')}`}
-                      data={optionData}
-                      typeDesign="navbar"
-                    />
+                      setValues({
+                        ...values,
+                        operator: vl,
+                        sql: onColumnAddSql,
+                        ...optionMultipleOrSelect,
+                      });
+                    }}
+                    placeholder={`${operatorData.length} ${t('operator(s)')}`}
+                    data={operatorData}
+                    typeDesign="navbar"
+                  />
+                  {!filtersOptionWithoutForm.includes(
+                    values.operator?.value,
+                  ) && (
+                    <>
+                      {filtersOptionOnInputSelect.includes(
+                        values.operator?.value,
+                      ) ? (
+                        <DvtInputSelect
+                          selectedValues={values.option ? values.option : []}
+                          setSelectedValues={vl => {
+                            const autoAddSql = `${values.column?.column_name} ${
+                              values.operator?.value
+                            } (${optionData
+                              .filter(fi => vl.includes(fi.value))
+                              .map(vm => `'${vm.label}'`)
+                              .join(', ')})`;
+                            const comparators = optionData
+                              .filter(fi => vl.includes(fi.value))
+                              .map(vm => vm.label);
+
+                            setValues({
+                              ...values,
+                              option: vl,
+                              comparator: comparators,
+                              sql: autoAddSql,
+                            });
+                          }}
+                          placeholder={`${optionData.length} ${t('option(s)')}`}
+                          data={optionData}
+                          // typeDesign="navbar"
+                        />
+                      ) : (
+                        <DvtSelect
+                          selectedValue={values.option}
+                          setSelectedValue={vl => {
+                            const autoAddSql = `${values.column?.column_name} ${values.operator?.value} '${vl.label}'`;
+                            setValues({
+                              ...values,
+                              option: vl,
+                              sql: autoAddSql,
+                            });
+                          }}
+                          placeholder={`${optionData.length} ${t('option(s)')}`}
+                          data={optionData}
+                          typeDesign="navbar"
+                        />
+                      )}
+                    </>
                   )}
                 </>
               )}
@@ -447,6 +494,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                 aggregate: '',
                 option: '',
                 comparator: '',
+                filterType: '',
                 sql: vl,
               });
               setSql(vl);
