@@ -58,7 +58,12 @@ function DvtQueryHistory() {
         },
       ],
       page: gPage,
-      orderColumn: sort.column,
+      orderColumn:
+        sort.column === 'database_name'
+          ? `database.${sort.column}`
+          : sort.column === 'user'
+          ? `${sort.column}.first_name`
+          : sort.column,
       orderDirection: sort.direction,
     })}`;
 
@@ -73,7 +78,7 @@ function DvtQueryHistory() {
     if (page === 1) {
       setQueryHistoryUrl(searchApiUrls(page));
     }
-  }, [queryHistorySelector]);
+  }, [queryHistorySelector, sort]);
 
   // const sqlData = useFetch({
   //   url: `query/${fetchQueryParamsSearch({
@@ -102,21 +107,25 @@ function DvtQueryHistory() {
       title: t('Time'),
       field: 'changed_on',
       flex: 3,
+      sort: true,
     },
     {
       id: 2,
       title: t('Tab Name'),
       field: 'tab_name',
+      sort: true,
     },
     {
       id: 3,
       title: t('Database'),
       field: 'database_name',
+      sort: true,
     },
     {
       id: 4,
       title: t('Schema'),
       field: 'schema',
+      sort: true,
     },
     {
       id: 5,
@@ -127,11 +136,13 @@ function DvtQueryHistory() {
       id: 6,
       title: t('User'),
       field: 'user',
+      sort: true,
     },
     {
       id: 7,
       title: t('Rows'),
       field: 'rows',
+      sort: true,
     },
     {
       id: 8,
@@ -173,7 +184,12 @@ function DvtQueryHistory() {
 
   return (
     <div>
-      <DvtTable data={data} header={QueryHistoryHeader} setSort={setSort} />
+      <DvtTable
+        data={data}
+        header={QueryHistoryHeader}
+        sort={sort}
+        setSort={setSort}
+      />
       <StyledSqlPagination>
         <DvtPagination
           page={page}

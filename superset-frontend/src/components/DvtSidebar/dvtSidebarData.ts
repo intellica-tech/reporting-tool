@@ -143,7 +143,7 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         label: t('Database'),
         placeholder: t('Select or type a value'),
-        name: 'databse',
+        name: 'database',
       },
       {
         label: t('State'),
