@@ -213,4 +213,5 @@ Default.args = {
   type: 'aggregates',
   multiple: true,
   popoverLabel: 'Info',
+  popperError: 'Cannot be empty',
 };

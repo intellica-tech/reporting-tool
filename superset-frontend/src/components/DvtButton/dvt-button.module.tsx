@@ -120,6 +120,7 @@ const StyledDvtButton = styled.button<DvtButtonProps>`
 
   &:disabled {
     cursor: no-drop;
+    opacity: 0.7;
   }
 `;
 export { StyledDvtButton };

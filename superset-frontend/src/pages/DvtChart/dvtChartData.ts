@@ -16,6 +16,7 @@ interface FormsProps {
   label?: string;
   name: string;
   popper?: string;
+  popperError?: string;
   placeholder?: string;
   type?: 'normal' | 'aggregates' | 'filters';
   savedType?: 'metric' | 'expressions';
@@ -27,6 +28,7 @@ interface FormsProps {
 interface CollapsesProps {
   collapse_label: string;
   collapse_popper?: string;
+  collapse_popper_error?: string;
   collapse_active: string;
   forms: FormsProps[];
 }
@@ -325,13 +327,14 @@ const DvtChartData: DvtChartDataProps[] = [
     collapses: [
       {
         collapse_label: t('Query'),
-        collapse_popper: t('This section contains validation errors'),
+        collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'query',
         forms: [
           {
             label: t('X-AXIS'),
             name: 'x_axis',
             popper: t('Dimension to use on x-axis.'),
+            popperError: t('cannot be empty'),
             status: 'input-drop',
             multiple: false,
             type: 'normal',
@@ -350,7 +353,10 @@ const DvtChartData: DvtChartDataProps[] = [
           {
             label: t('METRICS'),
             name: 'metrics',
-            popper: t('cannot be empty'),
+            popper: t(
+              'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+            ),
+            popperError: t('cannot be empty'),
             status: 'input-drop',
             multiple: true,
             type: 'aggregates',

@@ -534,6 +534,8 @@ const DvtChart = () => {
               key={index}
               label={item.collapse_label}
               popoverLabel={item.collapse_popper}
+              popperError={item.collapse_popper_error}
+              popperErrorSuccess={values.x_axis.length && values.metrics.length}
               popoverDirection="bottom"
               isOpen={collapsesIsOpen.includes(item.collapse_active)}
               setIsOpen={bln =>
@@ -603,6 +605,7 @@ const DvtChart = () => {
                             : t('Drop columns here or click')
                         }
                         popoverLabel={fItem.popper}
+                        popperError={fItem.popperError}
                         droppedData={values[fItem.name]}
                         setDroppedData={v =>
                           setValues({ ...values, [fItem.name]: v })
@@ -644,7 +647,7 @@ const DvtChart = () => {
           <DvtButton
             label={firstChartCreated ? t('Update Chart') : t('Create Chart')}
             loading={chartFullPromise.loading}
-            colour={chartFullPromise.loading ? 'grayscale' : 'primary'}
+            disabled={!(values.x_axis.length && values.metrics.length)}
             bold
             onClick={() => {
               setChartStatus('loading');

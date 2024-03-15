@@ -42,6 +42,7 @@ const initialValues = {
 export interface DvtInputDropProps {
   label?: string;
   popoverLabel?: string;
+  popperError?: string;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   placeholder?: string;
   onDrop?: (data: any) => void;
@@ -59,6 +60,7 @@ export interface DvtInputDropProps {
 const DvtInputDrop = ({
   label,
   popoverLabel,
+  popperError,
   popoverDirection = 'top',
   placeholder,
   onDrop,
@@ -89,6 +91,7 @@ const DvtInputDrop = ({
   const [tab, setTab] = useState<'SAVED' | 'SIMPLE' | 'SQL'>('SIMPLE');
   const [clause, setClause] = useState<'WHERE' | 'HAVING'>('WHERE');
   const [tabFetched, setTabFetched] = useState<boolean>(false);
+  const [firstDropAdd, setFirstDropAdd] = useState<boolean>(false);
 
   const openMenuHeight = 360;
   const inputHeight = 50;
@@ -258,6 +261,12 @@ const DvtInputDrop = ({
     }
   }, [tabFetched]);
 
+  useEffect(() => {
+    if (droppedData.length && !firstDropAdd) {
+      setFirstDropAdd(true);
+    }
+  }, [droppedData]);
+
   return (
     <StyledInputDrop
       ref={ref}
@@ -270,6 +279,24 @@ const DvtInputDrop = ({
     >
       <StyledInputDropLabel>
         {label}
+        {popperError && !droppedData.length && (
+          <DvtPopper
+            label={popperError}
+            direction={popoverDirection}
+            size="small"
+            nowrap
+          >
+            <Icon
+              fileName="warning"
+              css={(theme: SupersetTheme) => ({
+                color: firstDropAdd
+                  ? theme.colors.dvt.error.base
+                  : theme.colors.dvt.warning.base,
+              })}
+              iconSize="l"
+            />
+          </DvtPopper>
+        )}
         {popoverLabel && (
           <DvtPopper
             label={popoverLabel}
