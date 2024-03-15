@@ -23,6 +23,7 @@ import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtChartData from './dvtChartData';
+import DvtChartWithoutLangFindData from './dvtChartWithoutLangFindData';
 import {
   StyledChart,
   CreateChart,
@@ -32,6 +33,7 @@ import {
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,
+  RightPreviewTopChartScreen,
   RightPreviewBottom,
   RightPreviewBottomTabItem,
   RightPreviewBottomTableScroll,
@@ -173,6 +175,9 @@ const DvtChart = () => {
         },
   );
 
+  const withoutValueForNull = (vl: any) =>
+    vl?.value ? (vl.value === 'null' ? null : vl.value) : undefined;
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -255,6 +260,48 @@ const DvtChart = () => {
               .substring(2, 15)}`,
           }
         : undefined,
+      area: undefined,
+      cache_timeout: undefined,
+      contributionMode: withoutValueForNull(values.contributionMode),
+      currency_format: undefined,
+      forecastEnabled: values.forecastEnabled,
+      forecastSeasonalityDaily: withoutValueForNull(
+        values.forecastSeasonalityDaily,
+      ),
+      forecastSeasonalityWeekly: withoutValueForNull(
+        values.forecastSeasonalityWeekly,
+      ),
+      forecastSeasonalityYearly: withoutValueForNull(
+        values.forecastSeasonalityYearly,
+      ),
+      legendMargin: undefined,
+      limit: withoutValueForNull(values.limit),
+      logAxis: undefined,
+      markerEnabled: undefined,
+      min_periods: undefined,
+      minorSplitLine: undefined,
+      minorTicks: undefined,
+      percentage_threshold: undefined,
+      resample_method: withoutValueForNull(values.resample_method),
+      resample_rule: withoutValueForNull(values.resample_rule),
+      rolling_periods: undefined,
+      rolling_type: withoutValueForNull(values.rolling_type),
+      show_value: undefined,
+      slice_id: undefined,
+      sort_series_ascending: undefined,
+      stack: undefined,
+      time_compare: DvtChartWithoutLangFindData.time_compare
+        .filter(f => values.time_compare.includes(f.value))
+        .map(({ label }: { label: string }) => label),
+      tooltipSortByMetric: undefined,
+      truncateYAxis: undefined,
+      xAxisBounds: undefined,
+      xAxisForceCategorical: undefined,
+      xAxisLabelRotation: undefined,
+      x_axis_sort: undefined,
+      x_axis_title: undefined,
+      y_axis_title: undefined,
+      zoomable: undefined,
     },
     queries: [
       {
@@ -359,7 +406,10 @@ const DvtChart = () => {
         ]);
       }
     }
-    if (!firstChartCreated) {
+    if (
+      (chartFullPromise.data || chartFullPromise.error) &&
+      !firstChartCreated
+    ) {
       setFirstChartCreated(true);
     }
   }, [chartFullPromise.error, chartFullPromise.data]);
@@ -605,20 +655,20 @@ const DvtChart = () => {
       </CreateChart>
       <RightPreview>
         <RightPreviewTop ref={resizeObserverRef}>
-          {/* {chartDataLoading ? (
+          {/* {chartFullPromise.loading ? (
             <SpinnerContainer>
               <DvtSpinner type="grow" size="xlarge" />
             </SpinnerContainer>
           ) : (
-            // <DvtIconDataLabel
-            //   label={t('Add required control values to preview chart')}
-            //   description={t(
-            //     'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
-            //   )}
-            //   icon="square"
-            // />
+            <DvtIconDataLabel
+              label={t('Add required control values to preview chart')}
+              description={t(
+                'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
+              )}
+              icon="square"
+            />
           )} */}
-          <div style={{ width: '100%', height: '100%' }} ref={chartPanelRef}>
+          <RightPreviewTopChartScreen ref={chartPanelRef}>
             <ChartContainer
               width={chartPanelWidth}
               height={chartPanelHeight}
@@ -633,7 +683,7 @@ const DvtChart = () => {
               datasource={selectedChart?.dataset}
               errorMessage={<div>Error</div>}
               formData={formDataObj.form_data}
-              // latestQueryFormData={latestQueryFormData}
+              // latestQueryFormData={formDataObj.form_data}
               onQuery={() => {}}
               queriesResponse={chartData}
               chartIsStale={false}
@@ -641,7 +691,13 @@ const DvtChart = () => {
               triggerQuery={false}
               vizType={active}
             />
-          </div>
+            {/* {console.log({
+              chartStatus,
+              datasource: selectedChart?.dataset,
+              formData: formDataObj.form_data,
+              queriesResponse: chartData,
+            })} */}
+          </RightPreviewTopChartScreen>
         </RightPreviewTop>
         <RightPreviewBottom>
           <DvtButtonTabs

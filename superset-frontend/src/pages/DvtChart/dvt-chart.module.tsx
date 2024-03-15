@@ -73,6 +73,11 @@ const RightPreviewTop = styled.div`
   justify-content: center;
 `;
 
+const RightPreviewTopChartScreen = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 const RightPreviewBottom = styled.div`
   flex: 1;
   display: flex;
@@ -151,6 +156,7 @@ export {
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,
+  RightPreviewTopChartScreen,
   RightPreviewBottom,
   RightPreviewBottomTabItem,
   RightPreviewBottomTableScroll,
