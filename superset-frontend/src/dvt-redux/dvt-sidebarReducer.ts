@@ -98,6 +98,13 @@ interface DvtSidebarState {
     groupKey: any;
     filterType: any;
   };
+  queryHistory: {
+    database: any;
+    state: any;
+    user: any;
+    timeRange: any;
+    search: any;
+  };
   profile: {
     tabs: any;
   };
@@ -150,6 +157,11 @@ interface DvtSidebarState {
       };
       rowLevelSecurity: {
         modifiedBy: boolean;
+      };
+      queryHistory: {
+        database: boolean;
+        state: boolean;
+        user: boolean;
       };
       savedQuery: {
         modifiedBy: boolean;
@@ -208,6 +220,11 @@ interface DvtSidebarState {
     rowLevelSecurity: {
       modifiedBy: any[];
     };
+    queryHistory: {
+      database: any[];
+      state: any[];
+      user: any[];
+    }
     savedQuery: {
       modifiedBy: any[];
       database: any[];
@@ -295,6 +312,13 @@ const INITIAL_STATE = {
     groupKey: '',
     filterType: '',
   },
+  queryHistory: {
+    database: '',
+    state: '',
+    user: '',
+    timeRange: '',
+    search: '',
+  },
   savedQuery: {
     name: '',
     modifiedBy: '',
@@ -352,6 +376,11 @@ const initialState: DvtSidebarState = {
       rowLevelSecurity: {
         modifiedBy: false,
       },
+      queryHistory: {
+        database: false,
+        state: false,
+        user: false,
+      },
       savedQuery: {
         modifiedBy: false,
         database: false,
@@ -408,6 +437,11 @@ const initialState: DvtSidebarState = {
     },
     rowLevelSecurity: {
       modifiedBy: [],
+    },
+    queryHistory: {
+      database: [],
+      state: [],
+      user: [],
     },
     savedQuery: {
       modifiedBy: [],
