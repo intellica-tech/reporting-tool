@@ -171,15 +171,15 @@ const DvtSidebarData: SidebarDataProps[] = [
     apiUrls: [
       {
         name: 'database',
-        url: 'query/related/database',
+        url: 'query/related/database?q=(filter:%27%27,page:0,page_size:100)',
       },
       {
         name: 'state',
-        url: 'query/distinct/status',
+        url: 'query/distinct/status?q=(filter:%27%27,page:0,page_size:100)',
       },
       {
         name: 'user',
-        url: 'query/related/user',
+        url: 'query/related/user?q=(filter:%27%27,page:0,page_size:100)',
       },
     ],
   },

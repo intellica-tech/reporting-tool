@@ -214,6 +214,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.datasets,
     fetchedSelector.reports,
     fetchedSelector.alerts,
+    fetchedSelector.queryHistory,
     pathName,
   ]);
 
@@ -296,7 +297,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         },
         {
           key: 'queryHistory',
-          keyNames: ['database, state, user'],
+          keyNames: ['database', 'state', 'user'],
         },
       ];
       dataObjectKeys.forEach(item => {
@@ -341,6 +342,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
+                    };
+                  case 'queryHistory-datas':
+                    return {
+                      value: item.value,
+                      label: item.text,
                     };
                   default:
                     return {
@@ -489,7 +495,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       },
       {
         key: 'queryHistory',
-        keyNames: ['database, state, user'],
+        keyNames: ['database', 'state', 'user'],
       },
     ];
     const findPathTitle = selectionObjectKeys.find(
