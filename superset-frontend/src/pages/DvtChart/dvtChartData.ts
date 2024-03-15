@@ -12,7 +12,8 @@ interface FormsProps {
     | 'multiple-select'
     | 'input-drop'
     | 'checkbox'
-    | 'annotation-layer';
+    | 'annotation-layer'
+    | 'tabs';
   label?: string;
   name: string;
   popper?: string;
@@ -321,9 +322,266 @@ const chartFormsOption = {
   forecastSeasonalityDaily: forecastSeasonality,
 };
 
+const formDimensions: FormsProps = {
+  label: t('DIMENSIONS'),
+  name: 'groupby',
+  popper: t(
+    'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
+  ),
+  status: 'input-drop',
+  multiple: true,
+  type: 'normal',
+  savedType: 'expressions',
+};
+
+const formMetrics: FormsProps = {
+  label: t('METRICS'),
+  name: 'metrics',
+  popper: t(
+    'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+  ),
+  popperError: t('cannot be empty'),
+  status: 'input-drop',
+  multiple: true,
+  type: 'aggregates',
+  savedType: 'metric',
+};
+
+const formFilters: FormsProps = {
+  label: t('FILTERS'),
+  name: 'adhoc_filters',
+  status: 'input-drop',
+  multiple: true,
+  type: 'filters',
+};
+
+const formSortBy: FormsProps = {
+  label: t('SORT BY'),
+  name: 'timeseries_limit_metric',
+  popper: t(
+    'This metric is used to define row selection criteria (how the rows are sorted) if a series or row limit is present. If not defined, it reverts to the first metric (where appropriate).',
+  ),
+  status: 'input-drop',
+  multiple: false,
+  type: 'aggregates',
+  savedType: 'metric',
+};
+
+const formRowLimit: FormsProps = {
+  label: t('ROW LIMIT'),
+  name: 'row_limit',
+  popper: t(
+    'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
+  ),
+  status: 'select',
+  options: chartFormsOption.row_limit,
+};
+
+const lineAndBarChart: CollapsesProps[] = [
+  {
+    collapse_label: t('Query'),
+    collapse_popper_error: t('This section contains validation errors'),
+    collapse_active: 'query',
+    forms: [
+      {
+        label: t('X-AXIS'),
+        name: 'x_axis',
+        popper: t('Dimension to use on x-axis.'),
+        popperError: t('cannot be empty'),
+        status: 'input-drop',
+        multiple: false,
+        type: 'normal',
+        savedType: 'expressions',
+      },
+      {
+        label: t('TIME GRAIN'),
+        name: 'time_grain_sqla',
+        popper: t(
+          'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
+        ),
+        placeholder: t('None'),
+        status: 'select',
+        options: chartFormsOption.time_grain_sqla,
+      },
+      formMetrics,
+      formDimensions,
+      {
+        label: t('CONTRIBUTION MODE'),
+        name: 'contributionMode',
+        popper: t('Calculate contribution per series or row'),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.contributionMode,
+      },
+      formFilters,
+      {
+        label: t('SERIES LIMIT'),
+        name: 'limit',
+        popper: t(
+          'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+        ),
+        placeholder: t('None'),
+        status: 'select',
+        options: chartFormsOption.limit,
+      },
+      formSortBy,
+      {
+        label: t('SORT DESCENDING'),
+        name: 'order_desc',
+        status: 'checkbox',
+      },
+      formRowLimit,
+      {
+        label: t('TRUNCATE METRIC'),
+        name: 'truncate_metric',
+        status: 'checkbox',
+      },
+      {
+        label: t('SHOW EMPTY COLUMNS'),
+        name: 'show_empty_columns',
+        status: 'checkbox',
+      },
+    ],
+  },
+  {
+    collapse_label: t('Advanced analytics'),
+    collapse_popper: t(
+      'This section contains options that allow for advanced analytical post processing of query results',
+    ),
+    collapse_active: 'advanced_analytics',
+    forms: [
+      {
+        label: t('ROLLING FUNCTION'),
+        name: 'rolling_type',
+        popper: t(
+          'Defines a rolling window function to apply, works along with the [Periods] text box',
+        ),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.rolling_type,
+      },
+      {
+        label: t('TIME SHIFT'),
+        name: 'time_compare',
+        popper: t(
+          'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
+        ),
+        placeholder: t('Select ...'),
+        status: 'multiple-select',
+        options: chartFormsOption.time_compare,
+      },
+      {
+        label: t('CALCULATION TYPE'),
+        name: 'comparison_type',
+        popper: t(
+          'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
+        ),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.comparison_type,
+      },
+      {
+        label: t('RULE'),
+        name: 'resample_rule',
+        popper: t('Pandas resample rule'),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.resample_rule,
+      },
+      {
+        label: t('FILL METHOD'),
+        name: 'resample_method',
+        popper: t('Pandas resample method'),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.resample_method,
+      },
+    ],
+  },
+  {
+    collapse_label: t('Annotations and Layers'),
+    collapse_active: 'annotations_and_layers',
+    forms: [
+      {
+        name: 'annotation_layers',
+        placeholder: t('Add annotation layer'),
+        status: 'annotation-layer',
+      },
+    ],
+  },
+  {
+    collapse_label: t('Predictive Analytics'),
+    collapse_active: 'predictive_analytics',
+    forms: [
+      {
+        label: t('ENABLE FORECAST'),
+        name: 'forecastEnabled',
+        status: 'checkbox',
+      },
+      {
+        label: t('FORECAST PERIODS'),
+        name: 'forecastPeriods',
+        popper: t('How many periods into the future do we want to predict'),
+        status: 'input',
+        number: true,
+      },
+      {
+        label: t('CONFIDENCE INTERVAL'),
+        name: 'forecastInterval',
+        popper: t(
+          'Width of the confidence interval. Should be between 0 and 1',
+        ),
+        status: 'input',
+      },
+      {
+        label: t('YEARLY SEASONALITY'),
+        name: 'forecastSeasonalityYearly',
+        popper: t(
+          'Should yearly seasonality be applied. An integer value will specify Fourier order of seasonality.',
+        ),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.forecastSeasonalityYearly,
+      },
+      {
+        label: t('WEEKLY SEASONALITY'),
+        name: 'forecastSeasonalityWeekly',
+        popper: t(
+          'Should weekly seasonality be applied. An integer value will specify Fourier order of seasonality.',
+        ),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.forecastSeasonalityWeekly,
+      },
+      {
+        label: t('DAILY SEASONALITY'),
+        name: 'forecastSeasonalityDaily',
+        popper: t(
+          'Should daily seasonality be applied. An integer value will specify Fourier order of seasonality.',
+        ),
+        placeholder: t('Select ...'),
+        status: 'select',
+        options: chartFormsOption.forecastSeasonalityDaily,
+      },
+    ],
+  },
+];
+
 const DvtChartData: DvtChartDataProps[] = [
   {
     chart_name: 'echarts_timeseries_line',
+    collapses: lineAndBarChart,
+  },
+  {
+    chart_name: 'echarts_timeseries_bar',
+    collapses: lineAndBarChart,
+  },
+  {
+    chart_name: 'echarts_area',
+    collapses: lineAndBarChart,
+  },
+  {
+    chart_name: 'table',
     collapses: [
       {
         collapse_label: t('Query'),
@@ -331,229 +589,40 @@ const DvtChartData: DvtChartDataProps[] = [
         collapse_active: 'query',
         forms: [
           {
-            label: t('X-AXIS'),
-            name: 'x_axis',
-            popper: t('Dimension to use on x-axis.'),
-            popperError: t('cannot be empty'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          {
-            label: t('TIME GRAIN'),
-            name: 'time_grain_sqla',
-            popper: t(
-              'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-            ),
-            placeholder: t('None'),
-            status: 'select',
-            options: chartFormsOption.time_grain_sqla,
-          },
-          {
-            label: t('METRICS'),
-            name: 'metrics',
-            popper: t(
-              'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-            ),
-            popperError: t('cannot be empty'),
-            status: 'input-drop',
-            multiple: true,
-            type: 'aggregates',
-            savedType: 'metric',
-          },
-          {
-            label: t('DIMENSIONS'),
-            name: 'groupby',
-            popper: t(
-              'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
-            ),
-            status: 'input-drop',
-            multiple: true,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          {
-            label: t('CONTRIBUTION MODE'),
-            name: 'contributionMode',
-            popper: t('Calculate contribution per series or row'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.contributionMode,
-          },
-          {
-            label: t('FILTERS'),
+            label: t('QUERY MODE'),
             name: 'adhoc_filters',
+            status: 'tabs',
+          },
+          formDimensions,
+          formMetrics,
+          {
+            label: t('PERCENTAGE METRICS'),
+            name: 'metric',
+            popper: t(
+              'Select one or many metrics to display, that will be displayed in the percentages of total. Percentage metrics will be calculated only from data within the row limit. You can use an aggregation function on a column or write custom SQL to create a percentage metric.',
+            ),
             status: 'input-drop',
             multiple: true,
-            type: 'filters',
-          },
-          {
-            label: t('SERIES LIMIT'),
-            name: 'limit',
-            popper: t(
-              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
-            ),
-            placeholder: t('None'),
-            status: 'select',
-            options: chartFormsOption.limit,
-          },
-          {
-            label: t('SORT BY'),
-            name: 'timeseries_limit_metric',
-            popper: t(
-              'This metric is used to define row selection criteria (how the rows are sorted) if a series or row limit is present. If not defined, it reverts to the first metric (where appropriate).',
-            ),
-            status: 'input-drop',
-            multiple: false,
             type: 'aggregates',
             savedType: 'metric',
           },
+          formFilters,
+          formSortBy,
+          {
+            label: t('SERVER PAGINATION'),
+            name: 'server_pagination',
+            status: 'checkbox',
+          },
+          formRowLimit,
           {
             label: t('SORT DESCENDING'),
             name: 'order_desc',
             status: 'checkbox',
           },
           {
-            label: t('ROW LIMIT'),
-            name: 'row_limit',
-            popper: t(
-              'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
-            ),
-            status: 'select',
-            options: chartFormsOption.row_limit,
-          },
-          {
-            label: t('TRUNCATE METRIC'),
-            name: 'truncate_metric',
+            label: t('SHOW TOTALS'),
+            name: 'show_totals',
             status: 'checkbox',
-          },
-          {
-            label: t('SHOW EMPTY COLUMNS'),
-            name: 'show_empty_columns',
-            status: 'checkbox',
-          },
-        ],
-      },
-      {
-        collapse_label: t('Advanced analytics'),
-        collapse_popper: t(
-          'This section contains options that allow for advanced analytical post processing of query results',
-        ),
-        collapse_active: 'advanced_analytics',
-        forms: [
-          {
-            label: t('ROLLING FUNCTION'),
-            name: 'rolling_type',
-            popper: t(
-              'Defines a rolling window function to apply, works along with the [Periods] text box',
-            ),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.rolling_type,
-          },
-          {
-            label: t('TIME SHIFT'),
-            name: 'time_compare',
-            popper: t(
-              'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
-            ),
-            placeholder: t('Select ...'),
-            status: 'multiple-select',
-            options: chartFormsOption.time_compare,
-          },
-          {
-            label: t('CALCULATION TYPE'),
-            name: 'comparison_type',
-            popper: t(
-              'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
-            ),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.comparison_type,
-          },
-          {
-            label: t('RULE'),
-            name: 'resample_rule',
-            popper: t('Pandas resample rule'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_rule,
-          },
-          {
-            label: t('FILL METHOD'),
-            name: 'resample_method',
-            popper: t('Pandas resample method'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_method,
-          },
-        ],
-      },
-      {
-        collapse_label: t('Annotations and Layers'),
-        collapse_active: 'annotations_and_layers',
-        forms: [
-          {
-            name: 'annotation_layers',
-            placeholder: t('Add annotation layer'),
-            status: 'annotation-layer',
-          },
-        ],
-      },
-      {
-        collapse_label: t('Predictive Analytics'),
-        collapse_active: 'predictive_analytics',
-        forms: [
-          {
-            label: t('ENABLE FORECAST'),
-            name: 'forecastEnabled',
-            status: 'checkbox',
-          },
-          {
-            label: t('FORECAST PERIODS'),
-            name: 'forecastPeriods',
-            popper: t('How many periods into the future do we want to predict'),
-            status: 'input',
-            number: true,
-          },
-          {
-            label: t('CONFIDENCE INTERVAL'),
-            name: 'forecastInterval',
-            popper: t(
-              'Width of the confidence interval. Should be between 0 and 1',
-            ),
-            status: 'input',
-          },
-          {
-            label: t('YEARLY SEASONALITY'),
-            name: 'forecastSeasonalityYearly',
-            popper: t(
-              'Should yearly seasonality be applied. An integer value will specify Fourier order of seasonality.',
-            ),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.forecastSeasonalityYearly,
-          },
-          {
-            label: t('WEEKLY SEASONALITY'),
-            name: 'forecastSeasonalityWeekly',
-            popper: t(
-              'Should weekly seasonality be applied. An integer value will specify Fourier order of seasonality.',
-            ),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.forecastSeasonalityWeekly,
-          },
-          {
-            label: t('DAILY SEASONALITY'),
-            name: 'forecastSeasonalityDaily',
-            popper: t(
-              'Should daily seasonality be applied. An integer value will specify Fourier order of seasonality.',
-            ),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.forecastSeasonalityDaily,
           },
         ],
       },
@@ -564,25 +633,22 @@ const DvtChartData: DvtChartDataProps[] = [
     collapses: [
       {
         collapse_label: t('Query'),
-        collapse_popper: t('This section contains validation errors'),
+        collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'query',
         forms: [
           {
             label: t('METRIC'),
             name: 'metric',
-            popper: t('cannot be empty'),
+            popper: t(
+              'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+            ),
+            popperError: t('cannot be empty'),
             status: 'input-drop',
             multiple: false,
             type: 'aggregates',
             savedType: 'metric',
           },
-          {
-            label: t('FILTERS'),
-            name: 'adhoc_filters',
-            status: 'input-drop',
-            multiple: true,
-            type: 'filters',
-          },
+          formFilters,
         ],
       },
       {
@@ -593,6 +659,38 @@ const DvtChartData: DvtChartDataProps[] = [
             name: 'subheader',
             label: t('SUBHEADER'),
             status: 'input',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'pie',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          formDimensions,
+          {
+            label: t('METRIC'),
+            name: 'metric',
+            popper: t(
+              'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          formFilters,
+          formRowLimit,
+          {
+            label: t('SORT BY METRIC'),
+            name: 'sort_by_metric',
+            status: 'checkbox',
           },
         ],
       },
