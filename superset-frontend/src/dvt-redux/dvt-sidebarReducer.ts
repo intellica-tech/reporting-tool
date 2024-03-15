@@ -108,6 +108,12 @@ interface DvtSidebarState {
   profile: {
     tabs: any;
   };
+  savedQuery: {
+    name: any;
+    modifiedBy: any;
+    database: any;
+    schema: any;
+  };
   rolesList: {
     permissions: any;
     name: any;
@@ -156,6 +162,11 @@ interface DvtSidebarState {
         database: boolean;
         state: boolean;
         user: boolean;
+      };
+      savedQuery: {
+        modifiedBy: boolean;
+        database: boolean;
+        schema: boolean;
       };
     };
     alerts: {
@@ -213,6 +224,11 @@ interface DvtSidebarState {
       database: any[];
       state: any[];
       user: any[];
+    }
+    savedQuery: {
+      modifiedBy: any[];
+      database: any[];
+      schema: any[];
     };
   };
 }
@@ -303,6 +319,12 @@ const INITIAL_STATE = {
     timeRange: '',
     search: '',
   },
+  savedQuery: {
+    name: '',
+    modifiedBy: '',
+    database: '',
+    schema: '',
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -358,6 +380,11 @@ const initialState: DvtSidebarState = {
         database: false,
         state: false,
         user: false,
+      },
+      savedQuery: {
+        modifiedBy: false,
+        database: false,
+        schema: false,
       },
     },
     alerts: {
@@ -415,6 +442,11 @@ const initialState: DvtSidebarState = {
       database: [],
       state: [],
       user: [],
+    },
+    savedQuery: {
+      modifiedBy: [],
+      database: [],
+      schema: [],
     },
   },
 };

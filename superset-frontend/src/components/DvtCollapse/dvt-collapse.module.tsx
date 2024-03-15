@@ -107,11 +107,8 @@ const StyledCollapseChildren = styled.div<StyledCollapseChildrenProps>`
   padding-top: ${({ typeDesign }) => (typeDesign === 'dvt-list' ? 11 : 20)}px;
 `;
 
-const StyledCollapsePopover = styled.div``;
-
 export {
   StyledCollapse,
-  StyledCollapsePopover,
   StyledCollapseGroup,
   StyledCollapseLabel,
   StyledCollapseDeleteIcon,

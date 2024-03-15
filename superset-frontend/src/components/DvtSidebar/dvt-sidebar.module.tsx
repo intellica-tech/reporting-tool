@@ -129,6 +129,29 @@ const StyledDvtSidebarRotateIcon = styled.div<SidebarRotateIcon>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'none')};
 `;
 
+const StyledCollapseScroll = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+  max-height: 74vh;
+  margin-top: 10px;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
+`;
+
 export {
   StyledDvtSidebar,
   StyledDvtSidebarHeader,
@@ -141,4 +164,5 @@ export {
   StyledDvtSidebarIcon,
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
+  StyledCollapseScroll,
 };

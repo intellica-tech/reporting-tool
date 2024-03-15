@@ -10,7 +10,6 @@ import {
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
-  dvtSqlhubSetSqlQuery,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { t } from '@superset-ui/core';
@@ -289,9 +288,13 @@ function DvtSqllab() {
     navigator.clipboard.writeText(text);
   };
 
+  // useEffect(() => {
+  //   dispatch(dvtSqlhubSetSqlQuery(sqlValue));
+  // }, [sqlValue]);
+
   useEffect(() => {
-    dispatch(dvtSqlhubSetSqlQuery(sqlValue));
-  }, [sqlValue]);
+    setSqlValue(sqlhubSelector.sqlQuery);
+  }, [sqlhubSelector.sqlQuery]);
 
   return (
     <StyledSqlhub>

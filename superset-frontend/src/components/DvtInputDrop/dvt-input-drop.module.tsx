@@ -43,6 +43,9 @@ const StyledInputDropLabel = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
 `;
 
 const StyledInputDropGroup = styled.div`
@@ -120,9 +123,10 @@ interface StyledInputDropMenuProps {
 }
 
 const StyledInputDropMenu = styled.div<StyledInputDropMenuProps>`
-  position: absolute;
-  left: ${({ menuRight }) => menuRight + 8}px;
-  bottom: ${({ menuTopCalc }) => menuTopCalc};
+  position: fixed;
+  left: ${({ menuRight }) => menuRight + 20}px;
+  top: ${({ menuTopCalc }) => menuTopCalc};
+  z-index: 1000;
 
   &::before {
     content: '';

@@ -33,21 +33,7 @@ const StyledDvtDragCardListSize = styled.div`
 const StyledDvtDragCard = styled.div`
   display: flex;
   flex-direction: column;
-  height: 660px;
-  padding-right: 9px;
-  overflow-y: auto;
   width: 100%;
-
-  &::-webkit-scrollbar {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
-    width: 6px;
-    border-radius: 12px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
-    width: 4px;
-    border-radius: 12px;
-  }
 `;
 
 export { StyledDvtDragCardList, StyledDvtDragCardListSize, StyledDvtDragCard };

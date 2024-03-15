@@ -37,6 +37,7 @@ import {
   StyledDvtSidebarIcon,
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
+  StyledCollapseScroll,
 } from './dvt-sidebar.module';
 import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
@@ -45,6 +46,7 @@ import DvtInput from '../DvtInput';
 import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
 import DvtInputSelect from '../DvtInputSelect';
 import DvtDargCardList from '../DvtDragCardList';
+import DvtCollapse from '../DvtCollapse';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -77,6 +79,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const rolesListSelector = useAppSelector(state => state.dvtSidebar.rolesList);
   const usersListSelector = useAppSelector(state => state.dvtSidebar.usersList);
+  const savedQuerySelector = useAppSelector(
+    state => state.dvtSidebar.savedQuery,
+  );
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
   const dataSelector = useAppSelector(state => state.dvtSidebar.data);
@@ -99,7 +104,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
+  const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
+  const [chartCollapses, setChartCollapses] = useState<any[]>([]);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -215,6 +222,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.reports,
     fetchedSelector.alerts,
     fetchedSelector.queryHistory,
+    fetchedSelector.savedQuery,
     pathName,
   ]);
 
@@ -299,6 +307,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'queryHistory',
           keyNames: ['database', 'state', 'user'],
         },
+        {
+          key: 'savedQuery',
+          keyNames: ['database', 'schema', 'modifiedBy'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -344,6 +356,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       label: item.database_name,
                     };
                   case 'queryHistory-datas':
+                    return {
+                      value: item.value,
+                      label: item.text,
+                    };
+                  case 'savedQuery':
                     return {
                       value: item.value,
                       label: item.text,
@@ -497,6 +514,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'queryHistory',
         keyNames: ['database', 'state', 'user'],
       },
+      {
+        key: 'savedQuery',
+        keyNames: ['database', 'schema', 'modifiedBy'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -537,6 +558,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'rolesList',
     'usersList',
     'rowLevelSecurity',
+    'savedQuery',
   ];
 
   const getAlgorithmOptions = () => {
@@ -585,25 +607,48 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   }, [selectCategories]);
 
   useEffect(() => {
-    if (chartSelector?.dataset?.columns) {
-      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock';
+    if (chartSelector?.dataset) {
+      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
       const iconQuestions = ['BOOLEAN'];
-      const iconHashtags = ['BIGINT'];
+      const iconHashtags = ['BIGINT', 'FLOAT64'];
       const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
+
+      setChartMetrics(
+        chartSelector.dataset.metrics.map((ci: any) => ({
+          label: ci.expression,
+          value: ci,
+          icon: 'function_x',
+        })),
+      );
 
       setChartColumns(
         chartSelector.dataset.columns.map((ci: any) => ({
           label: ci.column_name,
           value: ci,
-          icon:
-            (iconQuestions.includes(ci.type) && 'question') ||
-            (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
-            (iconClocks.includes(ci.type) && 'clock') ||
-            'field_abc',
+          icon: ci.python_date_format
+            ? 'clock'
+            : ci.expression
+            ? 'function_x'
+            : (iconQuestions.includes(ci.type) && 'question') ||
+              (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
+              (iconClocks.includes(ci.type) && 'clock') ||
+              'field_abc',
         })),
       );
+
+      setChartCollapses(['metrics', 'columns']);
     }
   }, [chartAddSelector]);
+
+  const handleChartCollapseSetOpen = (bln: boolean, active: string) => {
+    if (bln) {
+      setChartCollapses([...chartCollapses, active]);
+    } else if (chartCollapses.includes(active)) {
+      setChartCollapses(chartCollapses.filter(f => f !== active));
+    } else {
+      setChartCollapses([...chartCollapses, active]);
+    }
+  };
 
   return (
     <StyledDvtSidebar minWidth={minWidth}>
@@ -759,6 +804,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? usersListSelector[data.name]
                             : pathTitles(pathName) === 'newTrainedTable'
                             ? newTrainedTableSelector[data.name]
+                            : pathTitles(pathName) === 'savedQuery'
+                            ? savedQuerySelector[data.name]
                             : pathTitles(pathName) === 'rolesList'
                             ? rolesListSelector[data.name]
                             : pathTitles(pathName) === 'queryHistory'
@@ -808,6 +855,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? rowLevelSecuritySelector[data.name]
                             : pathTitles(pathName) === 'queryHistory'
                             ? queryHistorySelector[data.name]
+                            : pathTitles(pathName) === 'savedQuery'
+                            ? savedQuerySelector[data.name]
                             : undefined
                         }
                         onChange={value => {
@@ -909,10 +958,32 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   }}
                 />
               )}
-            {pathTitles(pathName) === 'chart' &&
-              chartSelector?.dataset?.columns?.length && (
-                <DvtDargCardList data={chartColumns} />
-              )}
+            {pathTitles(pathName) === 'chart' && (
+              <StyledCollapseScroll>
+                {chartSelector?.dataset?.metrics?.length && (
+                  <DvtCollapse
+                    label="Metrics"
+                    isOpen={chartCollapses.includes('metrics')}
+                    setIsOpen={bln =>
+                      handleChartCollapseSetOpen(bln, 'metrics')
+                    }
+                  >
+                    <DvtDargCardList data={chartMetrics} />
+                  </DvtCollapse>
+                )}
+                {chartSelector?.dataset?.columns?.length && (
+                  <DvtCollapse
+                    label="Columns"
+                    isOpen={chartCollapses.includes('columns')}
+                    setIsOpen={bln =>
+                      handleChartCollapseSetOpen(bln, 'columns')
+                    }
+                  >
+                    <DvtDargCardList data={chartColumns} />
+                  </DvtCollapse>
+                )}
+              </StyledCollapseScroll>
+            )}
           </StyledDvtSidebarBody>
         </StyledDvtSidebarGroup>
       )}
