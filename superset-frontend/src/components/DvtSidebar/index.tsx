@@ -355,16 +355,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       value: item.explore_database_id,
                       label: item.database_name,
                     };
-                  case 'savedQuery':
-                    return {
-                      value: item.value,
-                      label: item.text,
-                    };
-                  case 'queryHistory-datas':
-                    return {
-                      value: item.value,
-                      label: item.text,
-                    };
                   default:
                     return {
                       value: item.value,
