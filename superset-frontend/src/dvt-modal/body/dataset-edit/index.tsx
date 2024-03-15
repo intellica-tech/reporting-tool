@@ -10,7 +10,6 @@ import DvtButtonTabs, {
 } from 'src/components/DvtButtonTabs';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtSelect from 'src/components/DvtSelect';
-import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import {
   StyledDatasetEdit,
@@ -32,13 +31,22 @@ import {
   ModalButtonContainer,
   ModalNavigationContainer,
 } from './dataset-edit.module';
+import DvtAceEditor from 'src/components/DvtAceEditor';
 
 const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const [isWarningActive, setIsWarningActive] = useState<boolean>(true);
+  const [calculatedColumn, setCalculatedColumn] = useState<any[]>(
+    meta.result.columns.filter((column: any) => column.expression),
+  );
+  const column = meta.result.columns.filter(
+    (column: any) => !column.expression,
+  );
+
   const [modalData, setModalData] = useState<any>({
     always_filter_main_dttm: meta.result.always_filter_main_dttm,
     cache_timeout: meta.result.cache_timeout,
-    columns: meta.result.columns,
+    columns: column,
+    calculated: calculatedColumn,
     database_id: meta.result.database.id,
     default_endpoint: meta.result.default_endpoint,
     description: meta.result.description,
@@ -54,11 +62,13 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     owners: meta.result.owners,
     schema: meta.result.schema,
     sql: meta.result.sql,
-    table_name: meta.result.table_name,
+    table_name: {
+      label: meta.result.table_name,
+      value: meta.result.table_name,
+    },
     template_params: meta.result.template_params,
   });
 
-  // Source
   const [databaseSelection, setDatabaseSelection] = useState<any>({
     label: meta.result.database.database_name,
     value: meta.result.database.id,
@@ -69,25 +79,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     value: meta.result.schema,
   });
   const [tableUrl, setTableUrl] = useState<string>('');
-  const [tableSelection, setTableSelection] = useState<any>();
+  const [activeRadio, setActiveRadio] = useState<string>(
+    meta.result.main_dttm_col,
+  );
 
   const [databaseList, setDatabaseList] = useState<any>([]);
   const [schemaList, setSchemaList] = useState<any>([]);
   const [tableList, setTableList] = useState<any>([]);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [sourceSqllimit, setSourceSqlLimit] = useState(1000);
-  const [sourceSqlValue, setSourceSqlValue] = useState<string>(
-    meta.result.sql || 'SELECT ...',
-  );
-  const [sourceSqlLoading, setSourceSqlLoading] = useState<boolean>(false);
-  const handleRunSourceSQL = () => {
-    setSourceSqlLoading(true);
-    setExecutePromiseUrl('sqllab/execute/');
-    setTimeout(() => {
-      setExecutePromiseUrl('');
-    }, 500);
-  };
+  const [sourceSqlValue, setSourceSqlValue] = useState<string>(meta.result.sql);
 
   const databaseResponse = useFetch({ url: 'database' });
   const schemaResponse = useFetch({ url: schemaUrl });
@@ -134,9 +135,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (tableResponse) {
       setTableList(
-        tableResponse.result.map((item: { value: any }, index: any) => ({
+        tableResponse.result.map((item: any) => ({
           label: item.value,
-          value: index,
+          value: item.value,
         })),
       );
     }
@@ -144,19 +145,43 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
   // Metrics
   const metricsHeader = [
-    { id: 1, title: t('Metric Key'), field: 'metric_name' },
-    { id: 2, title: t('Label'), field: 'verbose_name' },
-    { id: 3, title: t('SQL expression'), field: 'expression' },
+    { id: 1, title: t('Metric Key'), field: 'metric_name', input: true },
+    { id: 2, title: t('Label'), field: 'verbose_name', input: true },
+    { id: 3, title: t('SQL expression'), field: 'expression', editor: true },
   ];
 
   // Columns
   const columnsHeader = [
     { id: 1, title: t('Column'), field: 'column_name', sort: true },
     { id: 2, title: t('Data Type'), field: 'type', sort: true },
-    { id: 3, title: t('Is Temporal'), field: 'is_dttm', sort: true },
-    { id: 4, title: t('Default Datetime'), field: 'is_dttm', sort: true },
-    { id: 5, title: t('Is Filterable'), field: 'filterable', sort: true },
-    { id: 6, title: t('Is Dimension'), field: 'is_active', sort: true },
+    {
+      id: 3,
+      title: t('Is Temporal'),
+      field: 'is_dttm',
+      sort: true,
+      checkboxData: true,
+    },
+    {
+      id: 4,
+      title: t('Default Datetime'),
+      field: 'column_name',
+      sort: true,
+      radio: true,
+    },
+    {
+      id: 5,
+      title: t('Is Filterable'),
+      field: 'filterable',
+      sort: true,
+      checkboxData: true,
+    },
+    {
+      id: 6,
+      title: t('Is Dimension'),
+      field: 'groupby',
+      sort: true,
+      checkboxData: true,
+    },
     {
       id: 7,
       title: t('Action'),
@@ -170,6 +195,59 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       ],
     },
   ];
+
+  const calculatedHeader = [
+    {
+      id: 1,
+      title: t('Column'),
+      field: 'column_name',
+      sort: true,
+      input: true,
+      flex: 2,
+    },
+    { id: 2, title: t('Data Type'), field: 'type', sort: true },
+    {
+      id: 3,
+      title: t('Is Temporal'),
+      field: 'is_dttm',
+      sort: true,
+      checkboxData: true,
+    },
+    {
+      id: 4,
+      title: t('Default Datetime'),
+      field: 'column_name',
+      sort: true,
+      radio: true,
+    },
+    {
+      id: 5,
+      title: t('Is Filterable'),
+      field: 'filterable',
+      sort: true,
+      checkboxData: true,
+    },
+    {
+      id: 6,
+      title: t('Is Dimension'),
+      field: 'groupby',
+      sort: true,
+      checkboxData: true,
+    },
+    {
+      id: 7,
+      title: t('Action'),
+      showHover: true,
+      clicks: [
+        {
+          icon: 'trash',
+          click: (item: any) => handleModalDelete(item),
+          popperLabel: t('Delete'),
+        },
+      ],
+    },
+  ];
+
   const [sort, setSort] = useState<DvtTableSortProps>({
     column: 'id',
     direction: 'desc',
@@ -187,19 +265,54 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const [settingsSqlLimit, setSettingsSqlLimit] = useState<number>(1000);
   const [settingsSqlValue, setSettingsSqlValue] =
     useState<string>('SELECT ...');
-  const [settingsSqlLoading, setSettingsSqlLoading] = useState<boolean>(false);
-  const handleRunSettingsSQL = () => {
-    setSettingsSqlLoading(true);
-    setExecutePromiseUrl('sqllab/execute/');
-    setTimeout(() => {
-      setExecutePromiseUrl('');
-    }, 500);
-  };
 
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Source',
     value: 'source',
   });
+
+  console.log('match', calculatedColumn);
+
+  const handleAddItem = () => {
+    const newItem = {
+      column_name: '<new column>',
+      expression: '<enter SQL expression here>',
+      filterable: true,
+      groupby: true,
+      collapse: true,
+    };
+
+    setCalculatedColumn([...calculatedColumn, newItem]);
+  };
+
+  const fields = [
+    { label: 'SQL EXPRESSION', placeholder: 'SELECT ...', type: 'sqlEditor' },
+    { label: 'LABEL', placeholder: 'Label', type: 'input' },
+    { label: 'DESCRIPTION', placeholder: 'Description', type: 'input' },
+    { label: 'DATA TYPE', placeholder: 'Select ...', type: 'select' },
+    { label: 'DATETIME FORMAT', placeholder: '%Y/%m/%d', type: 'input' },
+    { label: 'CERTIFIED BY', placeholder: 'Certified by', type: 'input' },
+  ];
+
+  const updateModalDataColumns = (newColumns: any[]) => {
+    setModalData((prevData: any) => ({
+      ...prevData,
+      columns: newColumns,
+    }));
+  };
+
+  const updateModalDataMetrics = (newColumns: any[]) => {
+    setModalData((prevData: any) => ({
+      ...prevData,
+      metrics: newColumns,
+    }));
+  };
+
+  const updateModalDataCalculated = (newColumns: any[]) => {
+    setCalculatedColumn(newColumns);
+  };
+
+  console.log('columns', modalData.columns);
 
   return (
     <StyledDatasetEdit>
@@ -240,31 +353,35 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       </ModalNavigationContainer>
       {tabs.value === 'source' ? (
         <SourceBody>
-          <SourceLockContainer>
-            <Icon
-              fileName={isEditMode ? 'lock_locked' : 'lock_unlocked'}
-              onClick={() => {
-                setIsEditMode(!isEditMode);
-              }}
-            />
+          <SourceLockContainer
+            onClick={() => {
+              setIsEditMode(!isEditMode);
+            }}
+          >
+            <Icon fileName={!isEditMode ? 'lock_locked' : 'lock_unlocked'} />
             <div>{t('Click the lock to make changes.')}</div>
           </SourceLockContainer>
           <SourceCheckboxContainer>
             <DvtCheckbox
               label={t('Physical (Table or view)')}
               checked={!modalData.is_sqllab_view}
-              onChange={selected => {
-                setModalData({ ...modalData, is_sqllab_view: false });
+              onChange={() => {
+                if (!isEditMode) {
+                  setModalData({ ...modalData, is_sqllab_view: false });
+                }
               }}
-              disabled={!isEditMode}
+              disabled={isEditMode}
             />
+
             <DvtCheckbox
               label={t('Virtual (SQL)')}
               checked={modalData.is_sqllab_view}
-              onChange={selected => {
-                setModalData({ ...modalData, is_sqllab_view: true });
+              onChange={() => {
+                if (!isEditMode) {
+                  setModalData({ ...modalData, is_sqllab_view: true });
+                }
               }}
-              disabled={!isEditMode}
+              disabled={isEditMode}
             />
           </SourceCheckboxContainer>
           <ModalBreak />
@@ -294,10 +411,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               <DvtSelect
                 data={tableList}
                 label="Table"
-                selectedValue={tableSelection}
+                selectedValue={modalData.table_name}
                 setSelectedValue={selection => {
-                  setModalData({ ...modalData, table_name: selection.label });
-                  setTableSelection(selection);
+                  setModalData({ ...modalData, table_name: selection });
                 }}
                 typeDesign="form"
               />
@@ -327,19 +443,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               />
               <DvtInput
                 label="Name"
-                value={modalData.table_name}
+                value={modalData.table_name.label}
                 onChange={value =>
-                  setModalData({ ...modalData, table_name: value })
+                  setModalData({
+                    ...modalData,
+                    table_name: { ...modalData.table_name, label: value },
+                  })
                 }
                 typeDesign="form"
               />
-              <DvtTextareaSelectRun
-                limit={sourceSqllimit}
-                setLimit={setSourceSqlLimit}
+              <DvtAceEditor
+                mode="sql"
+                placeholder="SELECT..."
                 value={sourceSqlValue}
-                setValue={setSourceSqlValue}
-                clickRun={handleRunSourceSQL}
-                loading={sourceSqlLoading}
+                onChange={setSourceSqlValue}
+                height="200px"
+                fontSize={16}
               />
             </SourceInputContainer>
           )}
@@ -349,7 +468,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           <MetricsButtonContainer>
             <DvtButton label={t('Add Item')} icon="dvt-add_filled" />
           </MetricsButtonContainer>
-          <DvtTable data={modalData.metrics} header={metricsHeader} />
+          <DvtTable
+            data={modalData.metrics}
+            setData={updateModalDataMetrics}
+            header={metricsHeader}
+          />
         </MetricsBody>
       ) : tabs.value === 'columns' ? (
         <ColumnsBody>
@@ -360,14 +483,38 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             />
           </ColumnsButtonContainer>
           <DvtTable
-            data={[...modalData.columns]}
+            data={modalData.columns}
+            setData={updateModalDataColumns}
             header={columnsHeader}
             sort={sort}
             setSort={setSort}
+            activeRadio={activeRadio}
+            setActiveRadio={row => {
+              setActiveRadio(row);
+            }}
           />
         </ColumnsBody>
       ) : tabs.value === 'calculated_columns' ? (
-        <div>Calculated Columns</div>
+        <div>
+          <DvtButton
+            label={t('Add Item')}
+            icon="dvt-add_filled"
+            onClick={handleAddItem}
+          />
+
+          <DvtTable
+            data={calculatedColumn}
+            setData={updateModalDataCalculated}
+            header={calculatedHeader}
+            sort={sort}
+            setSort={setSort}
+            activeRadio={activeRadio}
+            setActiveRadio={row => {
+              setActiveRadio(row);
+            }}
+            collapseData={fields}
+          />
+        </div>
       ) : tabs.value === 'settings' ? (
         <SettingsBody>
           <SettingsBlock>
@@ -400,13 +547,13 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
                 setAutocompleteSelected(!autocompleteSelected);
               }}
             />
-            <DvtTextareaSelectRun
-              limit={settingsSqlLimit}
-              setLimit={setSettingsSqlLimit}
-              value={settingsSqlValue}
-              setValue={setSettingsSqlValue}
-              clickRun={handleRunSettingsSQL}
-              loading={settingsSqlLoading}
+            <DvtAceEditor
+              mode="sql"
+              placeholder="SELECT..."
+              value={sourceSqlValue}
+              onChange={setSourceSqlValue}
+              height="200px"
+              fontSize={16}
             />
             <ModalInfoText>
               {t(

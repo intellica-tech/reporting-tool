@@ -93,6 +93,7 @@ const SourceLockContainer = styled.div`
   gap: 10px;
   align-items: center;
   color: ${({ theme }) => theme.colors.dvt.grayscale.dark1};
+  cursor: pointer;
 `;
 
 const SourceCheckboxContainer = styled.div`
