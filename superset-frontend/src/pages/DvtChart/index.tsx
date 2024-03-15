@@ -658,49 +658,54 @@ const DvtChart = () => {
       </CreateChart>
       <RightPreview>
         <RightPreviewTop ref={resizeObserverRef}>
-          {/* {chartFullPromise.loading ? (
-            <SpinnerContainer>
-              <DvtSpinner type="grow" size="xlarge" />
-            </SpinnerContainer>
-          ) : (
-            <DvtIconDataLabel
-              label={t('Add required control values to preview chart')}
-              description={t(
-                'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
-              )}
-              icon="square"
-            />
-          )} */}
-          <RightPreviewTopChartScreen ref={chartPanelRef}>
-            <ChartContainer
-              width={chartPanelWidth}
-              height={chartPanelHeight}
-              ownState={undefined}
-              annotationData={undefined}
-              chartAlert={null}
-              chartStackTrace={null}
-              chartId={0}
-              chartStatus={chartStatus} // failed, loading, success, rendered
-              triggerRender={false}
-              force={false}
-              datasource={selectedChart?.dataset}
-              errorMessage={<div>Error</div>}
-              formData={formDataObj.form_data}
-              // latestQueryFormData={formDataObj.form_data}
-              onQuery={() => {}}
-              queriesResponse={chartData}
-              chartIsStale={false}
-              timeout={60}
-              triggerQuery={false}
-              vizType={active}
-            />
-            {/* {console.log({
+          {firstChartCreated ? (
+            <RightPreviewTopChartScreen ref={chartPanelRef}>
+              <ChartContainer
+                width={chartPanelWidth}
+                height={chartPanelHeight}
+                ownState={undefined}
+                annotationData={undefined}
+                chartAlert={null}
+                chartStackTrace={null}
+                chartId={0}
+                chartStatus={chartStatus} // failed, loading, success, rendered
+                triggerRender={false}
+                force={false}
+                datasource={selectedChart?.dataset}
+                errorMessage={<div>Error</div>}
+                formData={formDataObj.form_data}
+                // latestQueryFormData={formDataObj.form_data}
+                onQuery={() => {}}
+                queriesResponse={chartData}
+                chartIsStale={false}
+                timeout={60}
+                triggerQuery={false}
+                vizType={active}
+              />
+              {/* {console.log({
               chartStatus,
               datasource: selectedChart?.dataset,
               formData: formDataObj.form_data,
               queriesResponse: chartData,
             })} */}
-          </RightPreviewTopChartScreen>
+            </RightPreviewTopChartScreen>
+          ) : (
+            <>
+              {chartFullPromise.loading ? (
+                <SpinnerContainer>
+                  <DvtSpinner type="grow" size="xlarge" />
+                </SpinnerContainer>
+              ) : (
+                <DvtIconDataLabel
+                  label={t('Add required control values to preview chart')}
+                  description={t(
+                    'Select values in highlighted field(s) in the control panel. Then run the query by clicking on the "Create chart" button.',
+                  )}
+                  icon="square"
+                />
+              )}
+            </>
+          )}
         </RightPreviewTop>
         <RightPreviewBottom>
           <DvtButtonTabs

@@ -71,6 +71,7 @@ const RightPreviewTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  max-height: 400px;
 `;
 
 const RightPreviewTopChartScreen = styled.div`
@@ -95,7 +96,7 @@ const RightPreviewBottomTableScroll = styled.div`
   overflow-x: auto;
   overflow-y: auto;
   white-space: nowrap;
-  max-height: 32vh;
+  max-height: calc(100vh - 670px);
   max-width: calc(100vw - 940px);
 
   &::-webkit-scrollbar {
