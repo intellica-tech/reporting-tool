@@ -224,7 +224,7 @@ interface DvtSidebarState {
       database: any[];
       state: any[];
       user: any[];
-    }
+    };
     savedQuery: {
       modifiedBy: any[];
       database: any[];

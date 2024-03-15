@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
-import DvtPagination from 'src/components/DvtPagination';
-import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
-import useFetch from 'src/hooks/useFetch';
-import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { StyledSqlPagination } from './dvt-query-history.module';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import { dvtSqlhubSetSqlQuery } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { dvtSidebarSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
 import { useHistory } from 'react-router-dom';
+import DvtPagination from 'src/components/DvtPagination';
+import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
+import useFetch from 'src/hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import { StyledSqlPagination } from './dvt-query-history.module';
 
 function DvtQueryHistory() {
   const dispatch = useDispatch();
