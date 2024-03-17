@@ -33,11 +33,37 @@ import {
 } from './dataset-edit.module';
 import DvtAceEditor from 'src/components/DvtAceEditor';
 
+interface InputProps {
+  tabs: { label: string; value: string };
+  sqlQuery: string;
+  trigger: { label: string; value: string };
+  value: number | undefined;
+  hour: { label: string; value: string };
+  minute: { label: string; value: string };
+  timezone: { label: string; value: string };
+  logRetention: { label: string; value: number };
+  workingTimeout: number;
+  gracePeriod: number;
+  messageContent: { label: string; value: string };
+  owners: { label: string; value: number }[];
+  alertName: string;
+  description: string;
+  ignore: boolean;
+  schedule: string;
+  email: string;
+  active: boolean;
+}
+
 const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const [isWarningActive, setIsWarningActive] = useState<boolean>(true);
   const [calculatedColumn, setCalculatedColumn] = useState<any[]>(
     meta.result.columns.filter((column: any) => column.expression),
   );
+
+  const [metricsColumn, setMetricsColumn] = useState<any[]>(
+    meta.result.metrics,
+  );
+
   const column = meta.result.columns.filter(
     (column: any) => !column.expression,
   );
@@ -56,7 +82,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     is_managed_externally: meta.result.is_managed_externally,
     is_sqllab_view: meta.result.is_sqllab_view,
     main_dttm_col: meta.result.main_dttm_col,
-    metrics: meta.result.metrics,
+    metrics: metricsColumn,
     normalize_columns: meta.result.normalize_columns,
     offset: meta.result.offset,
     owners: meta.result.owners,
@@ -86,6 +112,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const [databaseList, setDatabaseList] = useState<any>([]);
   const [schemaList, setSchemaList] = useState<any>([]);
   const [tableList, setTableList] = useState<any>([]);
+  const [collapseCalculatedData, setCollapseCalculatedData] = useState<any[]>(
+    [],
+  );
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [sourceSqlValue, setSourceSqlValue] = useState<string>(meta.result.sql);
@@ -93,6 +122,76 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const databaseResponse = useFetch({ url: 'database' });
   const schemaResponse = useFetch({ url: schemaUrl });
   const tableResponse = useFetch({ url: tableUrl });
+
+  const [apiUrl, setApiUrl] = useState<string>('');
+
+  const [input, setInput] = useState<InputProps>({
+    tabs: { label: '', value: '' },
+    sqlQuery: '',
+    trigger: { label: '', value: '' },
+    value: undefined,
+    hour: { label: '', value: '' },
+    minute: { label: '', value: '' },
+    timezone: {
+      label: t('GMT +03:00 (Antarctica/Syowa)'),
+      value: t('Antarctica/Syowa'),
+    },
+    logRetention: {
+      label: t('90 days'),
+      value: 90,
+    },
+    workingTimeout: 3600,
+    gracePeriod: 0,
+    messageContent: { label: '', value: '' },
+    owners: [],
+    alertName: '',
+    description: '',
+    ignore: false,
+    schedule: '',
+    email: '',
+    active: false,
+  });
+
+  const editDatasetData = useFetch({
+    url: apiUrl,
+    method: 'PUT',
+    body: {
+      always_filter_main_dttm: input.active,
+      chart: value === 'Chart' ? input.messageContent.value : null,
+      context_markdown: 'string',
+      creation_method: 'alerts_reports',
+      crontab: input.schedule,
+      dashboard: value === 'Dashboard' ? input.messageContent.value : null,
+      database: input.database.value,
+      description: input.description,
+      force_screenshot: input.ignore,
+      grace_period: input.gracePeriod,
+      log_retention: input.logRetention.value,
+      name: input.alertName,
+      owners: input.owners,
+      recipients: [
+        {
+          recipient_config_json: {
+            target: input.email,
+          },
+          type: 'Email',
+        },
+      ],
+      report_format: chartType,
+      sql: input.sqlQuery,
+      timezone: input.timezone.value,
+      type: 'Alert',
+      validator_config_json: {
+        op: input.trigger.value,
+        threshold: input.value,
+      },
+      validator_type: 'operator',
+      working_timeout: input.workingTimeout,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
   useEffect(() => {
     if (databaseResponse) {
@@ -148,6 +247,19 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     { id: 1, title: t('Metric Key'), field: 'metric_name', input: true },
     { id: 2, title: t('Label'), field: 'verbose_name', input: true },
     { id: 3, title: t('SQL expression'), field: 'expression', editor: true },
+    {
+      id: 4,
+      title: t('Action'),
+      showHover: true,
+      clicks: [
+        {
+          icon: 'trash',
+          click: (item: any) => handleModalDelete(item),
+          popperLabel: t('Delete'),
+        },
+      ],
+      flex: 0.5,
+    },
   ];
 
   // Columns
@@ -271,10 +383,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     value: 'source',
   });
 
-  console.log('match', calculatedColumn);
+  console.log('matrics', modalData.metrics);
 
   const handleAddItem = () => {
     const newItem = {
+      id: generateId(),
       column_name: '<new column>',
       expression: '<enter SQL expression here>',
       filterable: true,
@@ -284,14 +397,56 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
     setCalculatedColumn([...calculatedColumn, newItem]);
   };
+  const handleMatricsAddItem = () => {
+    const newItem = {
+      id: generateId(),
+      metric_name: '<new metric>',
+      verbose_name: '',
+      expression: '',
+    };
+
+    setMetricsColumn([...metricsColumn, newItem]);
+  };
+
+  const generateId = () => Math.random().toString(36).slice(2, 11);
 
   const fields = [
-    { label: 'SQL EXPRESSION', placeholder: 'SELECT ...', type: 'sqlEditor' },
-    { label: 'LABEL', placeholder: 'Label', type: 'input' },
-    { label: 'DESCRIPTION', placeholder: 'Description', type: 'input' },
-    { label: 'DATA TYPE', placeholder: 'Select ...', type: 'select' },
-    { label: 'DATETIME FORMAT', placeholder: '%Y/%m/%d', type: 'input' },
-    { label: 'CERTIFIED BY', placeholder: 'Certified by', type: 'input' },
+    {
+      label: 'SQL EXPRESSION',
+      placeholder: 'SELECT ...',
+      type: 'sqlEditor',
+      fieldName: 'deneme',
+    },
+    {
+      label: 'LABEL',
+      placeholder: 'Label',
+      type: 'input',
+      fieldName: 'deneme1',
+    },
+    {
+      label: 'DESCRIPTION',
+      placeholder: 'Description',
+      type: 'input',
+      fieldName: 'deneme2',
+    },
+    {
+      label: 'DATA TYPE',
+      placeholder: 'Select ...',
+      type: 'select',
+      fieldName: 'deneme3',
+    },
+    {
+      label: 'DATETIME FORMAT',
+      placeholder: '%Y/%m/%d',
+      type: 'input',
+      fieldName: 'deneme4',
+    },
+    {
+      label: 'CERTIFIED BY',
+      placeholder: 'Certified by',
+      type: 'input',
+      fieldName: 'deneme5',
+    },
   ];
 
   const updateModalDataColumns = (newColumns: any[]) => {
@@ -466,11 +621,15 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       ) : tabs.value === 'metrics' ? (
         <MetricsBody>
           <MetricsButtonContainer>
-            <DvtButton label={t('Add Item')} icon="dvt-add_filled" />
+            <DvtButton
+              label={t('Add Item')}
+              icon="dvt-add_filled"
+              onClick={handleMatricsAddItem}
+            />
           </MetricsButtonContainer>
           <DvtTable
-            data={modalData.metrics}
-            setData={updateModalDataMetrics}
+            data={metricsColumn}
+            setData={setMetricsColumn}
             header={metricsHeader}
           />
         </MetricsBody>
@@ -504,7 +663,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
           <DvtTable
             data={calculatedColumn}
-            setData={updateModalDataCalculated}
+            setData={setCalculatedColumn}
             header={calculatedHeader}
             sort={sort}
             setSort={setSort}
@@ -513,6 +672,8 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               setActiveRadio(row);
             }}
             collapseData={fields}
+            collapseInputValues={collapseCalculatedData}
+            setCollapseInputValues={setCollapseCalculatedData}
           />
         </div>
       ) : tabs.value === 'settings' ? (

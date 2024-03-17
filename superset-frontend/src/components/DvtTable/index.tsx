@@ -96,6 +96,8 @@ export interface DvtTableProps {
   activeRadio?: string;
   setActiveRadio?: (row: any) => void;
   collapseData?: any[];
+  collapseInputValues?: any[];
+  setCollapseInputValues?: (row: any[]) => void;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -112,6 +114,8 @@ const DvtTable: React.FC<DvtTableProps> = ({
   activeRadio = '',
   setActiveRadio = () => {},
   collapseData,
+  collapseInputValues,
+  setCollapseInputValues,
 }) => {
   const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
@@ -192,6 +196,22 @@ const DvtTable: React.FC<DvtTableProps> = ({
     });
     setData(updatedData);
   };
+
+  const handleCollapseInputChange = (
+    newValue: string,
+    fieldName: string,
+    rowId: number,
+  ) => {
+    setCollapseInputValues(prevState => ({
+      ...prevState,
+      [rowId]: {
+        ...prevState[rowId],
+        [fieldName]: newValue,
+      },
+    }));
+  };
+
+  console.log(collapseInputValues);
 
   return (
     <StyledTable>
@@ -532,8 +552,18 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                 <DvtAceEditor
                                   mode="sql"
                                   placeholder={field.placeholder}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={
+                                    collapseInputValues[row.id]?.[
+                                      field.fieldName
+                                    ] || ''
+                                  }
+                                  onChange={newValue =>
+                                    handleCollapseInputChange(
+                                      newValue,
+                                      field.fieldName,
+                                      row.id,
+                                    )
+                                  }
                                   height="200px"
                                   fontSize={16}
                                 />
@@ -542,16 +572,36 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             {field.type === 'input' && (
                               <DvtInput
                                 label={field.label}
-                                value=""
-                                onChange={() => {}}
+                                value={
+                                  collapseInputValues[row.id]?.[
+                                    field.fieldName
+                                  ] || ''
+                                }
+                                onChange={newValue =>
+                                  handleCollapseInputChange(
+                                    newValue,
+                                    field.fieldName,
+                                    row.id,
+                                  )
+                                }
                                 placeholder={field.placeholder}
                               />
                             )}
                             {field.type === 'select' && (
                               <DvtSelect
                                 data={[{ value: 'deneme', label: 'denem' }]}
-                                selectedValue={selected}
-                                setSelectedValue={setSelected}
+                                selectedValue={
+                                  collapseInputValues[row.id]?.[
+                                    field.fieldName
+                                  ] || ''
+                                }
+                                setSelectedValue={newValue =>
+                                  handleCollapseInputChange(
+                                    newValue,
+                                    field.fieldName,
+                                    row.id,
+                                  )
+                                }
                                 label={field.label}
                                 placeholder={field.placeholder}
                               />
