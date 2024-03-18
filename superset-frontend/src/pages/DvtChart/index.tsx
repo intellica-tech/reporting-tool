@@ -78,7 +78,15 @@ const selectBars = [
 const DvtChart = () => {
   const dispatch = useDispatch();
   const selectedChart = useAppSelector(state => state.dvtChart.selectedChart);
-  const [active, setActive] = useState<string>('echarts_timeseries_line');
+  const selectedVizType = useAppSelector(
+    state => state.dvtNavbar.chartAdd.vizType,
+  );
+  const statusVizType = selectBars.find(
+    v => v.status === selectedVizType,
+  )?.status;
+  const [active, setActive] = useState<string>(
+    statusVizType || 'echarts_timeseries_line',
+  );
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Results',
     value: 'results',
