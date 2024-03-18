@@ -18,7 +18,7 @@
  */
 import React from 'react';
 import { StyledDvtLogo, DvtTitle } from './dvt-logo.module';
-import DvtAppLogo from '../../assets/dvt-img/dvtAppLogo.png';
+import DvtAppLogo from '../../assets/dvt-img/dvt-logo-data-analytics.png';
 
 export interface DvtLogoProps {
   title: string;
@@ -26,7 +26,7 @@ export interface DvtLogoProps {
 
 const DvtLogo: React.FC<DvtLogoProps> = ({ title }) => (
   <StyledDvtLogo to="/welcome/">
-    <img src={DvtAppLogo} alt="Logo" />
+    <img height={28} width={28} src={DvtAppLogo} alt="Logo" />
     <DvtTitle>{title}</DvtTitle>
   </StyledDvtLogo>
 );
