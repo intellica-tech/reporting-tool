@@ -116,7 +116,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     addittional_parameters: meta?.isEdit
       ? JSON.stringify(meta.result.parameters.query)
       : '',
-    switch: meta?.isEdit ? meta.result.parameters.encryption : '',
+    switch: meta?.isEdit ? meta.result.parameters.encryption : false,
   };
 
   const { values, errors, handleChange, validateForm } = useFormValidation(
