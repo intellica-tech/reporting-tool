@@ -34,6 +34,7 @@ const CreateChartCenter = styled.div`
   flex-direction: column;
   gap: 15px;
   padding-right: 10px;
+  max-height: calc(100vh - 365px);
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
@@ -64,6 +65,7 @@ const RightPreview = styled.div`
   flex-direction: column;
   margin-left: 20px;
   width: -webkit-fill-available;
+  width: -moz-available;
 `;
 
 const RightPreviewTop = styled.div`
