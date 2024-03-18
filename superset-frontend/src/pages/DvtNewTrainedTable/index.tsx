@@ -89,7 +89,7 @@ function DvtNewTainedTable() {
   useEffect(() => {
     if (newTainedTableAddSelector.schema?.value) {
       setGetSchemaDataApiUrl({
-        url: `database/1/tables/?q=(force:!f,schema_name:${newTainedTableAddSelector.schema.value})`,
+        url: `database/${newTainedTableAddSelector.database?.value}/tables/?q=(force:!f,schema_name:${newTainedTableAddSelector.schema.value})`,
         key: 'schema',
       });
     }

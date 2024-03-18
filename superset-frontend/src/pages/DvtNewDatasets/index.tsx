@@ -78,7 +78,7 @@ function DvtNewDatasets() {
   useEffect(() => {
     if (datasetAddSelector.schema?.value) {
       setGetSchemaDataApiUrl({
-        url: `database/1/tables/?q=(force:!f,schema_name:${datasetAddSelector.schema.value})`,
+        url: `database/${datasetAddSelector.database?.value}/tables/?q=(force:!f,schema_name:${datasetAddSelector.schema.value})`,
         key: 'schema',
       });
     }
