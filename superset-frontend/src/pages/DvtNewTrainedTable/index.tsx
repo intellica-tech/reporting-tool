@@ -139,7 +139,7 @@ function DvtNewTainedTable() {
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
       setGetTableDataApiUrl(
-        `database/1/table/${newTainedTableAddSelector.selectDatabase.value}/${newTainedTableAddSelector.schema.value}/`,
+        `database/${newTainedTableAddSelector.database?.value}/table/${newTainedTableAddSelector.selectDatabase.value}/${newTainedTableAddSelector.schema.value}/`,
       );
     }
   }, [newTainedTableAddSelector.selectDatabase]);
