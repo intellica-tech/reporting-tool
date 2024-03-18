@@ -205,6 +205,16 @@ const DvtChart = () => {
   const withoutValueForNull = (vl: any) =>
     vl?.value ? (vl.value === 'null' ? null : vl.value) : undefined;
 
+  const postProcessingAggregates = (data: any[]) => {
+    const result = {};
+
+    data.forEach(item => {
+      result[item.label] = { operator: 'mean' };
+    });
+
+    return result;
+  };
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -414,11 +424,7 @@ const DvtChart = () => {
                   options: {
                     index: [values.x_axis[0]?.label],
                     columns: [],
-                    aggregates: {
-                      count: {
-                        operator: 'mean',
-                      },
-                    },
+                    aggregates: postProcessingAggregates(values.metrics),
                     drop_missing_columns: false,
                   },
                 },
