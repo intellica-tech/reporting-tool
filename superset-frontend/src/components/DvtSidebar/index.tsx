@@ -92,6 +92,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const rowLevelSecuritySelector = useAppSelector(
     state => state.dvtSidebar.rowLevelSecurity,
   );
+  const queryHistorySelector = useAppSelector(
+    state => state.dvtSidebar.queryHistory,
+  );
   const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -219,6 +222,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.reports,
     fetchedSelector.alerts,
     fetchedSelector.savedQuery,
+    fetchedSelector.queryHistory,
     pathName,
   ]);
 
@@ -303,6 +307,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'savedQuery',
           keyNames: ['database', 'schema', 'modifiedBy'],
         },
+        {
+          key: 'queryHistory',
+          keyNames: ['database', 'state', 'user'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -346,11 +354,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
-                    };
-                  case 'savedQuery':
-                    return {
-                      value: item.value,
-                      label: item.text,
                     };
                   default:
                     return {
@@ -501,6 +504,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'savedQuery',
         keyNames: ['database', 'schema', 'modifiedBy'],
       },
+      {
+        key: 'queryHistory',
+        keyNames: ['database', 'state', 'user'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -536,12 +543,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'connection',
     'sqlhub',
     'chartAdd',
-    'sqlhubHistory',
     'chart',
     'rolesList',
     'usersList',
     'rowLevelSecurity',
     'savedQuery',
+    'queryHistory',
   ];
 
   const getAlgorithmOptions = () => {
@@ -791,6 +798,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? savedQuerySelector[data.name]
                             : pathTitles(pathName) === 'rolesList'
                             ? rolesListSelector[data.name]
+                            : pathTitles(pathName) === 'queryHistory'
+                            ? queryHistorySelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -836,6 +845,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? rowLevelSecuritySelector[data.name]
                             : pathTitles(pathName) === 'savedQuery'
                             ? savedQuerySelector[data.name]
+                            : pathTitles(pathName) === 'queryHistory'
+                            ? queryHistorySelector[data.name]
                             : undefined
                         }
                         onChange={value => {

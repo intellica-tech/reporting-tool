@@ -142,19 +142,16 @@ const DvtSidebarData: SidebarDataProps[] = [
     data: [
       {
         label: t('Database'),
-        values: [],
         placeholder: t('Select or type a value'),
-        name: 'databse',
+        name: 'database',
       },
       {
         label: t('State'),
-        values: [],
         placeholder: t('Select or type a value'),
         name: 'state',
       },
       {
         label: t('User'),
-        values: [],
         placeholder: t('Type a value'),
         name: 'user',
       },
@@ -169,6 +166,20 @@ const DvtSidebarData: SidebarDataProps[] = [
         placeholder: t('Type a value'),
         name: 'search',
         status: 'input',
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'query/related/database?q=(filter:%27%27,page:0,page_size:100)',
+      },
+      {
+        name: 'state',
+        url: 'query/distinct/status?q=(filter:%27%27,page:0,page_size:100)',
+      },
+      {
+        name: 'user',
+        url: 'query/related/user?q=(filter:%27%27,page:0,page_size:100)',
       },
     ],
   },

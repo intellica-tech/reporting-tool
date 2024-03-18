@@ -62,7 +62,10 @@ function DvtSavedQuery() {
         },
       ],
       page: gPage,
-      orderColumn: sort.column,
+      orderColumn:
+        sort.column === 'database_name'
+          ? `database.${sort.column}`
+          : sort.column,
       orderDirection: sort.direction,
     })}`;
 
@@ -128,12 +131,24 @@ function DvtSavedQuery() {
   };
 
   const SavedQueriesHeader = [
-    { id: 1, title: t('Name'), field: 'label', flex: 3, checkbox: true },
-    { id: 2, title: t('Database'), field: 'database_name' },
-    { id: 3, title: t('Schema'), field: 'schema' },
+    {
+      id: 1,
+      title: t('Name'),
+      field: 'label',
+      flex: 3,
+      checkbox: true,
+      sort: true,
+    },
+    { id: 2, title: t('Database'), field: 'database_name', sort: true },
+    { id: 3, title: t('Schema'), field: 'schema', sort: true },
     { id: 4, title: t('Tables'), field: 'table' },
     { id: 5, title: t('Created on'), field: 'id' },
-    { id: 6, title: t('Modified'), field: 'changed_on_delta_humanized' },
+    {
+      id: 6,
+      title: t('Modified'),
+      field: 'changed_on_delta_humanized',
+      sort: true,
+    },
     {
       id: 7,
       title: t('Actions'),
@@ -217,6 +232,7 @@ function DvtSavedQuery() {
         checkboxActiveField="id"
         selected={selected}
         setSelected={setSelected}
+        sort={sort}
         setSort={setSort}
       />
       <SavedQueryPagination>
