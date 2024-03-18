@@ -129,7 +129,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       case '/rowlevelsecurity/list/':
         return t('Row Level Security');
       case '/traindata/':
-        return t('New Trained Table');
+        return t('New Output Table');
       case '/role/list/':
         return t('Roles List');
       case '/user/list/':
