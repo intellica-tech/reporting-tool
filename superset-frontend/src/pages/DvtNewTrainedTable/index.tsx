@@ -188,7 +188,7 @@ function DvtNewTainedTable() {
           <DvtIconDataLabel
             label={t('Select table source')}
             description={t(
-              'You can create a new trained table from existing table from the panel on the left.',
+              'You can create an output table from existing table from the panel on the left.',
             )}
             icon="square"
           />
@@ -202,7 +202,7 @@ function DvtNewTainedTable() {
           onClick={() => history.push('/tablemodelview/list/')}
         />
         <DvtButton
-          label={t('Create New Trained Table')}
+          label={t('Create Output Table')}
           size="small"
           colour="grayscale"
           typeColour={
