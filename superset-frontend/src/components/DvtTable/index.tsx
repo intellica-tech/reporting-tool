@@ -96,8 +96,6 @@ export interface DvtTableProps {
   activeRadio?: string;
   setActiveRadio?: (row: any) => void;
   collapseData?: any[];
-  collapseInputValues?: any[];
-  setCollapseInputValues?: (row: any[]) => void;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -114,8 +112,6 @@ const DvtTable: React.FC<DvtTableProps> = ({
   activeRadio = '',
   setActiveRadio = () => {},
   collapseData,
-  collapseInputValues,
-  setCollapseInputValues,
 }) => {
   const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
@@ -197,22 +193,6 @@ const DvtTable: React.FC<DvtTableProps> = ({
     setData(updatedData);
   };
 
-  const handleCollapseInputChange = (
-    newValue: string,
-    fieldName: string,
-    rowId: number,
-  ) => {
-    setCollapseInputValues(prevState => ({
-      ...prevState,
-      [rowId]: {
-        ...prevState[rowId],
-        [fieldName]: newValue,
-      },
-    }));
-  };
-
-  console.log(collapseInputValues);
-
   return (
     <StyledTable>
       <StyledTableTable>
@@ -273,7 +253,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
         </StyledTabletHead>
         <StyledTableTbody>
           {data
-            .sort((a, b) => (a.collapse ? -1 : b.collapse ? 1 : 0))
+            .sort((a, b) => (a?.collapse ? -1 : b?.collapse ? 1 : 0))
             .map((row, rowIndex) => (
               <>
                 <StyledTableTr
@@ -553,15 +533,13 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                   mode="sql"
                                   placeholder={field.placeholder}
                                   value={
-                                    collapseInputValues[row.id]?.[
-                                      field.fieldName
-                                    ] || ''
+                                    field.fieldName ? row[field.fieldName] : ''
                                   }
                                   onChange={newValue =>
-                                    handleCollapseInputChange(
+                                    handleInputChange(
                                       newValue,
-                                      field.fieldName,
                                       row.id,
+                                      field.fieldName ? field.fieldName : '',
                                     )
                                   }
                                   height="200px"
@@ -573,15 +551,13 @@ const DvtTable: React.FC<DvtTableProps> = ({
                               <DvtInput
                                 label={field.label}
                                 value={
-                                  collapseInputValues[row.id]?.[
-                                    field.fieldName
-                                  ] || ''
+                                  field.fieldName ? row[field.fieldName] : ''
                                 }
                                 onChange={newValue =>
-                                  handleCollapseInputChange(
+                                  handleInputChange(
                                     newValue,
-                                    field.fieldName,
                                     row.id,
+                                    field.fieldName ? field.fieldName : '',
                                   )
                                 }
                                 placeholder={field.placeholder}
@@ -589,17 +565,15 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             )}
                             {field.type === 'select' && (
                               <DvtSelect
-                                data={[{ value: 'deneme', label: 'denem' }]}
+                                data={field.data}
                                 selectedValue={
-                                  collapseInputValues[row.id]?.[
-                                    field.fieldName
-                                  ] || ''
+                                  field.fieldName ? row[field.fieldName] : ''
                                 }
                                 setSelectedValue={newValue =>
-                                  handleCollapseInputChange(
+                                  handleInputChange(
                                     newValue,
-                                    field.fieldName,
                                     row.id,
+                                    field.fieldName,
                                   )
                                 }
                                 label={field.label}

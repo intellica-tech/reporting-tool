@@ -5,11 +5,9 @@ import useFetch from 'src/hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import Icon from 'src/components/Icons/Icon';
-import DvtButtonTabs, {
-  ButtonTabsDataProps,
-} from 'src/components/DvtButtonTabs';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtSelect from 'src/components/DvtSelect';
+import DvtAceEditor from 'src/components/DvtAceEditor';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import {
   StyledDatasetEdit,
@@ -31,31 +29,25 @@ import {
   ModalButtonContainer,
   ModalNavigationContainer,
 } from './dataset-edit.module';
-import DvtAceEditor from 'src/components/DvtAceEditor';
+import DvtButtonTabs from 'src/components/DvtButtonTabs';
 
 interface InputProps {
   tabs: { label: string; value: string };
-  sqlQuery: string;
-  trigger: { label: string; value: string };
-  value: number | undefined;
-  hour: { label: string; value: string };
-  minute: { label: string; value: string };
-  timezone: { label: string; value: string };
-  logRetention: { label: string; value: number };
-  workingTimeout: number;
-  gracePeriod: number;
-  messageContent: { label: string; value: string };
-  owners: { label: string; value: number }[];
-  alertName: string;
-  description: string;
-  ignore: boolean;
-  schedule: string;
-  email: string;
-  active: boolean;
+  databaseSelection: { label: string; value: string };
+  isWarningActive: boolean;
+  schemaUrl: string;
+  schemaSelection: { label: string; value: string };
+  tableUrl: string;
+  activeRadio: string;
+  databaseList: { label: string; value: string }[];
+  schemaList: { label: string; value: string }[];
+  tableList: { label: string; value: string }[];
+  collapseCalculatedData: any[];
+  isEditMode: boolean;
+  sourceSqlValue: string;
 }
 
 const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
-  const [isWarningActive, setIsWarningActive] = useState<boolean>(true);
   const [calculatedColumn, setCalculatedColumn] = useState<any[]>(
     meta.result.columns.filter((column: any) => column.expression),
   );
@@ -67,6 +59,8 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   const column = meta.result.columns.filter(
     (column: any) => !column.expression,
   );
+
+  const [owners, setOwners] = useState<{ value: number; label: string }>();
 
   const [modalData, setModalData] = useState<any>({
     always_filter_main_dttm: meta.result.always_filter_main_dttm,
@@ -95,98 +89,103 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     template_params: meta.result.template_params,
   });
 
-  const [databaseSelection, setDatabaseSelection] = useState<any>({
-    label: meta.result.database.database_name,
-    value: meta.result.database.id,
-  });
-  const [schemaUrl, setSchemaUrl] = useState<string>('');
-  const [schemaSelection, setSchemaSelection] = useState<any>({
-    label: meta.result.schema,
-    value: meta.result.schema,
-  });
-  const [tableUrl, setTableUrl] = useState<string>('');
-  const [activeRadio, setActiveRadio] = useState<string>(
-    meta.result.main_dttm_col,
-  );
-
-  const [databaseList, setDatabaseList] = useState<any>([]);
-  const [schemaList, setSchemaList] = useState<any>([]);
-  const [tableList, setTableList] = useState<any>([]);
-  const [collapseCalculatedData, setCollapseCalculatedData] = useState<any[]>(
-    [],
-  );
-
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [sourceSqlValue, setSourceSqlValue] = useState<string>(meta.result.sql);
-
   const databaseResponse = useFetch({ url: 'database' });
-  const schemaResponse = useFetch({ url: schemaUrl });
-  const tableResponse = useFetch({ url: tableUrl });
 
   const [apiUrl, setApiUrl] = useState<string>('');
 
   const [input, setInput] = useState<InputProps>({
-    tabs: { label: '', value: '' },
-    sqlQuery: '',
-    trigger: { label: '', value: '' },
-    value: undefined,
-    hour: { label: '', value: '' },
-    minute: { label: '', value: '' },
-    timezone: {
-      label: t('GMT +03:00 (Antarctica/Syowa)'),
-      value: t('Antarctica/Syowa'),
+    tabs: { label: 'Source', value: 'source' },
+    databaseSelection: {
+      label: meta.result.database.database_name,
+      value: meta.result.database.id,
     },
-    logRetention: {
-      label: t('90 days'),
-      value: 90,
-    },
-    workingTimeout: 3600,
-    gracePeriod: 0,
-    messageContent: { label: '', value: '' },
-    owners: [],
-    alertName: '',
-    description: '',
-    ignore: false,
-    schedule: '',
-    email: '',
-    active: false,
+    isWarningActive: true,
+    schemaUrl: '',
+    schemaSelection: { label: meta.result.schema, value: meta.result.schema },
+    tableUrl: '',
+    activeRadio: meta.result.main_dttm_col,
+    databaseList: [],
+    schemaList: [],
+    tableList: [],
+    collapseCalculatedData: [],
+    isEditMode: false,
+    sourceSqlValue: meta.result.sql,
   });
+  const schemaResponse = useFetch({ url: input.schemaUrl });
+  const tableResponse = useFetch({ url: input.tableUrl });
+
+  const ownersFetch = useFetch({
+    url: 'dataset/related/owners?q=(filter:%27%27,page:0,page_size:100)',
+  });
+
+  console.log(meta);
 
   const editDatasetData = useFetch({
     url: apiUrl,
     method: 'PUT',
     body: {
-      always_filter_main_dttm: input.active,
-      chart: value === 'Chart' ? input.messageContent.value : null,
-      context_markdown: 'string',
-      creation_method: 'alerts_reports',
-      crontab: input.schedule,
-      dashboard: value === 'Dashboard' ? input.messageContent.value : null,
-      database: input.database.value,
-      description: input.description,
-      force_screenshot: input.ignore,
-      grace_period: input.gracePeriod,
-      log_retention: input.logRetention.value,
-      name: input.alertName,
-      owners: input.owners,
-      recipients: [
-        {
-          recipient_config_json: {
-            target: input.email,
-          },
-          type: 'Email',
-        },
+      always_filter_main_dttm: modalData.always_filter_main_dttm,
+      cache_timeout: modalData.cache_timeout,
+      columns: [
+        ...modalData.columns.map((a: any) => ({
+          advanced_data_type: a.advanced_data_type,
+          column_name: a.column_name,
+          description: a.description,
+          expression: a.expression,
+          extra: a.extra,
+          filterable: a.filterable,
+          groupby: a.groupby,
+          id: a.id,
+          is_active: a.is_active,
+          is_dttm: a.is_dttm,
+          python_date_format: a.python_date_format,
+          type: a.type,
+          uuid: a.uuid,
+          verbose_name: a.verbose_name,
+        })),
+        ...(calculatedColumn || []).map(calculatedColumnItem => ({
+          column_name: calculatedColumnItem.column_name,
+          description: calculatedColumnItem.description,
+          expression: calculatedColumnItem.expression,
+          filterable: calculatedColumnItem.filterable,
+          groupby: calculatedColumnItem.groupby,
+          python_date_format: calculatedColumnItem.python_date_format,
+          type: calculatedColumnItem.type,
+          verbose_name: calculatedColumnItem.verbose_name,
+          certified_by: calculatedColumnItem.certified_by,
+          details: calculatedColumnItem.details,
+        })),
       ],
-      report_format: chartType,
-      sql: input.sqlQuery,
-      timezone: input.timezone.value,
-      type: 'Alert',
-      validator_config_json: {
-        op: input.trigger.value,
-        threshold: input.value,
-      },
-      validator_type: 'operator',
-      working_timeout: input.workingTimeout,
+      database_id: modalData.database_id,
+      default_endpoint: modalData.default_endpoint,
+      description: modalData.description,
+      extra: modalData.extra,
+      fetch_values_predicate: modalData.fetch_values_predicate,
+      filter_select_enabled: modalData.filter_select_enabled,
+      is_managed_externally: modalData.is_managed_externally,
+      is_sqllab_view: modalData.is_sqllab_view,
+      main_dttm_col: modalData.main_dttm_col,
+      metrics: metricsColumn.map(item => {
+        const idIsNumber = typeof item?.id === 'number';
+        return {
+          currency: null,
+          d3format: null,
+          description: item.description,
+          expression: item.expression,
+          id: idIsNumber ? item.id : undefined,
+          extra: '{}',
+          metric_name: item.metric_name,
+          verbose_name: item.verbose_name,
+          warning_text: item.warning_text,
+        };
+      }),
+      normalize_columns: modalData.normalize_columns,
+      offset: modalData.offset,
+      owners,
+      schema: modalData.schema,
+      sql: modalData.sql,
+      table_name: modalData.table_name.label,
+      template_params: modalData.template_params,
     },
     headers: {
       'Content-Type': 'application/json',
@@ -195,50 +194,57 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
   useEffect(() => {
     if (databaseResponse) {
-      setDatabaseList(
-        databaseResponse.result.map(
+      setInput({
+        ...input,
+        databaseList: databaseResponse.result.map(
           (database: { database_name: any; id: any }) => ({
             label: database.database_name,
             value: database.id,
           }),
         ),
-      );
+      });
     }
   }, [databaseResponse]);
 
   useEffect(() => {
-    if (databaseSelection) {
-      setSchemaUrl(`database/${databaseSelection.value}/schemas/?q=(force:!t)`);
+    if (input.databaseSelection) {
+      setInput({
+        ...input,
+        schemaUrl: `database/${input.databaseSelection.value}/schemas/?q=(force:!t)`,
+      });
     }
-  }, [databaseSelection]);
+  }, [input.databaseSelection]);
 
   useEffect(() => {
     if (schemaResponse) {
-      setSchemaList(
-        schemaResponse.result.map((item: any, index: any) => ({
+      setInput({
+        ...input,
+        schemaList: schemaResponse.result.map((item: any, index: any) => ({
           label: item,
           value: index,
         })),
-      );
+      });
     }
   }, [schemaResponse]);
 
   useEffect(() => {
-    if (schemaSelection) {
-      setTableUrl(
-        `database/${databaseSelection.value}/tables/?q=(force:!t,schema_name:${schemaSelection.label})`,
-      );
+    if (input.schemaSelection) {
+      setInput({
+        ...input,
+        tableUrl: `database/${input.databaseSelection.value}/tables/?q=(force:!t,schema_name:${input.schemaSelection.label})`,
+      });
     }
-  }, [schemaSelection]);
+  }, [input.schemaSelection]);
 
   useEffect(() => {
     if (tableResponse) {
-      setTableList(
-        tableResponse.result.map((item: any) => ({
+      setInput({
+        ...input,
+        tableList: tableResponse.result.map((item: any) => ({
           label: item.value,
           value: item.value,
         })),
-      );
+      });
     }
   }, [tableResponse]);
 
@@ -254,7 +260,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: (item: any) => handleModalDelete(item),
+          click: () => {},
           popperLabel: t('Delete'),
         },
       ],
@@ -301,7 +307,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: (item: any) => handleModalDelete(item),
+          click: () => {},
           popperLabel: t('Delete'),
         },
       ],
@@ -353,7 +359,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: (item: any) => handleModalDelete(item),
+          click: () => {},
           popperLabel: t('Delete'),
         },
       ],
@@ -365,25 +371,21 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     direction: 'desc',
   });
 
-  // Settings
-  const [owners, setOwners] = useState<string[]>(
-    meta.result.owners.map((owner: { first_name: any; id: any }) => ({
-      label: owner.first_name,
-      value: owner.id,
-    })),
-  );
+  const ownersOptions: { label: string; value: number }[] =
+    ownersFetch?.result.map((item: any) => ({
+      label: item.text,
+      value: item.value,
+    })) || [];
+
+  useEffect(() => {
+    if (ownersFetch?.result) {
+      const ownersValues = ownersFetch.result.map((item: any) => item.value);
+      setOwners(ownersValues);
+    }
+  }, [ownersFetch]);
+
   const [autocompleteSelected, setAutocompleteSelected] =
     useState<boolean>(false);
-  const [settingsSqlLimit, setSettingsSqlLimit] = useState<number>(1000);
-  const [settingsSqlValue, setSettingsSqlValue] =
-    useState<string>('SELECT ...');
-
-  const [tabs, setTabs] = useState<ButtonTabsDataProps>({
-    label: 'Source',
-    value: 'source',
-  });
-
-  console.log('matrics', modalData.metrics);
 
   const handleAddItem = () => {
     const newItem = {
@@ -415,37 +417,49 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       label: 'SQL EXPRESSION',
       placeholder: 'SELECT ...',
       type: 'sqlEditor',
-      fieldName: 'deneme',
+      fieldName: 'expression',
     },
     {
       label: 'LABEL',
       placeholder: 'Label',
       type: 'input',
-      fieldName: 'deneme1',
+      fieldName: 'verbose_name',
     },
     {
       label: 'DESCRIPTION',
       placeholder: 'Description',
       type: 'input',
-      fieldName: 'deneme2',
+      fieldName: 'description',
     },
     {
       label: 'DATA TYPE',
       placeholder: 'Select ...',
       type: 'select',
-      fieldName: 'deneme3',
+      fieldName: 'typeData',
+      data: [
+        { label: 'STRING', value: 'STRING' },
+        { label: 'NUMERIC', value: 'NUMERIC' },
+        { label: 'DATETIME', value: 'DATETIME' },
+        { label: 'BOOLEAN', value: 'BOOLEAN' },
+      ],
     },
     {
       label: 'DATETIME FORMAT',
       placeholder: '%Y/%m/%d',
       type: 'input',
-      fieldName: 'deneme4',
+      fieldName: 'python_date_format',
     },
     {
       label: 'CERTIFIED BY',
       placeholder: 'Certified by',
       type: 'input',
-      fieldName: 'deneme5',
+      fieldName: 'certified_by',
+    },
+    {
+      label: 'CERTIFICATION DETAILS',
+      placeholder: 'Certification details',
+      type: 'input',
+      fieldName: 'details',
     },
   ];
 
@@ -456,18 +470,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     }));
   };
 
-  const updateModalDataMetrics = (newColumns: any[]) => {
-    setModalData((prevData: any) => ({
-      ...prevData,
-      metrics: newColumns,
-    }));
-  };
-
-  const updateModalDataCalculated = (newColumns: any[]) => {
-    setCalculatedColumn(newColumns);
-  };
-
-  console.log('columns', modalData.columns);
+  console.log('columns', meta);
 
   return (
     <StyledDatasetEdit>
@@ -476,7 +479,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           {t('Edit Dataset')} - {meta.result.table_name}
         </ModalLabel>
       </ModalHeader>
-      {isWarningActive && (
+      {input.isWarningActive && (
         <ModalInfoTextContainer>
           <Icon fileName="warning" />
           <ModalInfoText>
@@ -488,7 +491,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           <Icon
             fileName="close"
             onClick={() => {
-              setIsWarningActive(false);
+              setInput({ ...input, isWarningActive: false });
             }}
           />
         </ModalInfoTextContainer>
@@ -502,18 +505,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             { label: 'Calculated Columns', value: 'calculated_columns' },
             { label: 'Settings', value: 'settings' },
           ]}
-          active={tabs}
-          setActive={setTabs}
+          active={input.tabs}
+          setActive={(v: any) => {
+            setInput({ ...input, tabs: v });
+          }}
         />
       </ModalNavigationContainer>
-      {tabs.value === 'source' ? (
+      {input.tabs.value === 'source' ? (
         <SourceBody>
           <SourceLockContainer
-            onClick={() => {
-              setIsEditMode(!isEditMode);
+            onClick={v => {
+              setInput({ ...input, isEditMode: !input.isEditMode });
             }}
           >
-            <Icon fileName={!isEditMode ? 'lock_locked' : 'lock_unlocked'} />
+            <Icon
+              fileName={!input.isEditMode ? 'lock_locked' : 'lock_unlocked'}
+            />
             <div>{t('Click the lock to make changes.')}</div>
           </SourceLockContainer>
           <SourceCheckboxContainer>
@@ -521,22 +528,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               label={t('Physical (Table or view)')}
               checked={!modalData.is_sqllab_view}
               onChange={() => {
-                if (!isEditMode) {
+                if (!input.isEditMode) {
                   setModalData({ ...modalData, is_sqllab_view: false });
                 }
               }}
-              disabled={isEditMode}
+              disabled={input.isEditMode}
             />
 
             <DvtCheckbox
               label={t('Virtual (SQL)')}
               checked={modalData.is_sqllab_view}
               onChange={() => {
-                if (!isEditMode) {
+                if (!input.isEditMode) {
                   setModalData({ ...modalData, is_sqllab_view: true });
                 }
               }}
-              disabled={isEditMode}
+              disabled={input.isEditMode}
             />
           </SourceCheckboxContainer>
           <ModalBreak />
@@ -544,27 +551,27 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <SourceInputContainer>
               <div style={{ fontSize: '14px' }}>{t('Physical')}</div>
               <DvtSelect
-                data={databaseList}
+                data={input.databaseList}
                 label="Database"
-                selectedValue={databaseSelection}
+                selectedValue={input.databaseSelection}
                 setSelectedValue={selection => {
                   setModalData({ ...modalData, database_id: selection.value });
-                  setDatabaseSelection(selection);
+                  setInput({ ...input, databaseSelection: selection });
                 }}
                 typeDesign="form"
               />
               <DvtSelect
-                data={schemaList}
+                data={input.schemaList}
                 label="Schema"
-                selectedValue={schemaSelection}
+                selectedValue={input.schemaSelection}
                 setSelectedValue={selection => {
-                  setSchemaSelection(selection);
+                  setInput({ ...input, schemaSelection: selection });
                   setModalData({ ...modalData, schema: selection.label });
                 }}
                 typeDesign="form"
               />
               <DvtSelect
-                data={tableList}
+                data={input.tableList}
                 label="Table"
                 selectedValue={modalData.table_name}
                 setSelectedValue={selection => {
@@ -577,21 +584,21 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <SourceInputContainer>
               <div style={{ fontSize: '14px' }}>{t('Virtual')}</div>
               <DvtSelect
-                data={databaseList}
+                data={input.databaseList}
                 label="Database"
-                selectedValue={databaseSelection}
+                selectedValue={input.databaseSelection}
                 setSelectedValue={selection => {
-                  setDatabaseSelection(selection);
+                  setInput({ ...input, databaseSelection: selection });
                   setModalData({ ...modalData, database_id: selection.value });
                 }}
                 typeDesign="form"
               />
               <DvtSelect
-                data={schemaList}
+                data={input.schemaList}
                 label="Schema"
-                selectedValue={schemaSelection}
+                selectedValue={input.schemaSelection}
                 setSelectedValue={selection => {
-                  setSchemaSelection(selection);
+                  setInput({ ...input, schemaSelection: selection });
                   setModalData({ ...modalData, schema: selection.label });
                 }}
                 typeDesign="form"
@@ -610,15 +617,15 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               <DvtAceEditor
                 mode="sql"
                 placeholder="SELECT..."
-                value={sourceSqlValue}
-                onChange={setSourceSqlValue}
+                value={input.sourceSqlValue}
+                onChange={v => setInput({ ...input, sourceSqlValue: v })}
                 height="200px"
                 fontSize={16}
               />
             </SourceInputContainer>
           )}
         </SourceBody>
-      ) : tabs.value === 'metrics' ? (
+      ) : input.tabs.value === 'metrics' ? (
         <MetricsBody>
           <MetricsButtonContainer>
             <DvtButton
@@ -631,14 +638,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             data={metricsColumn}
             setData={setMetricsColumn}
             header={metricsHeader}
+ 
           />
         </MetricsBody>
-      ) : tabs.value === 'columns' ? (
+      ) : input.tabs.value === 'columns' ? (
         <ColumnsBody>
           <ColumnsButtonContainer>
             <DvtButton
               label={t('Sync Columns from Source')}
               icon="dvt-add_filled"
+              onClick={() => {}}
             />
           </ColumnsButtonContainer>
           <DvtTable
@@ -647,13 +656,13 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             header={columnsHeader}
             sort={sort}
             setSort={setSort}
-            activeRadio={activeRadio}
+            activeRadio={input.activeRadio}
             setActiveRadio={row => {
-              setActiveRadio(row);
+              setInput({ ...input, activeRadio: row });
             }}
           />
         </ColumnsBody>
-      ) : tabs.value === 'calculated_columns' ? (
+      ) : input.tabs.value === 'calculated_columns' ? (
         <div>
           <DvtButton
             label={t('Add Item')}
@@ -667,16 +676,14 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             header={calculatedHeader}
             sort={sort}
             setSort={setSort}
-            activeRadio={activeRadio}
+            activeRadio={input.activeRadio}
             setActiveRadio={row => {
-              setActiveRadio(row);
+              setInput({ ...input, activeRadio: row });
             }}
             collapseData={fields}
-            collapseInputValues={collapseCalculatedData}
-            setCollapseInputValues={setCollapseCalculatedData}
           />
         </div>
-      ) : tabs.value === 'settings' ? (
+      ) : input.tabs.value === 'settings' ? (
         <SettingsBody>
           <SettingsBlock>
             <ModalInfoText>{t('Basic')}</ModalInfoText>
@@ -711,8 +718,8 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <DvtAceEditor
               mode="sql"
               placeholder="SELECT..."
-              value={sourceSqlValue}
-              onChange={setSourceSqlValue}
+              value={input.sourceSqlValue}
+              onChange={v => setInput({ ...input, sourceSqlValue: v })}
               height="200px"
               fontSize={16}
             />
@@ -733,9 +740,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
               )}
             </ModalInfoText>
             <DvtSelect
-              data={owners}
+              data={ownersOptions}
               label="Owners"
-              selectedValue=""
+              selectedValue={owners}
               setSelectedValue={selection => setOwners(selection)}
               typeDesign="form"
             />
@@ -820,7 +827,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
         <DvtButton
           colour="primary"
           label={t('Save')}
-          onClick={() => console.log(modalData)}
+          onClick={() => setApiUrl(`dataset/${meta.id}`)}
           typeColour="powder"
           size="medium"
         />
