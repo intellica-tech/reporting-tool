@@ -56,6 +56,7 @@ export interface DvtInputDropProps {
   savedData?: MetricDataProps[];
   columnData: ColumnDataProps[];
   datasourceApi: string;
+  anotherFormNoError?: boolean;
 }
 
 const DvtInputDrop = ({
@@ -74,6 +75,7 @@ const DvtInputDrop = ({
   savedData = [],
   columnData = [],
   datasourceApi = '',
+  anotherFormNoError = false,
 }: DvtInputDropProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -349,7 +351,7 @@ const DvtInputDrop = ({
     >
       <StyledInputDropLabel>
         {label}
-        {popperError && !droppedData.length && (
+        {popperError && (anotherFormNoError ? false : !droppedData.length) && (
           <DvtPopper
             label={popperError}
             direction={popoverDirection}

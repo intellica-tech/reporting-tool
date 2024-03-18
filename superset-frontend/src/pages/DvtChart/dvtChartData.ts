@@ -5,6 +5,10 @@ interface OptionsData {
   value: any;
 }
 
+interface ActivesProps {
+  [key: string]: string[];
+}
+
 interface FormsProps {
   status:
     | 'input'
@@ -32,6 +36,8 @@ interface CollapsesProps {
   collapse_popper_error?: string;
   collapse_active: string;
   forms: FormsProps[];
+  tabs_name?: string;
+  tabs_actives?: ActivesProps;
 }
 
 interface DvtChartDataProps {
@@ -320,6 +326,122 @@ const chartFormsOption = {
   forecastSeasonalityYearly: forecastSeasonality,
   forecastSeasonalityWeekly: forecastSeasonality,
   forecastSeasonalityDaily: forecastSeasonality,
+  order_by_cols: [
+    {
+      label: t('eu_sales [asc]'),
+      value: '["eu_sales", true]',
+    },
+    {
+      label: t('eu_sales [desc]'),
+      value: '["eu_sales", false]',
+    },
+    {
+      label: t('genre [asc]'),
+      value: '["genre", true]',
+    },
+    {
+      label: t('genre [desc]'),
+      value: '["genre", false]',
+    },
+    {
+      label: t('global_sales [asc]'),
+      value: '["global_sales", true]',
+    },
+    {
+      label: t('global_sales [desc]'),
+      value: '["global_sales", false]',
+    },
+    {
+      label: t('jp_sales [asc]'),
+      value: '["jp_sales", true]',
+    },
+    {
+      label: t('jp_sales [desc]'),
+      value: '["jp_sales", false]',
+    },
+    {
+      label: t('na_sales [asc]'),
+      value: '["na_sales", true]',
+    },
+    {
+      label: t('na_sales [desc]'),
+      value: '["na_sales", false]',
+    },
+    {
+      label: t('name [asc]'),
+      value: '["name", true]',
+    },
+    {
+      label: t('name [desc]'),
+      value: '["name", false]',
+    },
+    {
+      label: t('other_sales [asc]'),
+      value: '["other_sales", true]',
+    },
+    {
+      label: t('other_sales [desc]'),
+      value: '["other_sales", false]',
+    },
+    {
+      label: t('platform [asc]'),
+      value: '["platform", true]',
+    },
+    {
+      label: t('platform [desc]'),
+      value: '["platform", false]',
+    },
+    {
+      label: t('publisher [asc]'),
+      value: '["publisher", true]',
+    },
+    {
+      label: t('publisher [desc]'),
+      value: '["publisher", false]',
+    },
+    {
+      label: t('rank [asc]'),
+      value: '["rank", true]',
+    },
+    {
+      label: t('rank [desc]'),
+      value: '["rank", false]',
+    },
+    {
+      label: t('year [asc]'),
+      value: '["year", true]',
+    },
+    {
+      label: t('year [desc]'),
+      value: '["year", false]',
+    },
+  ],
+  server_page_length: [
+    {
+      label: t('All'),
+      value: 0,
+    },
+    {
+      label: t('10'),
+      value: 10,
+    },
+    {
+      label: t('20'),
+      value: 20,
+    },
+    {
+      label: t('50'),
+      value: 50,
+    },
+    {
+      label: t('100'),
+      value: 100,
+    },
+    {
+      label: t('200'),
+      value: 200,
+    },
+  ],
 };
 
 const formDimensions: FormsProps = {
@@ -587,33 +709,96 @@ const DvtChartData: DvtChartDataProps[] = [
         collapse_label: t('Query'),
         collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'query',
+        tabs_name: 'query_mode',
+        tabs_actives: {
+          aggregate: [
+            'groupby',
+            'metrics',
+            'percent_metrics',
+            'adhoc_filters',
+            'timeseries_limit_metric',
+            'server_pagination',
+            'server_page_length',
+            'order_desc',
+            'show_totals',
+          ],
+          raw: [
+            'all_columns',
+            'adhoc_filters',
+            'order_by_cols',
+            'server_pagination',
+            'server_page_length',
+          ],
+        },
         forms: [
           {
             label: t('QUERY MODE'),
-            name: 'adhoc_filters',
+            name: 'query_mode',
             status: 'tabs',
+            options: [
+              { label: t('AGGREGATE'), value: 'aggregate' },
+              { label: t('RAW RECORDS'), value: 'raw' },
+            ],
           },
-          formDimensions,
-          formMetrics,
+          {
+            ...formDimensions,
+            popperError: t(
+              'Group By, Metrics or Percentage Metrics must have a value',
+            ),
+          },
+          {
+            ...formMetrics,
+            popperError: t(
+              'Group By, Metrics or Percentage Metrics must have a value',
+            ),
+          },
           {
             label: t('PERCENTAGE METRICS'),
-            name: 'metric',
+            name: 'percent_metrics',
             popper: t(
               'Select one or many metrics to display, that will be displayed in the percentages of total. Percentage metrics will be calculated only from data within the row limit. You can use an aggregation function on a column or write custom SQL to create a percentage metric.',
+            ),
+            popperError: t(
+              'Group By, Metrics or Percentage Metrics must have a value',
             ),
             status: 'input-drop',
             multiple: true,
             type: 'aggregates',
             savedType: 'metric',
           },
+          {
+            label: t('COLUMNS'),
+            name: 'all_columns',
+            popper: t('Columns to display'),
+            popperError: t('must have a value'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
           formFilters,
           formSortBy,
+          {
+            label: t('ORDERING'),
+            name: 'order_by_cols',
+            popper: t('Order results by selected columns'),
+            placeholder: t('Select ...'),
+            status: 'multiple-select',
+            options: chartFormsOption.order_by_cols,
+          },
           {
             label: t('SERVER PAGINATION'),
             name: 'server_pagination',
             status: 'checkbox',
           },
-          formRowLimit,
+          {
+            label: t('SERVER PAGE LENGTH'),
+            name: 'server_page_length',
+            popper: t('Rows per page, 0 means no pagination'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.server_page_length,
+          },
           {
             label: t('SORT DESCENDING'),
             name: 'order_desc',

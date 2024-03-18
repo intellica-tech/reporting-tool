@@ -23,6 +23,7 @@ import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtChartData from './dvtChartData';
+import DvtChartFormPayloads from './dvtChartFormPayloads';
 import DvtChartWithoutLangFindData from './dvtChartWithoutLangFindData';
 import {
   StyledChart,
@@ -130,6 +131,19 @@ const DvtChart = () => {
       label: t('default'),
       value: 'null',
     },
+    query_mode: { label: t('AGGREGATE'), value: 'aggregate' },
+    percent_metrics: [],
+    server_pagination: false,
+    server_page_length: {
+      label: t('10'),
+      value: 10,
+    },
+    show_totals: false,
+    all_columns: [],
+    order_by_cols: [],
+    metric: [],
+    sort_by_metric: false,
+    subheader: '',
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   const [chartData, setChartData] = useState<any[] | any>([]);
@@ -153,27 +167,32 @@ const DvtChart = () => {
 
   const formData = new FormData();
 
-  const metricsFormation = values.metrics.map((v: any) =>
-    v.values.saved?.metric_name
-      ? v.values.saved.metric_name
-      : {
-          expressionType: v.values.expressionType,
-          column: v.values.column?.column_name ? v.values.column : null,
-          aggregate: v.values.aggregate?.value
-            ? v.values.aggregate.value
-            : null,
-          sqlExpression:
-            v.values.column?.column_name || v.values.saved?.metric_name
-              ? null
-              : v.values.sql,
-          datasourceWarning: false,
-          hasCustomLabel: false,
-          label: v.label,
-          optionName: `metric_${Math.random()
-            .toString(36)
-            .substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`,
-        },
-  );
+  const metricsFormation = (valueKey: string) =>
+    values[valueKey].map((v: any) =>
+      v.values.saved?.metric_name
+        ? v.values.saved.metric_name
+        : {
+            expressionType: v.values.expressionType,
+            column: v.values.column?.column_name ? v.values.column : null,
+            aggregate: v.values.aggregate?.value
+              ? v.values.aggregate.value
+              : null,
+            sqlExpression:
+              v.values.column?.column_name || v.values.saved?.metric_name
+                ? null
+                : v.values.sql,
+            datasourceWarning: false,
+            hasCustomLabel: false,
+            label: v.label,
+            optionName: `metric_${Math.random()
+              .toString(36)
+              .substring(2, 15)}_${Math.random()
+              .toString(36)
+              .substring(2, 15)}`,
+          },
+    );
+
+  const queriesOnlyMetric = ['big_number_total', 'pie'];
 
   const withoutValueForNull = (vl: any) =>
     vl?.value ? (vl.value === 'null' ? null : vl.value) : undefined;
@@ -193,7 +212,7 @@ const DvtChart = () => {
       x_axis_sort_asc: true,
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
-      metrics: metricsFormation,
+      metrics: metricsFormation('metrics'),
       groupby: values.groupby,
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
@@ -243,22 +262,7 @@ const DvtChart = () => {
       result_format: 'json',
       result_type: 'full',
       timeseries_limit_metric: values.timeseries_limit_metric.length
-        ? {
-            expressionType:
-              values.timeseries_limit_metric[0]?.values?.expressionType,
-            column: {},
-            aggregate:
-              values.timeseries_limit_metric[0]?.values?.aggregate?.value,
-            sqlExpression: null,
-            datasourceWarning: false,
-            hasCustomLabel: false,
-            label: values.timeseries_limit_metric[0]?.label,
-            optionName: `metric_${Math.random()
-              .toString(36)
-              .substring(2, 15)}_${Math.random()
-              .toString(36)
-              .substring(2, 15)}`,
-          }
+        ? metricsFormation('timeseries_limit_metric')[0]
         : undefined,
       area: undefined,
       cache_timeout: undefined,
@@ -302,6 +306,42 @@ const DvtChart = () => {
       x_axis_title: undefined,
       y_axis_title: undefined,
       zoomable: undefined,
+      header_font_size: 0.4,
+      metric: metricsFormation('metric')[0],
+      date_format: 'smart_date',
+      innerRadius: 30,
+      label_type: 'key',
+      labels_outside: true,
+      number_format: 'SMART_NUMBER',
+      outerRadius: 70,
+      show_labels: true,
+      show_labels_threshold: 5,
+      sort_by_metric: values.sort_by_metric,
+      subheader: values.subheader,
+      subheader_font_size: 0.15,
+      time_format: 'smart_date',
+      all_columns: values.all_columns.map((ac: any) =>
+        ac.values.expressionType === 'SQL'
+          ? {
+              expressionType: ac.values.expressionType,
+              label: ac.label,
+              sqlExpression: ac.values.sql,
+            }
+          : ac.values.sql,
+      ),
+      color_pn: true,
+      query_mode: values.query_mode.value,
+      include_time:
+        active === 'table' && values.query_mode.value === 'aggregate'
+          ? undefined
+          : false,
+      order_by_cols: values.order_by_cols,
+      percent_metrics: metricsFormation('percent_metrics'),
+      server_page_length: values.server_page_length.value,
+      show_cell_bars: true,
+      table_timestamp_format: 'smart_date',
+      temporal_columns_lookup: { year: true },
+      server_pagination: values.server_pagination,
     },
     queries: [
       {
@@ -316,15 +356,38 @@ const DvtChart = () => {
           where: '',
         },
         applied_time_extras: {},
-        columns: values.x_axis.map((c: any) => ({
-          timeGrain: values.time_grain_sqla?.value,
-          columnType: 'BASE_AXIS',
-          sqlExpression: c.label,
-          label: c.label,
-          expressionType: 'SQL',
-        })),
-        metrics: metricsFormation,
-        orderby: [[metricsFormation[0], false]],
+        columns:
+          active === 'table'
+            ? values.all_columns.map((ac: any) =>
+                ac.values.expressionType === 'SQL'
+                  ? {
+                      expressionType: ac.values.expressionType,
+                      label: ac.label,
+                      sqlExpression: ac.values.sql,
+                    }
+                  : ac.values.sql,
+              )
+            : values.x_axis.map((c: any) => ({
+                timeGrain: values.time_grain_sqla?.value,
+                columnType: 'BASE_AXIS',
+                sqlExpression: c.label,
+                label: c.label,
+                expressionType: 'SQL',
+              })),
+        metrics: queriesOnlyMetric.includes(active)
+          ? metricsFormation('metric')
+          : metricsFormation('metrics'),
+        orderby:
+          active === 'table'
+            ? values.order_by_cols
+            : [
+                [
+                  queriesOnlyMetric.includes(active)
+                    ? metricsFormation('metric')[0]
+                    : metricsFormation('metrics')[0],
+                  false,
+                ],
+              ],
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: [],
@@ -334,28 +397,63 @@ const DvtChart = () => {
         custom_params: {},
         custom_form_data: {},
         time_offsets: [],
-        post_processing: [
-          {
-            operation: 'pivot',
-            options: {
-              index: [values.x_axis[0]?.label],
-              columns: [],
-              aggregates: {
-                count: {
-                  operator: 'mean',
+        post_processing:
+          active === 'table'
+            ? []
+            : [
+                {
+                  operation: 'pivot',
+                  options: {
+                    index: [values.x_axis[0]?.label],
+                    columns: [],
+                    aggregates: {
+                      count: {
+                        operator: 'mean',
+                      },
+                    },
+                    drop_missing_columns: false,
+                  },
                 },
-              },
-              drop_missing_columns: false,
-            },
-          },
-          {
-            operation: 'flatten',
-          },
-        ],
+                {
+                  operation: 'flatten',
+                },
+              ],
+        series_limit_metric: values.timeseries_limit_metric.length
+          ? metricsFormation('timeseries_limit_metric')[0]
+          : undefined,
       },
     ],
     result_format: 'json',
     result_type: 'full',
+  };
+
+  const onlyVizChartFindFormPayload = (formKey: string) => {
+    let result: any;
+    const findChartForm: any = DvtChartFormPayloads.find(
+      fv => fv.viz_name === active,
+    );
+
+    if (Array.isArray(formDataObj[formKey])) {
+      result = formDataObj[formKey].map((q: any) => {
+        const filteredQuery = {};
+        findChartForm?.[formKey].forEach((key: any) => {
+          if (q.hasOwnProperty(key)) {
+            filteredQuery[key] = q[key];
+          }
+        });
+        return filteredQuery;
+      });
+    } else {
+      const objResult = {};
+      findChartForm?.[formKey].forEach((key: any) => {
+        if (formDataObj[formKey].hasOwnProperty(key)) {
+          objResult[key] = formDataObj[formKey][key];
+        }
+      });
+      result = objResult;
+    }
+
+    return result;
   };
 
   formData.append('datasource', JSON.stringify(formDataObj.datasource));
@@ -368,7 +466,11 @@ const DvtChart = () => {
   const chartFullPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
-    body: formDataObj,
+    body: {
+      ...formDataObj,
+      form_data: onlyVizChartFindFormPayload('form_data'),
+      queries: onlyVizChartFindFormPayload('queries'),
+    },
   });
 
   formData.append('result_type', JSON.stringify('results'));
@@ -378,7 +480,11 @@ const DvtChart = () => {
     method: 'POST',
     body: {
       ...formDataObj,
-      form_data: { ...formDataObj.form_data, result_type: 'results' },
+      form_data: {
+        ...onlyVizChartFindFormPayload('form_data'),
+        result_type: 'results',
+      },
+      queries: onlyVizChartFindFormPayload('queries'),
       result_type: 'results',
     },
   });
@@ -510,6 +616,40 @@ const DvtChart = () => {
     height: chartPanelHeight,
   } = useResizeDetectorByObserver();
 
+  const createChartDisableds = (vizType: string) => {
+    switch (vizType) {
+      case 'echarts_timeseries_line':
+      case 'echarts_timeseries_bar':
+      case 'echarts_area':
+        return !(values.x_axis.length && values.metrics.length);
+      case 'table':
+        return values.query_mode.value === 'aggregate'
+          ? !(
+              !!values.groupby.length ||
+              !!values.metrics.length ||
+              !!values.percent_metrics.length
+            )
+          : !values.all_columns.length;
+
+      default:
+        return false;
+    }
+  };
+
+  const anotherFormsNoError = (vizType: string) => {
+    switch (vizType) {
+      case 'table':
+        return values.query_mode.value === 'aggregate'
+          ? !!values.groupby.length ||
+              !!values.metrics.length ||
+              !!values.percent_metrics.length
+          : false;
+
+      default:
+        return false;
+    }
+  };
+
   return (
     <StyledChart>
       <CreateChart>
@@ -555,90 +695,109 @@ const DvtChart = () => {
               }
             >
               <CreateChartCenterCollapseInGap>
-                {item.forms.map((fItem, fIndex) => (
-                  <div key={fIndex}>
-                    {fItem.status === 'input' && (
-                      <DvtInput
-                        label={fItem.label}
-                        placeholder={fItem.placeholder}
-                        popoverLabel={fItem.popper}
-                        number={fItem.number}
-                        value={values[fItem.name]}
-                        onChange={v =>
-                          setValues({ ...values, [fItem.name]: v })
-                        }
-                      />
-                    )}
-                    {fItem.status === 'select' && (
-                      <DvtSelect
-                        label={fItem.label}
-                        placeholder={fItem.placeholder}
-                        popoverLabel={fItem.popper}
-                        selectedValue={values[fItem.name]}
-                        setSelectedValue={v =>
-                          setValues({ ...values, [fItem.name]: v })
-                        }
-                        data={fItem.options || []}
-                        typeDesign="form"
-                        maxWidth
-                      />
-                    )}
-                    {fItem.status === 'multiple-select' && (
-                      <DvtInputSelect
-                        label={fItem.label}
-                        placeholder={fItem.placeholder}
-                        // popoverLabel={fItem.popper}
-                        selectedValues={values[fItem.name]}
-                        setSelectedValues={v =>
-                          setValues({ ...values, [fItem.name]: v })
-                        }
-                        data={fItem.options}
-                        typeDesign="form"
-                      />
-                    )}
-                    {fItem.status === 'input-drop' && (
-                      <DvtInputDrop
-                        label={fItem.label}
-                        placeholder={
-                          fItem.multiple
-                            ? t('Drop columns/metrics here or click')
-                            : t('Drop columns here or click')
-                        }
-                        popoverLabel={fItem.popper}
-                        popperError={fItem.popperError}
-                        droppedData={values[fItem.name]}
-                        setDroppedData={v =>
-                          setValues({ ...values, [fItem.name]: v })
-                        }
-                        type={fItem?.type || 'normal'}
-                        savedType={fItem?.savedType || 'metric'}
-                        multiple={fItem.multiple}
-                        savedData={
-                          fItem?.savedType === 'expressions'
-                            ? selectedChart?.dataset?.columns
-                                .filter(
-                                  (fi: { expression: any }) => fi.expression,
-                                )
-                                .map((item: { column_name: string }) => ({
-                                  metric_name: item.column_name,
-                                }))
-                            : selectedChart?.dataset?.metrics
-                        }
-                        columnData={selectedChart?.dataset?.columns}
-                        datasourceApi={`datasource/${selectedChart?.form_data?.url_params?.datasource_type}/${selectedChart?.form_data?.url_params?.datasource_id}`}
-                      />
-                    )}
-                    {fItem.status === 'checkbox' && (
-                      <DvtCheckbox
-                        label={fItem.label}
-                        checked={values[fItem.name]}
-                        onChange={v =>
-                          setValues({ ...values, [fItem.name]: v })
-                        }
-                      />
-                    )}
-                  </div>
-                ))}
+                {item.forms
+                  .filter(fi =>
+                    item.tabs_name && item.tabs_actives
+                      ? [
+                          item.tabs_name,
+                          ...item.tabs_actives[values[item.tabs_name].value],
+                        ].includes(fi.name)
+                      : fi,
+                  )
+                  .map((fItem, fIndex) => (
+                    <div key={fIndex}>
+                      {fItem.status === 'tabs' && (
+                        <DvtButtonTabs
+                          data={fItem.options?.length ? fItem.options : []}
+                          active={values[fItem.name]}
+                          setActive={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                        />
+                      )}
+                      {fItem.status === 'input' && (
+                        <DvtInput
+                          label={fItem.label}
+                          placeholder={fItem.placeholder}
+                          popoverLabel={fItem.popper}
+                          number={fItem.number}
+                          value={values[fItem.name]}
+                          onChange={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                        />
+                      )}
+                      {fItem.status === 'select' && (
+                        <DvtSelect
+                          label={fItem.label}
+                          placeholder={fItem.placeholder}
+                          popoverLabel={fItem.popper}
+                          selectedValue={values[fItem.name]}
+                          setSelectedValue={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          data={fItem.options || []}
+                          typeDesign="form"
+                          maxWidth
+                        />
+                      )}
+                      {fItem.status === 'multiple-select' && (
+                        <DvtInputSelect
+                          label={fItem.label}
+                          placeholder={fItem.placeholder}
+                          // popoverLabel={fItem.popper}
+                          selectedValues={values[fItem.name]}
+                          setSelectedValues={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          data={fItem.options}
+                          typeDesign="form"
+                        />
+                      )}
+                      {fItem.status === 'input-drop' && (
+                        <DvtInputDrop
+                          label={fItem.label}
+                          placeholder={
+                            fItem.multiple
+                              ? t('Drop columns/metrics here or click')
+                              : t('Drop columns here or click')
+                          }
+                          popoverLabel={fItem.popper}
+                          popperError={fItem.popperError}
+                          anotherFormNoError={anotherFormsNoError(active)}
+                          droppedData={values[fItem.name]}
+                          setDroppedData={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          type={fItem?.type || 'normal'}
+                          savedType={fItem?.savedType || 'metric'}
+                          multiple={fItem.multiple}
+                          savedData={
+                            fItem?.savedType === 'expressions'
+                              ? selectedChart?.dataset?.columns
+                                  .filter(
+                                    (fi: { expression: any }) => fi.expression,
+                                  )
+                                  .map((item: { column_name: string }) => ({
+                                    metric_name: item.column_name,
+                                  }))
+                              : selectedChart?.dataset?.metrics
+                          }
+                          columnData={selectedChart?.dataset?.columns}
+                          datasourceApi={`datasource/${selectedChart?.form_data?.url_params?.datasource_type}/${selectedChart?.form_data?.url_params?.datasource_id}`}
+                        />
+                      )}
+                      {fItem.status === 'checkbox' && (
+                        <DvtCheckbox
+                          label={fItem.label}
+                          checked={values[fItem.name]}
+                          onChange={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
               </CreateChartCenterCollapseInGap>
             </DvtCollapse>
           ))}
@@ -647,7 +806,7 @@ const DvtChart = () => {
           <DvtButton
             label={firstChartCreated ? t('Update Chart') : t('Create Chart')}
             loading={chartFullPromise.loading}
-            disabled={!(values.x_axis.length && values.metrics.length)}
+            disabled={createChartDisableds(active)}
             bold
             onClick={() => {
               setChartStatus('loading');
@@ -683,11 +842,11 @@ const DvtChart = () => {
                 vizType={active}
               />
               {/* {console.log({
-              chartStatus,
-              datasource: selectedChart?.dataset,
-              formData: formDataObj.form_data,
-              queriesResponse: chartData,
-            })} */}
+                chartStatus,
+                datasource: selectedChart?.dataset,
+                formData: formDataObj.form_data,
+                queriesResponse: chartData,
+              })} */}
             </RightPreviewTopChartScreen>
           ) : (
             <>
@@ -710,8 +869,8 @@ const DvtChart = () => {
         <RightPreviewBottom>
           <DvtButtonTabs
             data={[
-              { label: 'Results', value: 'results' },
-              { label: 'Samples', value: 'samples' },
+              { label: t('Results'), value: 'results' },
+              { label: t('Samples'), value: 'samples' },
             ]}
             active={tabs}
             setActive={setTabs}
