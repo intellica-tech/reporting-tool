@@ -132,7 +132,7 @@ function DvtNewDatasets() {
   useEffect(() => {
     if (datasetAddSelector.selectDatabase?.value) {
       setGetTableDataApiUrl(
-        `database/1/table/${datasetAddSelector.selectDatabase.value}/${datasetAddSelector.schema.value}/`,
+        `database/${datasetAddSelector.database?.value}/table/${datasetAddSelector.selectDatabase.value}/${datasetAddSelector.schema.value}/`,
       );
     }
   }, [datasetAddSelector.selectDatabase]);
