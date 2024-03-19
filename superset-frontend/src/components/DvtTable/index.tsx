@@ -252,8 +252,8 @@ const DvtTable: React.FC<DvtTableProps> = ({
           </StyledTableTitle>
         </StyledTabletHead>
         <StyledTableTbody>
-          {data
-            .sort((a, b) => (a?.collapse ? -1 : b?.collapse ? 1 : 0))
+          {[...data]
+            .sort((a, b) => (a?.collapse ? -1 : b?.collapse ? 1 : a.id - b.id))
             .map((row, rowIndex) => (
               <>
                 <StyledTableTr

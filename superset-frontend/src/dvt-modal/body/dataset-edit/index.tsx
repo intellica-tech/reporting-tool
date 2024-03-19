@@ -30,6 +30,8 @@ import {
   ModalNavigationContainer,
 } from './dataset-edit.module';
 import DvtButtonTabs from 'src/components/DvtButtonTabs';
+import { useDispatch } from 'react-redux';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 
 interface InputProps {
   tabs: { label: string; value: string };
@@ -48,6 +50,7 @@ interface InputProps {
 }
 
 const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
+  const dispatch = useDispatch();
   const [calculatedColumn, setCalculatedColumn] = useState<any[]>(
     meta.result.columns.filter((column: any) => column.expression),
   );
@@ -260,7 +263,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: () => {},
+          click: (row: any) => {
+            handleMatricsRemoveItem(row);
+          },
           popperLabel: t('Delete'),
         },
       ],
@@ -307,7 +312,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: () => {},
+          click: (row: any) => {
+            handleColumnRemoveItem(row);
+          },
           popperLabel: t('Delete'),
         },
       ],
@@ -359,7 +366,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       clicks: [
         {
           icon: 'trash',
-          click: () => {},
+          click: (row: any) => {
+            handleCalculatedColumnRemoveItem(row);
+          },
           popperLabel: t('Delete'),
         },
       ],
@@ -399,6 +408,15 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
     setCalculatedColumn([...calculatedColumn, newItem]);
   };
+
+  const handleCalculatedColumnRemoveItem = (row: any) => {
+    const updatedCalculatedColumn = calculatedColumn.filter(
+      item => item.id !== row.id,
+    );
+
+    setCalculatedColumn(updatedCalculatedColumn);
+  };
+
   const handleMatricsAddItem = () => {
     const newItem = {
       id: generateId(),
@@ -408,6 +426,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     };
 
     setMetricsColumn([...metricsColumn, newItem]);
+  };
+
+  const handleMatricsRemoveItem = (row: any) => {
+    const updatedMetrics = metricsColumn.filter(item => item.id !== row.id);
+
+    setMetricsColumn(updatedMetrics);
+  };
+
+  const handleColumnRemoveItem = (row: { id: any }) => {
+    const updatedColumns = modalData.columns.filter(
+      (column: { id: any }) => column.id !== row.id,
+    );
+    setModalData((prevData: any) => ({
+      ...prevData,
+      columns: updatedColumns,
+    }));
   };
 
   const generateId = () => Math.random().toString(36).slice(2, 11);
@@ -470,7 +504,20 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     }));
   };
 
-  console.log('columns', meta);
+  useEffect(() => {
+    if (editDatasetData?.id) {
+      dispatch(dvtHomeDeleteSuccessStatus('Success'));
+      onClose();
+    }
+  }, [editDatasetData]);
+
+  useEffect(() => {
+    if (apiUrl) {
+      setTimeout(() => {
+        setApiUrl('');
+      }, 2000);
+    }
+  }, [apiUrl]);
 
   return (
     <StyledDatasetEdit>
@@ -638,7 +685,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             data={metricsColumn}
             setData={setMetricsColumn}
             header={metricsHeader}
- 
           />
         </MetricsBody>
       ) : input.tabs.value === 'columns' ? (
