@@ -44,7 +44,6 @@ const ModalLabel = styled.div`
   gap: 15px;
   justify-content: center;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.dvt.grayscale.dark2};
 `;
 
 const ModalInfoTextContainer = styled.div`
@@ -54,9 +53,7 @@ const ModalInfoTextContainer = styled.div`
   margin-left: 27px;
 `;
 
-const ModalInfoText = styled.div`
-  color: ${({ theme }) => theme.colors.dvt.grayscale.dark2};
-`;
+const ModalInfoText = styled.div``;
 
 const ModalNavigationContainer = styled.div`
   margin-left: 27px;
