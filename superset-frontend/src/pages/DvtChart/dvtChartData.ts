@@ -499,6 +499,12 @@ const formRowLimit: FormsProps = {
   options: chartFormsOption.row_limit,
 };
 
+const sortDescending: FormsProps = {
+  label: t('SORT DESCENDING'),
+  name: 'order_desc',
+  status: 'checkbox',
+};
+
 const lineAndBarChart: CollapsesProps[] = [
   {
     collapse_label: t('Query'),
@@ -547,11 +553,7 @@ const lineAndBarChart: CollapsesProps[] = [
         options: chartFormsOption.limit,
       },
       formSortBy,
-      {
-        label: t('SORT DESCENDING'),
-        name: 'order_desc',
-        status: 'checkbox',
-      },
+      sortDescending,
       formRowLimit,
       {
         label: t('TRUNCATE METRIC'),
@@ -799,11 +801,7 @@ const DvtChartData: DvtChartDataProps[] = [
             status: 'select',
             options: chartFormsOption.server_page_length,
           },
-          {
-            label: t('SORT DESCENDING'),
-            name: 'order_desc',
-            status: 'checkbox',
-          },
+          sortDescending,
           {
             label: t('SHOW TOTALS'),
             name: 'show_totals',
@@ -877,6 +875,77 @@ const DvtChartData: DvtChartDataProps[] = [
             name: 'sort_by_metric',
             status: 'checkbox',
           },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'bubble_v2',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('DIMENSION'),
+            name: 'dimension',
+            popper: t(
+              'Defines the grouping of entities. Each series is represented by a specific color in the chart.',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('ENTITY'),
+            name: 'entity',
+            popper: t('This defines the element to be plotted on the chart'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('X AXIS'),
+            name: 'x',
+            popper: t(
+              "The dataset column/metric that returns the values on your chart's x-axis.",
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('Y AXIS'),
+            name: 'y',
+            popper: t(
+              "The dataset column/metric that returns the values on your chart's y-axis.",
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          formFilters,
+          {
+            label: t('BUBBLE SIZE'),
+            name: 'size',
+            popper: t('Metric used to calculate bubble size'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          formSortBy,
+          sortDescending,
+          formRowLimit,
         ],
       },
     ],

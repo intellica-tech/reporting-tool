@@ -25,6 +25,7 @@ import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtChartData from './dvtChartData';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import DvtChartWithoutLangFindData from './dvtChartWithoutLangFindData';
+import { ChartDefaultSelectBars, ChartSelectBars } from './dvtChartSelectBars';
 import {
   StyledChart,
   CreateChart,
@@ -41,45 +42,14 @@ import {
   SpinnerContainer,
 } from './dvt-chart.module';
 
-const selectBars = [
-  // {
-  //   popoverLabel: 'Big Number with Trendline',
-  //   status: 'big_number',
-  //   icon: 'dvt-linear_chart',
-  // },
-  {
-    popoverLabel: 'Line Chart',
-    status: 'echarts_timeseries_line',
-    icon: 'dvt-diagram',
-  },
-  {
-    popoverLabel: 'Bar Chart',
-    status: 'echarts_timeseries_bar',
-    icon: 'dvt-chart',
-  },
-  {
-    popoverLabel: 'Area Chart',
-    status: 'echarts_area',
-    icon: 'dvt-status_up',
-  },
-  {
-    popoverLabel: 'Table',
-    status: 'table',
-    icon: 'dvt-linear_chart',
-  },
-  {
-    popoverLabel: 'Big Number',
-    status: 'big_number_total',
-    icon: 'dvt-4k',
-  },
-  { popoverLabel: 'Pie Chart', status: 'pie', icon: 'dvt-diagram' },
-];
-
 const DvtChart = () => {
   const dispatch = useDispatch();
   const selectedChart = useAppSelector(state => state.dvtChart.selectedChart);
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
+  );
+  const selectBars = ChartSelectBars.filter(vf =>
+    [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
   );
   const statusVizType = selectBars.find(
     v => v.status === selectedVizType,
@@ -152,6 +122,11 @@ const DvtChart = () => {
     metric: [],
     sort_by_metric: false,
     subheader: '',
+    dimension: [],
+    entity: [],
+    x: [],
+    y: [],
+    size: [],
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   const [chartData, setChartData] = useState<any[] | any>([]);
@@ -200,8 +175,6 @@ const DvtChart = () => {
           },
     );
 
-  const queriesOnlyMetric = ['big_number_total', 'pie'];
-
   const withoutValueForNull = (vl: any) =>
     vl?.value ? (vl.value === 'null' ? null : vl.value) : undefined;
 
@@ -239,6 +212,61 @@ const DvtChart = () => {
           },
         }
       : {};
+
+  const queriesOrderBySwitch = () => {
+    switch (active) {
+      case 'table':
+        return values.order_by_cols;
+      case 'big_number_total':
+      case 'pie':
+        return [[metricsFormation('metric')[0], false]];
+      case 'bubble_v2':
+        return values.timeseries_limit_metric.length
+          ? [[metricsFormation('timeseries_limit_metric')[0], false]]
+          : undefined;
+      default:
+        return [[metricsFormation('metrics')[0], false]];
+    }
+  };
+
+  const queriesColumnsSwitch = () => {
+    switch (active) {
+      case 'table':
+        return droppedOnlyLabels('all_columns');
+      case 'bubble_v2':
+        return [
+          ...droppedOnlyLabels('entity'),
+          ...droppedOnlyLabels('dimension'),
+        ];
+      default:
+        return [
+          ...values.x_axis.map((c: any) => ({
+            timeGrain: values.time_grain_sqla?.value,
+            columnType: 'BASE_AXIS',
+            sqlExpression: c.label,
+            label: c.label,
+            expressionType: 'SQL',
+          })),
+          ...droppedOnlyLabels('groupby'),
+        ];
+    }
+  };
+
+  const queriesMetricsSwitch = () => {
+    switch (active) {
+      case 'big_number_total':
+      case 'pie':
+        return metricsFormation('metric');
+      case 'bubble_v2':
+        return [
+          metricsFormation('x')[0],
+          metricsFormation('y')[0],
+          metricsFormation('size')[0],
+        ];
+      default:
+        return metricsFormation('metrics');
+    }
+  };
 
   const formDataObj = {
     datasource: {
@@ -282,19 +310,20 @@ const DvtChart = () => {
       annotation_layers: [],
       forecastPeriods: values.forecastPeriods,
       forecastInterval: values.forecastInterval,
-      x_axis_title_margin: 15,
-      y_axis_title_margin: 15,
+      x_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
+      y_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
       y_axis_title_position: 'Left',
       sort_series_type: 'sum',
       color_scheme: 'supersetColors',
       seriesType: 'line',
       only_total: true,
-      opacity: 0.2,
+      opacity: active === 'bubble_v2' ? 0.6 : 0.2,
       markerSize: 6,
       orientation: 'vertical',
       show_legend: true,
       legendType: 'scroll',
       legendOrientation: 'top',
+      max_bubble_size: '25',
       x_axis_time_format: 'smart_date',
       rich_tooltip: true,
       tooltipTimeFormat: 'smart_date',
@@ -378,47 +407,50 @@ const DvtChart = () => {
       table_timestamp_format: 'smart_date',
       temporal_columns_lookup: { year: true },
       server_pagination: values.server_pagination,
+      entity: droppedOnlyLabels('entity')[0],
+      orderby: values.timeseries_limit_metric.length
+        ? metricsFormation('timeseries_limit_metric')[0]
+        : undefined,
+      series: droppedOnlyLabels('dimension')[0],
+      size: metricsFormation('size')[0],
+      tooltipSizeFormat: 'SMART_NUMBER',
+      x: metricsFormation('x')[0],
+      xAxisFormat: 'SMART_NUMBER',
+      y: metricsFormation('y')[0],
     },
     queries: [
       {
-        filters: values.adhoc_filters.map((v: any) => ({
-          col: v.values.column.column_name,
-          op: v.values.operator.value,
-          val: v.values.comparator,
-        })),
+        filters: values.adhoc_filters
+          .filter((v: any) => v.values.expressionType !== 'SQL')
+          .map((v: any) => ({
+            col: v.values.column.column_name,
+            op: v.values.operator.value,
+            val: v.values.comparator,
+          })),
         extras: {
-          time_grain_sqla: values.time_grain_sqla?.value,
-          having: '',
-          where: '',
+          time_grain_sqla:
+            active === 'bubble_v2' ? undefined : values.time_grain_sqla?.value,
+          having: values.adhoc_filters
+            .filter(
+              (v: any) =>
+                v.values.expressionType === 'SQL' &&
+                v.values.clause === 'HAVING',
+            )
+            .map((v: any) => `(${v.values.sql})`)
+            .join(' AND '),
+          where: values.adhoc_filters
+            .filter(
+              (v: any) =>
+                v.values.expressionType === 'SQL' &&
+                v.values.clause === 'WHERE',
+            )
+            .map((v: any) => `(${v.values.sql})`)
+            .join(' AND '),
         },
         applied_time_extras: {},
-        columns:
-          active === 'table'
-            ? droppedOnlyLabels('all_columns')
-            : [
-                ...values.x_axis.map((c: any) => ({
-                  timeGrain: values.time_grain_sqla?.value,
-                  columnType: 'BASE_AXIS',
-                  sqlExpression: c.label,
-                  label: c.label,
-                  expressionType: 'SQL',
-                })),
-                ...droppedOnlyLabels('groupby'),
-              ],
-        metrics: queriesOnlyMetric.includes(active)
-          ? metricsFormation('metric')
-          : metricsFormation('metrics'),
-        orderby:
-          active === 'table'
-            ? values.order_by_cols
-            : [
-                [
-                  queriesOnlyMetric.includes(active)
-                    ? metricsFormation('metric')[0]
-                    : metricsFormation('metrics')[0],
-                  false,
-                ],
-              ],
+        columns: queriesColumnsSwitch(),
+        metrics: queriesMetricsSwitch(),
+        orderby: queriesOrderBySwitch(),
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
