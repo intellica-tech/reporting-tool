@@ -292,7 +292,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       field: 'column_name',
       sort: true,
       radio: true,
-      disabledRadio: 'is_dttm',
+      disabledRadioField: 'is_dttm',
     },
     {
       id: 5,
@@ -347,6 +347,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       field: 'column_name',
       sort: true,
       radio: true,
+      disabledRadioField: 'is_dttm',
     },
     {
       id: 5,
