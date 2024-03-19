@@ -39,6 +39,10 @@ import {
   StyledTableIcon,
   StyledTableCheckbox,
   StyledTableUrl,
+  StyledTableInput,
+  StyledTableEditor,
+  StyledTableCollapseCheckbox,
+  StyledTableCollapse,
 } from './dvt-table.module';
 import DvtPopper from '../DvtPopper';
 import { useToasts } from '../MessageToasts/withToasts';
@@ -75,7 +79,7 @@ interface HeaderProps {
   checkboxData?: boolean;
   checkboxField?: boolean;
   radio?: boolean;
-  disabledRadio?: string;
+  disabledRadioField?: string;
 }
 
 export interface DvtTableSortProps {
@@ -288,7 +292,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                           </StyledTableCheckbox>
                         )}
                         {column.input && (
-                          <div style={{ marginRight: '14px' }}>
+                          <StyledTableInput>
                             <DvtInput
                               value={column.field ? row[column.field] : ''}
                               onChange={newValue =>
@@ -299,16 +303,11 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                 )
                               }
                             />
-                          </div>
+                          </StyledTableInput>
                         )}
 
                         {column.editor && (
-                          <div
-                            style={{
-                              margin: '2px 14px',
-                              width: '100%',
-                            }}
-                          >
+                          <StyledTableEditor>
                             <DvtAceEditor
                               mode="sql"
                               placeholder="SELECT..."
@@ -323,16 +322,10 @@ const DvtTable: React.FC<DvtTableProps> = ({
                               height="60px"
                               fontSize={16}
                             />
-                          </div>
+                          </StyledTableEditor>
                         )}
                         {column.checkboxData && (
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              width: '100%',
-                            }}
-                          >
+                          <StyledTableCollapseCheckbox>
                             <StyledTableCheckbox>
                               <Checkbox
                                 onChange={e =>
@@ -347,31 +340,25 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                 }
                               />
                             </StyledTableCheckbox>
-                          </div>
+                          </StyledTableCollapseCheckbox>
                         )}
                         {column.radio && (
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              width: '100%',
-                            }}
-                          >
+                          <StyledTableCollapseCheckbox>
                             <DvtRadioList
                               data={[
                                 {
                                   label: '',
                                   value: column.field ? row[column.field] : '',
                                   disabled: !(
-                                    column.disabledRadio &&
-                                    row[column.disabledRadio]
+                                    column.disabledRadioField &&
+                                    row[column.disabledRadioField]
                                   ),
                                 },
                               ]}
                               active={activeRadio}
                               setActive={setActiveRadio}
                             />
-                          </div>
+                          </StyledTableCollapseCheckbox>
                         )}
                         {column.icon && (
                           <Icon
@@ -520,15 +507,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                 {row.collapse && (
                   <StyledTableTr>
                     <StyledTableTd colSpan={header.length}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          width: '100%',
-                          gap: '15px',
-                          padding: '30px 30px 30px 0 ',
-                        }}
-                      >
+                      <StyledTableCollapse>
                         {collapseData?.map(field => (
                           <>
                             {field.type === 'sqlEditor' && (
@@ -587,7 +566,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             )}
                           </>
                         ))}
-                      </div>
+                      </StyledTableCollapse>
                     </StyledTableTd>
                   </StyledTableTr>
                 )}

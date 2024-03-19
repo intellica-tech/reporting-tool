@@ -42,9 +42,6 @@ function DvtDatasets() {
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
   );
-  const editSuccessStatus = useAppSelector(
-    state => state.dvtHome.editSuccessStatus,
-  );
   const [data, setData] = useState([]);
   const [page, setPage] = useState<number>(1);
   const [sort, setSort] = useState<DvtTableSortProps>({
@@ -122,13 +119,8 @@ function DvtDatasets() {
       );
       setCount(datasetApi.count);
       setSelectedRows([]);
-      if (editSuccessStatus) {
-        setData(datasetApi.result);
-        setCount(datasetApi.count);
-        setSelectedRows([]);
-      }
     }
-  }, [datasetApi, editSuccessStatus]);
+  }, [datasetApi]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

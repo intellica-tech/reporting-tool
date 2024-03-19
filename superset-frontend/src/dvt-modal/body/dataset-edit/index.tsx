@@ -12,6 +12,7 @@ import DvtButtonTabs from 'src/components/DvtButtonTabs';
 import { useDispatch } from 'react-redux';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
+import DvtInputSelect from 'src/components/DvtInputSelect';
 import {
   StyledDatasetEdit,
   ModalBreak,
@@ -32,7 +33,6 @@ import {
   ModalButtonContainer,
   ModalNavigationContainer,
 } from './dataset-edit.module';
-import DvtInputSelect from 'src/components/DvtInputSelect';
 
 interface InputProps {
   tabs: { label: string; value: string };
@@ -255,7 +255,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     }
   }, [tableResponse]);
 
-  // Metrics
   const metricsHeader = [
     { id: 1, title: t('Metric Key'), field: 'metric_name', input: true },
     { id: 2, title: t('Label'), field: 'verbose_name', input: true },
@@ -277,7 +276,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     },
   ];
 
-  // Columns
   const columnsHeader = [
     { id: 1, title: t('Column'), field: 'column_name', sort: true },
     { id: 2, title: t('Data Type'), field: 'type', sort: true },
