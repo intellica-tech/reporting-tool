@@ -75,6 +75,7 @@ interface HeaderProps {
   checkboxData?: boolean;
   checkboxField?: boolean;
   radio?: boolean;
+  disabledRadio?: string;
 }
 
 export interface DvtTableSortProps {
@@ -253,7 +254,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
         </StyledTabletHead>
         <StyledTableTbody>
           {[...data]
-            .sort((a, b) => (a?.collapse ? -1 : b?.collapse ? 1 : a.id - b.id))
+            .sort((a, b) => a.id - b.id)
             .map((row, rowIndex) => (
               <>
                 <StyledTableTr
@@ -361,6 +362,10 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                 {
                                   label: '',
                                   value: column.field ? row[column.field] : '',
+                                  disabled: !(
+                                    column.disabledRadio &&
+                                    row[column.disabledRadio]
+                                  ),
                                 },
                               ]}
                               active={activeRadio}

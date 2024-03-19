@@ -44,3 +44,26 @@ export const Default = () => {
     </div>
   );
 };
+
+export const Disabled = () => {
+  const [active, setActive] = useState<string>('');
+
+  return (
+    <div style={{ display: 'flex', gap: '15px' }}>
+      <DvtRadio
+        active={active}
+        setActive={setActive}
+        label="Radio 1"
+        value="1"
+        disabled
+      />
+      <DvtRadio
+        active={active}
+        setActive={setActive}
+        label="Radio 2"
+        value="2"
+        disabled
+      />
+    </div>
+  );
+};

@@ -169,9 +169,6 @@ function DvtDatasets() {
 
   const handleEditDataset = (item: any) => {
     setDatasetEditApiUrl(`dataset/${item.id}`);
-    setTimeout(() => {
-      setDatasetApiUrl('');
-    }, 500);
   };
 
   const header = [
@@ -231,6 +228,7 @@ function DvtDatasets() {
           meta: { ...datasetEditPromise, isEdit: true },
         }),
       );
+      setDatasetEditApiUrl('');
     }
   }, [datasetEditPromise]);
 

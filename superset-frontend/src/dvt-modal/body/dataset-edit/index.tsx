@@ -8,6 +8,9 @@ import Icon from 'src/components/Icons/Icon';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtAceEditor from 'src/components/DvtAceEditor';
+import DvtButtonTabs from 'src/components/DvtButtonTabs';
+import { useDispatch } from 'react-redux';
+import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import {
   StyledDatasetEdit,
@@ -29,9 +32,7 @@ import {
   ModalButtonContainer,
   ModalNavigationContainer,
 } from './dataset-edit.module';
-import DvtButtonTabs from 'src/components/DvtButtonTabs';
-import { useDispatch } from 'react-redux';
-import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
+import DvtInputSelect from 'src/components/DvtInputSelect';
 
 interface InputProps {
   tabs: { label: string; value: string };
@@ -63,7 +64,8 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     (column: any) => !column.expression,
   );
 
-  const [owners, setOwners] = useState<{ value: number; label: string }>();
+  const [owners, setOwners] = useState<any[]>([]);
+  const [syncApiUrl, setSyncApiUrl] = useState<string>('');
 
   const [modalData, setModalData] = useState<any>({
     always_filter_main_dttm: meta.result.always_filter_main_dttm,
@@ -121,7 +123,9 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     url: 'dataset/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  console.log(meta);
+  const syncApi = useFetch({
+    url: syncApiUrl,
+  });
 
   const editDatasetData = useFetch({
     url: apiUrl,
@@ -290,6 +294,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       field: 'column_name',
       sort: true,
       radio: true,
+      disabledRadio: 'is_dttm',
     },
     {
       id: 5,
@@ -406,7 +411,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       collapse: true,
     };
 
-    setCalculatedColumn([...calculatedColumn, newItem]);
+    setCalculatedColumn([newItem, ...calculatedColumn]);
   };
 
   const handleCalculatedColumnRemoveItem = (row: any) => {
@@ -417,16 +422,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     setCalculatedColumn(updatedCalculatedColumn);
   };
 
-  const handleMatricsAddItem = () => {
-    const newItem = {
-      id: generateId(),
-      metric_name: '<new metric>',
-      verbose_name: '',
-      expression: '',
-    };
-
-    setMetricsColumn([...metricsColumn, newItem]);
-  };
+  const handleMatricsAddItem = () =>
+    setMetricsColumn(prevMetricsColumn => [
+      {
+        id: generateId(),
+        metric_name: '<new metric>',
+        verbose_name: '',
+        expression: '',
+      },
+      ...prevMetricsColumn,
+    ]);
 
   const handleMatricsRemoveItem = (row: any) => {
     const updatedMetrics = metricsColumn.filter(item => item.id !== row.id);
@@ -518,6 +523,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       }, 2000);
     }
   }, [apiUrl]);
+
+  useEffect(() => {
+    if (syncApi?.result) {
+      setModalData((prevData: any) => ({
+        ...prevData,
+        columns: syncApi.result.columns,
+      }));
+      setSyncApiUrl('');
+    }
+  }, [syncApi]);
 
   return (
     <StyledDatasetEdit>
@@ -693,7 +708,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <DvtButton
               label={t('Sync Columns from Source')}
               icon="dvt-add_filled"
-              onClick={() => {}}
+              onClick={() => setSyncApiUrl(`dataset/${meta.id}`)}
             />
           </ColumnsButtonContainer>
           <DvtTable
@@ -709,13 +724,14 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           />
         </ColumnsBody>
       ) : input.tabs.value === 'calculated_columns' ? (
-        <div>
-          <DvtButton
-            label={t('Add Item')}
-            icon="dvt-add_filled"
-            onClick={handleAddItem}
-          />
-
+        <MetricsBody>
+          <MetricsButtonContainer>
+            <DvtButton
+              label={t('Add Item')}
+              icon="dvt-add_filled"
+              onClick={handleAddItem}
+            />
+          </MetricsButtonContainer>
           <DvtTable
             data={calculatedColumn}
             setData={setCalculatedColumn}
@@ -728,7 +744,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             }}
             collapseData={fields}
           />
-        </div>
+        </MetricsBody>
       ) : input.tabs.value === 'settings' ? (
         <SettingsBody>
           <SettingsBlock>
@@ -785,11 +801,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
                 'Extra data to specify table metadata. Currently supports metadata of the format: `{ "certification": { "certified_by": "Data Platform Team", "details": "This table is the source of truth." }, "warning_markdown": "This is a warning." }`.',
               )}
             </ModalInfoText>
-            <DvtSelect
+            <DvtInputSelect
               data={ownersOptions}
               label="Owners"
-              selectedValue={owners}
-              setSelectedValue={selection => setOwners(selection)}
+              selectedValues={owners}
+              setSelectedValues={selection => setOwners(selection)}
               typeDesign="form"
             />
           </SettingsBlock>
