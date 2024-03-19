@@ -23,7 +23,6 @@ const lineChartPayload = [
   'legendOrientation',
   'legendType',
   'limit',
-  'markerSize',
   'metrics',
   'min_periods',
   'only_total',
@@ -36,7 +35,6 @@ const lineChartPayload = [
   'rolling_periods',
   'rolling_type',
   'row_limit',
-  'seriesType',
   'show_empty_columns',
   'show_legend',
   'sort_series_type',
@@ -83,17 +81,17 @@ const lineChartQueries = [
 const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
   {
     viz_name: 'echarts_timeseries_line',
-    form_data: [...lineChartPayload, 'opacity'],
+    form_data: [...lineChartPayload, 'opacity', 'markerSize', 'seriesType'],
     queries: lineChartQueries,
   },
   {
     viz_name: 'echarts_timeseries_bar',
-    form_data: lineChartPayload,
+    form_data: [...lineChartPayload, 'orientation'],
     queries: lineChartQueries,
   },
   {
     viz_name: 'echarts_area',
-    form_data: [...lineChartPayload, 'opacity'],
+    form_data: [...lineChartPayload, 'opacity', 'markerSize', 'seriesType'],
     queries: lineChartQueries,
   },
   {

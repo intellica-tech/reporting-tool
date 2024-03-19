@@ -215,6 +215,31 @@ const DvtChart = () => {
     return result;
   };
 
+  const droppedOnlyLabels = (dataKey: string) =>
+    values[dataKey].map((ac: any) =>
+      ac.values.expressionType === 'SQL'
+        ? {
+            expressionType: ac.values.expressionType,
+            label: ac.label,
+            sqlExpression: ac.values.sql,
+          }
+        : ac.values.sql,
+    );
+
+  const postProcessingRename =
+    values.metrics.length === 1 && values.groupby.length
+      ? {
+          operation: 'rename',
+          options: {
+            columns: {
+              [values.metrics[0].label]: null,
+            },
+            level: 0,
+            inplace: true,
+          },
+        }
+      : {};
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -231,7 +256,7 @@ const DvtChart = () => {
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
       metrics: metricsFormation('metrics'),
-      groupby: values.groupby,
+      groupby: droppedOnlyLabels('groupby'),
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
         subject: v.values.column.column_name,
@@ -266,6 +291,7 @@ const DvtChart = () => {
       only_total: true,
       opacity: 0.2,
       markerSize: 6,
+      orientation: 'vertical',
       show_legend: true,
       legendType: 'scroll',
       legendOrientation: 'top',
@@ -338,15 +364,7 @@ const DvtChart = () => {
       subheader: values.subheader,
       subheader_font_size: 0.15,
       time_format: 'smart_date',
-      all_columns: values.all_columns.map((ac: any) =>
-        ac.values.expressionType === 'SQL'
-          ? {
-              expressionType: ac.values.expressionType,
-              label: ac.label,
-              sqlExpression: ac.values.sql,
-            }
-          : ac.values.sql,
-      ),
+      all_columns: droppedOnlyLabels('all_columns'),
       color_pn: true,
       query_mode: values.query_mode.value,
       include_time:
@@ -376,22 +394,17 @@ const DvtChart = () => {
         applied_time_extras: {},
         columns:
           active === 'table'
-            ? values.all_columns.map((ac: any) =>
-                ac.values.expressionType === 'SQL'
-                  ? {
-                      expressionType: ac.values.expressionType,
-                      label: ac.label,
-                      sqlExpression: ac.values.sql,
-                    }
-                  : ac.values.sql,
-              )
-            : values.x_axis.map((c: any) => ({
-                timeGrain: values.time_grain_sqla?.value,
-                columnType: 'BASE_AXIS',
-                sqlExpression: c.label,
-                label: c.label,
-                expressionType: 'SQL',
-              })),
+            ? droppedOnlyLabels('all_columns')
+            : [
+                ...values.x_axis.map((c: any) => ({
+                  timeGrain: values.time_grain_sqla?.value,
+                  columnType: 'BASE_AXIS',
+                  sqlExpression: c.label,
+                  label: c.label,
+                  expressionType: 'SQL',
+                })),
+                ...droppedOnlyLabels('groupby'),
+              ],
         metrics: queriesOnlyMetric.includes(active)
           ? metricsFormation('metric')
           : metricsFormation('metrics'),
@@ -408,7 +421,7 @@ const DvtChart = () => {
               ],
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
-        series_columns: [],
+        series_columns: droppedOnlyLabels('groupby'),
         series_limit: 0,
         order_desc: true,
         url_params: selectedChart?.form_data?.url_params,
@@ -423,11 +436,14 @@ const DvtChart = () => {
                   operation: 'pivot',
                   options: {
                     index: [values.x_axis[0]?.label],
-                    columns: [],
+                    columns: values.groupby.map((vg: any) => vg.values.sql),
                     aggregates: postProcessingAggregates(values.metrics),
                     drop_missing_columns: false,
                   },
                 },
+                ...(Object.keys(postProcessingRename).length !== 0
+                  ? [postProcessingRename]
+                  : []),
                 {
                   operation: 'flatten',
                 },
