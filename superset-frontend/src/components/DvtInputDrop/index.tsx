@@ -144,7 +144,7 @@ const DvtInputDrop = ({
 
     const aggregateSwitch = (type: string) => {
       let aggregate = 'AVG';
-      const sums = ['BIGINT', 'FLOAT64'];
+      const sums = ['BIGINT', 'FLOAT64', 'DOUBLE PRECISION'];
 
       if (sums.includes(type)) {
         aggregate = 'SUM';

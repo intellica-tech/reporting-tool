@@ -602,7 +602,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     if (chartSelector?.dataset) {
       // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
       const iconQuestions = ['BOOLEAN'];
-      const iconHashtags = ['BIGINT', 'FLOAT64'];
+      const iconHashtags = ['BIGINT', 'FLOAT64', 'DOUBLE PRECISION'];
       const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
 
       setChartMetrics(
@@ -974,7 +974,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
               )}
             {pathTitles(pathName) === 'chart' && (
               <StyledCollapseScroll>
-                {chartSelector?.dataset?.metrics?.length && (
+                {!!chartSelector?.dataset?.metrics?.length && (
                   <DvtCollapse
                     label="Metrics"
                     isOpen={chartCollapses.includes('metrics')}
@@ -985,7 +985,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     <DvtDargCardList data={searchFindChartMetrics} />
                   </DvtCollapse>
                 )}
-                {chartSelector?.dataset?.columns?.length && (
+                {!!chartSelector?.dataset?.columns?.length && (
                   <DvtCollapse
                     label="Columns"
                     isOpen={chartCollapses.includes('columns')}
