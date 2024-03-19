@@ -38,6 +38,7 @@ import {
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
   StyledCollapseScroll,
+  ChartDatasetName,
 } from './dvt-sidebar.module';
 import DvtList from '../DvtList';
 import DvtDatePicker from '../DvtDatepicker';
@@ -104,6 +105,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     useState<{ value: string; label: string }>();
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
+  const [chartSearch, setChartSearch] = useState<string>('');
   const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
   const [chartCollapses, setChartCollapses] = useState<any[]>([]);
@@ -640,6 +642,21 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     }
   };
 
+  // Chart searching for metrics and columns find data
+  const searchFindChartMetrics = chartMetrics.filter(
+    (cf: { label: string }) => {
+      const labelLowercase = cf.label.toLowerCase();
+      return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
+    },
+  );
+
+  const searchFindChartColumns = chartColumns.filter(
+    (cf: { label: string }) => {
+      const labelLowercase = cf.label.toLowerCase();
+      return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
+    },
+  );
+
   return (
     <StyledDvtSidebar minWidth={minWidth}>
       <StyledDvtSidebarHeader>
@@ -722,6 +739,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
             ))}
 
           <StyledDvtSidebarBody pathName={pathName}>
+            {pathTitles(pathName) === 'chart' && (
+              <ChartDatasetName>
+                {chartSelector?.dataset?.name}
+              </ChartDatasetName>
+            )}
             {pathTitles(pathName) === 'newTrainedTable' && (
               <div>
                 <DvtSelect
@@ -850,7 +872,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             : undefined
                         }
                         onChange={value => {
-                          if (pathTitles(pathName) === 'chartAdd') {
+                          if (pathTitles(pathName) === 'chart') {
+                            setChartSearch(value);
+                          } else if (pathTitles(pathName) === 'chartAdd') {
                             updateChartAddProperty(value, data.name);
                           } else if (sidebarDataFindPathname.key) {
                             updateProperty(
@@ -958,7 +982,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       handleChartCollapseSetOpen(bln, 'metrics')
                     }
                   >
-                    <DvtDargCardList data={chartMetrics} />
+                    <DvtDargCardList data={searchFindChartMetrics} />
                   </DvtCollapse>
                 )}
                 {chartSelector?.dataset?.columns?.length && (
@@ -969,7 +993,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       handleChartCollapseSetOpen(bln, 'columns')
                     }
                   >
-                    <DvtDargCardList data={chartColumns} />
+                    <DvtDargCardList data={searchFindChartColumns} />
                   </DvtCollapse>
                 )}
               </StyledCollapseScroll>

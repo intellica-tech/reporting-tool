@@ -136,7 +136,7 @@ const StyledCollapseScroll = styled.div`
   flex-direction: column;
   gap: 15px;
   padding-right: 10px;
-  max-height: 74vh;
+  max-height: calc(100vh - 289px);
   margin-top: 10px;
 
   &::-webkit-scrollbar {
@@ -152,6 +152,22 @@ const StyledCollapseScroll = styled.div`
   }
 `;
 
+const ChartDatasetName = styled.div`
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  padding: 2px 8px;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 34px;
+  max-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+`;
+
 export {
   StyledDvtSidebar,
   StyledDvtSidebarHeader,
@@ -165,4 +181,5 @@ export {
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
   StyledCollapseScroll,
+  ChartDatasetName,
 };

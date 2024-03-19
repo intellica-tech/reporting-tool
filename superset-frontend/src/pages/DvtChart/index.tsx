@@ -644,6 +644,9 @@ const DvtChart = () => {
               !!values.percent_metrics.length
             )
           : !values.all_columns.length;
+      case 'big_number_total':
+      case 'pie':
+        return !values.metric.length;
 
       default:
         return false;
