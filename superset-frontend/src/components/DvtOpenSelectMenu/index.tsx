@@ -18,7 +18,9 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import DvtSelect from '../DvtSelect';
 import DvtInputSelect from '../DvtInputSelect';
 // import DvtInput from '../DvtInput';
@@ -120,6 +122,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
   tab = 'SIMPLE',
   clause = 'WHERE',
 }) => {
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState<string>(tab);
   const [whereOrHaving, setWhereOrHaving] = useState(
     OpenSelectMenuData.whereOrHaving.find(f => f.value === clause),
@@ -331,7 +334,16 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
           {type === 'filters' && (
             <>
               {values?.filterType === 'time_range' ? (
-                <FilterTimeRangeOpen>
+                <FilterTimeRangeOpen
+                  onClick={() =>
+                    dispatch(
+                      openModal({
+                        component: 'time-range',
+                        meta: values,
+                      }),
+                    )
+                  }
+                >
                   {values.operator?.label}
                   <Icon fileName="clock" iconSize="xl" />
                 </FilterTimeRangeOpen>

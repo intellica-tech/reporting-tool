@@ -9,15 +9,16 @@ import DvtDeleteModal from './body/delete-modal';
 import DvtConnectionAdd from './body/connection-add';
 import DvtAlertAdd from './body/alert-add';
 import DvtReportAdd from './body/report-add';
+import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
+import DvtQueryPreview from './body/query-preview';
+import DvtSaveQuery from './body/save-query';
+import DvtSaveDataset from './body/save-dataset';
+import DvtTimeRange from './body/time-range';
 import {
   StyledModal,
   StyledModalCard,
   StyledModalCardBody,
 } from './dvt-modal.module';
-import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
-import DvtQueryPreview from './body/query-preview';
-import DvtSaveQuery from './body/save-query';
-import DvtSaveDataset from './body/save-dataset';
 
 export interface ModalProps {
   meta: any;
@@ -46,6 +47,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtSaveQuery meta={meta} onClose={onClose} />;
     case 'save-dataset':
       return <DvtSaveDataset meta={meta} onClose={onClose} />;
+    case 'time-range':
+      return <DvtTimeRange meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -76,6 +79,8 @@ const DvtModal = () => {
       case 'save-query':
         return 'custom';
       case 'save-dataset':
+        return 'custom';
+      case 'time-range':
         return 'custom';
       default:
         return 'small';

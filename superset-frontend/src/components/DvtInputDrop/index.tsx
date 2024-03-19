@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme, t } from '@superset-ui/core';
-import useFetch from 'src/hooks/useFetch';
+import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useDispatch } from 'react-redux';
+import { dvtChartSetTimeRange } from 'src/dvt-redux/dvt-chartReducer';
+import useFetch from 'src/dvt-hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import moment from 'moment';
 import Icon from '../Icons/Icon';
@@ -77,9 +80,15 @@ const DvtInputDrop = ({
   datasourceApi = '',
   anotherFormNoError = false,
 }: DvtInputDropProps) => {
+  const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement | null>(null);
+  const modalComponent = useAppSelector(state => state.dvtModal?.component);
+  const addTimeRange = useAppSelector(state => state.dvtChart?.addTimeRange);
   const [isOpen, setIsOpen] = useState(false);
-  useOnClickOutside(ref, () => setIsOpen(false));
+  useOnClickOutside(
+    ref,
+    () => modalComponent !== 'time-range' && setIsOpen(false),
+  );
   const [windowScreen, setWindowScreen] = useState({
     top: 0,
     left: 0,
@@ -95,6 +104,12 @@ const DvtInputDrop = ({
   const [clause, setClause] = useState<'WHERE' | 'HAVING'>('WHERE');
   const [tabFetched, setTabFetched] = useState<boolean>(false);
   const [firstDropAdd, setFirstDropAdd] = useState<boolean>(false);
+
+  const clearAddTimeRange = () => {
+    if (addTimeRange?.label) {
+      dispatch(dvtChartSetTimeRange({}));
+    }
+  };
 
   const openMenuHeight = 360;
   const inputHeight = 50;
@@ -130,6 +145,7 @@ const DvtInputDrop = ({
       );
       setMenuTopCalcArrow(`${openMenuHeight / 2 - borderHeight / 2}px`);
     }
+    clearAddTimeRange();
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -281,23 +297,43 @@ const DvtInputDrop = ({
   });
 
   useEffect(() => {
-    if (optionDataPromise) {
+    if (optionDataPromise.data) {
       setOptionData(
-        optionDataPromise.result.map((rv: string, ri: number) => ({
+        optionDataPromise.data.result.map((rv: string, ri: number) => ({
           label: rv,
           value: ri + 1,
         })),
       );
     }
-  }, [optionDataPromise]);
+  }, [optionDataPromise.data]);
 
   useEffect(() => {
-    if (datasourceApi && values.column && type === 'filters') {
+    if (
+      datasourceApi &&
+      values.column &&
+      !values.column.python_date_format &&
+      type === 'filters'
+    ) {
       setOptionApiUrl(
         `${datasourceApi}/column/${values.column?.column_name}/values`,
       );
     }
   }, [datasourceApi, values.column]);
+
+  useEffect(() => {
+    if (
+      values.column.python_date_format &&
+      type === 'filters' &&
+      addTimeRange?.label
+    ) {
+      setValues({
+        ...values,
+        comparator: addTimeRange.comparator,
+        operator: { label: addTimeRange.menuLabel, value: 'TEMPORAL_RANGE' },
+        addTimeRange,
+      });
+    }
+  }, [addTimeRange]);
 
   const handleSaveClick = (args: any) => {
     const onlyCountDistinct = values.saved?.metric_name
@@ -311,7 +347,12 @@ const DvtInputDrop = ({
         : onlyCountDistinct;
     const newAddItem = {
       id: getId === null ? moment().unix() : getId,
-      label: onlyFilterTimeRange,
+      label:
+        values.column.python_date_format &&
+        type === 'filters' &&
+        addTimeRange?.label
+          ? addTimeRange?.label
+          : onlyFilterTimeRange,
       values: { ...values, ...args },
     };
     const selectedItem =
@@ -325,6 +366,7 @@ const DvtInputDrop = ({
     setIsOpen(false);
     setValues(initialValues);
     setGetId(null);
+    clearAddTimeRange();
   };
 
   useEffect(() => {
@@ -456,7 +498,10 @@ const DvtInputDrop = ({
             savedData={savedData}
             columnData={columnData}
             optionData={optionData}
-            closeOnClick={() => setIsOpen(false)}
+            closeOnClick={() => {
+              setIsOpen(false);
+              clearAddTimeRange();
+            }}
             saveOnClick={handleSaveClick}
             tab={tab}
             clause={clause}
