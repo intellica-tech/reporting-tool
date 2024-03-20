@@ -14,6 +14,7 @@ import DvtQueryPreview from './body/query-preview';
 import DvtSaveQuery from './body/save-query';
 import DvtSaveDataset from './body/save-dataset';
 import DvtTimeRange from './body/time-range';
+import DvtDashoardFilterModal from './body/dashboard-filter';
 import {
   StyledModal,
   StyledModalCard,
@@ -49,6 +50,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtSaveDataset meta={meta} onClose={onClose} />;
     case 'time-range':
       return <DvtTimeRange meta={meta} onClose={onClose} />;
+    case 'dashboard-filter':
+      return <DvtDashoardFilterModal meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -82,6 +85,8 @@ const DvtModal = () => {
         return 'custom';
       case 'time-range':
         return 'custom';
+      case 'dashboard-filter':
+        return 'xlarge';
       default:
         return 'small';
     }
