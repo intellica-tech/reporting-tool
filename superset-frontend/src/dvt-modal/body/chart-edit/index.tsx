@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtModalHeader from 'src/components/DvtModalHeader';
@@ -28,7 +28,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
 
   useEffect(() => {
     if (chartItemApi) {
-      const { result } = chartItemApi;
+      const { result } = chartItemApi.data;
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
@@ -61,14 +61,14 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   });
 
   const ownersOptions = updateChartDataFetchResult
-    ? updateChartDataFetchResult.result.map((item: any) => ({
+    ? updateChartDataFetchResult.data.result.map((item: any) => ({
         label: item.text,
         value: item.value,
       }))
     : [];
 
   useEffect(() => {
-    if (updateChartData?.id) {
+    if (updateChartData.data?.id) {
       onClose();
     }
   }, [onClose, updateChartData]);

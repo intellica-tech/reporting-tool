@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
 import { ModalProps } from 'src/dvt-modal';
@@ -32,7 +32,7 @@ const DvtSaveQuery = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (saveQuery?.id) {
+    if (saveQuery.data?.id) {
       onClose();
       addDangerToast(t('Saved Success'));
     }

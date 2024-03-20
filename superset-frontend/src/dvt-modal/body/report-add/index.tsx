@@ -5,7 +5,7 @@ import { ModalProps } from 'src/dvt-modal';
 import DvtSwitch from 'src/components/DvtSwitch';
 import { dvtAlertAddStatus } from 'src/dvt-redux/dvt-alertReducer';
 import DvtSelect from 'src/components/DvtSelect';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
@@ -109,11 +109,11 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (alertAddData?.id) {
+    if (alertAddData.data?.id) {
       dispatch(dvtAlertAddStatus('Success'));
       onClose();
     }
-  }, [alertAddData]);
+  }, [alertAddData.data]);
 
   const ownersData = useFetch({
     url: '/report/related/created_by?q=(filter:%27%27,page:0,page_size:100)',
@@ -128,19 +128,19 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   const ownersOptions: { label: string; value: number }[] =
-    ownersData?.result.map((item: any) => ({
+    ownersData.data?.result.map((item: any) => ({
       label: item.text,
       value: item.value,
     })) || [];
 
   const chartOptions: { label: string; value: string }[] =
-    chartData?.result.map((item: any) => ({
+    chartData.data?.result.map((item: any) => ({
       label: item.text,
       value: item.value,
     }));
 
   const dashboardOptions: { label: string; value: string }[] =
-    dashboardData?.result.map((item: any) => ({
+    dashboardData.data?.result.map((item: any) => ({
       label: item.text,
       value: item.value,
     }));
@@ -215,8 +215,10 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
   }, [meta]);
 
   useEffect(() => {
-    if (ownersData?.result) {
-      const ownersValues = ownersData.result.map((item: any) => item.value);
+    if (ownersData.data?.result) {
+      const ownersValues = ownersData.data.result.map(
+        (item: any) => item.value,
+      );
       setInput(prevState => ({
         ...prevState,
         owners: ownersValues,

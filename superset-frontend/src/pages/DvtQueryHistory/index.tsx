@@ -9,7 +9,7 @@ import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
 import { useHistory } from 'react-router-dom';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { StyledSqlPagination } from './dvt-query-history.module';
 
@@ -88,18 +88,20 @@ function DvtQueryHistory() {
   // });
 
   useEffect(() => {
-    if (sqlQueryHistoryData) {
-      const transformedData = sqlQueryHistoryData.result.map((item: any) => ({
-        ...item,
-        database_name: item.database.database_name,
-        table: item.sql_tables.table,
-        user: `${item.user.first_name} ${item.user.last_name}`,
-        selectSql: '',
-      }));
+    if (sqlQueryHistoryData.data) {
+      const transformedData = sqlQueryHistoryData.data.result.map(
+        (item: any) => ({
+          ...item,
+          database_name: item.database.database_name,
+          table: item.sql_tables.table,
+          user: `${item.user.first_name} ${item.user.last_name}`,
+          selectSql: '',
+        }),
+      );
       setData(transformedData);
-      setCount(sqlQueryHistoryData.count);
+      setCount(sqlQueryHistoryData.data.count);
     }
-  }, [sqlQueryHistoryData]);
+  }, [sqlQueryHistoryData.data]);
 
   const QueryHistoryHeader = [
     {

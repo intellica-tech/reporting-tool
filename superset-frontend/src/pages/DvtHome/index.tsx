@@ -26,7 +26,7 @@ import handleResourceExport from 'src/utils/export';
 import { Moment } from 'moment';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 // import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtCalendar from 'src/components/DvtCalendar';
 import DvtButton from 'src/components/DvtButton';
@@ -135,51 +135,51 @@ function DvtWelcome() {
   });
 
   useEffect(() => {
-    if (dashboardPromise) {
+    if (dashboardPromise.data) {
       setWhatsNewData(state => [
         ...state,
-        ...formatDashboardData(dashboardPromise.result),
+        ...formatDashboardData(dashboardPromise.data.result),
       ]);
     }
-  }, [dashboardPromise]);
+  }, [dashboardPromise.data]);
 
   useEffect(() => {
-    if (datasetPromise) {
+    if (datasetPromise.data) {
       setWhatsNewData(state => [
         ...state,
-        ...formatDatasetData(datasetPromise.result),
+        ...formatDatasetData(datasetPromise.data.result),
       ]);
     }
-  }, [datasetPromise]);
+  }, [datasetPromise.data]);
 
   useEffect(() => {
-    if (chartPromise) {
+    if (chartPromise.data) {
       setWhatsNewData(state => [
         ...state,
-        ...formatChartData(chartPromise.result),
+        ...formatChartData(chartPromise.data.result),
       ]);
     }
-  }, [chartPromise]);
+  }, [chartPromise.data]);
 
   useEffect(() => {
-    if (recentsPromise) {
-      setRecentData(formatRecentData(recentsPromise.result));
+    if (recentsPromise.data) {
+      setRecentData(formatRecentData(recentsPromise.data.result));
     }
-  }, [recentsPromise]);
+  }, [recentsPromise.data]);
 
   useEffect(() => {
-    if (dashboardFavouritePromise) {
+    if (dashboardFavouritePromise.data) {
       setDashboardFavoriteData(
-        formatDashboardData(dashboardFavouritePromise.result),
+        formatDashboardData(dashboardFavouritePromise.data.result),
       );
     }
-  }, [dashboardFavouritePromise]);
+  }, [dashboardFavouritePromise.data]);
 
   useEffect(() => {
-    if (chartFavouritePromise) {
-      setChartFavoriteData(formatChartData(chartFavouritePromise.result));
+    if (chartFavouritePromise.data) {
+      setChartFavoriteData(formatChartData(chartFavouritePromise.data.result));
     }
-  }, [chartFavouritePromise]);
+  }, [chartFavouritePromise.data]);
 
   const handleSetFavorites = (id: number, title: string) => {
     setFavoriteUrl({
@@ -192,7 +192,7 @@ function DvtWelcome() {
   // /api/v1/chart/*/favorites/
 
   useEffect(() => {
-    if (favoritePromise?.result === 'OK') {
+    if (favoritePromise.data?.result === 'OK') {
       if (favoriteUrl.title === 'dashboard') {
         setDashboardFavoriteData(state =>
           state.filter(item => item.id !== favoriteUrl.id),
@@ -204,7 +204,7 @@ function DvtWelcome() {
         );
       }
     }
-  }, [favoritePromise]);
+  }, [favoritePromise.data]);
 
   // useEffect(() => {
   //   if (deleteSuccessStatus === 'chart') {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
@@ -35,7 +35,7 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
     url: formUrl,
     method: 'POST',
     body: {
-      datasource_id: saveDataset?.id,
+      datasource_id: saveDataset.data?.id,
       datasource_type: saveDataset?.data.type,
       form_data: JSON.stringify({
         metrics: [],
@@ -51,14 +51,14 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (saveDataset?.id) {
+    if (saveDataset.data?.id) {
       setFormUrl('explore/form_data');
     }
   }, [saveDataset]);
 
   useEffect(() => {
-    if (formData?.key) {
-      history.push(`explore/?form_data_key=${formData.key}`);
+    if (formData.data?.key) {
+      history.push(`explore/?form_data_key=${formData.data.key}`);
     }
   }, [formData]);
 

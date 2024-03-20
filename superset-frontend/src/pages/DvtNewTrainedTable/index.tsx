@@ -8,7 +8,7 @@ import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
@@ -96,13 +96,13 @@ function DvtNewTainedTable() {
   }, [newTainedTableAddSelector.schema]);
 
   useEffect(() => {
-    if (getSchemaData) {
+    if (getSchemaData.data) {
       if (getSchemaDataApiUrl.key === 'database') {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'newTrainedTable',
             key: 'schema',
-            value: getSchemaData.result.map((s: string) => ({
+            value: getSchemaData.data.result.map((s: string) => ({
               value: s,
               label: s,
             })),
@@ -110,20 +110,20 @@ function DvtNewTainedTable() {
         );
       }
       if (getSchemaDataApiUrl.key === 'schema') {
-        setDataSchema(getSchemaData.result);
+        setDataSchema(getSchemaData.data.result);
         setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(0));
       }
     }
-  }, [getSchemaData]);
+  }, [getSchemaData.data]);
 
   useEffect(() => {
-    if (getSchemaDataAlready) {
+    if (getSchemaDataAlready.data) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
           key: 'selectDatabase',
           value: dataSchema.map((item: any) => {
-            const findItem = getSchemaDataAlready.result.find(
+            const findItem = getSchemaDataAlready.data.result.find(
               (ar: { table_name: string }) => ar.table_name === item.value,
             );
             return {
@@ -134,7 +134,7 @@ function DvtNewTainedTable() {
         }),
       );
     }
-  }, [getSchemaDataAlready]);
+  }, [getSchemaDataAlready.data]);
 
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
@@ -145,10 +145,10 @@ function DvtNewTainedTable() {
   }, [newTainedTableAddSelector.selectDatabase]);
 
   useEffect(() => {
-    if (getTableData) {
-      setData(getTableData.columns);
+    if (getTableData.data) {
+      setData(getTableData.data.columns);
     }
-  }, [getTableData]);
+  }, [getTableData.data]);
 
   const handleCreateDataset = () => {
     if (newTainedTableAddSelector.selectCategory.label === 'Segmentation') {

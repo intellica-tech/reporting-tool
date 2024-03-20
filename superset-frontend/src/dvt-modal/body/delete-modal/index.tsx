@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useDispatch } from 'react-redux';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
@@ -35,7 +35,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
     : `${types}/${item}`;
 
   useEffect(() => {
-    if (deleteApi?.message === itemMessage) {
+    if (deleteApi.data?.message === itemMessage) {
       dispatch(dvtHomeDeleteSuccessStatus(types));
       onClose();
     }

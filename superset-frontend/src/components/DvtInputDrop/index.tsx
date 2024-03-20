@@ -324,7 +324,7 @@ const DvtInputDrop = ({
     if (
       values.column.python_date_format &&
       type === 'filters' &&
-      addTimeRange.data?.label
+      addTimeRange?.label
     ) {
       setValues({
         ...values,
@@ -333,7 +333,7 @@ const DvtInputDrop = ({
         addTimeRange,
       });
     }
-  }, [addTimeRange.data]);
+  }, [addTimeRange]);
 
   const handleSaveClick = (args: any) => {
     const onlyCountDistinct = values.saved?.metric_name

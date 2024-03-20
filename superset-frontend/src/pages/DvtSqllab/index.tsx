@@ -13,7 +13,7 @@ import {
 } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { t } from '@superset-ui/core';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';
 import DvtButtonTabs, {
   ButtonTabsDataProps,
@@ -120,10 +120,10 @@ function DvtSqllab() {
   });
 
   useEffect(() => {
-    if (tabstateviewPromiseApi) {
-      setSqlEditorId(tabstateviewPromiseApi.id);
+    if (tabstateviewPromiseApi.data) {
+      setSqlEditorId(tabstateviewPromiseApi.data.id);
     }
-  }, [tabstateviewPromiseApi]);
+  }, [tabstateviewPromiseApi.data]);
 
   useEffect(() => {
     if (sqlhubSidebarSelector.database?.value) {
@@ -175,12 +175,12 @@ function DvtSqllab() {
   }, [sqlhubSidebarSelector]);
 
   useEffect(() => {
-    if (getSchemaApi) {
+    if (getSchemaApi.data) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'sqlhub',
           key: 'schema',
-          value: getSchemaApi.result.map((v: string) => ({
+          value: getSchemaApi.data.result.map((v: string) => ({
             label: v,
             value: v,
           })),
@@ -188,15 +188,15 @@ function DvtSqllab() {
       );
       setGetSchemaApiUrl('');
     }
-  }, [getSchemaApi]);
+  }, [getSchemaApi.data]);
 
   useEffect(() => {
-    if (getSeeTableSchemaApi) {
+    if (getSeeTableSchemaApi.data) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'sqlhub',
           key: 'see_table_schema',
-          value: getSeeTableSchemaApi.result.map((v: any) => ({
+          value: getSeeTableSchemaApi.data.result.map((v: any) => ({
             ...v,
             label: v.value,
           })),
@@ -204,23 +204,23 @@ function DvtSqllab() {
       );
       setGetSeeTableSchemaApiUrl('');
     }
-  }, [getSeeTableSchemaApi]);
+  }, [getSeeTableSchemaApi.data]);
 
   useEffect(() => {
-    if (selectedSeeTableSchemaApi) {
+    if (selectedSeeTableSchemaApi.data) {
       dispatch(
         dvtSqlhubSetSelectedTables({
-          title: selectedSeeTableSchemaApi.name,
-          data: selectedSeeTableSchemaApi.columns,
-          selectStar: selectedSeeTableSchemaApi.selectStar,
+          title: selectedSeeTableSchemaApi.data.name,
+          data: selectedSeeTableSchemaApi.data.columns,
+          selectStar: selectedSeeTableSchemaApi.data.selectStar,
         }),
       );
       setSelectedSeeTableSchemaApiUrl('');
     }
-  }, [selectedSeeTableSchemaApi]);
+  }, [selectedSeeTableSchemaApi.data]);
 
   useEffect(() => {
-    if (executePromiseApi?.status === 'success') {
+    if (executePromiseApi.data?.status === 'success') {
       if (executePromiseApi.data.length) {
         const firstObjectItem = Object.keys(executePromiseApi.data[0]);
         const headerFormation = firstObjectItem.map((v, i) => ({
@@ -234,7 +234,7 @@ function DvtSqllab() {
       }
       setLoading(false);
     }
-  }, [executePromiseApi]);
+  }, [executePromiseApi.data]);
 
   useEffect(() => {
     if (resultSort.column) {
@@ -333,7 +333,7 @@ function DvtSqllab() {
                     bold
                     onClick={() => {
                       window.location.href = getExportCsvUrl(
-                        executePromiseApi.query.id,
+                        executePromiseApi.data.query.id,
                       );
                     }}
                   />
@@ -346,7 +346,7 @@ function DvtSqllab() {
                       handleCopyToClick(
                         prepareCopyToClipboardTabularData(
                           executePromiseApi.data,
-                          executePromiseApi.columns,
+                          executePromiseApi.data.columns,
                         ),
                       )
                     }
