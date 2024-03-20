@@ -38,6 +38,7 @@ import NewColumn from 'src/dashboard/components/gridComponents/new/NewColumn';
 import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
 import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
 import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
+import DvtCheckbox from 'src/components/DvtCheckbox';
 import {
   StyledTab,
   StyledDashboard,
@@ -61,6 +62,7 @@ function DvtDashboardList() {
     value: 'slice_name',
   });
   const [searchInput, setSearchInput] = useState<string>('');
+  const [showMyOnlyChart, setShowMyOnlyChart] = useState<boolean>(false);
 
   const getApiData = useFetch({
     url: chartsApiUrl,
@@ -68,21 +70,50 @@ function DvtDashboardList() {
 
   const searchApiUrls = () =>
     `chart/${fetchQueryParamsSearch({
+      columns: [
+        'changed_on_delta_humanized',
+        'changed_on_utc',
+        'datasource_id',
+        'datasource_type',
+        'datasource_url',
+        'datasource_name_text',
+        'description_markeddown',
+        'description',
+        'id',
+        'params',
+        'slice_name',
+        'thumbnail_url',
+        'url',
+        'viz_type',
+        'owners.id',
+        'created_by.id',
+      ],
       filters: [
         {
           col: 'slice_name',
           opr: 'chart_all_text',
           value: rison.encode(searchInput),
         },
+        {
+          col: 'viz_type',
+          opr: 'neq',
+          value: 'filter_box',
+        },
+        {
+          col: 'owners',
+          opr: 'rel_m_m',
+          value: showMyOnlyChart ? '1' : '0',
+        },
       ],
-      pageSize: 250,
+      pageSize: 200,
       orderColumn: sortType.value,
-      orderDirection: 'asc',
+      orderDirection:
+        sortType.value === 'changed_on_delta_humanized' ? 'desc' : 'asc',
     })}`;
 
   useEffect(() => {
     setChartsApiUrl(searchApiUrls);
-  }, [searchInput, sortType]);
+  }, [searchInput, sortType, showMyOnlyChart]);
 
   useEffect(() => {
     if (getApiData) {
@@ -172,7 +203,6 @@ function DvtDashboardList() {
                 typeDesign="chartsForm"
                 value={searchInput}
               />
-
               <DvtSelect
                 data={Object.entries(KEYS_TO_SORT).map(([key, label]) => ({
                   label: t('Sort by %s', label),
@@ -183,6 +213,11 @@ function DvtDashboardList() {
                 setSelectedValue={setsortType}
               />
             </StyledChartFilter>
+            <DvtCheckbox
+              label={t('Show only my charts')}
+              checked={showMyOnlyChart}
+              onChange={setShowMyOnlyChart}
+            />
             <DvtCardDetailChartList data={chartData.data} />
           </StyledChartList>
         )}

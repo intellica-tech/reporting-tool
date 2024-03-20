@@ -68,7 +68,7 @@ const StyledChartList = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 16px;
-  gap: 26px;
+  gap: 20px;
 `;
 
 const StyledChartFilter = styled.div`
