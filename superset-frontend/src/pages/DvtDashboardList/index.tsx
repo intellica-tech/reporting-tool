@@ -28,7 +28,7 @@ import { useHistory } from 'react-router-dom';
 import handleResourceExport from 'src/utils/export';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
@@ -119,19 +119,19 @@ function DvtDashboardList() {
   });
 
   useEffect(() => {
-    if (dashboardAdd?.id) {
-      history.push(`/dashboard/${dashboardAdd.id}/?edit=true`);
+    if (dashboardAdd.data?.id) {
+      history.push(`/dashboard/${dashboardAdd.data.id}/?edit=true`);
     }
-  }, [dashboardAdd]);
+  }, [dashboardAdd.data]);
 
   const dashboardApi = useFetch({
     url: dashboardApiUrl,
   });
 
   useEffect(() => {
-    if (dashboardApi) {
+    if (dashboardApi.data) {
       setData(
-        dashboardApi.result.map((item: any) => ({
+        dashboardApi.data.result.map((item: any) => ({
           ...item,
           published: item.status,
           owners: item.owners.length
@@ -147,10 +147,16 @@ function DvtDashboardList() {
             : '',
         })),
       );
-      setCount(dashboardApi.count);
+      setCount(dashboardApi.data.count);
       setSelectedRows([]);
     }
-  }, [dashboardApi]);
+  }, [dashboardApi.data]);
+
+  useEffect(() => {
+    if (!dashboardApi.loading) {
+      setDashboardApiUrl('');
+    }
+  }, [dashboardApi.loading]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
@@ -186,7 +192,7 @@ function DvtDashboardList() {
         meta: { item, type: 'dashboard', title: 'dashboard' },
       }),
     );
-    setDashboardApiUrl('');
+    setDashboardApiUrl(''); // sen bu yapmıştın delete sonra otomatik api gelsin bi tane bu ama
   };
 
   const handleSingleExport = (id: number) => {
@@ -211,7 +217,7 @@ function DvtDashboardList() {
   });
 
   useEffect(() => {
-    if (favoritePromise?.result === 'OK') {
+    if (favoritePromise.data?.result === 'OK') {
       setData(state => {
         const itemRemovedData = state.filter(
           item => item.id !== favoriteUrl.id,
@@ -224,7 +230,7 @@ function DvtDashboardList() {
         ].sort((a, b) => a.id - b.id);
       });
     }
-  }, [favoritePromise]);
+  }, [favoritePromise.data]);
 
   const handleSetFavorites = (
     id: number,
