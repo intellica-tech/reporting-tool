@@ -29,7 +29,7 @@ const StyledDvtListScroll = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 520px;
+  height: calc(100vh - 422px);
   overflow-y: auto;
   padding-right: 8px;
 

@@ -12,9 +12,10 @@ import { dvtSqlhubSetSelectedTableRemove } from 'src/dvt-redux/dvt-sqlhubReducer
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { nativeFilterGate } from 'src/dashboard/components/nativeFilters/utils';
 import { ChartMetadata, t } from '@superset-ui/core';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import useOnClickOutside from 'src/hooks/useOnClickOutsite';
 import { DoubleRightOutlined } from '@ant-design/icons';
+import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
 import DvtLogo from '../DvtLogo';
 // import DvtDarkMode from '../DvtDarkMode';
 import DvtTitlePlus from '../DvtTitlePlus';
@@ -262,8 +263,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   }, [pathName, dataSelector.sqlhub.database.length]);
 
   useEffect(() => {
-    if (getApiData) {
-      const data = getApiData?.result;
+    if (getApiData.data) {
+      const data = getApiData.data?.result;
       const dataObjectKeys: any[] = [
         {
           key: 'dashboard',
@@ -377,7 +378,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         }
       });
     }
-  }, [getApiData]);
+  }, [getApiData.data]);
 
   const { mountedPluginMetadata } = usePluginContext();
   const typesWithDefaultOrder = new Set(DefaultOrder);
@@ -658,7 +659,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
 
   return (
-    <StyledDvtSidebar minWidth={minWidth}>
+    <StyledDvtSidebar
+      minWidth={minWidth}
+      withoutSidebar={pathName === extractIdPathname(pathName, 'dashboard')}
+    >
       <StyledDvtSidebarHeader>
         <DvtLogo title="DVT" />
       </StyledDvtSidebarHeader>

@@ -27,7 +27,7 @@ const StyledDvtCardCard = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 202px;
+  width: 100%;
   height: 48px;
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.dvt.grayscale.light2};

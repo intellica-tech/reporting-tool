@@ -126,3 +126,5 @@ export const WithNavbarBottom: string[] = [
   '/explore/',
   '/rowlevelsecurity/list/',
 ];
+
+export const WithNavbarBottomOnlyPage: string[] = ['dashboard'];
