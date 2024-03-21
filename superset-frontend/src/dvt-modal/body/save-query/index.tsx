@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
@@ -36,7 +37,7 @@ const DvtSaveQuery = ({ meta, onClose }: ModalProps) => {
       onClose();
       addDangerToast(t('Saved Success'));
     }
-  }, [saveQuery]);
+  }, [saveQuery.data]);
 
   return (
     <StyledSaveQuery>

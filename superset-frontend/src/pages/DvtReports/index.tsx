@@ -293,15 +293,15 @@ function ReportList() {
   };
 
   useEffect(() => {
-    if (reportEditPromise) {
+    if (reportEditPromise.data) {
       dispatch(
         openModal({
           component: 'edit-chart',
-          meta: reportEditPromise,
+          meta: reportEditPromise.data,
         }),
       );
     }
-  }, [reportEditPromise]);
+  }, [reportEditPromise.data]);
 
   useEffect(
     () => () => {

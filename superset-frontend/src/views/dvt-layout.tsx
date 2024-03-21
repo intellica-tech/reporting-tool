@@ -29,7 +29,7 @@ import ToastContainer from 'src/components/MessageToasts/ToastContainer';
 import { routes } from 'src/views/dvt-routes';
 import { styled } from '@superset-ui/core';
 import { WithNavbarBottom } from 'src/components/DvtNavbar/dvt-navbar-tabs-data';
-import useFetch from 'src/dvt-hooks/useFetch';
+import useFetch from 'src/hooks/useFetch';
 import { dvtAppSetUser } from 'src/dvt-redux/dvt-appReducer';
 import { useDispatch } from 'react-redux';
 
@@ -89,10 +89,10 @@ const DvtLayout = () => {
   const userPromise = useFetch({ url: 'me/' });
 
   useEffect(() => {
-    if (userPromise.data) {
-      dispatch(dvtAppSetUser(userPromise.data.result));
+    if (userPromise) {
+      dispatch(dvtAppSetUser(userPromise.result));
     }
-  }, [userPromise.data]);
+  }, [userPromise]);
 
   const extractDashboardId = (pathName: string) => {
     const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;

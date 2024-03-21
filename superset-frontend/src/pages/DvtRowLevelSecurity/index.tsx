@@ -184,7 +184,8 @@ function DvtRowLevelSecurity() {
         />
       </StyledRowLevelSecurityButton>
       <div>
-        {!rowLevelSecurityData || rowLevelSecurityData.data.length === 0 ? (
+        {!rowLevelSecurityData.data ||
+        rowLevelSecurityData.data.length === 0 ? (
           <DvtIconDataLabel
             label="No Records Found"
             buttonLabel="Add New Record"

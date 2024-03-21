@@ -221,8 +221,8 @@ function DvtSqllab() {
 
   useEffect(() => {
     if (executePromiseApi.data?.status === 'success') {
-      if (executePromiseApi.data.length) {
-        const firstObjectItem = Object.keys(executePromiseApi.data[0]);
+      if (executePromiseApi.data.data.length) {
+        const firstObjectItem = Object.keys(executePromiseApi.data.data[0]);
         const headerFormation = firstObjectItem.map((v, i) => ({
           id: i,
           title: v,
@@ -230,7 +230,7 @@ function DvtSqllab() {
           sort: true,
         }));
         setResultHeader(headerFormation);
-        setResultData(executePromiseApi.data);
+        setResultData(executePromiseApi.data.data);
       }
       setLoading(false);
     }
@@ -345,7 +345,7 @@ function DvtSqllab() {
                     onClick={() =>
                       handleCopyToClick(
                         prepareCopyToClipboardTabularData(
-                          executePromiseApi.data,
+                          executePromiseApi.data.data,
                           executePromiseApi.data.columns,
                         ),
                       )

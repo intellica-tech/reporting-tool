@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFetch from 'src/dvt-hooks/useFetch';
@@ -36,14 +37,14 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
     method: 'POST',
     body: {
       datasource_id: saveDataset.data?.id,
-      datasource_type: saveDataset?.data.type,
+      datasource_type: saveDataset.data?.data.type,
       form_data: JSON.stringify({
         metrics: [],
         groupby: [],
         time_range: 'No filter',
         row_limit: 1000,
-        datasource: saveDataset?.data.uid,
-        all_columns: saveDataset?.data.columns.map(
+        datasource: saveDataset.data?.data.uid,
+        all_columns: saveDataset.data?.data.columns.map(
           (item: { column_name: string }) => item.column_name,
         ),
       }),
@@ -54,13 +55,13 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
     if (saveDataset.data?.id) {
       setFormUrl('explore/form_data');
     }
-  }, [saveDataset]);
+  }, [saveDataset.data]);
 
   useEffect(() => {
     if (formData.data?.key) {
       history.push(`explore/?form_data_key=${formData.data.key}`);
     }
-  }, [formData]);
+  }, [formData.data]);
 
   return (
     <StyledSaveDataset>

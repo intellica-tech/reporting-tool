@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
@@ -284,7 +285,7 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
         owners: ownersValues,
       }));
     }
-  }, [ownersData]);
+  }, [ownersData.data]);
 
   return (
     <StyledAlertAdd>

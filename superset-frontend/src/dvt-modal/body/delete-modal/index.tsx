@@ -17,6 +17,7 @@ import {
 const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [deleteUrlApi, setDeleteUrlApi] = useState('');
+
   const deleteApi = useFetch({ url: deleteUrlApi, method: 'DELETE' });
   const item = meta.item.length
     ? meta.item.map(({ id }: { id: number }) => id).join(',')
@@ -39,7 +40,7 @@ const DvtDeleteModal = ({ meta, onClose }: ModalProps) => {
       dispatch(dvtHomeDeleteSuccessStatus(types));
       onClose();
     }
-  }, [deleteApi]);
+  }, [deleteApi.data]);
 
   return (
     <StyledDeleteModal>

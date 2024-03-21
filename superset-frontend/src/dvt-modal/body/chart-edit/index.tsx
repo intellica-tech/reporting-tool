@@ -27,7 +27,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   const chartItemApi = useFetch({ url: `chart/${meta.id}` });
 
   useEffect(() => {
-    if (chartItemApi) {
+    if (chartItemApi.data) {
       const { result } = chartItemApi.data;
       const ownersFixed = result.owners.map((item: any) => item.id);
 
@@ -41,7 +41,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [chartItemApi]);
+  }, [chartItemApi.data]);
 
   const updateChartData = useFetch({
     url: chartApi,
@@ -60,7 +60,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
     url: 'dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  const ownersOptions = updateChartDataFetchResult
+  const ownersOptions = updateChartDataFetchResult.data
     ? updateChartDataFetchResult.data.result.map((item: any) => ({
         label: item.text,
         value: item.value,
@@ -71,7 +71,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
     if (updateChartData.data?.id) {
       onClose();
     }
-  }, [onClose, updateChartData]);
+  }, [onClose, updateChartData.data]);
 
   const handleOnChange = (key: string, value: any) => {
     setValues((state: any) => ({ ...state, [key]: value }));

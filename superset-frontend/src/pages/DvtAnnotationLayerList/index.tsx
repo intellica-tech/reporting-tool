@@ -106,7 +106,7 @@ function DvtAnnotationLayerList() {
   });
 
   useEffect(() => {
-    if (annotationLayerApi) {
+    if (annotationLayerApi.data) {
       setData(
         annotationLayerApi.data.result.map((item: any) => ({
           ...item,

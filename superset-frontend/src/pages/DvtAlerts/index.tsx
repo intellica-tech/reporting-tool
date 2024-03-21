@@ -89,7 +89,7 @@ function AlertList() {
   });
 
   useEffect(() => {
-    if (alertApi) {
+    if (alertApi.data) {
       const getData = alertApi.data.result.map((item: any) => ({
         ...item,
         lastRun: new Date(item.last_eval_dttm).toLocaleString('tr-TR'),
@@ -107,7 +107,7 @@ function AlertList() {
       setSelectedRows([]);
       setAlertApiUrl('');
     }
-  }, [alertApi]);
+  }, [alertApi.data]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

@@ -165,10 +165,10 @@ function DvtNewTainedTable() {
   };
 
   useEffect(() => {
-    if (postDataset || postSegmentationDataset) {
+    if (postDataset.data || postSegmentationDataset.data) {
       history.push('/traindata');
     }
-  }, [postDataset, postSegmentationDataset]);
+  }, [postDataset.data, postSegmentationDataset.data]);
 
   useEffect(
     () => () => {
