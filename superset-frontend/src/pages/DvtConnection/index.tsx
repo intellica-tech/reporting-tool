@@ -276,11 +276,7 @@ function DvtConnection() {
         buttonLabel={
           data.length === 0 ? t('Connection') : t('Clear All Filter')
         }
-        buttonClick={() => {
-          if (data.length > 0) {
-            clearConnection();
-          }
-        }}
+        buttonClick={handleConnectionAdd}
       />
     </StyledConnection>
   );

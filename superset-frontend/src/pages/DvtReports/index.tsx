@@ -383,10 +383,10 @@ function ReportList() {
       <DvtIconDataLabel
         label={
           data.length === 0
-            ? t('No Alerts Yet')
+            ? t('No Reports Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={data.length === 0 ? t('Alert') : t('Clear All Filter')}
+        buttonLabel={data.length === 0 ? t('Reports') : t('Clear All Filter')}
         buttonClick={() => {
           if (data.length > 0) {
             clearReports();

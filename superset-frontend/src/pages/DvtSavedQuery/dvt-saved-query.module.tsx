@@ -7,4 +7,11 @@ const SavedQueryPagination = styled.div`
   margin-top: 20px;
 `;
 
-export { SavedQueryPagination };
+const StyledEmptyAlerts = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
+
+export { SavedQueryPagination, StyledEmptyAlerts };

@@ -5,4 +5,10 @@ const StyledSqlPagination = styled.div`
   justify-content: flex-end;
 `;
 
-export { StyledSqlPagination };
+const StyledEmptyQueryHistory = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
+export { StyledSqlPagination,StyledEmptyQueryHistory };
