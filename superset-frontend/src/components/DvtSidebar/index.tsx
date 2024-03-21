@@ -112,13 +112,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
   const [chartCollapses, setChartCollapses] = useState<any[]>([]);
-  const [percentileInput, setPercentileInput] = useState<number>(0);
-  const [featureColumn, setFeatureColumn] = useState<any>(0);
-  const [groupColumn, setGroupColumn] = useState<any>(0);
-  const [labelColumn, setLabelColumn] = useState<any>(0);
-  const [epsilon, setEpsilon] = useState<number>(0);
-  const [minPoints, setMinPoints] = useState<number>(0);
-  const [clusterSize, setClusterSize] = useState<number>(0);
+  const [percentileInput, setPercentileInput] = useState<number | null>(null);
+  const [featureColumn, setFeatureColumn] = useState<any>('');
+  const [groupColumn, setGroupColumn] = useState<any>('');
+  const [labelColumn, setLabelColumn] = useState<any>('');
+  const [epsilon, setEpsilon] = useState<number | null>(null);
+  const [minPoints, setMinPoints] = useState<number | null>(0);
+  const [clusterSize, setClusterSize] = useState<number | null>(0);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -374,13 +374,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   useEffect(() => {
     setTargetColumnName([]);
     setTimeColumnName([]);
-    setPercentileInput(0);
+    setPercentileInput(null);
     setFeatureColumn([]);
     setGroupColumn([]);
     setLabelColumn([]);
-    setEpsilon(0);
-    setMinPoints(0);
-    setClusterSize(0);
+    setEpsilon(null);
+    setMinPoints(null);
+    setClusterSize(null);
   }, [newTrainedTableSelector.selectDatabase]);
 
   useEffect(() => {
@@ -973,7 +973,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       typeDesign="chartsForm"
                       label={t('Percentile')}
                       placeholder={t('Percentile')}
-                      value={percentileInput.toString()}
+                      value={percentileInput?.toString() || ''}
                       onChange={(value: string) => {
                         setPercentileInput(Number(value));
                       }}
@@ -1029,7 +1029,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       typeDesign="chartsForm"
                       label={t('EPSİLON')}
                       placeholder={t('Epsilon')}
-                      value={epsilon.toString()}
+                      value={epsilon?.toString() || ''}
                       onChange={(value: string) => {
                         setEpsilon(Number(value));
                       }}
@@ -1040,7 +1040,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       typeDesign="chartsForm"
                       label={t('MIN POINTS')}
                       placeholder={t('Min Points')}
-                      value={minPoints.toString()}
+                      value={minPoints?.toString() || ''}
                       onChange={(value: string) => {
                         setMinPoints(Number(value));
                       }}
@@ -1058,7 +1058,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         typeDesign="chartsForm"
                         label={t('CLUSTER SIZE')}
                         placeholder={t('Cluster Size')}
-                        value={clusterSize.toString()}
+                        value={clusterSize?.toString() || ''}
                         onChange={(value: string) => {
                           setClusterSize(Number(value));
                         }}
