@@ -21,7 +21,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import rison from 'rison';
 import { useHistory } from 'react-router-dom';
 import withToasts from 'src/components/MessageToasts/withToasts';
@@ -116,9 +116,9 @@ function DvtDashboardList() {
   }, [searchInput, sortType, showMyOnlyChart]);
 
   useEffect(() => {
-    if (getApiData) {
+    if (getApiData.data) {
       const mappedData: DvtCardDetailChartListProps = {
-        data: getApiData.result.map((item: any) => ({
+        data: getApiData.data.result.map((item: any) => ({
           labelTitle: item.slice_name,
           vizTypeLabel: item.viz_type,
           datasetLabel: item.datasource_name_text,
@@ -128,7 +128,7 @@ function DvtDashboardList() {
       };
       setChartData(mappedData);
     }
-  }, [getApiData]);
+  }, [getApiData.data]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
@@ -50,8 +50,8 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
   const dashboardItemApi = useFetch({ url: `dashboard/${meta.id}` });
 
   useEffect(() => {
-    if (dashboardItemApi) {
-      const { result } = dashboardItemApi;
+    if (dashboardItemApi.data) {
+      const { result } = dashboardItemApi.data;
       const jsonData = JSON.parse(result.json_metadata || '{}');
       const colorScheme = (jsonData !== '{}' && jsonData?.color_scheme) || null;
       const findedColorSchema = colorScheme
@@ -69,7 +69,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [dashboardItemApi]);
+  }, [dashboardItemApi.data]);
 
   const updateDashboardData = useFetch({
     url: dashboardApi,
@@ -88,18 +88,18 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
     url: 'dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  const ownersOptions = updateDashboardDataFetchResult
-    ? updateDashboardDataFetchResult.result.map((item: any) => ({
+  const ownersOptions = updateDashboardDataFetchResult.data
+    ? updateDashboardDataFetchResult.data.result.map((item: any) => ({
         label: item.text,
         value: item.value,
       }))
     : [];
 
   useEffect(() => {
-    if (updateDashboardData?.id) {
+    if (updateDashboardData.data?.id) {
       onClose();
     }
-  }, [onClose, updateDashboardData]);
+  }, [onClose, updateDashboardData.data]);
 
   useEffect(() => {
     const formattedJson = `{
