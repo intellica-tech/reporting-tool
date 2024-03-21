@@ -25,9 +25,7 @@ import useFetch from 'src/dvt-hooks/useFetch';
 import rison from 'rison';
 import { useHistory } from 'react-router-dom';
 import withToasts from 'src/components/MessageToasts/withToasts';
-import DvtCardDetailChartList, {
-  DvtCardDetailChartListProps,
-} from 'src/components/DvtCardDetailChartList';
+import DvtCardDetailChartList from 'src/components/DvtCardDetailChartList';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
@@ -39,6 +37,7 @@ import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
 import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
 import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
 import DvtCheckbox from 'src/components/DvtCheckbox';
+import DvtSpinner from 'src/components/DvtSpinner';
 import {
   StyledTab,
   StyledDashboard,
@@ -47,6 +46,10 @@ import {
   StyledTabsGroup,
   StyledChartList,
   StyledChartFilter,
+  StyledDashboardDroppedList,
+  StyledDashboardDroppedListItem,
+  StyledDashboardDroppedListItemTitle,
+  StyledDashboardDroppedListItemChart,
 } from './dvtDashboardEdit.module';
 
 function DvtDashboardList() {
@@ -54,9 +57,7 @@ function DvtDashboardList() {
   const [activeTab, setActiveTab] = useState<string>('charts');
   const [chartsApiUrl, setChartsApiUrl] = useState<string>('');
   const [droppedData, setDroppedData] = useState<any[]>([]);
-  const [chartData, setChartData] = useState<DvtCardDetailChartListProps>({
-    data: [],
-  });
+  const [chartData, setChartData] = useState<any[]>([]);
   const [sortType, setsortType] = useState<{ value: string; label: string }>({
     label: t('Sort by name'),
     value: 'slice_name',
@@ -117,16 +118,16 @@ function DvtDashboardList() {
 
   useEffect(() => {
     if (getApiData.data) {
-      const mappedData: DvtCardDetailChartListProps = {
-        data: getApiData.data.result.map((item: any) => ({
-          labelTitle: item.slice_name,
-          vizTypeLabel: item.viz_type,
-          datasetLabel: item.datasource_name_text,
-          modified: new Date(item.changed_on_delta_humanized),
-          datasetLink: `/explore/?datasource_type=${item.datasource_type}&datasource_id=${item.datasource_id}`,
-        })),
-      };
-      setChartData(mappedData);
+      const sliceData = getApiData.data.result.map((item: any) => ({
+        ...item,
+        form_data: {
+          ...JSON.parse(item.params),
+          datasource: item.datasource_id
+            ? `${item.datasource_id}__${item.datasource_type}`
+            : JSON.parse(item.params).datasource,
+        },
+      }));
+      setChartData(sliceData);
     }
   }, [getApiData.data]);
 
@@ -138,13 +139,13 @@ function DvtDashboardList() {
     e.preventDefault();
 
     const droppedDataString = e.dataTransfer.getData('drag-drop');
-    const droppedData = JSON.parse(droppedDataString);
+    const jsonDropItem = JSON.parse(droppedDataString);
 
-    if (droppedData) {
+    if (jsonDropItem && droppedData.length < 3) {
       setDroppedData((prevData: any | any[]) => {
         const newData = Array.isArray(prevData)
-          ? [...prevData, droppedData]
-          : [droppedData];
+          ? [...prevData, jsonDropItem]
+          : [jsonDropItem];
         return newData;
       });
     }
@@ -160,7 +161,7 @@ function DvtDashboardList() {
   return (
     <StyledDashboardEdit>
       <StyledDashboard onDragOver={handleDragOver} onDrop={handleDrop}>
-        {droppedData.length === 0 && (
+        {droppedData.length === 0 ? (
           <DvtIconDataLabel
             description="You can create a new chart or use existinh ones from the panel on the right"
             icon="square"
@@ -168,6 +169,19 @@ function DvtDashboardList() {
             buttonLabel="+ Create a New Chart"
             buttonClick={() => history.push('/chart/add')}
           />
+        ) : (
+          <StyledDashboardDroppedList>
+            {droppedData.map(item => (
+              <StyledDashboardDroppedListItem key={item.id}>
+                <StyledDashboardDroppedListItemTitle>
+                  {item.slice_name}
+                </StyledDashboardDroppedListItemTitle>
+                <StyledDashboardDroppedListItemChart>
+                  <DvtSpinner type="grow" size="xlarge" />
+                </StyledDashboardDroppedListItemChart>
+              </StyledDashboardDroppedListItem>
+            ))}
+          </StyledDashboardDroppedList>
         )}
       </StyledDashboard>
       <StyledTab>
@@ -185,7 +199,6 @@ function DvtDashboardList() {
             Layout Elements
           </StyledTabs>
         </StyledTabsGroup>
-
         {activeTab === 'charts' && (
           <StyledChartList>
             <DvtButton
@@ -218,7 +231,10 @@ function DvtDashboardList() {
               checked={showMyOnlyChart}
               onChange={setShowMyOnlyChart}
             />
-            <DvtCardDetailChartList data={chartData.data} />
+            <DvtCardDetailChartList
+              data={chartData}
+              added={droppedData.map((v: { id: number }) => v.id)}
+            />
           </StyledChartList>
         )}
         {activeTab === 'layoutElements' && (

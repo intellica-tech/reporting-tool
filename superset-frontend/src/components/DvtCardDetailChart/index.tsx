@@ -1,74 +1,53 @@
 import React from 'react';
-import moment from 'moment';
+import { t } from '@superset-ui/core';
 import {
   StyledDvtCardDetailChart,
   StyledDvtCardDetailChartTitle,
   StyledDvtCardDetails,
   StyledDvtCardLink,
   StyledDvtCardP,
+  StyledDvtCardDetailAdded,
 } from './dvt-card-detail-chart.module';
 
 export interface DvtCardDetailChartProps {
-  labelTitle: string;
-  vizTypeLabel: string;
-  datasetLabel: string;
-  datasetLink?: string;
-  modified: Date;
+  slice_name: string;
+  viz_type: string;
+  datasource_name_text: string;
+  datasource_url: string;
+  changed_on_delta_humanized: string;
+  added: boolean;
 }
 
 const DvtCardDetailChart: React.FC<DvtCardDetailChartProps> = ({
-  labelTitle,
-  vizTypeLabel,
-  datasetLabel,
-  datasetLink = '',
-  modified,
-}) => {
-  const getFormattedDifference = (modified: Date) => {
-    const now = moment();
-    const diff = now.diff(modified);
-    const duration = moment.duration(diff);
-
-    const years = duration.years();
-    const months = duration.months();
-    const days = duration.days();
-    const hours = duration.hours();
-    const minutes = duration.minutes();
-
-    let dateMessage = 'Just Now';
-
-    if (years > 0) {
-      dateMessage = `${years} Years Ago`;
-    } else if (months > 0) {
-      dateMessage = `${months} Months Ago`;
-    } else if (days > 0) {
-      dateMessage = `${days} Days Ago`;
-    } else if (hours > 0) {
-      dateMessage = `${hours} Hours Ago`;
-    } else if (minutes > 0) {
-      dateMessage = `${minutes} Minutes Ago`;
-    }
-    return dateMessage;
-  };
-
-  return (
-    <StyledDvtCardDetailChart>
-      <StyledDvtCardDetailChartTitle>
-        {labelTitle}
-      </StyledDvtCardDetailChartTitle>
-      <StyledDvtCardDetails>
-        <StyledDvtCardP>Viz type</StyledDvtCardP>
-        <StyledDvtCardP>{vizTypeLabel}</StyledDvtCardP>
-      </StyledDvtCardDetails>
-      <StyledDvtCardDetails>
-        <StyledDvtCardP>Dataset</StyledDvtCardP>
-        <StyledDvtCardLink to={datasetLink}>{datasetLabel}</StyledDvtCardLink>
-      </StyledDvtCardDetails>
-      <StyledDvtCardDetails>
-        <StyledDvtCardP>Modified</StyledDvtCardP>
-        <StyledDvtCardP>{getFormattedDifference(modified)}</StyledDvtCardP>
-      </StyledDvtCardDetails>
-    </StyledDvtCardDetailChart>
-  );
-};
+  slice_name,
+  viz_type,
+  datasource_name_text,
+  datasource_url = '',
+  changed_on_delta_humanized,
+  added = false,
+}) => (
+  <StyledDvtCardDetailChart added={added}>
+    <StyledDvtCardDetailChartTitle>
+      {slice_name}
+      {added && (
+        <StyledDvtCardDetailAdded>{t('ADDED')}</StyledDvtCardDetailAdded>
+      )}
+    </StyledDvtCardDetailChartTitle>
+    <StyledDvtCardDetails>
+      <StyledDvtCardP>{t('Viz type')}</StyledDvtCardP>
+      <StyledDvtCardP>{viz_type}</StyledDvtCardP>
+    </StyledDvtCardDetails>
+    <StyledDvtCardDetails>
+      <StyledDvtCardP>{t('Dataset')}</StyledDvtCardP>
+      <StyledDvtCardLink to={datasource_url}>
+        {datasource_name_text}
+      </StyledDvtCardLink>
+    </StyledDvtCardDetails>
+    <StyledDvtCardDetails>
+      <StyledDvtCardP>{t('Modified')}</StyledDvtCardP>
+      <StyledDvtCardP>{changed_on_delta_humanized}</StyledDvtCardP>
+    </StyledDvtCardDetails>
+  </StyledDvtCardDetailChart>
+);
 
 export default DvtCardDetailChart;

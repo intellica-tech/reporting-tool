@@ -6,25 +6,25 @@ export default {
   title: 'Dvt-Components/DvtCardDetailChart',
   component: DvtCardDetailChart,
   argTypes: {
-    labelTitle: {
+    slice_name: {
       control: { type: 'text' },
       defaultValue: 'Country of Citizenship',
     },
-    vizTypeLabel: {
+    viz_type: {
       control: { type: 'text' },
       defaultValue: 'World Map',
     },
-    datasetLabel: {
+    datasource_name_text: {
       control: { type: 'text' },
       defaultValue: 'public_FCC 2018 Survey',
     },
-    datasetLink: {
+    datasource_url: {
       control: { type: 'text' },
       defaultValue: '/',
     },
-    modified: {
-      control: { type: 'date' },
-      defaultValue: new Date(),
+    changed_on_delta_humanized: {
+      control: { type: 'string' },
+      defaultValue: '2 days ago',
     },
   },
   decorators: [
