@@ -65,6 +65,33 @@ function DvtNewTainedTable() {
               newTainedTableAddSelector.targetColumnName?.value,
             time_column_name: newTainedTableAddSelector.timeColumnName?.value,
           }
+        : newTainedTableAddSelector.algorithm_name?.value === 'percentile'
+        ? {
+            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              percentile: newTainedTableAddSelector.percentileInput,
+            },
+          }
+        : newTainedTableAddSelector.algorithm_name?.value === 't_test' ||
+          newTainedTableAddSelector.algorithm_name?.value === 'z_test'
+        ? {
+            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              feature_column: newTainedTableAddSelector.featureColumn?.value,
+              group_column: newTainedTableAddSelector.groupColumn?.value,
+            },
+          }
+        : newTainedTableAddSelector.algorithm_name?.value ===
+          'linear_regression'
+        ? {
+            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              label_column: newTainedTableAddSelector.labelColumn?.value,
+            },
+          }
         : {
             algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,

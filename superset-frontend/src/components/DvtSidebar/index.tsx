@@ -112,6 +112,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
   const [chartCollapses, setChartCollapses] = useState<any[]>([]);
+  const [percentileInput, setPercentileInput] = useState<number>(0);
+  const [featureColumn, setFeatureColumn] = useState<any>(0);
+  const [groupColumn, setGroupColumn] = useState<any>(0);
+  const [labelColumn, setLabelColumn] = useState<any>(0);
+  const [epsilon, setEpsilon] = useState<number>(0);
+  const [minPoints, setMinPoints] = useState<number>(0);
+  const [clusterSize, setClusterSize] = useState<number>(0);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -272,6 +279,113 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     };
     changeTargetColumnName();
   }, [targetColumnName]);
+
+  useEffect(() => {
+    const changePercentileInput = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'percentileInput',
+          value: percentileInput,
+        }),
+      );
+    };
+    changePercentileInput();
+  }, [percentileInput]);
+
+  useEffect(() => {
+    const changeFeatureColumn = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'featureColumn',
+          value: featureColumn,
+        }),
+      );
+    };
+    changeFeatureColumn();
+  }, [featureColumn]);
+
+  useEffect(() => {
+    const changeGroupColumn = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'groupColumn',
+          value: groupColumn,
+        }),
+      );
+    };
+    changeGroupColumn();
+  }, [groupColumn]);
+
+  useEffect(() => {
+    const changeLabelColumn = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'labelColumn',
+          value: labelColumn,
+        }),
+      );
+    };
+    changeLabelColumn();
+  }, [labelColumn]);
+
+  useEffect(() => {
+    const changeEpsilon = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'epsilon',
+          value: epsilon,
+        }),
+      );
+    };
+    changeEpsilon();
+  }, [epsilon]);
+
+  useEffect(() => {
+    const changeMinPoints = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'minPoints',
+          value: minPoints,
+        }),
+      );
+    };
+    changeMinPoints();
+  }, [minPoints]);
+
+  useEffect(() => {
+    const changeClusterSize = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'clusterSize',
+          value: clusterSize,
+        }),
+      );
+    };
+    changeClusterSize();
+  }, [clusterSize]);
+
+  useEffect(() => {
+    setTargetColumnName([]);
+    setTimeColumnName([]);
+    setPercentileInput(0);
+    setFeatureColumn([]);
+    setGroupColumn([]);
+    setLabelColumn([]);
+    setEpsilon(0);
+    setMinPoints(0);
+    setClusterSize(0);
+  }, [newTrainedTableSelector.selectDatabase]);
+
+  useEffect(() => {
+    setSelectAlgorithm([]);
+  }, [newTrainedTableSelector.selectCategory]);
 
   useEffect(() => {
     if (newTrainedTableSelector.selectDatabase?.value) {
@@ -633,7 +747,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         ];
       case '3':
         return [
-          { value: '13', label: 'kMeans' },
+          { value: '13', label: 'KMeans' },
           { value: '14', label: 'GMM' },
           { value: '15', label: 'DBSCAN' },
         ];
@@ -852,6 +966,107 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     />
                   </>
                 )}
+                {newTrainedTableSelector.algorithm_name?.value ===
+                  'percentile' && (
+                  <>
+                    <DvtInput
+                      typeDesign="chartsForm"
+                      label={t('Percentile')}
+                      placeholder={t('Percentile')}
+                      value={percentileInput.toString()}
+                      onChange={(value: string) => {
+                        setPercentileInput(Number(value));
+                      }}
+                      onShowClear
+                      number
+                    />
+                  </>
+                )}
+                {(newTrainedTableSelector.algorithm_name?.value === 'z_test' ||
+                  newTrainedTableSelector.algorithm_name?.value ===
+                    't_test') && (
+                  <>
+                    <DvtSelect
+                      data={columnOptions}
+                      label={t('FEATURE COLUMN')}
+                      placeholder={t('FEATURE ')}
+                      selectedValue={featureColumn}
+                      setSelectedValue={setFeatureColumn}
+                      maxWidth
+                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                      popoverLabel={t('Please select a table first.')}
+                    />
+                    <DvtSelect
+                      data={columnOptions}
+                      label={t('GROUP COLUMN')}
+                      placeholder={t('GROUP COLUMN')}
+                      selectedValue={groupColumn}
+                      setSelectedValue={setGroupColumn}
+                      maxWidth
+                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                      popoverLabel="Please select a table first."
+                    />
+                  </>
+                )}
+                {newTrainedTableSelector.algorithm_name?.value ===
+                  'linear_regression' && (
+                  <>
+                    <DvtSelect
+                      data={columnOptions}
+                      label={t('lABEL COLUMN')}
+                      placeholder={t('lABEL COLUMN')}
+                      selectedValue={labelColumn}
+                      setSelectedValue={setLabelColumn}
+                      maxWidth
+                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                      popoverLabel={t('Please select a table first.')}
+                    />
+                  </>
+                )}
+                {newTrainedTableSelector.algorithm_name?.label === 'DBSCAN' && (
+                  <>
+                    <DvtInput
+                      typeDesign="chartsForm"
+                      label={t('EPSİLON')}
+                      placeholder={t('Epsilon')}
+                      value={epsilon.toString()}
+                      onChange={(value: string) => {
+                        setEpsilon(Number(value));
+                      }}
+                      onShowClear
+                      number
+                    />
+                    <DvtInput
+                      typeDesign="chartsForm"
+                      label={t('MIN POINTS')}
+                      placeholder={t('Min Points')}
+                      value={minPoints.toString()}
+                      onChange={(value: string) => {
+                        setMinPoints(Number(value));
+                      }}
+                      onShowClear
+                      number
+                    />
+                  </>
+                )}
+                {newTrainedTableSelector.selectCategory?.label ===
+                  'Segmentation' &&
+                  newTrainedTableSelector.algorithm_name?.label !==
+                    'DBSCAN' && (
+                    <>
+                      <DvtInput
+                        typeDesign="chartsForm"
+                        label={t('CLUSTER SIZE')}
+                        placeholder={t('Cluster Size')}
+                        value={clusterSize.toString()}
+                        onChange={(value: string) => {
+                          setClusterSize(Number(value));
+                        }}
+                        onShowClear
+                        number
+                      />
+                    </>
+                  )}
               </div>
             )}
             {!isOpen &&
