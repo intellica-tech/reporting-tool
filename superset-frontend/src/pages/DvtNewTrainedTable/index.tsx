@@ -57,10 +57,18 @@ function DvtNewTainedTable() {
   const postDataset = useFetch({
     url: postDataSetUrl,
     method: 'POST',
-    body: {
-      algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
-      table_name: newTainedTableAddSelector.selectDatabase?.value,
-    },
+    body:
+      newTainedTableAddSelector.algorithm_name?.value === 'lstm'
+        ? {
+            source_table_name: newTainedTableAddSelector.selectDatabase?.value,
+            target_column_name:
+              newTainedTableAddSelector.targetColumnName?.value,
+            time_column_name: newTainedTableAddSelector.timeColumnName?.value,
+          }
+        : {
+            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+          },
   });
 
   const postSegmentationDataset = useFetch({
@@ -155,6 +163,11 @@ function DvtNewTainedTable() {
       setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
       setTimeout(() => {
         setPostSegmentationDataSetUrl('');
+      }, 200);
+    } else if (newTainedTableAddSelector.algorithm_name?.value === 'lstm') {
+      setPostDataSetUrl('lstm');
+      setTimeout(() => {
+        setPostDataSetUrl('');
       }, 200);
     } else {
       setPostDataSetUrl('ml_and_insert/');
