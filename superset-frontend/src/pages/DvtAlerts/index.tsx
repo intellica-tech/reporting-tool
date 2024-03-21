@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtAlertAddStatus } from 'src/dvt-redux/dvt-alertReducer';
@@ -89,8 +89,8 @@ function AlertList() {
   });
 
   useEffect(() => {
-    if (alertApi) {
-      const getData = alertApi.result.map((item: any) => ({
+    if (alertApi.data) {
+      const getData = alertApi.data.result.map((item: any) => ({
         ...item,
         lastRun: new Date(item.last_eval_dttm).toLocaleString('tr-TR'),
         schedule: new Date(item.created_on).toLocaleString('tr-TR'),
@@ -103,11 +103,11 @@ function AlertList() {
         active: item.active.toString(),
       }));
       setData(getData);
-      setCount(alertApi.count);
+      setCount(alertApi.data.count);
       setSelectedRows([]);
       setAlertApiUrl('');
     }
-  }, [alertApi]);
+  }, [alertApi.data]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

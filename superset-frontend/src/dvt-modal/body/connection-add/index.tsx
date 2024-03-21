@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import {
   DvtConnectionData,
   OtherOptions,
@@ -227,13 +228,13 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (step === 2 && connectionAddData?.message === 'OK') {
+    if (step === 2 && connectionAddData.data?.message === 'OK') {
       setStep(3);
-    } else if (step === 3 && connectionAddData?.id) {
+    } else if (step === 3 && connectionAddData.data?.id) {
       onClose();
       dispatch(dvtConnectionEditSuccessStatus('connection'));
     }
-  }, [onClose, connectionAddData]);
+  }, [onClose, connectionAddData.data]);
 
   const setCollapseValue = (category: string) => {
     if (!collapseValues[category]) {

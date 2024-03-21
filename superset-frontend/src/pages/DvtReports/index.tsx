@@ -26,7 +26,7 @@ import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
@@ -119,18 +119,18 @@ function ReportList() {
   const favoriteData = useFetch({ url: favoriteApiUrl });
 
   useEffect(() => {
-    if (reportData) {
-      const editedDatas = reportData.result.map((item: any) => ({
+    if (reportData.data) {
+      const editedDatas = reportData.data.result.map((item: any) => ({
         ...item,
         last_saved_at: new Date(item.changed_on_utc).toLocaleString('tr-TR'),
       }));
       setData(editedDatas);
-      setCount(reportData.count);
+      setCount(reportData.data.count);
       setFavoriteApiUrl('');
       setDataOnReady(true);
       setSelectedRows([]);
     }
-  }, [reportData]);
+  }, [reportData.data]);
 
   useEffect(() => {
     if (dataOnReady && data.length > 0) {
@@ -141,9 +141,9 @@ function ReportList() {
   }, [dataOnReady, data]);
 
   useEffect(() => {
-    if (favoriteData?.result.length > 0) {
+    if (favoriteData.data?.result.length > 0) {
       const addedFavoriteData = [];
-      const fvrArray = favoriteData.result;
+      const fvrArray = favoriteData.data.result;
 
       for (let i = 0; i < fvrArray.length; i += 1) {
         const favoriteItem = fvrArray[i];
@@ -158,7 +158,7 @@ function ReportList() {
 
       setData(addedFavoriteData);
     }
-  }, [favoriteData]);
+  }, [favoriteData.data]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
@@ -191,7 +191,7 @@ function ReportList() {
   });
 
   useEffect(() => {
-    if (favoritePromise?.result === 'OK') {
+    if (favoritePromise.data?.result === 'OK') {
       setData(state => {
         const itemRemovedData = state.filter(
           item => item.id !== favoriteUrl.id,
@@ -204,7 +204,7 @@ function ReportList() {
         ].sort((a, b) => a.id - b.id);
       });
     }
-  }, [favoritePromise]);
+  }, [favoritePromise.data]);
 
   const handleSetFavorites = (
     id: number,
@@ -293,15 +293,15 @@ function ReportList() {
   };
 
   useEffect(() => {
-    if (reportEditPromise) {
+    if (reportEditPromise.data) {
       dispatch(
         openModal({
           component: 'edit-chart',
-          meta: reportEditPromise,
+          meta: reportEditPromise.data,
         }),
       );
     }
-  }, [reportEditPromise]);
+  }, [reportEditPromise.data]);
 
   useEffect(
     () => () => {

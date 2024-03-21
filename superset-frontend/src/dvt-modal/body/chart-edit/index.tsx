@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtModalHeader from 'src/components/DvtModalHeader';
@@ -27,8 +27,8 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   const chartItemApi = useFetch({ url: `chart/${meta.id}` });
 
   useEffect(() => {
-    if (chartItemApi) {
-      const { result } = chartItemApi;
+    if (chartItemApi.data) {
+      const { result } = chartItemApi.data;
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
@@ -41,7 +41,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [chartItemApi]);
+  }, [chartItemApi.data]);
 
   const updateChartData = useFetch({
     url: chartApi,
@@ -60,18 +60,18 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
     url: 'dashboard/related/owners?q=(filter:%27%27,page:0,page_size:100)',
   });
 
-  const ownersOptions = updateChartDataFetchResult
-    ? updateChartDataFetchResult.result.map((item: any) => ({
+  const ownersOptions = updateChartDataFetchResult.data
+    ? updateChartDataFetchResult.data.result.map((item: any) => ({
         label: item.text,
         value: item.value,
       }))
     : [];
 
   useEffect(() => {
-    if (updateChartData?.id) {
+    if (updateChartData.data?.id) {
       onClose();
     }
-  }, [onClose, updateChartData]);
+  }, [onClose, updateChartData.data]);
 
   const handleOnChange = (key: string, value: any) => {
     setValues((state: any) => ({ ...state, [key]: value }));

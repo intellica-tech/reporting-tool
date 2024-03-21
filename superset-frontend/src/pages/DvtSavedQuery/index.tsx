@@ -14,7 +14,7 @@ import { dvtNavbarViewlistTabs } from 'src/dvt-redux/dvt-navbarReducer';
 import { dvtSidebarSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { SavedQueryPagination } from './dvt-saved-query.module';
 
@@ -76,17 +76,17 @@ function DvtSavedQuery() {
   });
 
   useEffect(() => {
-    if (sqlData) {
-      const transformedData = sqlData.result.map((item: any) => ({
+    if (sqlData.data) {
+      const transformedData = sqlData.data.result.map((item: any) => ({
         ...item,
         database_name: item.database.database_name,
         table: item.sql_tables.table,
         user: `${item.created_by.first_name} ${item.created_by.last_name}`,
       }));
       setData(transformedData);
-      setCount(sqlData.count);
+      setCount(sqlData.data.count);
     }
-  }, [sqlData]);
+  }, [sqlData.data]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

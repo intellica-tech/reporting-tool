@@ -3,7 +3,7 @@ import { t } from '@superset-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 // import { useHistory } from 'react-router-dom';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import DvtButton from 'src/components/DvtButton';
@@ -89,12 +89,12 @@ function DvtRowLevelSecurity() {
   }, []);
 
   useEffect(() => {
-    if (rowLevelSecurityData) {
-      const editedData = rowLevelSecurityData.result;
-      setCount(rowLevelSecurityData.count);
+    if (rowLevelSecurityData.data) {
+      const editedData = rowLevelSecurityData.data.result;
+      setCount(rowLevelSecurityData.data.count);
       setData(editedData);
     }
-  }, [rowLevelSecurityData]);
+  }, [rowLevelSecurityData.data]);
 
   useEffect(() => {
     if (modalAddSuccess === 'Success') {
@@ -184,7 +184,8 @@ function DvtRowLevelSecurity() {
         />
       </StyledRowLevelSecurityButton>
       <div>
-        {!rowLevelSecurityData || rowLevelSecurityData.length === 0 ? (
+        {!rowLevelSecurityData.data ||
+        rowLevelSecurityData.data.length === 0 ? (
           <DvtIconDataLabel
             label="No Records Found"
             buttonLabel="Add New Record"
