@@ -11,7 +11,7 @@ import {
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
 } from 'src/dvt-redux/dvt-sqlhubReducer';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { t } from '@superset-ui/core';
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTextareaSelectRun from 'src/components/DvtTextareaSelectRun';

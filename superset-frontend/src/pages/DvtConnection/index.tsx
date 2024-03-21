@@ -25,7 +25,7 @@ import handleResourceExport from 'src/utils/export';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';

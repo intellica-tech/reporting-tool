@@ -9,11 +9,11 @@ import {
   dvtSidebarSetPropertySelectedRemove,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import { dvtSqlhubSetSelectedTableRemove } from 'src/dvt-redux/dvt-sqlhubReducer';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { nativeFilterGate } from 'src/dashboard/components/nativeFilters/utils';
 import { ChartMetadata, t } from '@superset-ui/core';
 import useFetch from 'src/dvt-hooks/useFetch';
-import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import { DoubleRightOutlined } from '@ant-design/icons';
 import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
 import DvtLogo from '../DvtLogo';

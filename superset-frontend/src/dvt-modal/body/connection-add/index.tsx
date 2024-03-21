@@ -19,7 +19,7 @@ import DvtPopper from 'src/components/DvtPopper';
 import DvtCollapse from 'src/components/DvtCollapse';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
-import useFormValidation from 'src/hooks/useFormValidation';
+import useFormValidation from 'src/dvt-hooks/useFormValidation';
 import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
 import {
   StyledConnectionAdd,

@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme, t } from '@superset-ui/core';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import { dvtChartSetTimeRange } from 'src/dvt-redux/dvt-chartReducer';
 import useFetch from 'src/dvt-hooks/useFetch';
-import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import moment from 'moment';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';

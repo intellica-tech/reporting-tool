@@ -25,7 +25,7 @@ import handleResourceExport from 'src/utils/export';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { useHistory } from 'react-router-dom';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';

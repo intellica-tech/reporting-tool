@@ -6,7 +6,7 @@ import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import handleResourceExport from 'src/utils/export';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSqlhubSetSqlQuery } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { useHistory } from 'react-router-dom';

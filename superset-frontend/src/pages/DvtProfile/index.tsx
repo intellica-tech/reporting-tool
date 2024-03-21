@@ -23,7 +23,7 @@ import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtProfileInformation from 'src/components/DvtProfileInformation';
 import DvtTable from 'src/components/DvtTable';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { StyledDvtProfile, StyledDvtTable } from './dvt-profile.module';
 
 function DvtProfile() {

@@ -20,7 +20,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';

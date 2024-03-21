@@ -18,7 +18,7 @@
  * under the License.
  */
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import {
   styled,
   css,

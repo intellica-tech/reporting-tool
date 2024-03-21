@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,

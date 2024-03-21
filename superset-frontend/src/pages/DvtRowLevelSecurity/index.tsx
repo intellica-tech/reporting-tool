@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 // import { useHistory } from 'react-router-dom';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';

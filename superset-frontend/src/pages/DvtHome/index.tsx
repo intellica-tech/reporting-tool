@@ -18,7 +18,7 @@
  * under the License.
  */
 import React, { useEffect, useState } from 'react';
-// import { useAppSelector } from 'src/hooks/useAppSelector';
+// import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';

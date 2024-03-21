@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';

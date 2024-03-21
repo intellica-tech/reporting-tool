@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import useOnClickOutside from '../hooks/useOnClickOutsite';
-import { useAppSelector } from '../hooks/useAppSelector';
+import useOnClickOutside from '../dvt-hooks/useOnClickOutsite';
+import { useAppSelector } from '../dvt-hooks/useAppSelector';
 import { closeModal } from '../dvt-redux/dvt-modalReducer';
 import DvtDashboardEdit from './body/dashboard-edit';
 import DvtChartEdit from './body/chart-edit';

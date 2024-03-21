@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import { dvtSqlhubSetSqlQuery } from 'src/dvt-redux/dvt-sqlhubReducer';
 import { dvtSidebarSetProperty } from 'src/dvt-redux/dvt-sidebarReducer';

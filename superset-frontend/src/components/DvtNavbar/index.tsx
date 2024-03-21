@@ -19,7 +19,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useHistory } from 'react-router-dom';
 import useFetch from 'src/dvt-hooks/useFetch';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
