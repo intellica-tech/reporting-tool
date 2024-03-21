@@ -11,4 +11,4 @@ const StyledEmptyQueryHistory = styled.div`
   justify-content: space-between;
   height: 100%;
 `;
-export { StyledSqlPagination,StyledEmptyQueryHistory };
+export { StyledSqlPagination, StyledEmptyQueryHistory };

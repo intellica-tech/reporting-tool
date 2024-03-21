@@ -33,12 +33,12 @@ import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
   StyledButtons,
   StyledDvtDatasets,
   StyledEmptyDatasets,
 } from './dvt-datasets.module';
-import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 
 function DvtDatasets() {
   const dispatch = useDispatch();

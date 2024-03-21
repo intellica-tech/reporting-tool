@@ -28,7 +28,6 @@ import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/dvt-hooks/useFetch';
-import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
@@ -144,10 +143,6 @@ function DvtConnection() {
     );
   };
 
-  const handleDeselectAll = () => {
-    setSelectedRows([]);
-  };
-
   const handleModalDelete = (item: any) => {
     dispatch(
       openModal({
@@ -159,11 +154,6 @@ function DvtConnection() {
 
   const handleSingleExport = (id: number) => {
     handleResourceExport('database', [id], () => {});
-  };
-
-  const handleBulkExport = () => {
-    const selectedIds = selectedRows.map(item => item.id);
-    handleResourceExport('database', selectedIds, () => {});
   };
 
   const handleEditConnection = (item: any) => {
@@ -179,7 +169,6 @@ function DvtConnection() {
         id: 1,
         title: t('Database'),
         field: 'database_name',
-        checkbox: true,
         heartIcon: true,
         sort: true,
       },
@@ -236,18 +225,17 @@ function DvtConnection() {
 
   return data.length > 0 ? (
     <StyledConnection>
-      <DvtDeselectDeleteExport
+      {/* <DvtDeselectDeleteExport
         count={selectedRows.length}
         handleDeselectAll={handleDeselectAll}
         handleDelete={() => handleModalDelete(selectedRows)}
         handleExport={handleBulkExport}
-      />
+      /> */}
       <DvtTable
         data={data}
         header={modifiedData.header}
         selected={selectedRows}
         setSelected={setSelectedRows}
-        checkboxActiveField="id"
         sort={sort}
         setSort={setSort}
       />
