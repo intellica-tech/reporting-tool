@@ -100,14 +100,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectCategories, setSelectCategories] =
-    useState<{ value: string; label: string }>();
-  const [selectAlgorithm, setSelectAlgorithm] =
-    useState<{ value: string; label: string }>();
-  const [timeColumnName, setTimeColumnName] =
-    useState<{ value: string; label: string }>();
-  const [targetColumnName, setTargetColumnName] =
-    useState<{ value: string; label: string }>();
+  const [selectCategories, setSelectCategories] = useState<any>('');
+  const [selectAlgorithm, setSelectAlgorithm] = useState<any>('');
+  const [timeColumnName, setTimeColumnName] = useState<any>('');
+  const [targetColumnName, setTargetColumnName] = useState<any>('');
   const [getColumnUrl, setGetColumnUrl] = useState('');
   const [columnOptions, setColumnOptions] = useState<any[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -288,7 +284,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   useEffect(() => {
     if (getTableData.data) {
       setColumnOptions(
-        getTableData?.data.columns.map((item: any) => ({
+        getTableData.data?.columns.map((item: any) => ({
           label: item.name,
           value: item.name,
         })),
