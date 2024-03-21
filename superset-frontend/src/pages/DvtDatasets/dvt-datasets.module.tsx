@@ -37,4 +37,4 @@ const StyledEmptyDatasets = styled.div`
   height: 100%;
 `;
 
-export { StyledButtons, StyledDvtDatasets,StyledEmptyDatasets };
+export { StyledButtons, StyledDvtDatasets, StyledEmptyDatasets };
