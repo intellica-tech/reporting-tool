@@ -100,10 +100,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectCategories, setSelectCategories] =
-    useState<{ value: string; label: string }>();
-  const [selectAlgorithm, setSelectAlgorithm] =
-    useState<{ value: string; label: string }>();
+  const [selectCategories, setSelectCategories] = useState<any>('');
+  const [selectAlgorithm, setSelectAlgorithm] = useState<any>('');
+  const [timeColumnName, setTimeColumnName] = useState<any>('');
+  const [targetColumnName, setTargetColumnName] = useState<any>('');
+  const [getColumnUrl, setGetColumnUrl] = useState('');
+  const [columnOptions, setColumnOptions] = useState<any[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
   const [chartSearch, setChartSearch] = useState<string>('');
@@ -203,6 +205,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   }>({ name: '', url: null });
 
   const getApiData = useFetch({ url: getDataApiUrl.url });
+  const getTableData = useFetch({
+    url: getColumnUrl,
+  });
 
   useEffect(() => {
     const findedPathName = DvtSidebarData.find(p => p.pathname === pathName);
@@ -241,6 +246,57 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     };
     changeAlgorithmName();
   }, [selectAlgorithm]);
+
+  useEffect(() => {
+    const changeTimeColumnName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'timeColumnName',
+          value: timeColumnName,
+        }),
+      );
+    };
+    changeTimeColumnName();
+  }, [timeColumnName]);
+
+  useEffect(() => {
+    const changeTargetColumnName = () => {
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'targetColumnName',
+          value: targetColumnName,
+        }),
+      );
+    };
+    changeTargetColumnName();
+  }, [targetColumnName]);
+
+  useEffect(() => {
+    if (newTrainedTableSelector.selectDatabase?.value) {
+      setGetColumnUrl(
+        `database/${newTrainedTableSelector.database?.value}/table/${newTrainedTableSelector.selectDatabase.value}/${newTrainedTableSelector.schema.value}/`,
+      );
+    }
+  }, [newTrainedTableSelector.selectDatabase]);
+
+  useEffect(() => {
+    if (getTableData.data) {
+      setColumnOptions(
+        getTableData.data?.columns.map((item: any) => ({
+          label: item.name,
+          value: item.name,
+        })),
+      );
+    }
+  }, [getTableData.data]);
+
+  useEffect(() => {
+    if (!getTableData.loading) {
+      setGetColumnUrl('');
+    }
+  }, [getTableData.loading]);
 
   useEffect(() => {
     if (
@@ -756,8 +812,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     { value: '2', label: 'Statistical' },
                     { value: '3', label: 'Segmentation' },
                   ]}
-                  label="CATEGORY"
-                  placeholder="CATEGORY"
+                  label={t('CATEGORY')}
+                  placeholder={t('CATEGORY')}
                   selectedValue={selectCategories}
                   setSelectedValue={setSelectCategories}
                   maxWidth
@@ -765,13 +821,37 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 />
                 <DvtSelect
                   data={getAlgorithmOptions()}
-                  label="ALGORİTHM"
-                  placeholder="ALGORİTHM"
+                  label={t('ALGORİTHM')}
+                  placeholder={t('ALGORİTHM')}
                   selectedValue={selectAlgorithm}
                   setSelectedValue={setSelectAlgorithm}
                   maxWidth
                   onShowClear={pathTitles(pathName) !== 'sqlhub'}
                 />
+                {newTrainedTableSelector.algorithm_name?.value === 'lstm' && (
+                  <>
+                    <DvtSelect
+                      data={columnOptions}
+                      label={t('TARGET COLUMN NAME')}
+                      placeholder={t('Target Column Name')}
+                      selectedValue={targetColumnName}
+                      setSelectedValue={setTargetColumnName}
+                      maxWidth
+                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                      popoverLabel={t('Please select a table first.')}
+                    />
+                    <DvtSelect
+                      data={columnOptions}
+                      label={t('TİME COLUMN NAME')}
+                      placeholder={t('Time Column Name')}
+                      selectedValue={timeColumnName}
+                      setSelectedValue={setTimeColumnName}
+                      maxWidth
+                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                      popoverLabel="Please select a table first."
+                    />
+                  </>
+                )}
               </div>
             )}
             {!isOpen &&
@@ -958,6 +1038,11 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     )
                   }
                   icon={false}
+                  height={
+                    newTrainedTableSelector.algorithm_name?.value === 'lstm'
+                      ? '200px'
+                      : '350px'
+                  }
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&

@@ -22,6 +22,10 @@ interface StyledDvtSelectDatabaseListItemProps {
   active: boolean;
 }
 
+interface StyledDvtSelectDatabaseListItemHeightProps {
+  height?: string;
+}
+
 const StyledDvtSelectDatabaseList = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,11 +39,11 @@ const StyledDvtSelectDatabaseListLabel = styled.div`
   margin-bottom: 6px;
 `;
 
-const StyledDvtSelectDatabaseListScroll = styled.div`
+const StyledDvtSelectDatabaseListScroll = styled.div<StyledDvtSelectDatabaseListItemHeightProps>`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  height: 500px;
+  height: ${({ height }) => height || '500px'};
   padding-right: 9px;
   margin-top: 20px;
   overflow-y: auto;

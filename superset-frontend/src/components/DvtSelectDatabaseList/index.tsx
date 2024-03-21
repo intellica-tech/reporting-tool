@@ -40,6 +40,7 @@ export interface DvtSelectDatabaseListProps {
   active: CardProps;
   setActive: (item: CardProps) => void;
   icon?: boolean;
+  height?: string;
 }
 
 const DvtSelectDatabaseList = ({
@@ -47,6 +48,7 @@ const DvtSelectDatabaseList = ({
   active,
   setActive,
   icon = true,
+  height,
 }: DvtSelectDatabaseListProps) => {
   const [search, setSearch] = useState<string>('');
 
@@ -66,7 +68,7 @@ const DvtSelectDatabaseList = ({
         onChange={setSearch}
         placeholder={t('Search tables')}
       />
-      <StyledDvtSelectDatabaseListScroll>
+      <StyledDvtSelectDatabaseListScroll height={height}>
         {searchData.map((item, index) => (
           <StyledDvtSelectDatabaseListItem
             key={index}
