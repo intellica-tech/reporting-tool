@@ -16,11 +16,11 @@ import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import {
   SavedQueryPagination,
   StyledEmptyAlerts,
 } from './dvt-saved-query.module';
-import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 
 function DvtSavedQuery() {
   const dispatch = useDispatch();
