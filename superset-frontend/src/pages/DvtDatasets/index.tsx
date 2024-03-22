@@ -213,16 +213,16 @@ function DvtDatasets() {
   ];
 
   useEffect(() => {
-    if (datasetEditPromise) {
+    if (datasetEditPromise.data) {
       dispatch(
         openModal({
           component: 'dataset-edit-modal',
-          meta: { ...datasetEditPromise, isEdit: true },
+          meta: { ...datasetEditPromise.data, isEdit: true },
         }),
       );
       setDatasetEditApiUrl('');
     }
-  }, [datasetEditPromise]);
+  }, [datasetEditPromise.data]);
 
   useEffect(
     () => () => {
