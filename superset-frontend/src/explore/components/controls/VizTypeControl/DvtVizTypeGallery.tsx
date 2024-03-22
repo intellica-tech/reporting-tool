@@ -115,6 +115,14 @@ const IconsPane = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 60px 20px;
   padding: 20px;
+
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 // overflow hidden on the details pane and overflow auto on the description
@@ -147,6 +155,7 @@ const thumbnailContainerCss = (theme: SupersetTheme) => css`
     line-height: 100%;
     letter-spacing: 0.2px;
     padding-bottom: 18px;
+    height: 46px;
   }
 `;
 
