@@ -14,16 +14,12 @@ import DvtQueryPreview from './body/query-preview';
 import DvtSaveQuery from './body/save-query';
 import DvtSaveDataset from './body/save-dataset';
 import DvtTimeRange from './body/time-range';
+import DvtDatasetEdit from './body/dataset-edit';
 import {
   StyledModal,
   StyledModalCard,
   StyledModalCardBody,
 } from './dvt-modal.module';
-import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
-import DvtQueryPreview from './body/query-preview';
-import DvtSaveQuery from './body/save-query';
-import DvtSaveDataset from './body/save-dataset';
-import DvtDatasetEdit from './body/dataset-edit';
 
 export interface ModalProps {
   meta: any;
