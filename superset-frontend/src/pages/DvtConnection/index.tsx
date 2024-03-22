@@ -57,7 +57,7 @@ function DvtConnection() {
     direction: 'desc',
   });
   const [count, setCount] = useState<number>(0);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  // const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   const searchApiUrls = (gPage: number) =>
     `database/${fetchQueryParamsSearch({
@@ -104,7 +104,7 @@ function DvtConnection() {
         })),
       );
       setCount(connectionApi.data.count);
-      setSelectedRows([]);
+      // setSelectedRows([]);
     }
   }, [connectionApi.data]);
 
@@ -218,7 +218,7 @@ function DvtConnection() {
     () => () => {
       clearConnection();
       setData([]);
-      setSelectedRows([]);
+      // setSelectedRows([]);
     },
     [],
   );
@@ -234,8 +234,8 @@ function DvtConnection() {
       <DvtTable
         data={data}
         header={modifiedData.header}
-        selected={selectedRows}
-        setSelected={setSelectedRows}
+        // selected={selectedRows}
+        // setSelected={setSelectedRows}
         sort={sort}
         setSort={setSort}
       />
