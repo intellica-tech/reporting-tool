@@ -391,11 +391,7 @@ function ReportList() {
             ? t('Create a New Graph/Chart')
             : t('Clear All Filter')
         }
-        buttonClick={() => {
-          if (data.length > 0) {
-            clearReports();
-          }
-        }}
+        buttonClick={() => history.push('/chart/add')}
       />
     </StyledReports>
   );
