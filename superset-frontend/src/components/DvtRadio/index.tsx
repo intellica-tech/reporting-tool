@@ -28,6 +28,7 @@ export interface DvtRadioProps {
   value: string;
   active: string;
   setActive: (active: string) => void;
+  disabled?: boolean;
 }
 
 const DvtRadio: React.FC<DvtRadioProps> = ({
@@ -35,9 +36,13 @@ const DvtRadio: React.FC<DvtRadioProps> = ({
   value,
   active,
   setActive,
+  disabled = false,
 }) => (
-  <StyledRadio onClick={() => setActive(value)}>
-    <StyledRadioCheck active={value === active} />
+  <StyledRadio
+    onClick={() => !disabled && setActive(value)}
+    disabled={disabled}
+  >
+    <StyledRadioCheck active={value === active} disabled={disabled} />
     <StyledRadioLabel>{label}</StyledRadioLabel>
   </StyledRadio>
 );

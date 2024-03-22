@@ -139,6 +139,29 @@ const StyledTableUrl = styled.div`
   color: ${({ theme }) => theme.colors.dvt.primary.base};
 `;
 
+const StyledTableInput = styled.div`
+  margin-right: 14px;
+`;
+
+const StyledTableEditor = styled.div`
+  margin: 2px 14px;
+  width: 100%;
+`;
+
+const StyledTableCollapseCheckbox = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const StyledTableCollapse = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+  padding: 30px 30px 30px 0;
+`;
+
 export {
   StyledTable,
   StyledTableTable,
@@ -153,4 +176,8 @@ export {
   StyledTableIcon,
   StyledTableCheckbox,
   StyledTableUrl,
+  StyledTableInput,
+  StyledTableEditor,
+  StyledTableCollapseCheckbox,
+  StyledTableCollapse,
 };

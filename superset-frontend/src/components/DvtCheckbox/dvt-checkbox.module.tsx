@@ -33,8 +33,8 @@ const StyledCheckbox = styled.div<StyledCheckboxProps>`
 
 const StyledCheckboxInput = styled.div<StyledCheckboxProps>`
   position: relative;
-  width: 24px;
-  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   border: 2px solid
     ${({ theme, checked, colour }) =>
       checked
