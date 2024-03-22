@@ -210,7 +210,7 @@ function DvtQueryHistory() {
       <DvtIconDataLabel
         label={
           data.length === 0
-            ? 'No Query History Yet'
+            ? t('No Query History Yet')
             : t('No results match your filter criteria')
         }
       />

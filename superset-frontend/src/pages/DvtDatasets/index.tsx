@@ -260,7 +260,9 @@ function DvtDatasets() {
             ? t('No Datasets Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={data.length === 0 ? t('Datasets') : t('Clear All Filter')}
+        buttonLabel={
+          data.length === 0 ? t('Create a New Dataset') : t('Clear All Filter')
+        }
         buttonClick={() => history.push('/dataset/add/')}
       />
     </StyledEmptyDatasets>

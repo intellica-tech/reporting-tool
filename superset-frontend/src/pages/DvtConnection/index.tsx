@@ -262,7 +262,9 @@ function DvtConnection() {
             : t('No results match your filter criteria')
         }
         buttonLabel={
-          data.length === 0 ? t('Connection') : t('Clear All Filter')
+          data.length === 0
+            ? t('Create a New Connection')
+            : t('Clear All Filter')
         }
         buttonClick={handleConnectionAdd}
       />

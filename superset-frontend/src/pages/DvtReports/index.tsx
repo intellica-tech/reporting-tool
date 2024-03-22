@@ -386,7 +386,11 @@ function ReportList() {
             ? t('No Reports Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={data.length === 0 ? t('Reports') : t('Clear All Filter')}
+        buttonLabel={
+          data.length === 0
+            ? t('Create a New Graph/Chart')
+            : t('Clear All Filter')
+        }
         buttonClick={() => {
           if (data.length > 0) {
             clearReports();
