@@ -56,11 +56,8 @@ const DvtDropdown: React.FC<DvtDropdownProps> = ({
   return (
     <StyledDropdownGroup>
       <StyledDropdownOpen onClick={() => setIsOpen(!isOpen)}>
-        {!icon ? (
-          <StyledDropdownLabel>{label}</StyledDropdownLabel>
-        ) : (
-          <Icon fileName={icon} iconSize="xl" />
-        )}
+        <StyledDropdownLabel>{label}</StyledDropdownLabel>
+        {icon && <Icon fileName={icon} iconSize="xl" />}
       </StyledDropdownOpen>
       <StyledDropdown ref={ref} direction={direction}>
         {isOpen && (

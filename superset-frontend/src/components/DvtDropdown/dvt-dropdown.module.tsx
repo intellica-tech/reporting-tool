@@ -39,6 +39,7 @@ const StyledDropdownOpen = styled.button`
   background-color: transparent;
   cursor: pointer;
   display: flex;
+  gap: 10px;
 `;
 
 const StyledDropdown = styled.div<StyledDropdownProps>`
