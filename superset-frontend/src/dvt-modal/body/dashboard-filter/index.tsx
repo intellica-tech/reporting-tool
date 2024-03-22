@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
 import DvtModalHeader from 'src/components/DvtModalHeader';
@@ -11,6 +10,7 @@ import DvtButtonTabs from 'src/components/DvtButtonTabs';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtInput from 'src/components/DvtInput';
 import DvtCollapse from 'src/components/DvtCollapse';
+import DvtDropdown from 'src/components/DvtDropdown';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtTextarea from 'src/components/DvtTextarea';
 import DvtRadioList from 'src/components/DvtRadioList';
@@ -27,11 +27,10 @@ import {
   StyledDashboardFilterRight,
   StyledDashboardFilterScoping,
 } from './dashboard-filter-modal.module';
-import DvtDropdown from 'src/components/DvtDropdown';
 
-const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
+const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
   const [activeTab, setActiveTab] = useState<any>({
-    label: 'Settings',
+    label: t('Settings'),
     value: 'settings',
   });
   const [activeId, setActiveId] = useState<number>(0);
@@ -156,12 +155,12 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledDashboardFilter>
-      <DvtModalHeader title="Add and edit filters" onClose={onClose} />
+      <DvtModalHeader title={t('Add and edit filters')} onClose={onClose} />
       <StyledDashboardBody>
         <StyledDashboardFilterLeft>
           <DvtDropdown
             data={data}
-            label="Add  filters and dividers"
+            label={t('Add  filters and dividers')}
             icon="dvt-add_square"
           />
           {leftMenu.map((item: any, index: number) => (
@@ -170,7 +169,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
               onClick={() => {
                 setActiveId(item.id);
                 setActiveTab({
-                  label: 'Settings',
+                  label: t('Settings'),
                   value: 'settings',
                 });
               }}
@@ -194,8 +193,8 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                   {' '}
                   <DvtButtonTabs
                     data={[
-                      { label: 'Settings', value: 'settings' },
-                      { label: 'Scoping', value: 'scoping' },
+                      { label: t('Settings'), value: 'settings' },
+                      { label: t('Scoping'), value: 'scoping' },
                     ]}
                     active={activeTab}
                     setActive={setActiveTab}
@@ -205,7 +204,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                       <StyledDashboardFilterFlexGroup>
                         <StyledDashboardFilterFlexColumnGroup>
                           <DvtSelect
-                            label="Filter Type"
+                            label={t('Filter Type')}
                             data={[
                               { value: 'value', label: 'Value' },
                               { value: 'numerical', label: 'Numerical Range' },
@@ -223,7 +222,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }
                           />
                           <DvtInput
-                            label="Filter Name"
+                            label={t('Filter Name')}
                             value={filteredItem.filterName}
                             onChange={selected =>
                               handleSelectValue(
@@ -259,7 +258,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                         </StyledDashboardFilterFlexColumnGroup>
                       </StyledDashboardFilterFlexGroup>
                       <DvtCollapse
-                        label="Filter Configuration"
+                        label={t('Filter Configuration')}
                         isOpen={filteredItem.filterConfiguration}
                         setIsOpen={() => {
                           setLeftMenu(prevLeftMenu => {
@@ -277,7 +276,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                       >
                         <StyledDashboardFilterCollapse>
                           <DvtCheckbox
-                            label="Pre-filter available values"
+                            label={t('Pre-filter available values')}
                             checked={filteredItem.preFilterAvailable}
                             onChange={selected => {
                               handleSelectValue(
@@ -288,7 +287,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Sort filter values"
+                            label={t('Sort filter values')}
                             checked={filteredItem.sortFilter}
                             onChange={selected => {
                               handleSelectValue(
@@ -301,7 +300,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                         </StyledDashboardFilterCollapse>
                       </DvtCollapse>
                       <DvtCollapse
-                        label="Filter Settings"
+                        label={t('Filter Settings')}
                         isOpen={filteredItem.filterSettings}
                         setIsOpen={() => {
                           setLeftMenu(prevLeftMenu => {
@@ -319,7 +318,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                       >
                         <StyledDashboardFilterCollapse>
                           <DvtTextarea
-                            label="Description"
+                            label={t('Description')}
                             value={filteredItem.description}
                             onChange={selected => {
                               handleSelectValue(
@@ -330,7 +329,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Filter has default value"
+                            label={t('Filter has default value')}
                             checked={filteredItem.filterHasDefault}
                             onChange={selected => {
                               handleSelectValue(
@@ -341,7 +340,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Filter value is required"
+                            label={t('Filter value is required')}
                             checked={filteredItem.filterValueIsRequired}
                             onChange={selected => {
                               handleSelectValue(
@@ -352,7 +351,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Select first filter value by default"
+                            label={t('Select first filter value by default')}
                             checked={filteredItem.selectFirstFilter}
                             onChange={selected => {
                               handleSelectValue(
@@ -363,7 +362,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Can select multiple values"
+                            label={t('Can select multiple values')}
                             checked={filteredItem.canSelectMultiple}
                             onChange={selected => {
                               handleSelectValue(
@@ -374,7 +373,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Dynamically search all filter values"
+                            label={t('Dynamically search all filter values')}
                             checked={filteredItem.dynamicallySearchAllFilter}
                             onChange={selected => {
                               handleSelectValue(
@@ -385,7 +384,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                             }}
                           />
                           <DvtCheckbox
-                            label="Inverse selection"
+                            label={t('Inverse selection')}
                             checked={filteredItem.inverseSelection}
                             onChange={selected => {
                               handleSelectValue(
@@ -412,9 +411,9 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                     <StyledDashboardFilterScoping>
                       <DvtRadioList
                         data={[
-                          { label: 'Apply to all panels', value: 'radio1' },
+                          { label: t('Apply to all panels'), value: 'radio1' },
                           {
-                            label: 'Apply to specific panels',
+                            label: t('Apply to specific panels'),
                             value: 'radio2',
                           },
                         ]}
@@ -425,17 +424,20 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                       />
                       {filteredItem.activeRadio === 'radio1' && (
                         <StyledDashboardFilterLabel active={false}>
-                          All panels with this column will be affected by this
-                          filter
+                          {t(
+                            'All panels with this column will be affected by this filter',
+                          )}
                         </StyledDashboardFilterLabel>
                       )}
                       {filteredItem.activeRadio === 'radio2' && (
                         <>
                           <StyledDashboardFilterLabel active={false}>
-                            Only selected panels will be affected by this filter
+                            {t(
+                              'Only selected panels will be affected by this filter',
+                            )}
                           </StyledDashboardFilterLabel>
                           <DvtCheckbox
-                            label="All panels"
+                            label={t('All panels')}
                             checked={filteredItem.allPanels}
                             onChange={selected => {
                               handleSelectValue(
@@ -447,7 +449,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                           />
                           {filteredItem.allPanels && (
                             <DvtCheckbox
-                              label="Degrees vs Income"
+                              label={t('Degrees vs Income')}
                               checked={filteredItem.allPanels}
                               onChange={() => {}}
                             />
@@ -460,7 +462,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
               ) : (
                 <>
                   <DvtInput
-                    label="Filter Name"
+                    label={t('Filter Name')}
                     value={filteredItem.filterName}
                     onChange={selected =>
                       handleSelectValue(activeId, selected, 'filterName')
@@ -468,7 +470,7 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
                     typeDesign="chartsForm"
                   />
                   <DvtTextarea
-                    label="Description"
+                    label={t('Description')}
                     value={filteredItem.description}
                     onChange={selected => {
                       handleSelectValue(activeId, selected, 'description');
