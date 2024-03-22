@@ -26,6 +26,7 @@ import useFetch from 'src/dvt-hooks/useFetch';
 import { BellOutlined } from '@ant-design/icons';
 import {
   dvtNavbarAlertSetTabs,
+  dvtNavbarChartSearchVizType,
   dvtNavbarChartsSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
@@ -58,6 +59,7 @@ import {
   NavbarProfileIcon,
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
+import DvtInput from '../DvtInput';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -296,7 +298,12 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           )}
           {pathName === '/chart/add' && (
             <>
-              <div />
+              <DvtInput
+                type="search"
+                placeholder="search"
+                value={chartAddSelector.search}
+                onChange={v => dispatch(dvtNavbarChartSearchVizType(v))}
+              />
               <NavbarBottomRight>
                 <DvtButton
                   typeColour="powder"
@@ -306,7 +313,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                       ? 'primary'
                       : 'grayscale'
                   }
-                  label="Create New Chart"
+                  label={t('Create New Chart')}
                   onClick={() =>
                     chartAddSelector.vizType &&
                     chartAddSidebarSelector.dataset?.id &&

@@ -110,8 +110,6 @@ const VizPickerLayout = styled.div`
   min-height: 100%;
 `;
 
-const RightPane = styled.div``;
-
 const IconsPane = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -240,6 +238,9 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
   }, [mountedPluginMetadata]);
 
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
+  const chartAddSearchSelector = useAppSelector(
+    state => state.dvtNavbar.chartAdd.search,
+  );
   const sortedMetadata = useMemo(
     () => chartMetadata.sort((a, b) => a.key.localeCompare(b.key)),
     [chartMetadata],
@@ -301,16 +302,21 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
     setEditedData(filteredData);
   }, [chartAddSelector]);
 
-  return editedData.length > 0 ? (
+  const searchEditedData = editedData.filter(
+    (item: any) =>
+      item.value.name
+        .toLowerCase()
+        .indexOf(chartAddSearchSelector.toLowerCase()) > -1,
+  );
+
+  return searchEditedData.length > 0 ? (
     <VizPickerLayout className={className}>
-      <RightPane>
-        <ThumbnailGallery
-          vizEntries={editedData}
-          selectedViz={selectedViz}
-          setSelectedViz={onChange}
-          onDoubleClick={onDoubleClick}
-        />
-      </RightPane>
+      <ThumbnailGallery
+        vizEntries={searchEditedData}
+        selectedViz={selectedViz}
+        setSelectedViz={onChange}
+        onDoubleClick={onDoubleClick}
+      />
     </VizPickerLayout>
   ) : (
     <DvtIconDataLabel
