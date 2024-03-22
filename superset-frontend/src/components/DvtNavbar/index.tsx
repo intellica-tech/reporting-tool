@@ -170,12 +170,25 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   };
 
   useEffect(() => {
+    if (history.location?.search) {
+      setGetExploreApiUrl(`explore/${history.location?.search}`);
+    }
+  }, [history.location]);
+
+  useEffect(() => {
     if (getExploreApi.data) {
       dispatch(dvtChartSetSelectedChart(getExploreApi.data.result));
-      history.push('/explore/');
-      setGetExploreApiUrl('');
+      if (!history.location?.search) {
+        history.push('/explore/');
+      }
     }
   }, [getExploreApi.data]);
+
+  useEffect(() => {
+    if (!getExploreApi.loading) {
+      setGetExploreApiUrl('');
+    }
+  }, [getExploreApi.loading]);
 
   const sqlPathname = ['/sqlhub/', '/sqlhub/history/', '/savedqueryview/list/'];
 
