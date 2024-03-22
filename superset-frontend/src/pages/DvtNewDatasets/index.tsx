@@ -6,6 +6,7 @@ import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
+  dvtSidebarSetDataPropertyUpdate,
   dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
@@ -47,6 +48,7 @@ function DvtNewDatasets() {
   const [postDataSetUrl, setPostDataSetUrl] = useState('');
   const [data, setData] = useState([]);
   const [dataSchema, setDataSchema] = useState<any[]>([]);
+  const [nextToPage, setNextToPage] = useState<string>('');
 
   const getSchemaAlreadyFiltersUrl = (page: number) =>
     `dataset/?q=(filters:!((col:database,opr:rel_o_m,value:${datasetAddSelector.database.value}),(col:schema,opr:eq,value:${datasetAddSelector.schema.value}),(col:sql,opr:dataset_is_null_or_empty,value:!t)),page:${page})`;
@@ -143,29 +145,41 @@ function DvtNewDatasets() {
     }
   }, [getTableData.data]);
 
-  const handleCreateDataset = () => {
-    setPostDataSetUrl('');
-    setTimeout(() => {
-      setPostDataSetUrl('dataset/');
-    }, 200);
+  const handleCreateDataset = (url: string) => {
+    setNextToPage(url);
+    setPostDataSetUrl('dataset/');
   };
 
   useEffect(() => {
     if (postDataset.data?.id) {
+      const datasetObjectItem = {
+        id: postDataset.data.id,
+        value: postDataset.data.result.table_name,
+        label: postDataset.data.result.table_name,
+      };
       dispatch(
         dvtSidebarSetProperty({
           pageKey: 'chartAdd',
           key: 'dataset',
-          value: {
-            id: postDataset.data.id,
-            value: postDataset.data.result.table_name,
-            label: postDataset.data.result.table_name,
-          },
+          value: datasetObjectItem,
         }),
       );
-      history.push('/chart/add');
+      dispatch(
+        dvtSidebarSetDataPropertyUpdate({
+          pageKey: 'chartAdd',
+          key: 'dataset',
+          value: datasetObjectItem,
+        }),
+      );
+      history.push(nextToPage);
     }
   }, [postDataset.data]);
+
+  useEffect(() => {
+    if (!postDataset.loading) {
+      setPostDataSetUrl('');
+    }
+  }, [postDataset.loading]);
 
   useEffect(
     () => () => {
@@ -175,6 +189,10 @@ function DvtNewDatasets() {
     },
     [],
   );
+
+  const buttonDisabled =
+    datasetAddSelector.selectDatabase?.value &&
+    !datasetAddSelector.selectDatabase?.explore_url;
 
   return (
     <StyledDvtNewDatasets>
@@ -227,19 +245,27 @@ function DvtNewDatasets() {
           onClick={() => history.push('/tablemodelview/list/')}
         />
         <DvtButton
-          label={t('Create Dataset and Create Chart')}
+          label={t('Create Dataset')}
           size="small"
           colour="grayscale"
-          typeColour={
-            datasetAddSelector.selectDatabase?.value &&
-            !datasetAddSelector.selectDatabase?.explore_url
-              ? 'basic'
-              : 'powder'
-          }
+          typeColour={buttonDisabled ? 'basic' : 'powder'}
           onClick={() =>
-            datasetAddSelector.selectDatabase?.value &&
-            !datasetAddSelector.selectDatabase?.explore_url &&
-            handleCreateDataset()
+            buttonDisabled && handleCreateDataset('/tablemodelview/list/')
+          }
+          loading={
+            postDataset.loading && nextToPage === '/tablemodelview/list/'
+          }
+          disabled={postDataset.loading && nextToPage === '/chart/add'}
+        />
+        <DvtButton
+          label={t('Create Chart')}
+          size="small"
+          colour="grayscale"
+          typeColour={buttonDisabled ? 'basic' : 'powder'}
+          onClick={() => buttonDisabled && handleCreateDataset('/chart/add')}
+          loading={postDataset.loading && nextToPage === '/chart/add'}
+          disabled={
+            postDataset.loading && nextToPage === '/tablemodelview/list/'
           }
         />
       </StyledNewDatasetsButtons>
