@@ -231,13 +231,15 @@ function AlertList() {
         handleDeselectAll={handleDeselectAll}
         handleDelete={() => handleModalDelete(selectedRows)}
       />
-      <DvtTable
-        data={data}
-        header={headerData}
-        selected={selectedRows}
-        setSelected={setSelectedRows}
-        checkboxActiveField="id"
-      />
+      <div style={{ flex: 1 }}>
+        <DvtTable
+          data={data}
+          header={headerData}
+          selected={selectedRows}
+          setSelected={setSelectedRows}
+          checkboxActiveField="id"
+        />
+      </div>
       <StyledAlertsButton>
         <DvtButton
           label={

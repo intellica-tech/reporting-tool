@@ -20,10 +20,15 @@
 import { styled } from '@superset-ui/core';
 
 const StyledDashboardList = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
 `;
 
-const StyledDashboardTable = styled.div``;
+const StyledDashboardTable = styled.div`
+  flex: 1;
+`;
 
 const StyledDashboardPagination = styled.div`
   display: flex;
@@ -40,6 +45,7 @@ const StyledDashboardBottom = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 36px;
 `;
 
 export {

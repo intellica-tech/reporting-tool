@@ -246,7 +246,7 @@ function DvtDatasets() {
         handleDelete={() => handleModalDelete(selectedRows)}
         handleExport={handleSelectedExport}
       />
-      <div>
+      <div style={{ flex: 1 }}>
         <DvtTable
           data={data}
           header={header}

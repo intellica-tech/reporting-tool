@@ -21,6 +21,8 @@ import { styled } from '@superset-ui/core';
 const StyledDvtDatasets = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
 `;
 
 const StyledButtons = styled.div`
@@ -28,6 +30,7 @@ const StyledButtons = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 36px;
 `;
 
 const StyledEmptyDatasets = styled.div`

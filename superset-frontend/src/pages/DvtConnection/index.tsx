@@ -231,14 +231,16 @@ function DvtConnection() {
         handleDelete={() => handleModalDelete(selectedRows)}
         handleExport={handleBulkExport}
       /> */}
-      <DvtTable
-        data={data}
-        header={modifiedData.header}
-        // selected={selectedRows}
-        // setSelected={setSelectedRows}
-        sort={sort}
-        setSort={setSort}
-      />
+      <div style={{ flex: 1 }}>
+        <DvtTable
+          data={data}
+          header={modifiedData.header}
+          // selected={selectedRows}
+          // setSelected={setSelectedRows}
+          sort={sort}
+          setSort={setSort}
+        />
+      </div>
       <StyledConnectionButton>
         <DvtButton
           label={t('Create a New Connection')}
