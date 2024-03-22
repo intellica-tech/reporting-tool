@@ -18,6 +18,10 @@
  */
 import { styled } from '@superset-ui/core';
 
+interface StyledDashboardFilterProps {
+  active: boolean;
+}
+
 const StyledDashboardFilter = styled.div``;
 const StyledDashboardBody = styled.div`
   display: flex;
@@ -29,6 +33,7 @@ const StyledDashboardFilterLeft = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-weight: 600;
 `;
 
 const StyledDashboardFilterRight = styled.div`
@@ -39,6 +44,7 @@ const StyledDashboardFilterRight = styled.div`
   padding: 20px 0 0 28px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  gap: 10px;
 `;
 
 const StyledDashboardFilterMenuTabs = styled.div`
@@ -52,8 +58,9 @@ const StyledDashboardFilterMenuTabs = styled.div`
   padding: 0 13px;
 `;
 
-const StyledDashboardFilterLabel = styled.div`
-  color: ${({ theme }) => theme.colors.dvt.primary.light1};
+const StyledDashboardFilterLabel = styled.div<StyledDashboardFilterProps>`
+  color: ${({ theme, active }) =>
+    active ? theme.colors.dvt.text.bold : theme.colors.dvt.primary.light1};
   font-size: 12px;
   font-weight: 500;
 `;
@@ -73,6 +80,23 @@ const StyledDashboardFilterButtonGroup = styled.div`
   height: 100%;
 `;
 
+const StyledDashboardFilterFlexColumnGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+
+const StyledDashboardFilterFlexGroup = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const StyledDashboardFilterScoping = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+
 export {
   StyledDashboardFilter,
   StyledDashboardBody,
@@ -82,4 +106,7 @@ export {
   StyledDashboardFilterLabel,
   StyledDashboardFilterCollapse,
   StyledDashboardFilterButtonGroup,
+  StyledDashboardFilterFlexGroup,
+  StyledDashboardFilterFlexColumnGroup,
+  StyledDashboardFilterScoping,
 };

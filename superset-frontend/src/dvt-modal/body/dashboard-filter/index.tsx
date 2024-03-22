@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
 import DvtButton from 'src/components/DvtButton';
@@ -19,61 +19,46 @@ import {
   StyledDashboardFilter,
   StyledDashboardFilterButtonGroup,
   StyledDashboardFilterCollapse,
+  StyledDashboardFilterFlexColumnGroup,
+  StyledDashboardFilterFlexGroup,
   StyledDashboardFilterLabel,
   StyledDashboardFilterLeft,
   StyledDashboardFilterMenuTabs,
   StyledDashboardFilterRight,
+  StyledDashboardFilterScoping,
 } from './dashboard-filter-modal.module';
-
-interface InputProps {
-  filterType: { label: string; value: string };
-  filterName: string;
-  dataset: { label: string; value: string };
-  column: { label: string; value: string };
-  filterConfiguration: boolean;
-  filterSettings: boolean;
-  preFilterAvailable: boolean;
-  sortFilter: boolean;
-  description: string;
-  filterHasDefault: boolean;
-  filterValueIsRequired: boolean;
-  selectFirstFilter: boolean;
-  canSelectMultiple: boolean;
-  dynamicallySearchAllFilter: boolean;
-  inverseSelection: boolean;
-  activeRadio: string;
-}
+import DvtDropdown from 'src/components/DvtDropdown';
 
 const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
-  const [input, setInput] = useState<InputProps>({
-    filterType: { label: '', value: '' },
-    filterName: '',
-    dataset: { label: '', value: '' },
-    column: { label: '', value: '' },
-    filterConfiguration: false,
-    filterSettings: false,
-    preFilterAvailable: false,
-    sortFilter: false,
-    description: '',
-    filterHasDefault: false,
-    filterValueIsRequired: false,
-    selectFirstFilter: false,
-    canSelectMultiple: true,
-    dynamicallySearchAllFilter: false,
-    inverseSelection: false,
-    activeRadio: 'radio1',
-  });
-
-  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState<any>({
     label: 'Settings',
     value: 'settings',
   });
+  const [activeId, setActiveId] = useState<number>(0);
   const [leftMenu, setLeftMenu] = useState<any[]>([
     {
-      label: 'untitled',
+      id: 0,
+      type: 'filter',
+      filterType: { label: 'Value', value: 'value' },
+      filterName: 'untitled',
+      dataset: { label: '', value: '' },
+      column: { label: '', value: '' },
+      filterConfiguration: false,
+      filterSettings: false,
+      preFilterAvailable: false,
+      sortFilter: false,
+      description: '',
+      filterHasDefault: false,
+      filterValueIsRequired: false,
+      selectFirstFilter: false,
+      canSelectMultiple: true,
+      dynamicallySearchAllFilter: false,
+      inverseSelection: false,
+      activeRadio: 'radio1',
+      allPanels: false,
     },
   ]);
+
   const [apiUrl, setApiUrl] = useState<string>('');
 
   const datasetData = useFetch({
@@ -85,264 +70,423 @@ const DvtDashoardFilterModal = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (datasetData?.result) {
+    if (leftMenu.find(item => item.id === activeId)?.dataset?.value) {
       setApiUrl(
-        `dataset/${input.dataset.value}?q=(columns:!(columns.column_name,columns.is_dttm,columns.type_generic))`,
+        `dataset/${
+          leftMenu.find(item => item.id === activeId)?.dataset.value
+        }?q=(columns:!(columns.column_name,columns.is_dttm,columns.type_generic))`,
       );
     }
-  }, [input.dataset]);
+  }, [leftMenu.find(item => item.id === activeId)?.dataset]);
 
   const datasetOptions: { label: string; value: string }[] =
-    datasetData?.result.map((item: any) => ({
+    datasetData.data?.result?.map((item: any) => ({
       label: item.table_name,
       value: item.id,
-    }));
+    })) || [];
 
   const columnOptions: { label: string; value: string }[] =
-    columnData?.result.columns.map((item: any) => ({
+    columnData.data?.result.columns?.map((item: any) => ({
       label: item.column_name,
       value: item.is_dttm,
-    }));
+    })) || [];
+
+  const generateId = () => {
+    const lastItemId =
+      leftMenu.length > 0 ? leftMenu[leftMenu.length - 1].id : 0;
+    return lastItemId + 1;
+  };
+
+  const handleFilterClick = (type: string) => () => {
+    setLeftMenu(prevLeftMenu => [
+      ...prevLeftMenu,
+      type === 'limit'
+        ? {
+            id: generateId(),
+            type,
+            filterType: { label: 'Value', value: 'value' },
+            filterName: 'untitled',
+            dataset: { label: '', value: '' },
+            column: { label: '', value: '' },
+            filterConfiguration: false,
+            filterSettings: false,
+            preFilterAvailable: false,
+            sortFilter: false,
+            description: '',
+            filterHasDefault: false,
+            filterValueIsRequired: false,
+            selectFirstFilter: false,
+            canSelectMultiple: true,
+            dynamicallySearchAllFilter: false,
+            inverseSelection: false,
+            activeRadio: 'radio1',
+            allPanels: false,
+          }
+        : {
+            id: generateId(),
+            filterName: 'untitled',
+            type,
+            description: '',
+          },
+    ]);
+  };
+
+  const data = [
+    { label: 'Filter', onClick: handleFilterClick('filter') },
+    { label: 'Divider', onClick: handleFilterClick('divider') },
+  ];
+
+  const handleDeleteItem = (id: number) => {
+    setLeftMenu(prevLeftMenu => {
+      const updatedMenu = prevLeftMenu.filter(item => item.id !== id);
+      return updatedMenu;
+    });
+  };
+
+  const handleSelectValue = (id: number, selected: any, row: any) => {
+    setLeftMenu(prevLeftMenu => {
+      const updatedMenu = [...prevLeftMenu];
+      const selectedItem = updatedMenu.find(item => item.id === id);
+      if (selectedItem) {
+        selectedItem[row] = selected;
+      }
+      return updatedMenu;
+    });
+  };
 
   return (
     <StyledDashboardFilter>
       <DvtModalHeader title="Add and edit filters" onClose={onClose} />
       <StyledDashboardBody>
         <StyledDashboardFilterLeft>
-          <DvtButton
-            bold
-            colour="primary"
-            icon="dvt-add_square"
+          <DvtDropdown
+            data={data}
             label="Add  filters and dividers"
-            onClick={() =>
-              setLeftMenu(prevLeftMenu => [
-                ...prevLeftMenu,
-                {
-                  label: 'Yeni Veri',
-                },
-              ])
-            }
-            typeColour="outline"
+            icon="dvt-add_square"
           />
-          {leftMenu.map((item: any) => (
-            <StyledDashboardFilterMenuTabs>
-              <StyledDashboardFilterLabel>
-                {item.label}
+          {leftMenu.map((item: any, index: number) => (
+            <StyledDashboardFilterMenuTabs
+              key={index}
+              onClick={() => {
+                setActiveId(item.id);
+                setActiveTab({
+                  label: 'Settings',
+                  value: 'settings',
+                });
+              }}
+            >
+              <StyledDashboardFilterLabel active={activeId === item.id}>
+                {item.filterName}
               </StyledDashboardFilterLabel>
-              <Icon fileName="trash" />
+              <Icon
+                fileName="trash"
+                onClick={() => handleDeleteItem(item.id)}
+              />
             </StyledDashboardFilterMenuTabs>
           ))}
         </StyledDashboardFilterLeft>
-        <StyledDashboardFilterRight>
-          <DvtButtonTabs
-            data={[
-              { label: 'Settings', value: 'settings' },
-              { label: 'Scoping', value: 'scoping' },
-            ]}
-            active={activeTab}
-            setActive={setActiveTab}
-          />
-          {activeTab.value === 'settings' && (
-            <>
-              <DvtSelect
-                label="Filter Type"
-                data={[
-                  { value: 'value', label: 'Value' },
-                  { value: 'numerical', label: 'Numerical Range' },
-                  { value: 'range', label: 'Time Range' },
-                  { value: 'column', label: 'Time Column' },
-                  { value: 'grain', label: 'Time Grain' },
-                ]}
-                selectedValue={input.filterType}
-                setSelectedValue={selected => {
-                  setInput({ ...input, filterType: selected });
-                }}
-              />
-              <DvtInput
-                label="Filter Name"
-                value={input.filterName}
-                onChange={selected => {
-                  setInput({ ...input, filterName: selected });
-                }}
-              />
-              <DvtSelect
-                data={datasetOptions}
-                label={t('Dataset')}
-                placeholder={t('Select')}
-                selectedValue={input.dataset}
-                setSelectedValue={selected => {
-                  setInput({ ...input, dataset: selected });
-                }}
-                typeDesign="form"
-              />
-              <DvtSelect
-                data={columnOptions || []}
-                label={t('Column')}
-                placeholder={t('Select')}
-                selectedValue={input.column}
-                setSelectedValue={selected => {
-                  setInput({ ...input, column: selected });
-                }}
-                typeDesign="form"
-              />
-              <DvtCollapse
-                label="Filter Configuration"
-                isOpen={input.filterConfiguration}
-                setIsOpen={() => {
-                  setInput({
-                    ...input,
-                    filterConfiguration: !input.filterConfiguration,
-                  });
-                }}
-              >
-                <StyledDashboardFilterCollapse>
-                  <DvtCheckbox
-                    label="Pre-filter available values"
-                    checked={input.preFilterAvailable}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        preFilterAvailable: v,
-                      });
-                    }}
+        {leftMenu
+          .filter(item => item.id === activeId)
+          .map((filteredItem: any, index: number) => (
+            <StyledDashboardFilterRight key={index}>
+              {filteredItem.type === 'filter' ? (
+                <>
+                  {' '}
+                  <DvtButtonTabs
+                    data={[
+                      { label: 'Settings', value: 'settings' },
+                      { label: 'Scoping', value: 'scoping' },
+                    ]}
+                    active={activeTab}
+                    setActive={setActiveTab}
                   />
-                  <DvtCheckbox
-                    label="Sort filter values"
-                    checked={input.sortFilter}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        sortFilter: v,
-                      });
-                    }}
+                  {activeTab.value === 'settings' && (
+                    <>
+                      <StyledDashboardFilterFlexGroup>
+                        <StyledDashboardFilterFlexColumnGroup>
+                          <DvtSelect
+                            label="Filter Type"
+                            data={[
+                              { value: 'value', label: 'Value' },
+                              { value: 'numerical', label: 'Numerical Range' },
+                              { value: 'range', label: 'Time Range' },
+                              { value: 'column', label: 'Time Column' },
+                              { value: 'grain', label: 'Time Grain' },
+                            ]}
+                            selectedValue={filteredItem.filterType}
+                            setSelectedValue={selected =>
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'filterType',
+                              )
+                            }
+                          />
+                          <DvtInput
+                            label="Filter Name"
+                            value={filteredItem.filterName}
+                            onChange={selected =>
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'filterName',
+                              )
+                            }
+                            typeDesign="chartsForm"
+                          />
+                        </StyledDashboardFilterFlexColumnGroup>
+                        <StyledDashboardFilterFlexColumnGroup>
+                          <DvtSelect
+                            data={datasetOptions}
+                            label={t('Dataset')}
+                            placeholder={t('Select')}
+                            selectedValue={filteredItem.dataset}
+                            setSelectedValue={selected =>
+                              handleSelectValue(activeId, selected, 'dataset')
+                            }
+                            typeDesign="form"
+                          />
+                          <DvtSelect
+                            data={columnOptions || []}
+                            label={t('Column')}
+                            placeholder={t('Select')}
+                            selectedValue={filteredItem.column}
+                            setSelectedValue={selected =>
+                              handleSelectValue(activeId, selected, 'column')
+                            }
+                            typeDesign="form"
+                          />
+                        </StyledDashboardFilterFlexColumnGroup>
+                      </StyledDashboardFilterFlexGroup>
+                      <DvtCollapse
+                        label="Filter Configuration"
+                        isOpen={filteredItem.filterConfiguration}
+                        setIsOpen={() => {
+                          setLeftMenu(prevLeftMenu => {
+                            const updatedMenu = [...prevLeftMenu];
+                            const selectedItem = updatedMenu.find(
+                              item => item.id === activeId,
+                            );
+                            if (selectedItem) {
+                              selectedItem.filterConfiguration =
+                                !filteredItem.filterConfiguration;
+                            }
+                            return updatedMenu;
+                          });
+                        }}
+                      >
+                        <StyledDashboardFilterCollapse>
+                          <DvtCheckbox
+                            label="Pre-filter available values"
+                            checked={filteredItem.preFilterAvailable}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'preFilterAvailable',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Sort filter values"
+                            checked={filteredItem.sortFilter}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'sortFilter',
+                              );
+                            }}
+                          />
+                        </StyledDashboardFilterCollapse>
+                      </DvtCollapse>
+                      <DvtCollapse
+                        label="Filter Settings"
+                        isOpen={filteredItem.filterSettings}
+                        setIsOpen={() => {
+                          setLeftMenu(prevLeftMenu => {
+                            const updatedMenu = [...prevLeftMenu];
+                            const selectedItem = updatedMenu.find(
+                              item => item.id === activeId,
+                            );
+                            if (selectedItem) {
+                              selectedItem.filterSettings =
+                                !filteredItem.filterSettings;
+                            }
+                            return updatedMenu;
+                          });
+                        }}
+                      >
+                        <StyledDashboardFilterCollapse>
+                          <DvtTextarea
+                            label="Description"
+                            value={filteredItem.description}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'description',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Filter has default value"
+                            checked={filteredItem.filterHasDefault}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'filterHasDefault',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Filter value is required"
+                            checked={filteredItem.filterValueIsRequired}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'filterValueIsRequired',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Select first filter value by default"
+                            checked={filteredItem.selectFirstFilter}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'selectFirstFilter',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Can select multiple values"
+                            checked={filteredItem.canSelectMultiple}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'canSelectMultiple',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Dynamically search all filter values"
+                            checked={filteredItem.dynamicallySearchAllFilter}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'dynamicallySearchAllFilter',
+                              );
+                            }}
+                          />
+                          <DvtCheckbox
+                            label="Inverse selection"
+                            checked={filteredItem.inverseSelection}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'inverseSelection',
+                              );
+                            }}
+                          />
+                        </StyledDashboardFilterCollapse>
+                      </DvtCollapse>
+                      <StyledDashboardFilterButtonGroup>
+                        <DvtButton bold label={t('Cancel')} onClick={onClose} />
+                        <DvtButton
+                          bold
+                          colour="grayscale"
+                          label={t('Save')}
+                          onClick={() => {}}
+                        />
+                      </StyledDashboardFilterButtonGroup>
+                    </>
+                  )}
+                  {activeTab.value === 'scoping' && (
+                    <StyledDashboardFilterScoping>
+                      <DvtRadioList
+                        data={[
+                          { label: 'Apply to all panels', value: 'radio1' },
+                          {
+                            label: 'Apply to specific panels',
+                            value: 'radio2',
+                          },
+                        ]}
+                        active={filteredItem.activeRadio}
+                        setActive={selected => {
+                          handleSelectValue(activeId, selected, 'activeRadio');
+                        }}
+                      />
+                      {filteredItem.activeRadio === 'radio1' && (
+                        <StyledDashboardFilterLabel active={false}>
+                          All panels with this column will be affected by this
+                          filter
+                        </StyledDashboardFilterLabel>
+                      )}
+                      {filteredItem.activeRadio === 'radio2' && (
+                        <>
+                          <StyledDashboardFilterLabel active={false}>
+                            Only selected panels will be affected by this filter
+                          </StyledDashboardFilterLabel>
+                          <DvtCheckbox
+                            label="All panels"
+                            checked={filteredItem.allPanels}
+                            onChange={selected => {
+                              handleSelectValue(
+                                activeId,
+                                selected,
+                                'allPanels',
+                              );
+                            }}
+                          />
+                          {filteredItem.allPanels && (
+                            <DvtCheckbox
+                              label="Degrees vs Income"
+                              checked={filteredItem.allPanels}
+                              onChange={() => {}}
+                            />
+                          )}
+                        </>
+                      )}
+                    </StyledDashboardFilterScoping>
+                  )}
+                </>
+              ) : (
+                <>
+                  <DvtInput
+                    label="Filter Name"
+                    value={filteredItem.filterName}
+                    onChange={selected =>
+                      handleSelectValue(activeId, selected, 'filterName')
+                    }
+                    typeDesign="chartsForm"
                   />
-                </StyledDashboardFilterCollapse>
-              </DvtCollapse>
-              <DvtCollapse
-                label="Filter Settings"
-                isOpen={input.filterSettings}
-                setIsOpen={() => {
-                  setInput({
-                    ...input,
-                    filterSettings: !input.filterSettings,
-                  });
-                }}
-              >
-                {' '}
-                <StyledDashboardFilterCollapse>
                   <DvtTextarea
                     label="Description"
-                    value={input.description}
+                    value={filteredItem.description}
                     onChange={selected => {
-                      setInput({ ...input, description: selected });
+                      handleSelectValue(activeId, selected, 'description');
                     }}
                   />
-                  <DvtCheckbox
-                    label="Filter has default value"
-                    checked={input.filterHasDefault}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        filterHasDefault: v,
-                      });
-                    }}
-                  />
-                  <DvtCheckbox
-                    label="Filter value is required"
-                    checked={input.filterValueIsRequired}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        filterValueIsRequired: v,
-                      });
-                    }}
-                  />
-                  <DvtCheckbox
-                    label="Select first filter value by default"
-                    checked={input.selectFirstFilter}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        selectFirstFilter: v,
-                      });
-                    }}
-                  />
-                  <DvtCheckbox
-                    label="Can select multiple values"
-                    checked={input.canSelectMultiple}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        canSelectMultiple: v,
-                      });
-                    }}
-                  />
-                  <DvtCheckbox
-                    label="Dynamically search all filter values"
-                    checked={input.dynamicallySearchAllFilter}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        dynamicallySearchAllFilter: v,
-                      });
-                    }}
-                  />
-                  <DvtCheckbox
-                    label="Inverse selection"
-                    checked={input.inverseSelection}
-                    onChange={v => {
-                      setInput({
-                        ...input,
-                        inverseSelection: v,
-                      });
-                    }}
-                  />
-                </StyledDashboardFilterCollapse>
-              </DvtCollapse>
-              <StyledDashboardFilterButtonGroup>
-                <DvtButton bold label={t('Cancel')} onClick={onClose} />
-                <DvtButton
-                  bold
-                  colour="grayscale"
-                  label={t('Save')}
-                  onClick={() => {}}
-                />
-              </StyledDashboardFilterButtonGroup>
-            </>
-          )}
-          {activeTab.value === 'scoping' && (
-            <>
-              <DvtRadioList
-                data={[
-                  { label: 'Apply to all panels', value: 'radio1' },
-                  { label: 'Apply to specific panels', value: 'radio2' },
-                ]}
-                active={input.activeRadio}
-                setActive={v => {
-                  setInput({
-                    ...input,
-                    activeRadio: v,
-                  });
-                }}
-              />
-              {input.activeRadio === 'radio1' && (
-                <StyledDashboardFilterLabel>
-                  All panels with this column will be affected by this filter
-                </StyledDashboardFilterLabel>
+                  <StyledDashboardFilterButtonGroup>
+                    <DvtButton bold label={t('Cancel')} onClick={onClose} />
+                    <DvtButton
+                      bold
+                      colour="grayscale"
+                      label={t('Save')}
+                      onClick={() => {}}
+                    />
+                  </StyledDashboardFilterButtonGroup>
+                </>
               )}
-              {input.activeRadio === 'radio2' && (
-                <StyledDashboardFilterLabel>
-                  Only selected panels will be affected by this filter
-                  <DvtCheckbox
-                    label="All panels"
-                    checked={false}
-                    onChange={() => {}}
-                  />
-                </StyledDashboardFilterLabel>
-              )}
-            </>
-          )}
-        </StyledDashboardFilterRight>
+            </StyledDashboardFilterRight>
+          ))}
       </StyledDashboardBody>
     </StyledDashboardFilter>
   );
