@@ -91,9 +91,14 @@ function DvtDatasets() {
     })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
+  const [datasetEditApiUrl, setDatasetEditApiUrl] = useState<string>('');
 
   const datasetApi = useFetch({
     url: datasetApiUrl,
+  });
+
+  const datasetEditPromise = useFetch({
+    url: datasetEditApiUrl,
   });
 
   useEffect(() => {
@@ -154,6 +159,10 @@ function DvtDatasets() {
     handleResourceExport('dataset', selectedIds, () => {});
   };
 
+  const handleEditDataset = (item: any) => {
+    setDatasetEditApiUrl(`dataset/${item.id}`);
+  };
+
   const header = [
     {
       id: 1,
@@ -186,7 +195,7 @@ function DvtDatasets() {
       clicks: [
         {
           icon: 'edit_alt',
-          click: () => {},
+          click: (item: any) => handleEditDataset(item),
           popperLabel: t('Edit'),
         },
         {
@@ -202,6 +211,18 @@ function DvtDatasets() {
       ],
     },
   ];
+
+  useEffect(() => {
+    if (datasetEditPromise) {
+      dispatch(
+        openModal({
+          component: 'dataset-edit-modal',
+          meta: { ...datasetEditPromise, isEdit: true },
+        }),
+      );
+      setDatasetEditApiUrl('');
+    }
+  }, [datasetEditPromise]);
 
   useEffect(
     () => () => {

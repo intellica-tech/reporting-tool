@@ -23,6 +23,7 @@ import DvtRadio from '../DvtRadio';
 interface DvtRadioProps {
   label: string;
   value: string;
+  disabled?: boolean;
 }
 
 export interface DvtRadioListProps {
@@ -46,6 +47,7 @@ const DvtRadioList: React.FC<DvtRadioListProps> = ({
         active={active}
         setActive={setActive}
         key={index}
+        disabled={radio.disabled}
       />
     ))}
   </StyledRadioList>

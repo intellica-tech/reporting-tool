@@ -20,13 +20,18 @@ import { styled } from '@superset-ui/core';
 
 interface StyledRadioProps {
   active: boolean;
+  disabled: boolean;
 }
 
-const StyledRadio = styled.div`
+interface StyledRadioDisabledProps {
+  disabled: boolean;
+}
+
+const StyledRadio = styled.div<StyledRadioDisabledProps>`
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const StyledRadioLabel = styled.div`
@@ -43,7 +48,10 @@ const StyledRadioCheck = styled.div<StyledRadioProps>`
   width: 19px;
   border-radius: 50px;
   border: ${({ active }) => (active ? '6px' : '2px')} solid
-    ${({ theme }) => theme.colors.dvt.primary.base};
+    ${({ theme, disabled }) =>
+      disabled
+        ? theme.colors.dvt.grayscale.base
+        : theme.colors.dvt.primary.base};
 `;
 
 export { StyledRadio, StyledRadioLabel, StyledRadioCheck };
