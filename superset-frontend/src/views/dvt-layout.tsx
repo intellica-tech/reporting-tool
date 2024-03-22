@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,10 +29,14 @@ import getBootstrapData from 'src/utils/getBootstrapData';
 import ToastContainer from 'src/components/MessageToasts/ToastContainer';
 import { routes } from 'src/views/dvt-routes';
 import { styled } from '@superset-ui/core';
-import { WithNavbarBottom } from 'src/components/DvtNavbar/dvt-navbar-tabs-data';
-import useFetch from 'src/hooks/useFetch';
+import {
+  WithNavbarBottom,
+  WithNavbarBottomOnlyPage,
+} from 'src/components/DvtNavbar/dvt-navbar-tabs-data';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { dvtAppSetUser } from 'src/dvt-redux/dvt-appReducer';
 import { useDispatch } from 'react-redux';
+import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
 
 interface StyledLayoutProps {
   navbarInHeight: boolean;
@@ -81,6 +86,8 @@ const DvtLayout = () => {
         return 380;
       case '/sqlhub/':
         return 480;
+      case '/explore/':
+        return 350;
       default:
         return 300;
     }
@@ -89,30 +96,22 @@ const DvtLayout = () => {
   const userPromise = useFetch({ url: 'me/' });
 
   useEffect(() => {
-    if (userPromise) {
-      dispatch(dvtAppSetUser(userPromise.result));
+    if (userPromise.data) {
+      dispatch(dvtAppSetUser(userPromise.data.result));
     }
-  }, [userPromise]);
-
-  const extractDashboardId = (pathName: string) => {
-    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
-    const isDashboardPage = dashboardRegex.test(pathName);
-
-    if (isDashboardPage) {
-      const dashboardId = pathName.match(dashboardRegex)?.[1];
-      return dashboardId ?? null;
-    }
-
-    return null;
-  };
+  }, [userPromise.data]);
 
   return (
     <StyledApp
       navbarInHeight={
         WithNavbarBottom.includes(pathname) ||
-        pathname === `/dashboard/${extractDashboardId(pathname)}/`
+        WithNavbarBottomOnlyPage.includes(pathname.split('/')[1])
       }
-      marginLeft={mainAppSidebarWidth(pathname)}
+      marginLeft={
+        extractIdPathname(pathname, 'dashboard')
+          ? 0
+          : mainAppSidebarWidth(pathname)
+      }
     >
       <GlobalStyles />
       <DvtSidebar
@@ -128,7 +127,7 @@ const DvtLayout = () => {
       <Main
         navbarInHeight={
           WithNavbarBottom.includes(pathname) ||
-          pathname === `/dashboard/${extractDashboardId(pathname)}/`
+          WithNavbarBottomOnlyPage.includes(pathname.split('/')[1])
         }
       >
         <Switch>

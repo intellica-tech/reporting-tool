@@ -1,14 +1,19 @@
 import { styled } from '@superset-ui/core';
 import { Link } from 'react-router-dom';
 
-const StyledDvtCardDetailChart = styled.div`
+interface StyledDvtCardDetailChartProps {
+  added: boolean;
+}
+
+const StyledDvtCardDetailChart = styled.div<StyledDvtCardDetailChartProps>`
   display: flex;
   flex-direction: column;
   border-radius: 4px;
   padding: 19px;
   gap: 20px;
   background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  cursor: move;
+  cursor: ${({ added }) => (added ? 'no-drop' : 'move')};
+  opacity: ${({ added }) => (added ? 0.7 : 1)};
 `;
 
 const StyledDvtCardDetailChartTitle = styled.div`
@@ -16,6 +21,8 @@ const StyledDvtCardDetailChartTitle = styled.div`
   font-size: 16px;
   font-weight: bold;
   line-height: 100%;
+  justify-content: space-between;
+  height: 22px;
 `;
 
 const StyledDvtCardDetails = styled.div`
@@ -39,10 +46,20 @@ const StyledDvtCardP = styled.p`
   margin: 0;
 `;
 
+const StyledDvtCardDetailAdded = styled.span`
+  border: 1px solid ${({ theme }) => theme.colors.dvt.primary.light1};
+  border-radius: 4px;
+  padding: 0 5px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+`;
+
 export {
   StyledDvtCardDetailChart,
   StyledDvtCardDetailChartTitle,
   StyledDvtCardDetails,
   StyledDvtCardLink,
   StyledDvtCardP,
+  StyledDvtCardDetailAdded,
 };

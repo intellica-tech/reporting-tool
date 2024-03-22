@@ -25,9 +25,9 @@ import handleResourceExport from 'src/utils/export';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionReducer';
 import DvtPagination from 'src/components/DvtPagination';
@@ -96,31 +96,34 @@ function DvtConnection() {
   });
 
   useEffect(() => {
-    if (connectionApi) {
+    if (connectionApi.data) {
       setData(
-        connectionApi.result.map((item: any) => ({
+        connectionApi.data.result.map((item: any) => ({
           ...item,
           admin: `${item.created_by?.first_name} ${item.created_by?.last_name}`,
           date: new Date(item.changed_on).toLocaleString('tr-TR'),
         })),
       );
-      setCount(connectionApi.count);
+      setCount(connectionApi.data.count);
       setSelectedRows([]);
     }
-    if (editSuccessStatus) {
-      setData(connectionApi.result);
-      setCount(connectionApi.count);
-      setSelectedRows([]);
-      dispatch(dvtConnectionEditSuccessStatus(''));
+  }, [connectionApi.data]);
+
+  useEffect(() => {
+    if (!connectionApi.loading) {
+      setConnectionApiUrl('');
     }
-  }, [connectionApi, editSuccessStatus]);
+  }, [connectionApi.loading]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
+    if (editSuccessStatus) {
+      dispatch(dvtConnectionEditSuccessStatus(''));
+    }
     setConnectionApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page, sort]);
+  }, [deleteSuccessStatus, editSuccessStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -152,7 +155,6 @@ function DvtConnection() {
         meta: { item, type: 'database', title: 'database' },
       }),
     );
-    setConnectionApiUrl('');
   };
 
   const handleSingleExport = (id: number) => {
@@ -213,15 +215,15 @@ function DvtConnection() {
   };
 
   useEffect(() => {
-    if (connectionEditPromise) {
+    if (connectionEditPromise.data) {
       dispatch(
         openModal({
           component: 'connection-add-modal',
-          meta: { ...connectionEditPromise, isEdit: true },
+          meta: { ...connectionEditPromise.data, isEdit: true },
         }),
       );
     }
-  }, [connectionEditPromise]);
+  }, [connectionEditPromise.data]);
 
   useEffect(
     () => () => {

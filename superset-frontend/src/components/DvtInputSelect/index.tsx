@@ -19,7 +19,7 @@
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
-import useOnClickOutside from '../../hooks/useOnClickOutsite';
+import useOnClickOutside from '../../dvt-hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import {
   StyledInputSelectInput,

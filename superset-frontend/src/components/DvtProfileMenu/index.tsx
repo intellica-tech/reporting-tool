@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { supersetTheme } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import {
   DropdownMenu,

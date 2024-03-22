@@ -20,9 +20,9 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable from 'src/components/DvtTable';
@@ -106,9 +106,9 @@ function DvtAnnotationLayerList() {
   });
 
   useEffect(() => {
-    if (annotationLayerApi) {
+    if (annotationLayerApi.data) {
       setData(
-        annotationLayerApi.result.map((item: any) => ({
+        annotationLayerApi.data.result.map((item: any) => ({
           ...item,
           created_on: `${new Date(item.created_on).getDay()}.${new Date(
             item.created_on,
@@ -116,10 +116,10 @@ function DvtAnnotationLayerList() {
           created_by: `${item.created_by.first_name} ${item.created_by.last_name}`,
         })),
       );
-      setCount(annotationLayerApi.count);
+      setCount(annotationLayerApi.data.count);
       setSelectedRows([]);
     }
-  }, [annotationLayerApi]);
+  }, [annotationLayerApi.data]);
 
   const handleDeselectAll = () => {
     setSelectedRows([]);

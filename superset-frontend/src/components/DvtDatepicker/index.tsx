@@ -17,7 +17,7 @@
  * under the License.
  */
 import React, { useEffect, useState, useRef } from 'react';
-import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import moment, { Moment } from 'moment';
 import Icon from '../Icons/Icon';
 

@@ -21,19 +21,22 @@ import DvtCardDetailChart from '../DvtCardDetailChart';
 import { StyledDvtCardDetailChartList } from './dvt-card-detail-chart-list.module';
 
 export interface CardDetailChartDataProps {
-  labelTitle: string;
-  vizTypeLabel: string;
-  datasetLabel: string;
-  datasetLink?: string;
-  modified: Date;
+  id?: number;
+  slice_name: string;
+  viz_type: string;
+  datasource_name_text: string;
+  datasource_url: string;
+  changed_on_delta_humanized: string;
 }
 
 export interface DvtCardDetailChartListProps {
   data: CardDetailChartDataProps[];
+  added: number[];
 }
 
 const DvtCardDetailChartList: React.FC<DvtCardDetailChartListProps> = ({
-  data,
+  data = [],
+  added = [],
 }) => {
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -44,14 +47,21 @@ const DvtCardDetailChartList: React.FC<DvtCardDetailChartListProps> = ({
 
   return (
     <StyledDvtCardDetailChartList>
-      {data.map((item, index) => (
-        <div onDragStart={e => handleDragStart(e, item)} draggable key={index}>
+      {data.map((item: any, index) => (
+        <div
+          onDragStart={e => handleDragStart(e, item)}
+          draggable={!added.includes(item.id)}
+          key={index}
+        >
           <DvtCardDetailChart
-            datasetLabel={item.datasetLabel}
-            labelTitle={item.labelTitle}
-            modified={item.modified}
-            vizTypeLabel={item.vizTypeLabel}
-            datasetLink={item.datasetLink}
+            slice_name={item.slice_name}
+            viz_type={item.viz_type}
+            datasource_name_text={item.datasource_name_text}
+            datasource_url={
+              item.datasource_url === null ? '' : item.datasource_url
+            }
+            changed_on_delta_humanized={item.changed_on_delta_humanized}
+            added={added.includes(item.id)}
           />
         </div>
       ))}

@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
@@ -57,10 +57,18 @@ function DvtNewTainedTable() {
   const postDataset = useFetch({
     url: postDataSetUrl,
     method: 'POST',
-    body: {
-      algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
-      table_name: newTainedTableAddSelector.selectDatabase?.value,
-    },
+    body:
+      newTainedTableAddSelector.algorithm_name?.value === 'lstm'
+        ? {
+            source_table_name: newTainedTableAddSelector.selectDatabase?.value,
+            target_column_name:
+              newTainedTableAddSelector.targetColumnName?.value,
+            time_column_name: newTainedTableAddSelector.timeColumnName?.value,
+          }
+        : {
+            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+          },
   });
 
   const postSegmentationDataset = useFetch({
@@ -89,20 +97,20 @@ function DvtNewTainedTable() {
   useEffect(() => {
     if (newTainedTableAddSelector.schema?.value) {
       setGetSchemaDataApiUrl({
-        url: `database/1/tables/?q=(force:!f,schema_name:${newTainedTableAddSelector.schema.value})`,
+        url: `database/${newTainedTableAddSelector.database?.value}/tables/?q=(force:!f,schema_name:${newTainedTableAddSelector.schema.value})`,
         key: 'schema',
       });
     }
   }, [newTainedTableAddSelector.schema]);
 
   useEffect(() => {
-    if (getSchemaData) {
+    if (getSchemaData.data) {
       if (getSchemaDataApiUrl.key === 'database') {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'newTrainedTable',
             key: 'schema',
-            value: getSchemaData.result.map((s: string) => ({
+            value: getSchemaData.data.result.map((s: string) => ({
               value: s,
               label: s,
             })),
@@ -110,20 +118,20 @@ function DvtNewTainedTable() {
         );
       }
       if (getSchemaDataApiUrl.key === 'schema') {
-        setDataSchema(getSchemaData.result);
+        setDataSchema(getSchemaData.data.result);
         setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(0));
       }
     }
-  }, [getSchemaData]);
+  }, [getSchemaData.data]);
 
   useEffect(() => {
-    if (getSchemaDataAlready) {
+    if (getSchemaDataAlready.data) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
           key: 'selectDatabase',
           value: dataSchema.map((item: any) => {
-            const findItem = getSchemaDataAlready.result.find(
+            const findItem = getSchemaDataAlready.data.result.find(
               (ar: { table_name: string }) => ar.table_name === item.value,
             );
             return {
@@ -134,27 +142,32 @@ function DvtNewTainedTable() {
         }),
       );
     }
-  }, [getSchemaDataAlready]);
+  }, [getSchemaDataAlready.data]);
 
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
       setGetTableDataApiUrl(
-        `database/1/table/${newTainedTableAddSelector.selectDatabase.value}/${newTainedTableAddSelector.schema.value}/`,
+        `database/${newTainedTableAddSelector.database?.value}/table/${newTainedTableAddSelector.selectDatabase.value}/${newTainedTableAddSelector.schema.value}/`,
       );
     }
   }, [newTainedTableAddSelector.selectDatabase]);
 
   useEffect(() => {
-    if (getTableData) {
-      setData(getTableData.columns);
+    if (getTableData.data) {
+      setData(getTableData.data.columns);
     }
-  }, [getTableData]);
+  }, [getTableData.data]);
 
   const handleCreateDataset = () => {
     if (newTainedTableAddSelector.selectCategory.label === 'Segmentation') {
       setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
       setTimeout(() => {
         setPostSegmentationDataSetUrl('');
+      }, 200);
+    } else if (newTainedTableAddSelector.algorithm_name?.value === 'lstm') {
+      setPostDataSetUrl('lstm');
+      setTimeout(() => {
+        setPostDataSetUrl('');
       }, 200);
     } else {
       setPostDataSetUrl('ml_and_insert/');
@@ -165,10 +178,10 @@ function DvtNewTainedTable() {
   };
 
   useEffect(() => {
-    if (postDataset || postSegmentationDataset) {
+    if (postDataset.data || postSegmentationDataset.data) {
       history.push('/traindata');
     }
-  }, [postDataset, postSegmentationDataset]);
+  }, [postDataset.data, postSegmentationDataset.data]);
 
   useEffect(
     () => () => {
@@ -188,7 +201,7 @@ function DvtNewTainedTable() {
           <DvtIconDataLabel
             label={t('Select table source')}
             description={t(
-              'You can create a new trained table from existing table from the panel on the left.',
+              'You can create an output table from existing table from the panel on the left.',
             )}
             icon="square"
           />
@@ -202,7 +215,7 @@ function DvtNewTainedTable() {
           onClick={() => history.push('/tablemodelview/list/')}
         />
         <DvtButton
-          label={t('Create New Trained Table')}
+          label={t('Create Output Table')}
           size="small"
           colour="grayscale"
           typeColour={

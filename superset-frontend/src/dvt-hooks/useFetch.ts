@@ -23,6 +23,8 @@ const useFetch = ({
 }: UseFetchProps) => {
   const { addDangerToast } = useToasts();
   const [data, setData] = useState<any | null>(null);
+  const [error, setError] = useState<any | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const csrf_token = document.querySelector<HTMLInputElement>('#csrf_token');
 
   useEffect(() => {
@@ -34,6 +36,8 @@ const useFetch = ({
           ? ''
           : { 'Content-Type': 'application/json' };
         try {
+          setError(null);
+          setLoading(true);
           const response = await fetch(`${defaultParam}${url}`, {
             method,
             headers: {
@@ -49,16 +53,21 @@ const useFetch = ({
                 : undefined,
           });
 
+          const result = await response.json();
+
           if (!response.ok) {
+            setData(null);
+            setError(result);
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
-          const result = await response.json();
           if (isMounted) {
             setData(result);
+            setLoading(false);
           }
         } catch (error) {
           addDangerToast(error.message);
+          setLoading(false);
         }
       };
 
@@ -70,7 +79,7 @@ const useFetch = ({
     };
   }, [url]);
 
-  return data;
+  return { data, error, loading };
 };
 
 export default useFetch;

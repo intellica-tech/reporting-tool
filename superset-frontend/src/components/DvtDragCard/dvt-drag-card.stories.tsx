@@ -84,7 +84,7 @@ Default.argTypes = {
   icon: {
     control: {
       type: 'select',
-      options: ['question', 'clock', 'field_abc', 'dvt-hashtag'],
+      options: ['question', 'clock', 'field_abc', 'dvt-hashtag', 'function_x'],
     },
     defaultValue: 'question',
   },

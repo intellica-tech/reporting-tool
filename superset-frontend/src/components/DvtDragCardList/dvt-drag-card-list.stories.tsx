@@ -28,15 +28,10 @@ Default.args = {
       icon: 'dvt-hashtag',
     },
     { label: 'bas_tar', value: { id: 1, name: 'bas_tar' }, icon: 'clock' },
-    { label: 'arac_key', value: { id: 1, name: 'arac_key' }, icon: 'question' },
-    { label: 'arac_id', value: { id: 1, name: 'arac_id' }, icon: 'field_abc' },
     {
-      label: 'Kayıt Tarihi',
-      value: { id: 1, name: 'Kayit_Tarihi' },
-      icon: 'dvt-hashtag',
+      label: 'arac_key',
+      value: { id: 1, name: 'arac_key' },
+      icon: 'function_x',
     },
-    { label: 'bas_tar', value: { id: 1, name: 'bas_tar' }, icon: 'clock' },
-    { label: 'arac_key', value: { id: 1, name: 'arac_key' }, icon: 'question' },
-    { label: 'arac_id', value: { id: 1, name: 'arac_id' }, icon: 'field_abc' },
   ],
 };

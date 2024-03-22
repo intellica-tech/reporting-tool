@@ -17,7 +17,7 @@
  * under the License.
  */
 import React, { useRef, useState } from 'react';
-import useOnClickOutside from 'src/hooks/useOnClickOutsite';
+import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import Icon from '../Icons/Icon';
 import {
   StyledDropdown,

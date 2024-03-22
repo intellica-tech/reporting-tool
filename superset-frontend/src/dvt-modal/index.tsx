@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import useOnClickOutside from '../hooks/useOnClickOutsite';
-import { useAppSelector } from '../hooks/useAppSelector';
+import useOnClickOutside from '../dvt-hooks/useOnClickOutsite';
+import { useAppSelector } from '../dvt-hooks/useAppSelector';
 import { closeModal } from '../dvt-redux/dvt-modalReducer';
 import DvtDashboardEdit from './body/dashboard-edit';
 import DvtChartEdit from './body/chart-edit';
@@ -9,6 +9,11 @@ import DvtDeleteModal from './body/delete-modal';
 import DvtConnectionAdd from './body/connection-add';
 import DvtAlertAdd from './body/alert-add';
 import DvtReportAdd from './body/report-add';
+import DvtRowLevelSecurityAdd from './body/rowLevelSecurity-add';
+import DvtQueryPreview from './body/query-preview';
+import DvtSaveQuery from './body/save-query';
+import DvtSaveDataset from './body/save-dataset';
+import DvtTimeRange from './body/time-range';
 import {
   StyledModal,
   StyledModalCard,
@@ -49,6 +54,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtSaveDataset meta={meta} onClose={onClose} />;
     case 'dataset-edit-modal':
       return <DvtDatasetEdit meta={meta} onClose={onClose} />;
+    case 'time-range':
+      return <DvtTimeRange meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -79,6 +86,8 @@ const DvtModal = () => {
       case 'save-query':
         return 'custom';
       case 'save-dataset':
+        return 'custom';
+      case 'time-range':
         return 'custom';
       default:
         return 'small';

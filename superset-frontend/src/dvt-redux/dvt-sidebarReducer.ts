@@ -98,8 +98,21 @@ interface DvtSidebarState {
     groupKey: any;
     filterType: any;
   };
+  queryHistory: {
+    database: any;
+    state: any;
+    user: any;
+    timeRange: any;
+    search: any;
+  };
   profile: {
     tabs: any;
+  };
+  savedQuery: {
+    name: any;
+    modifiedBy: any;
+    database: any;
+    schema: any;
   };
   rolesList: {
     permissions: any;
@@ -144,6 +157,16 @@ interface DvtSidebarState {
       };
       rowLevelSecurity: {
         modifiedBy: boolean;
+      };
+      queryHistory: {
+        database: boolean;
+        state: boolean;
+        user: boolean;
+      };
+      savedQuery: {
+        modifiedBy: boolean;
+        database: boolean;
+        schema: boolean;
       };
     };
     alerts: {
@@ -196,6 +219,16 @@ interface DvtSidebarState {
     };
     rowLevelSecurity: {
       modifiedBy: any[];
+    };
+    queryHistory: {
+      database: any[];
+      state: any[];
+      user: any[];
+    };
+    savedQuery: {
+      modifiedBy: any[];
+      database: any[];
+      schema: any[];
     };
   };
 }
@@ -279,6 +312,19 @@ const INITIAL_STATE = {
     groupKey: '',
     filterType: '',
   },
+  queryHistory: {
+    database: '',
+    state: '',
+    user: '',
+    timeRange: '',
+    search: '',
+  },
+  savedQuery: {
+    name: '',
+    modifiedBy: '',
+    database: '',
+    schema: '',
+  },
   profile: {
     tabs: { label: t('Favorites'), url: 'favorites' },
   },
@@ -329,6 +375,16 @@ const initialState: DvtSidebarState = {
       },
       rowLevelSecurity: {
         modifiedBy: false,
+      },
+      queryHistory: {
+        database: false,
+        state: false,
+        user: false,
+      },
+      savedQuery: {
+        modifiedBy: false,
+        database: false,
+        schema: false,
       },
     },
     alerts: {
@@ -381,6 +437,16 @@ const initialState: DvtSidebarState = {
     },
     rowLevelSecurity: {
       modifiedBy: [],
+    },
+    queryHistory: {
+      database: [],
+      state: [],
+      user: [],
+    },
+    savedQuery: {
+      modifiedBy: [],
+      database: [],
+      schema: [],
     },
   },
 };

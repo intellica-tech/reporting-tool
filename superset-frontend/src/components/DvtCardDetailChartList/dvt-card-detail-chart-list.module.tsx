@@ -21,7 +21,7 @@ import { styled } from '@superset-ui/core';
 const StyledDvtCardDetailChartList = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 430px);
+  max-height: calc(100vh - 475px);
   gap: 20px;
   overflow-y: auto;
   padding-right: 20px;

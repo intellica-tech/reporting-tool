@@ -16,24 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
+import DvtPopper from '../DvtPopper';
 import {
   StyledCollapse,
-  StyledCollapsePopover,
   StyledCollapseGroup,
   StyledCollapseLabel,
   StyledCollapseDeleteIcon,
   StyledCollapseIcon,
   StyledCollapseChildren,
 } from './dvt-collapse.module';
-import DvtPopper from '../DvtPopper';
 
 export interface DvtCollapseProps {
   label: string;
   children: ReactNode;
   popoverLabel?: string;
+  popperError?: string;
+  popperErrorSuccess?: boolean;
   popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
   isOpen: boolean;
   setIsOpen: (newOpen: boolean) => void;
@@ -47,6 +48,8 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   children,
   popoverDirection = 'top',
   popoverLabel = '',
+  popperError = '',
+  popperErrorSuccess = false,
   isOpen,
   setIsOpen,
   typeDesign = 'normal',
@@ -54,6 +57,14 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
   copyToClick,
 }) => {
   const [onHover, setOnHover] = useState<boolean>(false);
+  const [firstPopperErrorSuccess, setFirstPopperErrorSuccess] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (popperErrorSuccess && !firstPopperErrorSuccess) {
+      setFirstPopperErrorSuccess(true);
+    }
+  }, [firstPopperErrorSuccess, popperErrorSuccess]);
 
   return (
     <StyledCollapse bgTransparent={typeDesign === 'dvt-list'}>
@@ -63,28 +74,38 @@ const DvtCollapse: React.FC<DvtCollapseProps> = ({
       >
         <StyledCollapseLabel onClick={() => setIsOpen(!isOpen)}>
           {label}
+          {popperError && !popperErrorSuccess && (
+            <DvtPopper
+              label={popperError}
+              direction={popoverDirection}
+              size="small"
+              nowrap
+            >
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color: firstPopperErrorSuccess
+                    ? theme.colors.dvt.error.base
+                    : theme.colors.dvt.warning.base,
+                })}
+                iconSize="l"
+              />
+            </DvtPopper>
+          )}
           {popoverLabel && (
-            <StyledCollapsePopover>
-              {popoverLabel ? (
-                <DvtPopper label={popoverLabel} direction={popoverDirection}>
-                  <Icon
-                    fileName="warning"
-                    css={(theme: SupersetTheme) => ({
-                      color: theme.colors.dvt.primary.base,
-                    })}
-                    iconSize="l"
-                  />
-                </DvtPopper>
-              ) : (
-                <Icon
-                  fileName="warning"
-                  css={(theme: SupersetTheme) => ({
-                    color: theme.colors.dvt.primary.base,
-                  })}
-                  iconSize="l"
-                />
-              )}
-            </StyledCollapsePopover>
+            <DvtPopper
+              label={popoverLabel}
+              size="small"
+              direction={popoverDirection}
+            >
+              <Icon
+                fileName="warning"
+                css={(theme: SupersetTheme) => ({
+                  color: theme.colors.dvt.primary.base,
+                })}
+                iconSize="l"
+              />
+            </DvtPopper>
           )}
         </StyledCollapseLabel>
         {onHover && deleteClick && (

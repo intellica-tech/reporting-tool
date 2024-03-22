@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
   dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
@@ -78,20 +78,20 @@ function DvtNewDatasets() {
   useEffect(() => {
     if (datasetAddSelector.schema?.value) {
       setGetSchemaDataApiUrl({
-        url: `database/1/tables/?q=(force:!f,schema_name:${datasetAddSelector.schema.value})`,
+        url: `database/${datasetAddSelector.database?.value}/tables/?q=(force:!f,schema_name:${datasetAddSelector.schema.value})`,
         key: 'schema',
       });
     }
   }, [datasetAddSelector.schema]);
 
   useEffect(() => {
-    if (getSchemaData) {
+    if (getSchemaData.data) {
       if (getSchemaDataApiUrl.key === 'database') {
         dispatch(
           dvtSidebarSetDataProperty({
             pageKey: 'datasetAdd',
             key: 'schema',
-            value: getSchemaData.result.map((s: string) => ({
+            value: getSchemaData.data.result.map((s: string) => ({
               value: s,
               label: s,
             })),
@@ -99,14 +99,14 @@ function DvtNewDatasets() {
         );
       }
       if (getSchemaDataApiUrl.key === 'schema') {
-        setDataSchema(getSchemaData.result);
+        setDataSchema(getSchemaData.data.result);
         setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(0));
       }
     }
-  }, [getSchemaData]);
+  }, [getSchemaData.data]);
 
   useEffect(() => {
-    if (getSchemaDataAlready) {
+    if (getSchemaDataAlready.data) {
       // if (getSchemaDataAlready.count > 20) {
       //   setGetSchemaDataApiAlreadyUrl(getSchemaAlreadyFiltersUrl(1));
       // }
@@ -116,7 +116,7 @@ function DvtNewDatasets() {
           pageKey: 'datasetAdd',
           key: 'selectDatabase',
           value: dataSchema.map((item: any) => {
-            const findItem = getSchemaDataAlready.result.find(
+            const findItem = getSchemaDataAlready.data.result.find(
               (ar: { table_name: string }) => ar.table_name === item.value,
             );
             return {
@@ -127,21 +127,21 @@ function DvtNewDatasets() {
         }),
       );
     }
-  }, [getSchemaDataAlready]);
+  }, [getSchemaDataAlready.data]);
 
   useEffect(() => {
     if (datasetAddSelector.selectDatabase?.value) {
       setGetTableDataApiUrl(
-        `database/1/table/${datasetAddSelector.selectDatabase.value}/${datasetAddSelector.schema.value}/`,
+        `database/${datasetAddSelector.database?.value}/table/${datasetAddSelector.selectDatabase.value}/${datasetAddSelector.schema.value}/`,
       );
     }
   }, [datasetAddSelector.selectDatabase]);
 
   useEffect(() => {
-    if (getTableData) {
-      setData(getTableData.columns);
+    if (getTableData.data) {
+      setData(getTableData.data.columns);
     }
-  }, [getTableData]);
+  }, [getTableData.data]);
 
   const handleCreateDataset = () => {
     setPostDataSetUrl('');
@@ -151,21 +151,21 @@ function DvtNewDatasets() {
   };
 
   useEffect(() => {
-    if (postDataset?.id) {
+    if (postDataset.data?.id) {
       dispatch(
         dvtSidebarSetProperty({
           pageKey: 'chartAdd',
           key: 'dataset',
           value: {
-            id: postDataset.id,
-            value: postDataset.result.table_name,
-            label: postDataset.result.table_name,
+            id: postDataset.data.id,
+            value: postDataset.data.result.table_name,
+            label: postDataset.data.result.table_name,
           },
         }),
       );
       history.push('/chart/add');
     }
-  }, [postDataset]);
+  }, [postDataset.data]);
 
   useEffect(
     () => () => {

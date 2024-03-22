@@ -10,7 +10,7 @@ import {
 export interface DvtDragCardProps {
   label: string;
   value: any;
-  icon: 'question' | 'field_abc' | 'dvt-hashtag' | 'clock';
+  icon: 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
 }
 
 const DvtDargCard = ({ label, value, icon }: DvtDragCardProps) => {

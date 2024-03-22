@@ -19,11 +19,11 @@
  */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtProfileInformation from 'src/components/DvtProfileInformation';
 import DvtTable from 'src/components/DvtTable';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { StyledDvtProfile, StyledDvtTable } from './dvt-profile.module';
 
 function DvtProfile() {
@@ -70,34 +70,36 @@ function DvtProfile() {
   });
 
   useEffect(() => {
-    if (dashboardFavouritePromise) {
-      setDashboardFavoriteData(dashboardFavouritePromise?.result);
+    if (dashboardFavouritePromise.data) {
+      setDashboardFavoriteData(dashboardFavouritePromise.data?.result);
     }
-  }, [dashboardFavouritePromise]);
+  }, [dashboardFavouritePromise.data]);
 
   useEffect(() => {
-    if (chartFavouritePromise) {
-      setChartFavoriteData(chartFavouritePromise?.result);
+    if (chartFavouritePromise.data) {
+      setChartFavoriteData(chartFavouritePromise.data?.result);
     }
-  }, [chartFavouritePromise]);
+  }, [chartFavouritePromise.data]);
 
   useEffect(() => {
-    if (createdContentDashboardPromise) {
-      setCreatedContentDashboardData(createdContentDashboardPromise?.result);
+    if (createdContentDashboardPromise.data) {
+      setCreatedContentDashboardData(
+        createdContentDashboardPromise.data?.result,
+      );
     }
-  }, [createdContentDashboardPromise]);
+  }, [createdContentDashboardPromise.data]);
 
   useEffect(() => {
-    if (createdContentChartPromise) {
-      setCreatedContentChartData(createdContentChartPromise?.result);
+    if (createdContentChartPromise.data) {
+      setCreatedContentChartData(createdContentChartPromise.data?.result);
     }
-  }, [createdContentChartPromise]);
+  }, [createdContentChartPromise.data]);
 
   useEffect(() => {
-    if (recentActivityPromise) {
-      setRecentActivityData(recentActivityPromise.result);
+    if (recentActivityPromise.data) {
+      setRecentActivityData(recentActivityPromise.data.result);
     }
-  }, [recentActivityPromise]);
+  }, [recentActivityPromise.data]);
 
   const tablesHeaderData = {
     dashboardHeader: [

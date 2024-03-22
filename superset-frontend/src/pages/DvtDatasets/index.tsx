@@ -22,9 +22,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { t } from '@superset-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import { dvtSidebarSetPropertyClear } from 'src/dvt-redux/dvt-sidebarReducer';
@@ -102,9 +102,9 @@ function DvtDatasets() {
   });
 
   useEffect(() => {
-    if (datasetApi) {
+    if (datasetApi.data) {
       setData(
-        datasetApi.result.map((item: any) => ({
+        datasetApi.data.result.map((item: any) => ({
           ...item,
           'database.database_name': `${item.database.database_name}`,
           owners: item.owners.length
@@ -117,10 +117,10 @@ function DvtDatasets() {
             : '',
         })),
       );
-      setCount(datasetApi.count);
+      setCount(datasetApi.data.count);
       setSelectedRows([]);
     }
-  }, [datasetApi]);
+  }, [datasetApi.data]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

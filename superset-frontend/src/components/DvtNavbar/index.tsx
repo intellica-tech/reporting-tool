@@ -19,9 +19,9 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useHistory } from 'react-router-dom';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 // import { dvtAppSetSort } from 'src/dvt-redux/dvt-appReducer';
 import { BellOutlined } from '@ant-design/icons';
 import {
@@ -32,6 +32,7 @@ import {
 import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
+import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
 import ImageProfileAdmin from '../../assets/dvt-img/profile-admin.png';
 import DvtButtonTabs, { ButtonTabsDataProps } from '../DvtButtonTabs';
 import DvtButton from '../DvtButton';
@@ -41,6 +42,7 @@ import {
   sqlTabsData,
   DvtNavbarTabsData,
   WithNavbarBottom,
+  WithNavbarBottomOnlyPage,
 } from './dvt-navbar-tabs-data';
 // import DvtInput from '../DvtInput';
 // import DvtSelect from '../DvtSelect';
@@ -87,23 +89,12 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
 
-  const extractDashboardId = (pathName: string) => {
-    const dashboardRegex = /^\/dashboard\/(\d+)\/?$/;
-    const isDashboardPage = dashboardRegex.test(pathName);
-
-    if (isDashboardPage) {
-      const dashboardId = pathName.match(dashboardRegex)?.[1];
-      return dashboardId ?? null;
-    }
-
-    return null;
-  };
-
   const pathTitles = (pathname: string) => {
     switch (pathname) {
       case '/welcome/':
         return t('Welcome Page');
       case '/dashboard/list/':
+      case extractIdPathname(pathName, 'dashboard'):
         return t('Dashboards');
       case '/alert/list/':
         return t('Alerts');
@@ -129,13 +120,11 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       case '/rowlevelsecurity/list/':
         return t('Row Level Security');
       case '/traindata/':
-        return t('New Trained Table');
+        return t('New Output Table');
       case '/role/list/':
         return t('Roles List');
       case '/user/list/':
         return t('List Users');
-      case `/dashboard/${extractDashboardId(pathName)}/`:
-        return t('Dashboards');
       default:
         return '';
     }
@@ -179,12 +168,12 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   };
 
   useEffect(() => {
-    if (getExploreApi) {
-      dispatch(dvtChartSetSelectedChart(getExploreApi.result));
+    if (getExploreApi.data) {
+      dispatch(dvtChartSetSelectedChart(getExploreApi.data.result));
       history.push('/explore/');
       setGetExploreApiUrl('');
     }
-  }, [getExploreApi]);
+  }, [getExploreApi.data]);
 
   const sqlPathname = ['/sqlhub/', '/sqlhub/history/', '/savedqueryview/list/'];
 
@@ -285,7 +274,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           />
         )}
       </NavbarTop>
-      {WithNavbarBottom.includes(pathName) && (
+      {(WithNavbarBottom.includes(pathName) ||
+        WithNavbarBottomOnlyPage.includes(pathName.split('/')[1])) && (
         <NavbarBottom>
           {pathName === '/alert/list/' && (
             <>
@@ -380,20 +370,22 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               />
             </>
           )}
-          {pathName === `/dashboard/${extractDashboardId(pathName)}/` && (
-            <NavbarBottom>
+          {pathName === extractIdPathname(pathName, 'dashboard') && (
+            <>
               <div />
               <NavbarBottomRight>
                 <DvtButton
+                  size="small"
+                  bold
                   label="CANCEL"
                   onClick={() => {
                     history.push('/dashboard/list/');
                   }}
                   colour="grayscale"
                 />
-                <DvtButton label="SAVE" onClick={() => {}} />
+                <DvtButton size="small" bold label="SAVE" onClick={() => {}} />
               </NavbarBottomRight>
-            </NavbarBottom>
+            </>
           )}
           {pathName === '/sqlhub/' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>

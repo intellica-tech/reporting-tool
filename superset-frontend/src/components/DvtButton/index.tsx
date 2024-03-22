@@ -32,6 +32,7 @@ export interface DvtButtonProps {
   iconToRight?: boolean;
   bold?: boolean;
   loading?: boolean;
+  disabled?: boolean;
   loadingType?: 'border' | 'grow';
 }
 
@@ -46,6 +47,7 @@ const DvtButton: React.FC<DvtButtonProps> = ({
   iconToRight = false,
   bold = false,
   loading = false,
+  disabled = false,
   loadingType = 'border',
 }) => (
   <StyledDvtButton
@@ -56,7 +58,7 @@ const DvtButton: React.FC<DvtButtonProps> = ({
     onClick={onClick}
     $bold={bold}
     $iconToRight={iconToRight}
-    disabled={loading}
+    disabled={disabled || loading}
   >
     {label}
     {icon && !loading && <Icon fileName={icon} iconSize="l" />}

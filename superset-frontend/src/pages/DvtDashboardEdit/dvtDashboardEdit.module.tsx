@@ -28,15 +28,18 @@ const StyledDashboardEdit = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  gap: 25px;
 `;
+
 const StyledDashboard = styled.div`
-  width: 100%;
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
+  flex: 1;
 `;
+
 const StyledTab = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 455px;
+  max-width: 455px;
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
 `;
 
@@ -68,12 +71,46 @@ const StyledChartList = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 16px;
-  gap: 26px;
+  gap: 20px;
 `;
 
 const StyledChartFilter = styled.div`
   display: flex;
   gap: 12px;
+`;
+
+const StyledDashboardDroppedList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+`;
+
+const StyledDashboardDroppedListItem = styled.div`
+  background-color: ${({ theme }) => theme.colors.grayscale.light5};
+  height: 350px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  cursor: move;
+
+  &:hover {
+    outline: 1px dashed ${({ theme }) => theme.colors.dvt.primary.light1};
+  }
+`;
+
+const StyledDashboardDroppedListItemTitle = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dvt.text.bold};
+`;
+
+const StyledDashboardDroppedListItemChart = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export {
@@ -84,4 +121,8 @@ export {
   StyledTabsGroup,
   StyledChartList,
   StyledChartFilter,
+  StyledDashboardDroppedList,
+  StyledDashboardDroppedListItem,
+  StyledDashboardDroppedListItemTitle,
+  StyledDashboardDroppedListItemChart,
 };

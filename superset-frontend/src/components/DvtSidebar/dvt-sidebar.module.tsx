@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   minWidth: number;
+  withoutSidebar: boolean;
 }
 
 interface StyledDvtSidebarBodyProps {
@@ -41,11 +42,12 @@ const StyledDvtSidebar = styled.div<SidebarProps>`
   flex-direction: column;
   position: relative;
   width: ${({ minWidth }) => minWidth}px;
-  padding: 32px 16px 39px 16px;
+  padding: 27px 16px 39px 16px;
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: ${({ withoutSidebar }) =>
+    withoutSidebar ? 'calc(100vh - 160px)' : 0};
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
   box-shadow: 10px 10px 50px 0px
     ${({ theme }) => theme.colors.dvt.boxShadow.sidebar};
@@ -54,7 +56,7 @@ const StyledDvtSidebar = styled.div<SidebarProps>`
 
 const StyledDvtSidebarHeader = styled.div`
   padding: 0 16px;
-  padding-bottom: 27px;
+  padding-bottom: 24px;
   margin-bottom: 24px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.dvt.border.base};
 `;
@@ -129,6 +131,45 @@ const StyledDvtSidebarRotateIcon = styled.div<SidebarRotateIcon>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'none')};
 `;
 
+const StyledCollapseScroll = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+  max-height: calc(100vh - 271px);
+  margin-top: 10px;
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
+`;
+
+const ChartDatasetName = styled.div`
+  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  padding: 2px 8px;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 34px;
+  max-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+`;
+
 export {
   StyledDvtSidebar,
   StyledDvtSidebarHeader,
@@ -141,4 +182,6 @@ export {
   StyledDvtSidebarIcon,
   StyledDvtSidebarRotateIcon,
   StyledDvtSidebarLink,
+  StyledCollapseScroll,
+  ChartDatasetName,
 };
