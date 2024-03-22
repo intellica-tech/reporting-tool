@@ -26,6 +26,7 @@ import useFetch from 'src/dvt-hooks/useFetch';
 import { BellOutlined } from '@ant-design/icons';
 import {
   dvtNavbarAlertSetTabs,
+  dvtNavbarChartAddSetVizType,
   dvtNavbarChartSearchVizType,
   dvtNavbarChartsSetTabs,
   dvtNavbarViewlistTabs,
@@ -234,6 +235,15 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       }),
     );
   };
+
+  useEffect(
+    () => () => {
+      if (history.location.pathname === '/chart/add') {
+        dispatch(dvtNavbarChartAddSetVizType(''));
+      }
+    },
+    [history.location],
+  );
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
