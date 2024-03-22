@@ -383,15 +383,15 @@ function ReportList() {
       <DvtIconDataLabel
         label={
           data.length === 0
-            ? t('No Alerts Yet')
+            ? t('No Reports Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={data.length === 0 ? t('Alert') : t('Clear All Filter')}
-        buttonClick={() => {
-          if (data.length > 0) {
-            clearReports();
-          }
-        }}
+        buttonLabel={
+          data.length === 0
+            ? t('Create a New Graph/Chart')
+            : t('Clear All Filter')
+        }
+        buttonClick={() => history.push('/chart/add')}
       />
     </StyledReports>
   );
