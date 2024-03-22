@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
-import useFetch from 'src/hooks/useFetch';
+import useFetch from 'src/dvt-hooks/useFetch';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import Icon from 'src/components/Icons/Icon';
@@ -200,10 +201,10 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   });
 
   useEffect(() => {
-    if (databaseResponse) {
+    if (databaseResponse.data) {
       setInput({
         ...input,
-        databaseList: databaseResponse.result.map(
+        databaseList: databaseResponse.data.result.map(
           (database: { database_name: any; id: any }) => ({
             label: database.database_name,
             value: database.id,
@@ -211,7 +212,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
         ),
       });
     }
-  }, [databaseResponse]);
+  }, [databaseResponse.data]);
 
   useEffect(() => {
     if (input.databaseSelection) {
@@ -223,16 +224,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   }, [input.databaseSelection]);
 
   useEffect(() => {
-    if (schemaResponse) {
+    if (schemaResponse.data) {
       setInput({
         ...input,
-        schemaList: schemaResponse.result.map((item: any, index: any) => ({
+        schemaList: schemaResponse.data.result.map((item: any, index: any) => ({
           label: item,
           value: index,
         })),
       });
     }
-  }, [schemaResponse]);
+  }, [schemaResponse.data]);
 
   useEffect(() => {
     if (input.schemaSelection) {
@@ -244,16 +245,16 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   }, [input.schemaSelection]);
 
   useEffect(() => {
-    if (tableResponse) {
+    if (tableResponse.data) {
       setInput({
         ...input,
-        tableList: tableResponse.result.map((item: any) => ({
+        tableList: tableResponse.data.result.map((item: any) => ({
           label: item.value,
           value: item.value,
         })),
       });
     }
-  }, [tableResponse]);
+  }, [tableResponse.data]);
 
   const metricsHeader = [
     { id: 1, title: t('Metric Key'), field: 'metric_name', input: true },
@@ -385,17 +386,19 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   });
 
   const ownersOptions: { label: string; value: number }[] =
-    ownersFetch?.result.map((item: any) => ({
+    ownersFetch.data?.result.map((item: any) => ({
       label: item.text,
       value: item.value,
     })) || [];
 
   useEffect(() => {
-    if (ownersFetch?.result) {
-      const ownersValues = ownersFetch.result.map((item: any) => item.value);
+    if (ownersFetch.data?.result) {
+      const ownersValues = ownersFetch.data.result.map(
+        (item: any) => item.value,
+      );
       setOwners(ownersValues);
     }
-  }, [ownersFetch]);
+  }, [ownersFetch.data]);
 
   const [autocompleteSelected, setAutocompleteSelected] =
     useState<boolean>(false);
@@ -509,11 +512,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   };
 
   useEffect(() => {
-    if (editDatasetData?.id) {
+    if (editDatasetData.data?.id) {
       dispatch(dvtHomeDeleteSuccessStatus('Success'));
       onClose();
     }
-  }, [editDatasetData]);
+  }, [editDatasetData.data]);
 
   useEffect(() => {
     if (apiUrl) {
@@ -524,14 +527,14 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   }, [apiUrl]);
 
   useEffect(() => {
-    if (syncApi?.result) {
+    if (syncApi.data?.result) {
       setModalData((prevData: any) => ({
         ...prevData,
-        columns: syncApi.result.columns,
+        columns: syncApi.data.result.columns,
       }));
       setSyncApiUrl('');
     }
-  }, [syncApi]);
+  }, [syncApi.data]);
 
   return (
     <StyledDatasetEdit>
