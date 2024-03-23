@@ -25,6 +25,14 @@ import DvtPopper from '../DvtPopper';
 import DvtSelect from '../DvtSelect';
 import DvtNavigationBar from '../DvtNavigationBar';
 import { DvtSidebarData, DefaultOrder } from './dvtSidebarData';
+import { usePluginContext } from '../DynamicPlugins';
+import DvtList from '../DvtList';
+import DvtDatePicker from '../DvtDatepicker';
+import DvtInput from '../DvtInput';
+import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
+import DvtInputSelect from '../DvtInputSelect';
+import DvtDargCardList from '../DvtDragCardList';
+import DvtCollapse from '../DvtCollapse';
 import Icon from '../Icons/Icon';
 import {
   StyledDvtSidebar,
@@ -41,14 +49,6 @@ import {
   StyledCollapseScroll,
   ChartDatasetName,
 } from './dvt-sidebar.module';
-import DvtList from '../DvtList';
-import DvtDatePicker from '../DvtDatepicker';
-import { usePluginContext } from '../DynamicPlugins';
-import DvtInput from '../DvtInput';
-import DvtSelectDatabaseList from '../DvtSelectDatabaseList';
-import DvtInputSelect from '../DvtInputSelect';
-import DvtDargCardList from '../DvtDragCardList';
-import DvtCollapse from '../DvtCollapse';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -109,9 +109,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
   const [chartSearch, setChartSearch] = useState<string>('');
-  const [chartMetrics, setChartMetrics] = useState<any[]>([]);
-  const [chartColumns, setChartColumns] = useState<any[]>([]);
-  const [chartCollapses, setChartCollapses] = useState<any[]>([]);
+  const [chartCollapses, setChartCollapses] = useState<any[]>([
+    'metrics',
+    'columns',
+  ]);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -655,24 +656,15 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     changeAlgorithmName();
   }, [selectCategories]);
 
-  useEffect(() => {
-    if (chartSelector?.dataset) {
-      // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
-      const iconQuestions = ['BOOLEAN'];
-      const iconHashtags = ['BIGINT', 'FLOAT64', 'DOUBLE PRECISION'];
-      const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
+  const columnOrMetricFormatData = (data: any[], objectLabel: string) => {
+    // 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
+    const iconQuestions = ['BOOLEAN'];
+    const iconHashtags = ['BIGINT', 'FLOAT64', 'DOUBLE PRECISION'];
+    const iconClocks = ['TIMESTAMP WITHOUT TIME ZONE'];
 
-      setChartMetrics(
-        chartSelector.dataset.metrics.map((ci: any) => ({
-          label: ci.expression,
-          value: ci,
-          icon: 'function_x',
-        })),
-      );
-
-      setChartColumns(
-        chartSelector.dataset.columns.map((ci: any) => ({
-          label: ci.column_name,
+    return data
+      ? data.map((ci: any) => ({
+          label: ci[objectLabel],
           value: ci,
           icon: ci.python_date_format
             ? 'clock'
@@ -682,12 +674,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
               (iconHashtags.includes(ci.type) && 'dvt-hashtag') ||
               (iconClocks.includes(ci.type) && 'clock') ||
               'field_abc',
-        })),
-      );
-
-      setChartCollapses(['metrics', 'columns']);
-    }
-  }, [chartAddSelector]);
+        }))
+      : [];
+  };
 
   const handleChartCollapseSetOpen = (bln: boolean, active: string) => {
     if (bln) {
@@ -700,19 +689,21 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   };
 
   // Chart searching for metrics and columns find data
-  const searchFindChartMetrics = chartMetrics.filter(
-    (cf: { label: string }) => {
-      const labelLowercase = cf.label.toLowerCase();
-      return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
-    },
-  );
+  const searchFindChartMetrics: any[] = columnOrMetricFormatData(
+    chartSelector?.dataset?.metrics,
+    'expression',
+  ).filter((cf: { label: string }) => {
+    const labelLowercase = String(cf.label).toLowerCase();
+    return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
+  });
 
-  const searchFindChartColumns = chartColumns.filter(
-    (cf: { label: string }) => {
-      const labelLowercase = cf.label.toLowerCase();
-      return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
-    },
-  );
+  const searchFindChartColumns: any[] = columnOrMetricFormatData(
+    chartSelector?.dataset?.columns,
+    'column_name',
+  ).filter((cf: { label: string }) => {
+    const labelLowercase = String(cf.label).toLowerCase();
+    return labelLowercase.indexOf(chartSearch.toLowerCase()) > -1;
+  });
 
   return (
     <StyledDvtSidebar

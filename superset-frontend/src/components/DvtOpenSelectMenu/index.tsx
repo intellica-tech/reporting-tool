@@ -235,7 +235,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
               const filtersAutoAddOperator =
                 type === 'filters'
                   ? values.operator?.value
-                    ? vl.python_date_format
+                    ? vl.python_date_format ||
+                      vl.type === 'TIMESTAMP WITHOUT TIME ZONE'
                       ? {
                           operator: {
                             label: t('No filter'),
@@ -252,7 +253,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                           filterType: '',
                         }
                       : {}
-                    : vl.python_date_format
+                    : vl.python_date_format ||
+                      vl.type === 'TIMESTAMP WITHOUT TIME ZONE'
                     ? {
                         operator: {
                           label: t('No filter'),

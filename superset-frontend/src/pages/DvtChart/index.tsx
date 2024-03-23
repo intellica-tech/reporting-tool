@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
@@ -22,6 +23,9 @@ import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
+import moment from 'moment';
+import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
+import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import DvtChartWithoutLangFindData from './dvtChartWithoutLangFindData';
@@ -44,6 +48,7 @@ import {
 
 const DvtChart = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const selectedChart = useAppSelector(state => state.dvtChart.selectedChart);
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
@@ -51,12 +56,7 @@ const DvtChart = () => {
   const selectBars = ChartSelectBars.filter(vf =>
     [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
   );
-  const statusVizType = selectBars.find(
-    v => v.status === selectedVizType,
-  )?.status;
-  const [active, setActive] = useState<string>(
-    statusVizType || 'echarts_timeseries_line',
-  );
+  const [active, setActive] = useState<string>(selectedVizType);
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Results',
     value: 'results',
@@ -129,6 +129,8 @@ const DvtChart = () => {
     size: [],
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
+  const [exploreJsonUrl, setExploreJsonUrl] = useState('');
+  const [exploreJsonResultsUrl, setExploreJsonResultsUrl] = useState('');
   const [chartData, setChartData] = useState<any[] | any>([]);
   const [chartStatus, setChartStatus] = useState<
     null | 'failed' | 'loading' | 'success' | 'rendered'
@@ -148,7 +150,266 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const formData = new FormData();
+  const adhocFiltersFormation = (v: any) => {
+    const fixOperator = (o: string) => {
+      switch (o) {
+        case '!=':
+          return '<>';
+        case '==':
+          return '=';
+        default:
+          return o;
+      }
+    };
+
+    const operatorFind = [
+      ...openSelectMenuData.operator.having,
+      openSelectMenuData.operator.where,
+    ].find((f: any) => f.value === fixOperator(v.operator));
+
+    const findColumn = selectedChart?.dataset.columns.find(
+      (f: any) => f.column_name === v.subject,
+    );
+
+    const onTimeRange =
+      v.operator === 'TEMPORAL_RANGE'
+        ? {
+            filterType: 'time_range',
+            addTimeRange: {
+              label: '2024-02-23 ≤ order_date < 2024-03-23',
+              menuLabel: 'last month',
+              range: 'last',
+              selected: 'month',
+              comparator: 'Last month',
+            },
+          }
+        : {};
+
+    return {
+      id: moment().unix(),
+      label:
+        v.operator === 'TEMPORAL_RANGE'
+          ? v.comparator === 'No filter'
+            ? `${v.subject} (${v.comparator})`
+            : `${v.comparator} ${v.subject} ${v.comparator}`
+          : '',
+      values: {
+        saved: '',
+        column: findColumn,
+        operator: operatorFind,
+        aggregate: '',
+        option: '',
+        comparator: v.comparator ? v.comparator : '',
+        sql: v.subject,
+        expressionType: 'SIMPLE',
+        clause: 'WHERE',
+        ...onTimeRange,
+      },
+    };
+  };
+
+  const metricsOrColumnsFormation = (v: any) => {
+    if (selectedChart?.dataset.metrics.some((s: any) => s.metric_name === v)) {
+      const findItem = selectedChart.dataset.metrics.find(
+        (f: any) => f.metric_name === v,
+      );
+      return {
+        id: moment().unix(),
+        label: findItem.expression,
+        values: {
+          saved: findItem,
+          column: '',
+          operator: '',
+          aggregate: '',
+          option: '',
+          comparator: '',
+          sql: '',
+          expressionType: 'SAVED',
+          clause: 'WHERE',
+        },
+      };
+    }
+    if (typeof v === 'string') {
+      const findItem = selectedChart?.dataset.columns.find(
+        (f: any) => f.column_name === v,
+      );
+      return {
+        id: moment().unix(),
+        label: findItem.column_name,
+        values: {
+          saved: '',
+          column: findItem,
+          operator: '',
+          aggregate: '',
+          option: '',
+          comparator: '',
+          sql: findItem.column_name,
+          expressionType: 'SIMPLE',
+          clause: 'WHERE',
+        },
+      };
+    }
+    return {
+      id: moment().unix(),
+      label: v?.label,
+      values: {
+        saved: '',
+        column: v?.column ? v.column : '',
+        operator: '',
+        aggregate: v?.aggregate
+          ? { label: v.aggregate, value: v.aggregate }
+          : '',
+        option: '',
+        comparator: '',
+        sql: v?.sqlExpression ? v.sqlExpression : '',
+        expressionType: v?.expressionType ? v.expressionType : '',
+        clause: 'WHERE',
+      },
+    };
+  };
+
+  useEffect(() => {
+    if (history.location.search && selectedChart?.form_data) {
+      if (history.location.search.split('?slice_id=')[1]) {
+        const getFormData = selectedChart.form_data;
+
+        const filtersOnItem = getFormData.granularity_sqla
+          ? [
+              {
+                id: 1711213021,
+                label:
+                  getFormData.time_range === 'No filter'
+                    ? `${getFormData.granularity_sqla} (No filter)`
+                    : getFormData.time_range,
+                values: {
+                  saved: '',
+                  column: selectedChart.dataset.columns.find(
+                    (f: any) => f.column_name === getFormData.granularity_sqla,
+                  ),
+                  operator: {
+                    label: getFormData.time_range,
+                    value: 'TEMPORAL_RANGE',
+                  },
+                  aggregate: '',
+                  option: '',
+                  comparator: getFormData.time_range,
+                  sql: getFormData.granularity_sqla,
+                  expressionType: 'SIMPLE',
+                  clause: 'WHERE',
+                  filterType: 'time_range',
+                },
+              },
+            ]
+          : [{}];
+        setActive(getFormData.viz_type);
+        setChartStatus('loading');
+        setValues({
+          x_axis: [],
+          time_grain_sqla: {
+            label: t('Day'),
+            value: 'P1D',
+          },
+          metrics: getFormData.metrics
+            ? getFormData.metrics.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          groupby: getFormData.groupby
+            ? getFormData.groupby.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          contributionMode: '',
+          adhoc_filters: [
+            ...filtersOnItem,
+            ...(getFormData.adhoc_filters
+              ? getFormData.adhoc_filters.map((v: any) =>
+                  adhocFiltersFormation(v),
+                )
+              : []),
+          ],
+          limit: '',
+          timeseries_limit_metric: [],
+          order_desc: getFormData?.order_desc !== false,
+          row_limit: {
+            label: '10000',
+            value: '10000',
+          },
+          truncate_metric: true,
+          show_empty_columns: true,
+          rolling_type: {
+            label: t('None'),
+            value: 'null',
+          },
+          time_compare: [],
+          comparison_type: {
+            label: t('Actual values'),
+            value: 'values',
+          },
+          resample_rule: '',
+          resample_method: '',
+          annotation_layers: [],
+          forecastEnabled: false,
+          forecastPeriods: '10',
+          forecastInterval: '0.8',
+          forecastSeasonalityYearly: {
+            label: t('default'),
+            value: 'null',
+          },
+          forecastSeasonalityWeekly: {
+            label: t('default'),
+            value: 'null',
+          },
+          forecastSeasonalityDaily: {
+            label: t('default'),
+            value: 'null',
+          },
+          query_mode:
+            getFormData?.query_mode === 'raw'
+              ? { label: t('RAW RECORDS'), value: 'raw' }
+              : { label: t('AGGREGATE'), value: 'aggregate' },
+          percent_metrics: [],
+          server_pagination: false,
+          server_page_length: {
+            label: t('10'),
+            value: 10,
+          },
+          show_totals: false,
+          all_columns: [],
+          order_by_cols: [],
+          metric: getFormData.metric
+            ? [metricsOrColumnsFormation(getFormData.metric)]
+            : [],
+          sort_by_metric: false,
+          subheader: '',
+          dimension: [],
+          entity: [],
+          x: [],
+          y: [],
+          size: [],
+        });
+
+        // {"slice_id":${
+        //     history.location.search.split('?slice_id=')[1]
+        //   }
+
+        setChartApiUrl(
+          `chart/data/?form_data=%7B%22slice_id%22%3A${
+            history.location.search.split('?slice_id=')[1]
+          }%7D`,
+        );
+
+        // setExploreJsonUrl(
+        //   `explore_json/?form_data=%7B%22slice_id%22%3A${
+        //     history.location.search.split('?slice_id=')[1]
+        //   }%7D`,
+        // );
+        // setExploreJsonResultsUrl(
+        //   `explore_json/?form_data=%7B%22slice_id%22%3A${
+        //     history.location.search.split('?slice_id=')[1]
+        //   }%7D&results=true`,
+        // );
+      } else {
+        setActive('table');
+      }
+    }
+  }, [history.location.search, selectedChart?.form_data]);
 
   const metricsFormation = (valueKey: string) =>
     values[valueKey].map((v: any) =>
@@ -518,13 +779,6 @@ const DvtChart = () => {
     return result;
   };
 
-  formData.append('datasource', JSON.stringify(formDataObj.datasource));
-  formData.append('force', JSON.stringify(formDataObj.force));
-  formData.append('form_data', JSON.stringify(formDataObj.form_data));
-  formData.append('queries', JSON.stringify(formDataObj.queries));
-  formData.append('result_format', JSON.stringify(formDataObj.result_format));
-  formData.append('result_type', JSON.stringify(formDataObj.result_type));
-
   const chartFullPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
@@ -534,8 +788,6 @@ const DvtChart = () => {
       queries: onlyVizChartFindFormPayload('queries'),
     },
   });
-
-  formData.append('result_type', JSON.stringify('results'));
 
   const chartResultsPromise = useFetch({
     url: chartApiUrl,
@@ -550,6 +802,43 @@ const DvtChart = () => {
       result_type: 'results',
     },
   });
+
+  // const formData = new FormData();
+  // formData.append(
+  //   'form_data',
+  //   JSON.stringify(onlyVizChartFindFormPayload('form_data')),
+  // );
+
+  // formData.append('force', JSON.stringify(formDataObj.force));
+  // formData.append('form_data', JSON.stringify(formDataObj.form_data));
+  // formData.append('queries', JSON.stringify(formDataObj.queries));
+  // formData.append('result_format', JSON.stringify(formDataObj.result_format));
+  // formData.append('result_type', JSON.stringify(formDataObj.result_type));
+  // formData.append('result_type', JSON.stringify('results'));
+
+  // const exploreJsonPromise = useFetch({
+  //   url: exploreJsonUrl,
+  //   defaultParam: '/superset/',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Disposition': 'form-data; name="form_data"',
+  //   },
+  //   body: formData,
+  //   formData: true,
+  //   withoutJson: true,
+  // });
+
+  // const exploreJsonResultsPromise = useFetch({
+  //   url: exploreJsonResultsUrl,
+  //   defaultParam: '/superset/',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Disposition': 'form-data; name="form_data"',
+  //   },
+  //   body: formData,
+  //   formData: true,
+  //   withoutJson: true,
+  // });
 
   const chartSamplePromise = useFetch({
     url: sampleApiUrl,
@@ -714,6 +1003,13 @@ const DvtChart = () => {
         return false;
     }
   };
+
+  useEffect(
+    () => () => {
+      dispatch(dvtNavbarChartAddSetVizType(''));
+    },
+    [],
+  );
 
   return (
     <StyledChart>

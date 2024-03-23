@@ -212,7 +212,9 @@ const DvtInputDrop = ({
 
     const onlyFilterNoFilter =
       type === 'filters' &&
-      (jsonDropData?.python_date_format || !jsonDropData.type) &&
+      (jsonDropData?.python_date_format ||
+        jsonDropData.type === 'TIMESTAMP WITHOUT TIME ZONE' ||
+        !jsonDropData.type) &&
       !jsonDropData.expression;
 
     const onFilterAndClock = onlyFilterNoFilter
@@ -312,6 +314,7 @@ const DvtInputDrop = ({
       datasourceApi &&
       values.column &&
       !values.column.python_date_format &&
+      values.column.type !== 'TIMESTAMP WITHOUT TIME ZONE' &&
       type === 'filters'
     ) {
       setOptionApiUrl(
@@ -322,7 +325,8 @@ const DvtInputDrop = ({
 
   useEffect(() => {
     if (
-      values.column.python_date_format &&
+      (values.column.python_date_format ||
+        values.column.type === 'TIMESTAMP WITHOUT TIME ZONE') &&
       type === 'filters' &&
       addTimeRange?.label
     ) {
@@ -348,7 +352,8 @@ const DvtInputDrop = ({
     const newAddItem = {
       id: getId === null ? moment().unix() : getId,
       label:
-        values.column.python_date_format &&
+        (values.column.python_date_format ||
+          values.column.type === 'TIMESTAMP WITHOUT TIME ZONE') &&
         type === 'filters' &&
         addTimeRange?.label
           ? addTimeRange?.label

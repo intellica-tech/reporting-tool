@@ -172,13 +172,35 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
 
   useEffect(() => {
     if (history.location?.search) {
-      setGetExploreApiUrl(`explore/${history.location?.search}`);
+      setTimeout(() => {
+        setGetExploreApiUrl(`explore/${history.location.search}`);
+      }, 500);
     }
   }, [history.location]);
 
   useEffect(() => {
     if (getExploreApi.data) {
-      dispatch(dvtChartSetSelectedChart(getExploreApi.data.result));
+      const datasource =
+        getExploreApi.data.result.form_data.datasource.split('__');
+
+      const urlParams = getExploreApi.data.result.form_data.url_params
+        ?.datasource_id
+        ? getExploreApi.data.result.form_data.url_params
+        : {
+            ...getExploreApi.data.result.form_data.url_params,
+            datasource_id: datasource[0],
+            datasource_type: datasource[1],
+          };
+
+      dispatch(
+        dvtChartSetSelectedChart({
+          ...getExploreApi.data.result,
+          form_data: {
+            ...getExploreApi.data.result.form_data,
+            url_params: urlParams,
+          },
+        }),
+      );
       if (!history.location?.search) {
         history.push('/explore/');
       }

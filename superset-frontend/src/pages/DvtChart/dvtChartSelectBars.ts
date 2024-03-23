@@ -19,11 +19,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     status: 'bubble_v2',
     icon: 'dvt-linear_chart',
   },
-  {
-    popoverLabel: 'Big Number with Trendline',
-    status: 'big_number',
-    icon: 'dvt-linear_chart',
-  },
+  // {
+  //   popoverLabel: 'Big Number with Trendline',
+  //   status: 'big_number',
+  //   icon: 'dvt-linear_chart',
+  // },
   {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',

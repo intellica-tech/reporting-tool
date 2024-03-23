@@ -24,7 +24,6 @@ const DvtDargCard = ({ label, value, icon }: DvtDragCardProps) => {
         <StyledDvtCardIcon>
           {icon === 'question' ? '?' : <Icon fileName={icon} iconSize="xl" />}
         </StyledDvtCardIcon>
-
         <StyledDvtCardLabel>{label}</StyledDvtCardLabel>
       </StyledDvtCardCard>
     </StyledDvtCard>
