@@ -21,6 +21,7 @@ import {
   StyledModalCard,
   StyledModalCardBody,
 } from './dvt-modal.module';
+import DvtSaveChartModal from './body/save-chart';
 
 export interface ModalProps {
   meta: any;
@@ -55,6 +56,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtTimeRange meta={meta} onClose={onClose} />;
     case 'dashboard-filter':
       return <DvtDashoardFilterModal meta={meta} onClose={onClose} />;
+    case 'save-chart':
+      return <DvtSaveChartModal meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -70,24 +73,20 @@ const DvtModal = () => {
 
   const size = (() => {
     switch (component) {
-      case 'alert-add-modal':
-        return 'medium';
-      case 'report-add-modal':
-        return 'medium';
       case 'delete-modal':
         return 'xsmall';
+      case 'alert-add-modal':
+      case 'report-add-modal':
+        return 'medium';
+      case 'save-query':
+      case 'save-dataset':
+      case 'time-range':
+      case 'save-chart':
+        return 'custom';
       case 'connection-add-modal':
-        return 'large';
       case 'edit-connection':
-        return 'large';
       case 'rowlevelsecurity-add-modal':
         return 'large';
-      case 'save-query':
-        return 'custom';
-      case 'save-dataset':
-        return 'custom';
-      case 'time-range':
-        return 'custom';
       case 'dashboard-filter':
         return 'xlarge';
       default:

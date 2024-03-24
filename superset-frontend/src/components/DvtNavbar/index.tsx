@@ -418,7 +418,13 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               <DvtButton
                 label={t('Save')}
                 typeColour="powder"
-                onClick={() => {}}
+                onClick={() =>
+                  dispatch(
+                    openModal({
+                      component: 'save-chart',
+                    }),
+                  )
+                }
               />
             </>
           )}

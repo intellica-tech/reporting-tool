@@ -21,11 +21,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface DvtChartState {
   selectedChart: any;
   addTimeRange: any;
+  queryContext: any;
 }
 
 const initialState: DvtChartState = {
   selectedChart: {},
   addTimeRange: {},
+  queryContext: {},
 };
 
 const dvtChartSlice = createSlice({
@@ -40,10 +42,17 @@ const dvtChartSlice = createSlice({
       ...state,
       addTimeRange: action.payload,
     }),
+    dvtChartSetQueryContext: (state, action: PayloadAction<any>) => ({
+      ...state,
+      queryContext: action.payload,
+    }),
   },
 });
 
-export const { dvtChartSetSelectedChart, dvtChartSetTimeRange } =
-  dvtChartSlice.actions;
+export const {
+  dvtChartSetSelectedChart,
+  dvtChartSetTimeRange,
+  dvtChartSetQueryContext,
+} = dvtChartSlice.actions;
 
 export default dvtChartSlice.reducer;

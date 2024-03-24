@@ -7,7 +7,10 @@ import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserv
 import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
 import withToasts from 'src/components/MessageToasts/withToasts';
-import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
+import {
+  dvtChartSetQueryContext,
+  dvtChartSetSelectedChart,
+} from 'src/dvt-redux/dvt-chartReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
 import DvtSelectButton from 'src/components/DvtSelectButton';
@@ -50,6 +53,7 @@ const DvtChart = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const selectedChart = useAppSelector(state => state.dvtChart.selectedChart);
+  const modalComponent = useAppSelector(state => state.dvtModal.component);
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
   );
@@ -129,8 +133,8 @@ const DvtChart = () => {
     size: [],
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
-  const [exploreJsonUrl, setExploreJsonUrl] = useState('');
-  const [exploreJsonResultsUrl, setExploreJsonResultsUrl] = useState('');
+  // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
+  // const [exploreJsonResultsUrl, setExploreJsonResultsUrl] = useState('');
   const [chartData, setChartData] = useState<any[] | any>([]);
   const [chartStatus, setChartStatus] = useState<
     null | 'failed' | 'loading' | 'success' | 'rendered'
@@ -273,10 +277,10 @@ const DvtChart = () => {
       if (history.location.search.split('?slice_id=')[1]) {
         const getFormData = selectedChart.form_data;
 
-        const filtersOnItem = getFormData.granularity_sqla
+        const filtersOnItem = getFormData?.granularity_sqla
           ? [
               {
-                id: 1711213021,
+                id: moment().unix(),
                 label:
                   getFormData.time_range === 'No filter'
                     ? `${getFormData.granularity_sqla} (No filter)`
@@ -300,11 +304,14 @@ const DvtChart = () => {
                 },
               },
             ]
-          : [{}];
+          : [];
+
         setActive(getFormData.viz_type);
         setChartStatus('loading');
         setValues({
-          x_axis: [],
+          x_axis: getFormData.x_axis
+            ? [metricsOrColumnsFormation(getFormData.x_axis)]
+            : [],
           time_grain_sqla: {
             label: t('Day'),
             value: 'P1D',
@@ -389,11 +396,13 @@ const DvtChart = () => {
         //     history.location.search.split('?slice_id=')[1]
         //   }
 
-        setChartApiUrl(
-          `chart/data/?form_data=%7B%22slice_id%22%3A${
-            history.location.search.split('?slice_id=')[1]
-          }%7D`,
-        );
+        setChartApiUrl('chart/data');
+
+        // setChartApiUrl(
+        //   `chart/data/?form_data=%7B%22slice_id%22%3A${
+        //     history.location.search.split('?slice_id=')[1]
+        //   }%7D`,
+        // );
 
         // setExploreJsonUrl(
         //   `explore_json/?form_data=%7B%22slice_id%22%3A${
@@ -778,6 +787,18 @@ const DvtChart = () => {
 
     return result;
   };
+
+  useEffect(() => {
+    if (modalComponent === 'save-chart') {
+      dispatch(
+        dvtChartSetQueryContext({
+          ...formDataObj,
+          form_data: onlyVizChartFindFormPayload('form_data'),
+          queries: onlyVizChartFindFormPayload('queries'),
+        }),
+      );
+    }
+  }, [modalComponent]);
 
   const chartFullPromise = useFetch({
     url: chartApiUrl,
