@@ -84,6 +84,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const chartAddSidebarSelector = useAppSelector(
     state => state.dvtSidebar.chartAdd,
   );
+  const saveDisabled = useAppSelector(state => state.dvtChart.saveDisabled);
   const sqlQuerySelector = useAppSelector(state => state.dvtSqlhub);
   const sqlLabSidebarSelector = useAppSelector(
     state => state.dvtSidebar.sqlhub,
@@ -425,6 +426,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                     }),
                   )
                 }
+                disabled={saveDisabled}
               />
             </>
           )}

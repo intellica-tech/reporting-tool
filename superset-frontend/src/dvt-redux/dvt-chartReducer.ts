@@ -22,12 +22,14 @@ interface DvtChartState {
   selectedChart: any;
   addTimeRange: any;
   queryContext: any;
+  saveDisabled: boolean;
 }
 
 const initialState: DvtChartState = {
   selectedChart: {},
   addTimeRange: {},
   queryContext: {},
+  saveDisabled: true,
 };
 
 const dvtChartSlice = createSlice({
@@ -46,6 +48,10 @@ const dvtChartSlice = createSlice({
       ...state,
       queryContext: action.payload,
     }),
+    dvtChartSetSaveDisabled: (state, action: PayloadAction<boolean>) => ({
+      ...state,
+      saveDisabled: action.payload,
+    }),
   },
 });
 
@@ -53,6 +59,7 @@ export const {
   dvtChartSetSelectedChart,
   dvtChartSetTimeRange,
   dvtChartSetQueryContext,
+  dvtChartSetSaveDisabled,
 } = dvtChartSlice.actions;
 
 export default dvtChartSlice.reducer;

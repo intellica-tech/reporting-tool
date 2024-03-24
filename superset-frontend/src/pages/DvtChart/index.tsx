@@ -9,6 +9,7 @@ import { t } from '@superset-ui/core';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import {
   dvtChartSetQueryContext,
+  dvtChartSetSaveDisabled,
   dvtChartSetSelectedChart,
 } from 'src/dvt-redux/dvt-chartReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
@@ -1024,6 +1025,10 @@ const DvtChart = () => {
         return false;
     }
   };
+
+  useEffect(() => {
+    dispatch(dvtChartSetSaveDisabled(createChartDisableds(active)));
+  }, [createChartDisableds(active)]);
 
   useEffect(
     () => () => {
