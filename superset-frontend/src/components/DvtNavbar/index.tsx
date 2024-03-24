@@ -31,7 +31,10 @@ import {
   dvtNavbarChartsSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
-import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
+import {
+  dvtChartSetSelectedChart,
+  dvtChartSetSlice,
+} from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
@@ -181,27 +184,34 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
 
   useEffect(() => {
     if (getExploreApi.data) {
-      const datasource =
-        getExploreApi.data.result.form_data.datasource.split('__');
+      const { result } = getExploreApi.data;
+      const datasource = result.form_data.datasource.split('__');
 
-      const urlParams = getExploreApi.data.result.form_data.url_params
-        ?.datasource_id
-        ? getExploreApi.data.result.form_data.url_params
+      const urlParams = result.form_data.url_params?.datasource_id
+        ? result.form_data.url_params
         : {
-            ...getExploreApi.data.result.form_data.url_params,
+            ...result.form_data.url_params,
             datasource_id: datasource[0],
             datasource_type: datasource[1],
           };
 
       dispatch(
         dvtChartSetSelectedChart({
-          ...getExploreApi.data.result,
+          ...result,
           form_data: {
-            ...getExploreApi.data.result.form_data,
+            ...result.form_data,
             url_params: urlParams,
           },
         }),
       );
+      if (result.slice) {
+        dispatch(
+          dvtChartSetSlice({
+            id: result.slice.slice_id,
+            name: result.slice.slice_name,
+          }),
+        );
+      }
       if (!history.location?.search) {
         history.push('/explore/');
       }

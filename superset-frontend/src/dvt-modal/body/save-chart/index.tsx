@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import DvtModalHeader from 'src/components/DvtModalHeader';
 import { t } from '@superset-ui/core';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
@@ -10,20 +11,58 @@ import DvtRadioList from 'src/components/DvtRadioList';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import useFetch from 'src/dvt-hooks/useFetch';
+import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import {
   StyledSaveChart,
   StyledSaveChartButtonContainer,
 } from './save-chart.module';
 
 const DvtSaveChartModal = ({ onClose }: ModalProps) => {
+  const history = useHistory();
   const { addSuccessToast } = useToasts();
   const chartSelector = useAppSelector(state => state.dvtChart);
-  const [active, setActive] = useState('save_as');
-  const [values, setValues] = useState({
-    chartName: '',
+  const { selectedChart, queryContext, slice } = chartSelector;
+  const [active, setActive] = useState(slice.id ? 'save' : 'save_as');
+  const [values, setValues] = useState<any>({
+    chartName: slice.name ? slice.name : '',
     addToDashboard: '',
   });
   const [chartUrl, setChartUrl] = useState('');
+  const [dashboardOption, setDashboardOption] = useState([]);
+
+  const metaDataDashboards =
+    active === 'save' && selectedChart.metadata
+      ? selectedChart.metadata.dashboards
+      : [];
+
+  const searchApiUrls = `dashboard/${fetchQueryParamsSearch({
+    columns: ['id', 'dashboard_title'],
+    filters: [
+      { col: 'dashboard_title', opr: 'ct', value: '' },
+      {
+        col: 'owners',
+        opr: 'rel_m_m',
+        value: '1',
+      },
+    ],
+    pageSize: 100,
+    orderColumn: 'dashboard_title',
+  })}`;
+
+  const dashboardDataPromise = useFetch({ url: searchApiUrls });
+
+  useEffect(() => {
+    if (dashboardDataPromise.data) {
+      setDashboardOption(
+        dashboardDataPromise.data.result
+          .filter((f: any) => f.dashboard_title)
+          .map((item: any) => ({
+            label: item.dashboard_title,
+            value: item.id,
+          })),
+      );
+    }
+  }, [dashboardDataPromise.data]);
 
   const paramsRemoveObject = [
     'force',
@@ -39,24 +78,34 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
     return updatedForm;
   };
 
-  const { queryContext } = chartSelector;
+  const onDashboard = values.addToDashboard?.value
+    ? [
+        values.addToDashboard.value,
+        ...metaDataDashboards
+          .filter((d: { id: number }) => d.id !== values.addToDashboard.value)
+          .map((d: { id: number }) => d.id),
+      ]
+    : metaDataDashboards.map((d: { id: number }) => d.id);
+
+  const onOwners = active === 'save' ? { owners: [1] } : {};
 
   const chartPromise = useFetch({
     url: chartUrl,
-    method: 'POST',
+    method: active === 'save' ? 'PUT' : 'POST',
     body: {
-      dashboards: values.addToDashboard ? [] : [],
+      dashboards: onDashboard,
       datasource_id: queryContext?.datasource?.id,
       datasource_type: queryContext?.datasource?.type,
+      ...onOwners,
       params: JSON.stringify({
         ...paramsRemoveObjects(queryContext?.form_data, paramsRemoveObject),
-        dashboards: [],
+        dashboards: onDashboard,
       }),
       query_context: JSON.stringify({
         ...queryContext,
         form_data: {
           ...paramsRemoveObjects(queryContext?.form_data, queryRemoveObject),
-          dashboards: [],
+          dashboards: onDashboard,
         },
       }),
       slice_name: values.chartName,
@@ -66,7 +115,13 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
 
   useEffect(() => {
     if (chartPromise.data) {
-      // slice id add
+      history.push({
+        pathname: '/explore/',
+        search: `?slice_id=${chartPromise.data.id}`,
+        state: {
+          update: true,
+        },
+      });
       addSuccessToast(t('Chart saved successfully'));
       onClose();
     }
@@ -79,7 +134,7 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
   }, [chartPromise.loading]);
 
   const handleSave = () => {
-    setChartUrl('chart');
+    setChartUrl(active === 'save' ? `chart/${slice.id}` : 'chart');
   };
 
   return (
@@ -88,7 +143,11 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
       <StyledSaveChart>
         <DvtRadioList
           data={[
-            { label: t('Save (Overwrite)'), value: 'save', disabled: true },
+            {
+              label: t('Save (Overwrite)'),
+              value: 'save',
+              disabled: !slice.id,
+            },
             { label: t('Save as...'), value: 'save_as' },
           ]}
           active={active}
@@ -104,7 +163,8 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
           selectedValue={values.addToDashboard}
           setSelectedValue={v => setValues({ ...values, addToDashboard: v })}
           typeDesign="navbar"
-          data={[]}
+          data={dashboardOption}
+          onShowClear
         />
         <StyledSaveChartButtonContainer>
           <DvtButton

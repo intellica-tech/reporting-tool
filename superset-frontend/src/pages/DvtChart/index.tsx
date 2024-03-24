@@ -11,6 +11,7 @@ import {
   dvtChartSetQueryContext,
   dvtChartSetSaveDisabled,
   dvtChartSetSelectedChart,
+  dvtChartSetSlice,
 } from 'src/dvt-redux/dvt-chartReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtButton from 'src/components/DvtButton';
@@ -978,6 +979,7 @@ const DvtChart = () => {
   useEffect(
     () => () => {
       dispatch(dvtChartSetSelectedChart({}));
+      dispatch(dvtChartSetSlice({ id: '', name: '' }));
     },
     [],
   );
