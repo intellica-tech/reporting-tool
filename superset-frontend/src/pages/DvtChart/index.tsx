@@ -1200,7 +1200,7 @@ const DvtChart = () => {
               label={item.collapse_label}
               popoverLabel={item.collapse_popper}
               popperError={item.collapse_popper_error}
-              popperErrorSuccess={values.x_axis.length && values.metrics.length}
+              popperErrorSuccess={!createChartDisableds(active)}
               popoverDirection="bottom"
               isOpen={collapsesIsOpen.includes(item.collapse_active)}
               setIsOpen={bln =>
