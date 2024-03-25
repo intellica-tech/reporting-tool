@@ -1358,7 +1358,7 @@ const DvtChart = () => {
                 triggerRender={false}
                 force={false}
                 datasource={selectedChart?.dataset}
-                errorMessage={<div>Error</div>}
+                // errorMessage={<div>Error</div>}
                 formData={formDataObj.form_data}
                 // latestQueryFormData={formDataObj.form_data}
                 onQuery={() => {}}
