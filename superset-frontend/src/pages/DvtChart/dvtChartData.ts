@@ -71,6 +71,19 @@ const formMetrics: FormsProps = {
   savedType: 'metric',
 };
 
+const formMetric: FormsProps = {
+  label: t('METRIC'),
+  name: 'metric',
+  popper: t(
+    'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+  ),
+  popperError: t('cannot be empty'),
+  status: 'input-drop',
+  multiple: false,
+  type: 'aggregates',
+  savedType: 'metric',
+};
+
 const formFilters: FormsProps = {
   label: t('FILTERS'),
   name: 'adhoc_filters',
@@ -420,21 +433,7 @@ const DvtChartData: DvtChartDataProps[] = [
         collapse_label: t('Query'),
         collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'query',
-        forms: [
-          {
-            label: t('METRIC'),
-            name: 'metric',
-            popper: t(
-              'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-            ),
-            popperError: t('cannot be empty'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'aggregates',
-            savedType: 'metric',
-          },
-          formFilters,
-        ],
+        forms: [formMetric, formFilters],
       },
       {
         collapse_label: t('Display settings'),
@@ -458,18 +457,7 @@ const DvtChartData: DvtChartDataProps[] = [
         collapse_active: 'query',
         forms: [
           formDimensions,
-          {
-            label: t('METRIC'),
-            name: 'metric',
-            popper: t(
-              'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-            ),
-            popperError: t('cannot be empty'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'aggregates',
-            savedType: 'metric',
-          },
+          formMetric,
           formFilters,
           formRowLimit,
           {
@@ -548,6 +536,52 @@ const DvtChartData: DvtChartDataProps[] = [
           formSortBy,
           sortDescending,
           formRowLimit,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'histogram',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('COLUMNS'),
+            name: 'all_columns',
+            popper: t('Columns to display'),
+            popperError: t('must have a value'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formFilters,
+          formRowLimit,
+          formDimensions,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'funnel',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          formDimensions,
+          formMetric,
+          formFilters,
+          formRowLimit,
+          {
+            label: t('SORT BY METRIC'),
+            name: 'sort_by_metric',
+            status: 'checkbox',
+          },
         ],
       },
     ],

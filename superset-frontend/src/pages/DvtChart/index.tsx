@@ -365,6 +365,24 @@ const DvtChart = () => {
           }
         };
 
+        const allColumnsSwitch = (vizType: string) => {
+          switch (vizType) {
+            case 'histogram':
+              return getFormData.all_columns_x
+                ? getFormData.all_columns_x.map((v: any) =>
+                    metricsOrColumnsFormation(v),
+                  )
+                : [];
+
+            default:
+              return getFormData.all_columns
+                ? getFormData.all_columns.map((v: any) =>
+                    metricsOrColumnsFormation(v),
+                  )
+                : [];
+          }
+        };
+
         setSelectBars(
           ChartSelectBars.filter(vf =>
             [getFormData.viz_type, ...ChartDefaultSelectBars].includes(
@@ -493,11 +511,7 @@ const DvtChart = () => {
                 value: 10,
               },
           show_totals: false,
-          all_columns: getFormData.all_columns
-            ? getFormData.all_columns.map((v: any) =>
-                metricsOrColumnsFormation(v),
-              )
-            : [],
+          all_columns: allColumnsSwitch(getFormData.viz_type),
           order_by_cols: [],
           metric: emptyArrayOrOneFindItem(getFormData.metric),
           sort_by_metric: getFormData?.sort_by_metric
@@ -609,6 +623,7 @@ const DvtChart = () => {
         return values.order_by_cols;
       case 'big_number_total':
       case 'pie':
+      case 'funnel':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -646,6 +661,7 @@ const DvtChart = () => {
     switch (active) {
       case 'big_number_total':
       case 'pie':
+      case 'funnel':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [
@@ -782,6 +798,7 @@ const DvtChart = () => {
       subheader_font_size: 0.15,
       time_format: 'smart_date',
       all_columns: droppedOnlyLabels('all_columns'),
+      all_columns_x: droppedOnlyLabels('all_columns'),
       color_pn: true,
       query_mode: values.query_mode.value,
       include_time:
@@ -805,6 +822,8 @@ const DvtChart = () => {
       x: metricsFormation('x')[0],
       xAxisFormat: 'SMART_NUMBER',
       y: metricsFormation('y')[0],
+      show_tooltip_labels: true,
+      tooltip_label_type: 5,
     },
     queries: [
       {
@@ -1123,6 +1142,7 @@ const DvtChart = () => {
           : !values.all_columns.length;
       case 'big_number_total':
       case 'pie':
+      case 'funnel':
         return !values.metric.length;
 
       default:

@@ -19,6 +19,16 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     status: 'bubble_v2',
     icon: 'dvt-linear_chart',
   },
+  {
+    popoverLabel: 'Funnel Chart',
+    status: 'funnel',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Histogram',
+    status: 'histogram',
+    icon: 'dvt-linear_chart',
+  },
   // {
   //   popoverLabel: 'Big Number with Trendline',
   //   status: 'big_number',
