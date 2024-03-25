@@ -33,7 +33,6 @@ import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
-import DvtChartWithoutLangFindData from './dvtChartWithoutLangFindData';
 import { ChartDefaultSelectBars, ChartSelectBars } from './dvtChartSelectBars';
 import {
   StyledChart,
@@ -50,6 +49,7 @@ import {
   RightPreviewBottomTableScroll,
   SpinnerContainer,
 } from './dvt-chart.module';
+import { chartFormsOption, forecastSeasonality } from './dvtChartDataOptions';
 
 const DvtChart = () => {
   const dispatch = useDispatch();
@@ -168,10 +168,13 @@ const DvtChart = () => {
       }
     };
 
-    const operatorFind = [
-      ...openSelectMenuData.operator.having,
-      openSelectMenuData.operator.where,
-    ].find((f: any) => f.value === fixOperator(v.operator));
+    const operatorFind =
+      v.operator === 'TEMPORAL_RANGE'
+        ? { label: v.comparator, value: v.operator }
+        : [
+            ...openSelectMenuData.operator.having,
+            ...openSelectMenuData.operator.where,
+          ].find((f: any) => f.value === fixOperator(v.operator));
 
     const findColumn = selectedChart?.dataset.columns.find(
       (f: any) => f.column_name === v.subject,
@@ -191,6 +194,21 @@ const DvtChart = () => {
           }
         : {};
 
+    const stringOrNumber =
+      typeof v.comparator === 'string' ? `'${v.comparator}'` : v.comparator;
+
+    const labelSameSql = v.comparator
+      ? `${v.subject} ${v.operator} ${
+          typeof v.comparator === 'object'
+            ? `(${v.comparator
+                .map((c: any) => (typeof c === 'string' ? `'${c}'` : c))
+                .join(', ')})`
+            : stringOrNumber
+        }`
+      : v.operator
+      ? `${v.subject} ${v.operator}`
+      : v.subject;
+
     return {
       id: moment().unix(),
       label:
@@ -198,15 +216,19 @@ const DvtChart = () => {
           ? v.comparator === 'No filter'
             ? `${v.subject} (${v.comparator})`
             : `${v.comparator} ${v.subject} ${v.comparator}`
-          : '',
+          : labelSameSql,
       values: {
         saved: '',
         column: findColumn,
         operator: operatorFind,
         aggregate: '',
-        option: '',
+        option: v.comparator
+          ? typeof v.comparator === 'object'
+            ? v.comparator
+            : { label: v.comparator, value: v.comparator }
+          : '',
         comparator: v.comparator ? v.comparator : '',
-        sql: v.subject,
+        sql: v.operator === 'TEMPORAL_RANGE' ? v.subject : labelSameSql,
         expressionType: 'SIMPLE',
         clause: 'WHERE',
         ...onTimeRange,
@@ -267,12 +289,26 @@ const DvtChart = () => {
           : '',
         option: '',
         comparator: '',
-        sql: v?.sqlExpression ? v.sqlExpression : '',
+        sql: v?.sqlExpression
+          ? v.sqlExpression
+          : v?.aggregate
+          ? v.aggregate === 'COUNT_DISTINCT'
+            ? `COUNT(DISTINCT ${v.column.column_name})`
+            : `${v.aggregate}(${v.column.column_name})`
+          : v.column.column_name,
         expressionType: v?.expressionType ? v.expressionType : '',
         clause: 'WHERE',
       },
     };
   };
+
+  const forecastSeasonalityDefaultOrItem = (item: any) =>
+    item
+      ? forecastSeasonality.find(f => f.value === item)
+      : {
+          label: t('default'),
+          value: 'null',
+        };
 
   useEffect(() => {
     if (history.location.search && selectedChart?.form_data) {
@@ -314,17 +350,25 @@ const DvtChart = () => {
           x_axis: getFormData.x_axis
             ? [metricsOrColumnsFormation(getFormData.x_axis)]
             : [],
-          time_grain_sqla: {
-            label: t('Day'),
-            value: 'P1D',
-          },
+          time_grain_sqla: getFormData?.time_grain_sqla
+            ? chartFormsOption.time_grain_sqla.find(
+                f => f.value === getFormData.time_grain_sqla,
+              )
+            : {
+                label: t('Day'),
+                value: 'P1D',
+              },
           metrics: getFormData.metrics
             ? getFormData.metrics.map((v: any) => metricsOrColumnsFormation(v))
             : [],
           groupby: getFormData.groupby
             ? getFormData.groupby.map((v: any) => metricsOrColumnsFormation(v))
             : [],
-          contributionMode: '',
+          contributionMode: getFormData?.contributionMode
+            ? chartFormsOption.contributionMode.find(
+                f => f.value === getFormData.contributionMode,
+              )
+            : '',
           adhoc_filters: [
             ...filtersOnItem,
             ...(getFormData.adhoc_filters
@@ -333,60 +377,110 @@ const DvtChart = () => {
                 )
               : []),
           ],
-          limit: '',
-          timeseries_limit_metric: [],
+          limit: getFormData?.limit
+            ? {
+                label: String(getFormData.limit),
+                value: String(getFormData.limit),
+              }
+            : '',
+          timeseries_limit_metric: getFormData.timeseries_limit_metric
+            ? [metricsOrColumnsFormation(getFormData.timeseries_limit_metric)]
+            : [],
           order_desc: getFormData?.order_desc !== false,
-          row_limit: {
-            label: '10000',
-            value: '10000',
-          },
+          row_limit: getFormData?.row_limit
+            ? {
+                label: String(getFormData.row_limit),
+                value: String(getFormData.row_limit),
+              }
+            : {
+                label: '10000',
+                value: '10000',
+              },
           truncate_metric: true,
           show_empty_columns: true,
-          rolling_type: {
-            label: t('None'),
-            value: 'null',
-          },
-          time_compare: [],
-          comparison_type: {
-            label: t('Actual values'),
-            value: 'values',
-          },
-          resample_rule: '',
-          resample_method: '',
+          rolling_type: getFormData?.rolling_type
+            ? chartFormsOption.rolling_type.find(
+                f => f.value === getFormData.rolling_type,
+              )
+            : {
+                label: t('None'),
+                value: 'null',
+              },
+          time_compare: getFormData?.time_compare
+            ? getFormData.time_compare
+            : [],
+          comparison_type: getFormData?.comparison_type
+            ? chartFormsOption.comparison_type.find(
+                f => f.value === getFormData.comparison_type,
+              )
+            : {
+                label: t('Actual values'),
+                value: 'values',
+              },
+          resample_rule: getFormData?.resample_rule
+            ? chartFormsOption.resample_rule.find(
+                f => f.value === getFormData.resample_rule,
+              )
+            : '',
+          resample_method: getFormData?.resample_method
+            ? chartFormsOption.resample_method.find(
+                f => f.value === getFormData.resample_method,
+              )
+            : '',
           annotation_layers: [],
-          forecastEnabled: false,
-          forecastPeriods: '10',
-          forecastInterval: '0.8',
-          forecastSeasonalityYearly: {
-            label: t('default'),
-            value: 'null',
-          },
-          forecastSeasonalityWeekly: {
-            label: t('default'),
-            value: 'null',
-          },
-          forecastSeasonalityDaily: {
-            label: t('default'),
-            value: 'null',
-          },
+          forecastEnabled: getFormData?.forecastEnabled
+            ? getFormData.forecastEnabled
+            : false,
+          forecastPeriods: getFormData?.forecastPeriods
+            ? getFormData.forecastPeriods
+            : '10',
+          forecastInterval: getFormData?.forecastInterval
+            ? getFormData.forecastInterval
+            : '0.8',
+          forecastSeasonalityYearly: forecastSeasonalityDefaultOrItem(
+            getFormData?.forecastSeasonalityYearly,
+          ),
+          forecastSeasonalityWeekly: forecastSeasonalityDefaultOrItem(
+            getFormData?.forecastSeasonalityWeekly,
+          ),
+          forecastSeasonalityDaily: forecastSeasonalityDefaultOrItem(
+            getFormData?.forecastSeasonalityDaily,
+          ),
           query_mode:
             getFormData?.query_mode === 'raw'
               ? { label: t('RAW RECORDS'), value: 'raw' }
               : { label: t('AGGREGATE'), value: 'aggregate' },
-          percent_metrics: [],
-          server_pagination: false,
-          server_page_length: {
-            label: t('10'),
-            value: 10,
-          },
+          percent_metrics: getFormData.percent_metrics
+            ? getFormData.percent_metrics.map((v: any) =>
+                metricsOrColumnsFormation(v),
+              )
+            : [],
+          server_pagination: getFormData?.server_pagination
+            ? getFormData.server_pagination
+            : false,
+          server_page_length: getFormData?.server_page_length
+            ? {
+                label: String(getFormData.server_page_length),
+                value: getFormData.server_page_length,
+              }
+            : {
+                label: t('10'),
+                value: 10,
+              },
           show_totals: false,
-          all_columns: [],
+          all_columns: getFormData.all_columns
+            ? getFormData.all_columns.map((v: any) =>
+                metricsOrColumnsFormation(v),
+              )
+            : [],
           order_by_cols: [],
           metric: getFormData.metric
             ? [metricsOrColumnsFormation(getFormData.metric)]
             : [],
-          sort_by_metric: false,
-          subheader: '',
+          sort_by_metric: getFormData?.sort_by_metric
+            ? getFormData.sort_by_metric
+            : false,
+          subheader: getFormData.subheader ? getFormData.subheader : '',
           dimension: [],
           entity: [],
           x: [],
@@ -639,9 +733,7 @@ const DvtChart = () => {
       slice_id: undefined,
       sort_series_ascending: undefined,
       stack: undefined,
-      time_compare: DvtChartWithoutLangFindData.time_compare
-        .filter(f => values.time_compare.includes(f.value))
-        .map(({ label }: { label: string }) => label),
+      time_compare: values.time_compare,
       tooltipSortByMetric: undefined,
       truncateYAxis: undefined,
       xAxisBounds: undefined,
