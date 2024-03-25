@@ -605,6 +605,28 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     },
   );
 
+  let databaseListHeight;
+
+  switch (newTrainedTableSelector.algorithm?.value) {
+    case 'lstm':
+    case 't_test':
+    case 'z_test':
+    case 'dbscan':
+      databaseListHeight = '250px';
+      break;
+    case 'percentile':
+    case 'linear_regression':
+      databaseListHeight = '320px';
+      break;
+    case 'kmeans':
+    case 'gmm':
+      databaseListHeight = '320px';
+      break;
+    default:
+      databaseListHeight = '350px';
+      break;
+  }
+
   return (
     <StyledDvtSidebar
       minWidth={minWidth}
@@ -928,27 +950,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     )
                   }
                   icon={false}
-                  height={
-                    newTrainedTableSelector.algorithm?.value === 'lstm'
-                      ? '250px'
-                      : newTrainedTableSelector.algorithm?.value ===
-                        'percentile'
-                      ? '320px'
-                      : newTrainedTableSelector.algorithm?.value === 't_test'
-                      ? '250px'
-                      : newTrainedTableSelector.algorithm?.value === 'z_test'
-                      ? '250px'
-                      : newTrainedTableSelector.algorithm?.value ===
-                        'linear_regression'
-                      ? '320px'
-                      : newTrainedTableSelector.algorithm?.value === 'dbscan'
-                      ? '250px'
-                      : newTrainedTableSelector.algorithm?.value === 'kmeans'
-                      ? '320px'
-                      : newTrainedTableSelector.algorithm?.value === 'gmm'
-                      ? '320px'
-                      : '350px'
-                  }
+                  height={databaseListHeight}
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&
