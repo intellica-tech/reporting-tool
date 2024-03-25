@@ -76,3 +76,25 @@ export const Number = (args: DvtInputSelectProps) => {
     </div>
   );
 };
+
+export const Values = (args: DvtInputSelectProps) => {
+  const [selectedValues, setSelectedValues] = useState<any[]>([]);
+  const exampleData = [
+    { label: 'Option 1', value: 'Option 1' },
+    { label: 'Option 2', value: 'Option 2' },
+    { label: 'Option 3', value: 'Option 3' },
+    { label: 'Option 4', value: 'Option 4' },
+    { label: 'Option 5', value: 'Option 5' },
+  ];
+
+  return (
+    <div style={{ width: 404 }}>
+      <DvtInputSelect
+        {...args}
+        data={exampleData}
+        selectedValues={selectedValues}
+        setSelectedValues={setSelectedValues}
+      />
+    </div>
+  );
+};

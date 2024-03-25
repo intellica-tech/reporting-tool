@@ -28,7 +28,7 @@ import {
 
 interface OptionDataProps {
   label: string;
-  value: number;
+  value: any;
 }
 
 const initialValues = {
@@ -301,9 +301,9 @@ const DvtInputDrop = ({
   useEffect(() => {
     if (optionDataPromise.data) {
       setOptionData(
-        optionDataPromise.data.result.map((rv: string, ri: number) => ({
-          label: rv,
-          value: ri + 1,
+        optionDataPromise.data.result.map((rv: string) => ({
+          label: rv === null ? '<NULL>' : rv,
+          value: rv,
         })),
       );
     }
@@ -311,6 +311,7 @@ const DvtInputDrop = ({
 
   useEffect(() => {
     if (
+      isOpen &&
       datasourceApi &&
       values.column &&
       !values.column.python_date_format &&
@@ -321,7 +322,7 @@ const DvtInputDrop = ({
         `${datasourceApi}/column/${values.column?.column_name}/values`,
       );
     }
-  }, [datasourceApi, values.column]);
+  }, [datasourceApi, values.column, isOpen]);
 
   useEffect(() => {
     if (
@@ -469,6 +470,9 @@ const DvtInputDrop = ({
                 setValues(initialValues);
                 setGetId(null);
                 handleAddClickPositionTop(e.target.getBoundingClientRect(), 21);
+                if (optionData.length) {
+                  setOptionData([]);
+                }
               }}
             >
               {placeholder}
@@ -478,6 +482,9 @@ const DvtInputDrop = ({
                 setValues(initialValues);
                 setGetId(null);
                 handleAddClickPositionTop(e.target.getBoundingClientRect(), 0);
+                if (optionData.length) {
+                  setOptionData([]);
+                }
               }}
             >
               <Icon
