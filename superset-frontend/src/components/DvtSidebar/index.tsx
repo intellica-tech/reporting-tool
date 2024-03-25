@@ -605,27 +605,22 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     },
   );
 
-  let databaseListHeight;
-
-  switch (newTrainedTableSelector.algorithm?.value) {
-    case 'lstm':
-    case 't_test':
-    case 'z_test':
-    case 'dbscan':
-      databaseListHeight = '250px';
-      break;
-    case 'percentile':
-    case 'linear_regression':
-      databaseListHeight = '320px';
-      break;
-    case 'kmeans':
-    case 'gmm':
-      databaseListHeight = '320px';
-      break;
-    default:
-      databaseListHeight = '350px';
-      break;
-  }
+  const databaseListHeight = (value: string) => {
+    switch (value) {
+      case 'lstm':
+      case 't_test':
+      case 'z_test':
+      case 'dbscan':
+        return '250px';
+      case 'percentile':
+      case 'linear_regression':
+      case 'kmeans':
+      case 'gmm':
+        return '320px';
+      default:
+        return '350px';
+    }
+  };
 
   return (
     <StyledDvtSidebar
@@ -950,7 +945,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     )
                   }
                   icon={false}
-                  height={databaseListHeight}
+                  height={databaseListHeight(
+                    newTrainedTableSelector.algorithm?.value,
+                  )}
                 />
               )}
             {pathTitles(pathName) === 'sqlhub' &&
