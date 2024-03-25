@@ -175,6 +175,12 @@ function DvtSqllab() {
   }, [sqlhubSidebarSelector]);
 
   useEffect(() => {
+    if (!selectedSeeTableSchemaApi.loading) {
+      setExecutePromiseUrl('');
+    }
+  }, [selectedSeeTableSchemaApi.loading]);
+
+  useEffect(() => {
     if (getSchemaApi.data) {
       dispatch(
         dvtSidebarSetDataProperty({
