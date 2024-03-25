@@ -100,25 +100,12 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectCategories, setSelectCategories] = useState<any>('');
-  const [selectAlgorithm, setSelectAlgorithm] = useState<any>('');
-  const [timeColumnName, setTimeColumnName] = useState<any>('');
-  const [targetColumnName, setTargetColumnName] = useState<any>('');
-  const [getColumnUrl, setGetColumnUrl] = useState('');
-  const [columnOptions, setColumnOptions] = useState<any[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
   const [chartSearch, setChartSearch] = useState<string>('');
   const [chartMetrics, setChartMetrics] = useState<any[]>([]);
   const [chartColumns, setChartColumns] = useState<any[]>([]);
   const [chartCollapses, setChartCollapses] = useState<any[]>([]);
-  const [percentileInput, setPercentileInput] = useState<number | null>(null);
-  const [featureColumn, setFeatureColumn] = useState<any>('');
-  const [groupColumn, setGroupColumn] = useState<any>('');
-  const [labelColumn, setLabelColumn] = useState<any>('');
-  const [epsilon, setEpsilon] = useState<number | null>(null);
-  const [minPoints, setMinPoints] = useState<number | null>(0);
-  const [clusterSize, setClusterSize] = useState<number | null>(0);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -212,9 +199,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   }>({ name: '', url: null });
 
   const getApiData = useFetch({ url: getDataApiUrl.url });
-  const getTableData = useFetch({
-    url: getColumnUrl,
-  });
 
   useEffect(() => {
     const findedPathName = DvtSidebarData.find(p => p.pathname === pathName);
@@ -240,177 +224,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     fetchedSelector.queryHistory,
     pathName,
   ]);
-
-  useEffect(() => {
-    const changeAlgorithmName = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'algorithm_name',
-          value: selectAlgorithm,
-        }),
-      );
-    };
-    changeAlgorithmName();
-  }, [selectAlgorithm]);
-
-  useEffect(() => {
-    const changeTimeColumnName = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'timeColumnName',
-          value: timeColumnName,
-        }),
-      );
-    };
-    changeTimeColumnName();
-  }, [timeColumnName]);
-
-  useEffect(() => {
-    const changeTargetColumnName = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'targetColumnName',
-          value: targetColumnName,
-        }),
-      );
-    };
-    changeTargetColumnName();
-  }, [targetColumnName]);
-
-  useEffect(() => {
-    const changePercentileInput = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'percentileInput',
-          value: percentileInput,
-        }),
-      );
-    };
-    changePercentileInput();
-  }, [percentileInput]);
-
-  useEffect(() => {
-    const changeFeatureColumn = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'featureColumn',
-          value: featureColumn,
-        }),
-      );
-    };
-    changeFeatureColumn();
-  }, [featureColumn]);
-
-  useEffect(() => {
-    const changeGroupColumn = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'groupColumn',
-          value: groupColumn,
-        }),
-      );
-    };
-    changeGroupColumn();
-  }, [groupColumn]);
-
-  useEffect(() => {
-    const changeLabelColumn = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'labelColumn',
-          value: labelColumn,
-        }),
-      );
-    };
-    changeLabelColumn();
-  }, [labelColumn]);
-
-  useEffect(() => {
-    const changeEpsilon = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'epsilon',
-          value: epsilon,
-        }),
-      );
-    };
-    changeEpsilon();
-  }, [epsilon]);
-
-  useEffect(() => {
-    const changeMinPoints = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'minPoints',
-          value: minPoints,
-        }),
-      );
-    };
-    changeMinPoints();
-  }, [minPoints]);
-
-  useEffect(() => {
-    const changeClusterSize = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'clusterSize',
-          value: clusterSize,
-        }),
-      );
-    };
-    changeClusterSize();
-  }, [clusterSize]);
-
-  useEffect(() => {
-    setTargetColumnName([]);
-    setTimeColumnName([]);
-    setPercentileInput(null);
-    setFeatureColumn([]);
-    setGroupColumn([]);
-    setLabelColumn([]);
-    setEpsilon(null);
-    setMinPoints(null);
-    setClusterSize(null);
-  }, [newTrainedTableSelector.selectDatabase]);
-
-  useEffect(() => {
-    setSelectAlgorithm([]);
-  }, [newTrainedTableSelector.selectCategory]);
-
-  useEffect(() => {
-    if (newTrainedTableSelector.selectDatabase?.value) {
-      setGetColumnUrl(
-        `database/${newTrainedTableSelector.database?.value}/table/${newTrainedTableSelector.selectDatabase.value}/${newTrainedTableSelector.schema.value}/`,
-      );
-    }
-  }, [newTrainedTableSelector.selectDatabase]);
-
-  useEffect(() => {
-    if (getTableData.data) {
-      setColumnOptions(
-        getTableData.data?.columns.map((item: any) => ({
-          label: item.name,
-          value: item.name,
-        })),
-      );
-    }
-  }, [getTableData.data]);
-
-  useEffect(() => {
-    if (!getTableData.loading) {
-      setGetColumnUrl('');
-    }
-  }, [getTableData.loading]);
 
   useEffect(() => {
     if (
@@ -651,7 +464,16 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       },
       {
         key: 'newTrainedTable',
-        keyNames: ['database', 'schema'],
+        keyNames: [
+          'database',
+          'schema',
+          'algorithm',
+          'targetColumnName',
+          'timeColumnName',
+          'featureColumn',
+          'groupColumn',
+          'labelColumn',
+        ],
       },
       {
         key: 'sqlhub',
@@ -723,51 +545,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'savedQuery',
     'queryHistory',
   ];
-
-  const getAlgorithmOptions = () => {
-    switch (selectCategories?.value) {
-      case '1':
-        return [{ value: 'lstm', label: 'LSTM' }];
-      case '2':
-        return [
-          { value: 'cumulative_sum', label: 'Cumulative sum' },
-          { value: 'mean', label: 'Mean' },
-          { value: 'median', label: 'Median' },
-          { value: 'min_max', label: 'Min Max' },
-          { value: 'variance', label: 'Variance' },
-          { value: 'percentile', label: 'Percentile' },
-          { value: 'skewness', label: 'Skewness' },
-          { value: 'kurtosis', label: 'Kurtosis' },
-          { value: 'histogram', label: 'Histogram' },
-          { value: 'correlation', label: 'Correlation' },
-          { value: 't_test', label: 'T-test' },
-          { value: 'z_test', label: 'Z-test' },
-          { value: 'chi_square', label: 'Chi square' },
-          { value: 'linear_regression', label: 'Linear regression' },
-        ];
-      case '3':
-        return [
-          { value: '13', label: 'KMeans' },
-          { value: '14', label: 'GMM' },
-          { value: '15', label: 'DBSCAN' },
-        ];
-      default:
-        return [];
-    }
-  };
-
-  useEffect(() => {
-    const changeAlgorithmName = () => {
-      dispatch(
-        dvtSidebarSetProperty({
-          pageKey: 'newTrainedTable',
-          key: 'selectCategory',
-          value: selectCategories,
-        }),
-      );
-    };
-    changeAlgorithmName();
-  }, [selectCategories]);
 
   useEffect(() => {
     if (chartSelector?.dataset) {
@@ -918,157 +695,6 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 {chartSelector?.dataset?.name}
               </ChartDatasetName>
             )}
-            {pathTitles(pathName) === 'newTrainedTable' && (
-              <div>
-                <DvtSelect
-                  data={[
-                    { value: '1', label: 'Time Series' },
-                    { value: '2', label: 'Statistical' },
-                    { value: '3', label: 'Segmentation' },
-                  ]}
-                  label={t('CATEGORY')}
-                  placeholder={t('CATEGORY')}
-                  selectedValue={selectCategories}
-                  setSelectedValue={setSelectCategories}
-                  maxWidth
-                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                />
-                <DvtSelect
-                  data={getAlgorithmOptions()}
-                  label={t('ALGORİTHM')}
-                  placeholder={t('ALGORİTHM')}
-                  selectedValue={selectAlgorithm}
-                  setSelectedValue={setSelectAlgorithm}
-                  maxWidth
-                  onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                />
-                {newTrainedTableSelector.algorithm_name?.value === 'lstm' && (
-                  <>
-                    <DvtSelect
-                      data={columnOptions}
-                      label={t('TARGET COLUMN NAME')}
-                      placeholder={t('Target Column Name')}
-                      selectedValue={targetColumnName}
-                      setSelectedValue={setTargetColumnName}
-                      maxWidth
-                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                      popoverLabel={t('Please select a table first.')}
-                    />
-                    <DvtSelect
-                      data={columnOptions}
-                      label={t('TİME COLUMN NAME')}
-                      placeholder={t('Time Column Name')}
-                      selectedValue={timeColumnName}
-                      setSelectedValue={setTimeColumnName}
-                      maxWidth
-                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                      popoverLabel="Please select a table first."
-                    />
-                  </>
-                )}
-                {newTrainedTableSelector.algorithm_name?.value ===
-                  'percentile' && (
-                  <>
-                    <DvtInput
-                      typeDesign="chartsForm"
-                      label={t('Percentile')}
-                      placeholder={t('Percentile')}
-                      value={percentileInput?.toString() || ''}
-                      onChange={(value: string) => {
-                        setPercentileInput(Number(value));
-                      }}
-                      onShowClear
-                      number
-                    />
-                  </>
-                )}
-                {(newTrainedTableSelector.algorithm_name?.value === 'z_test' ||
-                  newTrainedTableSelector.algorithm_name?.value ===
-                    't_test') && (
-                  <>
-                    <DvtSelect
-                      data={columnOptions}
-                      label={t('FEATURE COLUMN')}
-                      placeholder={t('FEATURE ')}
-                      selectedValue={featureColumn}
-                      setSelectedValue={setFeatureColumn}
-                      maxWidth
-                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                      popoverLabel={t('Please select a table first.')}
-                    />
-                    <DvtSelect
-                      data={columnOptions}
-                      label={t('GROUP COLUMN')}
-                      placeholder={t('GROUP COLUMN')}
-                      selectedValue={groupColumn}
-                      setSelectedValue={setGroupColumn}
-                      maxWidth
-                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                      popoverLabel="Please select a table first."
-                    />
-                  </>
-                )}
-                {newTrainedTableSelector.algorithm_name?.value ===
-                  'linear_regression' && (
-                  <>
-                    <DvtSelect
-                      data={columnOptions}
-                      label={t('lABEL COLUMN')}
-                      placeholder={t('lABEL COLUMN')}
-                      selectedValue={labelColumn}
-                      setSelectedValue={setLabelColumn}
-                      maxWidth
-                      onShowClear={pathTitles(pathName) !== 'sqlhub'}
-                      popoverLabel={t('Please select a table first.')}
-                    />
-                  </>
-                )}
-                {newTrainedTableSelector.algorithm_name?.label === 'DBSCAN' && (
-                  <>
-                    <DvtInput
-                      typeDesign="chartsForm"
-                      label={t('EPSİLON')}
-                      placeholder={t('Epsilon')}
-                      value={epsilon?.toString() || ''}
-                      onChange={(value: string) => {
-                        setEpsilon(Number(value));
-                      }}
-                      onShowClear
-                      number
-                    />
-                    <DvtInput
-                      typeDesign="chartsForm"
-                      label={t('MIN POINTS')}
-                      placeholder={t('Min Points')}
-                      value={minPoints?.toString() || ''}
-                      onChange={(value: string) => {
-                        setMinPoints(Number(value));
-                      }}
-                      onShowClear
-                      number
-                    />
-                  </>
-                )}
-                {newTrainedTableSelector.selectCategory?.label ===
-                  'Segmentation' &&
-                  newTrainedTableSelector.algorithm_name?.label !==
-                    'DBSCAN' && (
-                    <>
-                      <DvtInput
-                        typeDesign="chartsForm"
-                        label={t('CLUSTER SIZE')}
-                        placeholder={t('Cluster Size')}
-                        value={clusterSize?.toString() || ''}
-                        onChange={(value: string) => {
-                          setClusterSize(Number(value));
-                        }}
-                        onShowClear
-                        number
-                      />
-                    </>
-                  )}
-              </div>
-            )}
             {!isOpen &&
               sidebarDataFindPathname?.data.map(
                 (
@@ -1080,12 +706,13 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                     datePicker?: boolean;
                     name: string;
                     status: string;
+                    active: string;
                     data: [];
                   },
                   index: number,
                 ) => (
                   <StyledDvtSidebarBodySelect key={index}>
-                    {!data.datePicker && !data.status && (
+                    {!data.datePicker && !data.status && !data.active && (
                       <DvtSelect
                         data={selectsData(data)}
                         label={data.label}
@@ -1138,7 +765,55 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         onShowClear={pathTitles(pathName) !== 'sqlhub'}
                       />
                     )}
-                    {data.status === 'input' && (
+                    {!data.datePicker &&
+                      !data.status &&
+                      newTrainedTableSelector.algorithm &&
+                      data.active ===
+                        newTrainedTableSelector.algorithm.value && (
+                        <DvtSelect
+                          data={selectsData(data)}
+                          label={data.label}
+                          placeholder={data.placeholder}
+                          selectedValue={
+                            pathTitles(pathName) === 'newTrainedTable'
+                              ? newTrainedTableSelector[data.name]
+                              : undefined
+                          }
+                          setSelectedValue={value => {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              value,
+                            );
+                          }}
+                          maxWidth
+                          onShowClear={pathTitles(pathName) !== 'sqlhub'}
+                        />
+                      )}
+                    {data.status === 'input' &&
+                      newTrainedTableSelector.algorithm &&
+                      data.active ===
+                        newTrainedTableSelector.algorithm.value && (
+                        <DvtInput
+                          typeDesign="chartsForm"
+                          label={data.label}
+                          placeholder={data.placeholder}
+                          value={
+                            pathTitles(pathName) === 'newTrainedTable'
+                              ? newTrainedTableSelector[data.name]
+                              : undefined
+                          }
+                          onChange={value => {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              value,
+                            );
+                          }}
+                          onShowClear
+                        />
+                      )}
+                    {data.status === 'input' && !data.active && (
                       <DvtInput
                         typeDesign="chartsForm"
                         label={data.label}
@@ -1254,8 +929,24 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                   }
                   icon={false}
                   height={
-                    newTrainedTableSelector.algorithm_name?.value === 'lstm'
-                      ? '200px'
+                    newTrainedTableSelector.algorithm?.value === 'lstm'
+                      ? '250px'
+                      : newTrainedTableSelector.algorithm?.value ===
+                        'percentile'
+                      ? '320px'
+                      : newTrainedTableSelector.algorithm?.value === 't_test'
+                      ? '250px'
+                      : newTrainedTableSelector.algorithm?.value === 'z_test'
+                      ? '250px'
+                      : newTrainedTableSelector.algorithm?.value ===
+                        'linear_regression'
+                      ? '320px'
+                      : newTrainedTableSelector.algorithm?.value === 'dbscan'
+                      ? '250px'
+                      : newTrainedTableSelector.algorithm?.value === 'kmeans'
+                      ? '320px'
+                      : newTrainedTableSelector.algorithm?.value === 'gmm'
+                      ? '320px'
                       : '350px'
                   }
                 />

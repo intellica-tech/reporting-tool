@@ -64,7 +64,12 @@ interface DvtSidebarState {
     database: any;
     schema: any;
     selectDatabase: any;
-    algorithm_name: any;
+    algorithm: any;
+    targetColumnName: any;
+    timeColumnName: any;
+    featureColumn: any;
+    groupColumn: any;
+    labelColumn: any;
     selectCategory: any;
   };
   chartAdd: {
@@ -200,7 +205,12 @@ interface DvtSidebarState {
       database: any[];
       schema: any[];
       selectDatabase: any[];
-      algorithm_name: any[];
+      algorithm: any[];
+      targetColumnName: any[];
+      timeColumnName: any[];
+      featureColumn: any[];
+      groupColumn: any[];
+      labelColumn: any[];
       selectCategory: any[];
     };
     chartAdd: {
@@ -272,7 +282,12 @@ const INITIAL_STATE = {
     database: '',
     schema: '',
     selectDatabase: '',
-    algorithm_name: '',
+    algorithm: '',
+    targetColumnName: '',
+    timeColumnName: '',
+    featureColumn: '',
+    groupColumn: '',
+    labelColumn: '',
     selectCategory: '',
   },
   chartAdd: {
@@ -418,7 +433,12 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       selectDatabase: [],
-      algorithm_name: [],
+      algorithm: [],
+      targetColumnName: [],
+      timeColumnName: [],
+      featureColumn: [],
+      groupColumn: [],
+      labelColumn: [],
       selectCategory: [],
     },
     chartAdd: {
