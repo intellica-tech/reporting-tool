@@ -629,6 +629,8 @@ const DvtChart = () => {
         return values.timeseries_limit_metric.length
           ? [[metricsFormation('timeseries_limit_metric')[0], false]]
           : undefined;
+      case 'histogram':
+        return [];
       default:
         return [[metricsFormation('metrics')[0], false]];
     }
