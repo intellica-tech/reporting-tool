@@ -59,8 +59,10 @@ const DvtChart = () => {
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
   );
-  const selectBars = ChartSelectBars.filter(vf =>
-    [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
+  const [selectBars, setSelectBars] = useState(
+    ChartSelectBars.filter(vf =>
+      [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
+    ),
   );
   const [active, setActive] = useState<string>(selectedVizType);
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
@@ -156,160 +158,6 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const adhocFiltersFormation = (v: any) => {
-    const fixOperator = (o: string) => {
-      switch (o) {
-        case '!=':
-          return '<>';
-        case '==':
-          return '=';
-        default:
-          return o;
-      }
-    };
-
-    const operatorFind =
-      v.operator === 'TEMPORAL_RANGE'
-        ? { label: v.comparator, value: v.operator }
-        : [
-            ...openSelectMenuData.operator.having,
-            ...openSelectMenuData.operator.where,
-          ].find((f: any) => f.value === fixOperator(v.operator));
-
-    const findColumn = selectedChart?.dataset.columns.find(
-      (f: any) => f.column_name === v.subject,
-    );
-
-    const onTimeRange =
-      v.operator === 'TEMPORAL_RANGE'
-        ? {
-            filterType: 'time_range',
-            addTimeRange: {
-              label: '2024-02-23 ≤ order_date < 2024-03-23',
-              menuLabel: 'last month',
-              range: 'last',
-              selected: 'month',
-              comparator: 'Last month',
-            },
-          }
-        : {};
-
-    const stringOrNumber =
-      typeof v.comparator === 'string' ? `'${v.comparator}'` : v.comparator;
-
-    const labelSameSql = v.comparator
-      ? `${v.subject} ${v.operator} ${
-          typeof v.comparator === 'object'
-            ? `(${v.comparator
-                .map((c: any) => (typeof c === 'string' ? `'${c}'` : c))
-                .join(', ')})`
-            : stringOrNumber
-        }`
-      : v.operator
-      ? `${v.subject} ${v.operator}`
-      : v.subject;
-
-    return {
-      id: moment().unix(),
-      label:
-        v.operator === 'TEMPORAL_RANGE'
-          ? v.comparator === 'No filter'
-            ? `${v.subject} (${v.comparator})`
-            : `${v.comparator} ${v.subject} ${v.comparator}`
-          : labelSameSql,
-      values: {
-        saved: '',
-        column: findColumn,
-        operator: operatorFind,
-        aggregate: '',
-        option: v.comparator
-          ? typeof v.comparator === 'object'
-            ? v.comparator
-            : { label: v.comparator, value: v.comparator }
-          : '',
-        comparator: v.comparator ? v.comparator : '',
-        sql: v.operator === 'TEMPORAL_RANGE' ? v.subject : labelSameSql,
-        expressionType: 'SIMPLE',
-        clause: 'WHERE',
-        ...onTimeRange,
-      },
-    };
-  };
-
-  const metricsOrColumnsFormation = (v: any) => {
-    if (selectedChart?.dataset.metrics.some((s: any) => s.metric_name === v)) {
-      const findItem = selectedChart.dataset.metrics.find(
-        (f: any) => f.metric_name === v,
-      );
-      return {
-        id: moment().unix(),
-        label: findItem.expression,
-        values: {
-          saved: findItem,
-          column: '',
-          operator: '',
-          aggregate: '',
-          option: '',
-          comparator: '',
-          sql: '',
-          expressionType: 'SAVED',
-          clause: 'WHERE',
-        },
-      };
-    }
-    if (typeof v === 'string') {
-      const findItem = selectedChart?.dataset.columns.find(
-        (f: any) => f.column_name === v,
-      );
-      return {
-        id: moment().unix(),
-        label: findItem.column_name,
-        values: {
-          saved: '',
-          column: findItem,
-          operator: '',
-          aggregate: '',
-          option: '',
-          comparator: '',
-          sql: findItem.column_name,
-          expressionType: 'SIMPLE',
-          clause: 'WHERE',
-        },
-      };
-    }
-    return {
-      id: moment().unix(),
-      label: v?.label,
-      values: {
-        saved: '',
-        column: v?.column ? v.column : '',
-        operator: '',
-        aggregate: v?.aggregate
-          ? { label: v.aggregate, value: v.aggregate }
-          : '',
-        option: '',
-        comparator: '',
-        sql: v?.sqlExpression
-          ? v.sqlExpression
-          : v?.aggregate
-          ? v.aggregate === 'COUNT_DISTINCT'
-            ? `COUNT(DISTINCT ${v.column.column_name})`
-            : `${v.aggregate}(${v.column.column_name})`
-          : v.column.column_name,
-        expressionType: v?.expressionType ? v.expressionType : '',
-        clause: 'WHERE',
-      },
-    };
-  };
-
-  const forecastSeasonalityDefaultOrItem = (item: any) =>
-    item
-      ? forecastSeasonality.find(f => f.value === item)
-      : {
-          label: t('default'),
-          value: 'null',
-        };
-
   useEffect(() => {
     if (history.location.search && selectedChart?.form_data) {
       if (history.location.search.split('?slice_id=')[1]) {
@@ -344,12 +192,189 @@ const DvtChart = () => {
             ]
           : [];
 
+        const adhocFiltersFormation = (v: any) => {
+          const fixOperator = (o: string) => {
+            switch (o) {
+              case '!=':
+                return '<>';
+              case '==':
+                return '=';
+              default:
+                return o;
+            }
+          };
+
+          const operatorFind =
+            v.operator === 'TEMPORAL_RANGE'
+              ? { label: v.comparator, value: v.operator }
+              : [
+                  ...openSelectMenuData.operator.having,
+                  ...openSelectMenuData.operator.where,
+                ].find((f: any) => f.value === fixOperator(v.operator));
+
+          const findColumn = selectedChart?.dataset.columns.find(
+            (f: any) => f.column_name === v.subject,
+          );
+
+          const onTimeRange =
+            v.operator === 'TEMPORAL_RANGE'
+              ? {
+                  filterType: 'time_range',
+                  addTimeRange: {
+                    label: '2024-02-23 ≤ order_date < 2024-03-23',
+                    menuLabel: 'last month',
+                    range: 'last',
+                    selected: 'month',
+                    comparator: 'Last month',
+                  },
+                }
+              : {};
+
+          const stringOrNumber =
+            typeof v.comparator === 'string'
+              ? `'${v.comparator}'`
+              : v.comparator;
+
+          const labelSameSql = v.comparator
+            ? `${v.subject} ${v.operator} ${
+                typeof v.comparator === 'object'
+                  ? `(${v.comparator
+                      .map((c: any) => (typeof c === 'string' ? `'${c}'` : c))
+                      .join(', ')})`
+                  : stringOrNumber
+              }`
+            : v.operator
+            ? `${v.subject} ${v.operator}`
+            : v.subject;
+
+          return {
+            id: moment().unix(),
+            label:
+              v.operator === 'TEMPORAL_RANGE'
+                ? v.comparator === 'No filter'
+                  ? `${v.subject} (${v.comparator})`
+                  : `${v.comparator} ${v.subject} ${v.comparator}`
+                : labelSameSql,
+            values: {
+              saved: '',
+              column: findColumn,
+              operator: operatorFind,
+              aggregate: '',
+              option: v.comparator
+                ? typeof v.comparator === 'object'
+                  ? v.comparator
+                  : { label: v.comparator, value: v.comparator }
+                : '',
+              comparator: v.comparator ? v.comparator : '',
+              sql: v.operator === 'TEMPORAL_RANGE' ? v.subject : labelSameSql,
+              expressionType: 'SIMPLE',
+              clause: 'WHERE',
+              ...onTimeRange,
+            },
+          };
+        };
+
+        const metricsOrColumnsFormation = (v: any) => {
+          if (
+            selectedChart?.dataset.metrics.some((s: any) => s.metric_name === v)
+          ) {
+            const findItem = selectedChart.dataset.metrics.find(
+              (f: any) => f.metric_name === v,
+            );
+            return {
+              id: moment().unix(),
+              label: findItem.expression,
+              values: {
+                saved: findItem,
+                column: '',
+                operator: '',
+                aggregate: '',
+                option: '',
+                comparator: '',
+                sql: '',
+                expressionType: 'SAVED',
+                clause: 'WHERE',
+              },
+            };
+          }
+          if (typeof v === 'string') {
+            const findItem = selectedChart?.dataset.columns.find(
+              (f: any) => f.column_name === v,
+            );
+            return {
+              id: moment().unix(),
+              label: findItem.column_name,
+              values: {
+                saved: '',
+                column: findItem,
+                operator: '',
+                aggregate: '',
+                option: '',
+                comparator: '',
+                sql: findItem.column_name,
+                expressionType: 'SIMPLE',
+                clause: 'WHERE',
+              },
+            };
+          }
+          return {
+            id: moment().unix(),
+            label: v?.label,
+            values: {
+              saved: '',
+              column: v?.column ? v.column : '',
+              operator: '',
+              aggregate: v?.aggregate
+                ? { label: v.aggregate, value: v.aggregate }
+                : '',
+              option: '',
+              comparator: '',
+              sql: v?.sqlExpression
+                ? v.sqlExpression
+                : v?.aggregate
+                ? v.aggregate === 'COUNT_DISTINCT'
+                  ? `COUNT(DISTINCT ${v.column.column_name})`
+                  : `${v.aggregate}(${v.column.column_name})`
+                : v.column.column_name,
+              expressionType: v?.expressionType ? v.expressionType : '',
+              clause: 'WHERE',
+            },
+          };
+        };
+
+        const forecastSeasonalityDefaultOrItem = (item: any) =>
+          item
+            ? forecastSeasonality.find(f => f.value === item)
+            : {
+                label: t('default'),
+                value: 'null',
+              };
+
+        const emptyArrayOrOneFindItem = (item: any) =>
+          item ? [metricsOrColumnsFormation(item)] : [];
+
+        const timeseriesLimitMetricSwitch = (vizType: string) => {
+          switch (vizType) {
+            case 'bubble_v2':
+              return emptyArrayOrOneFindItem(getFormData.orderby);
+
+            default:
+              return emptyArrayOrOneFindItem(
+                getFormData.timeseries_limit_metric,
+              );
+          }
+        };
+
+        setSelectBars(
+          ChartSelectBars.filter(vf =>
+            [getFormData.viz_type, ...ChartDefaultSelectBars].includes(
+              vf.status,
+            ),
+          ),
+        );
         setActive(getFormData.viz_type);
-        setChartStatus('loading');
         setValues({
-          x_axis: getFormData.x_axis
-            ? [metricsOrColumnsFormation(getFormData.x_axis)]
-            : [],
+          x_axis: emptyArrayOrOneFindItem(getFormData.x_axis),
           time_grain_sqla: getFormData?.time_grain_sqla
             ? chartFormsOption.time_grain_sqla.find(
                 f => f.value === getFormData.time_grain_sqla,
@@ -383,9 +408,9 @@ const DvtChart = () => {
                 value: String(getFormData.limit),
               }
             : '',
-          timeseries_limit_metric: getFormData.timeseries_limit_metric
-            ? [metricsOrColumnsFormation(getFormData.timeseries_limit_metric)]
-            : [],
+          timeseries_limit_metric: timeseriesLimitMetricSwitch(
+            getFormData.viz_type,
+          ),
           order_desc: getFormData?.order_desc !== false,
           row_limit: getFormData?.row_limit
             ? {
@@ -474,25 +499,24 @@ const DvtChart = () => {
               )
             : [],
           order_by_cols: [],
-          metric: getFormData.metric
-            ? [metricsOrColumnsFormation(getFormData.metric)]
-            : [],
+          metric: emptyArrayOrOneFindItem(getFormData.metric),
           sort_by_metric: getFormData?.sort_by_metric
             ? getFormData.sort_by_metric
             : false,
           subheader: getFormData.subheader ? getFormData.subheader : '',
-          dimension: [],
-          entity: [],
-          x: [],
-          y: [],
-          size: [],
+          dimension: emptyArrayOrOneFindItem(getFormData.series),
+          entity: emptyArrayOrOneFindItem(getFormData.entity),
+          x: emptyArrayOrOneFindItem(getFormData.x),
+          y: emptyArrayOrOneFindItem(getFormData.y),
+          size: emptyArrayOrOneFindItem(getFormData.size),
         });
+
+        setChartStatus('loading');
+        setChartApiUrl('chart/data');
 
         // {"slice_id":${
         //     history.location.search.split('?slice_id=')[1]
         //   }
-
-        setChartApiUrl('chart/data');
 
         // setChartApiUrl(
         //   `chart/data/?form_data=%7B%22slice_id%22%3A${
