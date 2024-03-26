@@ -6,6 +6,7 @@ import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
+  dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/dvt-hooks/useFetch';
@@ -161,23 +162,14 @@ function DvtNewTainedTable() {
   ];
 
   useEffect(() => {
-    keys.forEach(({ key }) => {
-      if (newTainedTableDataSelector.selectDatabase) {
-        dispatch(
-          dvtSidebarSetDataProperty({
-            pageKey: 'newTrainedTable',
-            key,
-            value: newTainedTableDataSelector.selectDatabase.map(
-              (item: any) => ({
-                value: item.value,
-                label: item.value,
-              }),
-            ),
-          }),
-        );
-      }
-    });
-  }, [newTainedTableDataSelector.selectDatabase]);
+    dispatch(
+      dvtSidebarSetProperty({
+        pageKey: 'newTrainedTable',
+        key: 'algorithm',
+        value: '',
+      }),
+    );
+  }, [newTainedTableAddSelector.category]);
 
   useEffect(() => {
     if (getSchemaDataAlready.data) {
@@ -210,6 +202,36 @@ function DvtNewTainedTable() {
   useEffect(() => {
     if (getTableData.data) {
       setData(getTableData.data.columns);
+      keys.forEach(({ key }) => {
+        if (newTainedTableAddSelector.selectDatabase) {
+          dispatch(
+            dvtSidebarSetDataProperty({
+              pageKey: 'newTrainedTable',
+              key,
+              value: getTableData.data.columns.map((item: any) => ({
+                value: item.name,
+                label: item.name,
+              })),
+            }),
+          );
+        }
+      });
+    }
+  }, [getTableData.data]);
+
+  useEffect(() => {
+    if (getTableData.data) {
+      keys.forEach(({ key }) => {
+        if (newTainedTableAddSelector.selectDatabase) {
+          dispatch(
+            dvtSidebarSetProperty({
+              pageKey: 'newTrainedTable',
+              key,
+              value: '',
+            }),
+          );
+        }
+      });
     }
   }, [getTableData.data]);
 
@@ -240,9 +262,7 @@ function DvtNewTainedTable() {
 
   useEffect(
     () => () => {
-      dispatch(dvtSidebarSetPropertyClear('datasetAdd'));
-      setData([]);
-      setDataSchema([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
     },
     [],
   );
