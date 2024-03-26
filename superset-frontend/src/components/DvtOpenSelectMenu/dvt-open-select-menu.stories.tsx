@@ -113,42 +113,42 @@ const savedData = [
 const apiNameOptionData = [
   {
     label: 'From Home',
-    value: 1,
+    value: 'From Home',
   },
   {
     label: 'No Perefence',
-    value: 2,
+    value: 'No Perefence',
   },
   {
     label: 'No Answer',
-    value: 3,
+    value: 'No Answer',
   },
   {
     label: 'In an Office (with Other Developers)',
-    value: 4,
+    value: 'In an Office (with Other Developers)',
   },
 ];
 
 const apiColorOptionData = [
   {
     label: '<NULL>',
-    value: 1,
+    value: null,
   },
   {
     label: 'A. No high school (secondary school)',
-    value: 2,
+    value: 'A. No high school (secondary school)',
   },
   {
     label: "F. Bachelor's degree",
-    value: 3,
+    value: "F. Bachelor's degree",
   },
   {
     label: 'C. High school diploma or equivalent (GED)',
-    value: 4,
+    value: 'C. High school diploma or equivalent (GED)',
   },
   {
     label: 'I. Ph.D.',
-    value: 5,
+    value: 'I. Ph.D.',
   },
 ];
 

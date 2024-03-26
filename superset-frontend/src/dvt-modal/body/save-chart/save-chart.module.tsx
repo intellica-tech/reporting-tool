@@ -16,35 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import {
-  StyledRadio,
-  StyledRadioCheck,
-  StyledRadioLabel,
-} from './dvt-radio.module';
+import { styled } from '@superset-ui/core';
 
-export interface DvtRadioProps {
-  label: string;
-  value: string;
-  active: string;
-  setActive: (active: string) => void;
-  disabled?: boolean;
-}
+const StyledSaveChart = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 75px);
+  padding: 0 20px;
+  gap: 20px;
+`;
 
-const DvtRadio: React.FC<DvtRadioProps> = ({
-  label,
-  value,
-  active,
-  setActive,
-  disabled = false,
-}) => (
-  <StyledRadio
-    onClick={() => !disabled && setActive(value)}
-    disabled={disabled}
-  >
-    <StyledRadioCheck active={value === active} disabled={disabled} />
-    <StyledRadioLabel>{label}</StyledRadioLabel>
-  </StyledRadio>
-);
+const StyledSaveChartButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: auto;
+`;
 
-export default DvtRadio;
+export { StyledSaveChart, StyledSaveChartButtonContainer };

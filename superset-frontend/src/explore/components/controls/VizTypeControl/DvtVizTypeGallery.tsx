@@ -107,17 +107,22 @@ export const VIZ_TYPE_CONTROL_TEST_ID = 'viz-type-control';
 
 const VizPickerLayout = styled.div`
   display: grid;
-  height: 100%;
+  min-height: 100%;
 `;
 
-const RightPane = styled.div``;
-
 const IconsPane = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  padding-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 60px 20px;
+  padding: 20px;
+
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 // overflow hidden on the details pane and overflow auto on the description
@@ -127,8 +132,7 @@ const thumbnailContainerCss = (theme: SupersetTheme) => css`
   cursor: pointer;
   width: ${theme.gridUnit * THUMBNAIL_GRID_UNITS}px;
   position: relative;
-  padding-bottom: 62px;
-  width: 547px;
+  width: 100%;
 
   img {
     border: 1px solid ${theme.colors.grayscale.light2};
@@ -146,11 +150,12 @@ const thumbnailContainerCss = (theme: SupersetTheme) => css`
   }
 
   .viztype-label {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 140%;
+    line-height: 100%;
     letter-spacing: 0.2px;
-    padding-bottom: 62px;
+    padding-bottom: 18px;
+    height: 46px;
   }
 `;
 
@@ -242,6 +247,9 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
   }, [mountedPluginMetadata]);
 
   const chartAddSelector = useAppSelector(state => state.dvtSidebar.chartAdd);
+  const chartAddSearchSelector = useAppSelector(
+    state => state.dvtNavbar.chartAdd.search,
+  );
   const sortedMetadata = useMemo(
     () => chartMetadata.sort((a, b) => a.key.localeCompare(b.key)),
     [chartMetadata],
@@ -303,16 +311,21 @@ export default function VizTypeGallery(props: VizTypeGalleryProps) {
     setEditedData(filteredData);
   }, [chartAddSelector]);
 
-  return editedData.length > 0 ? (
+  const searchEditedData = editedData.filter(
+    (item: any) =>
+      item.value.name
+        .toLowerCase()
+        .indexOf(chartAddSearchSelector.toLowerCase()) > -1,
+  );
+
+  return searchEditedData.length > 0 ? (
     <VizPickerLayout className={className}>
-      <RightPane>
-        <ThumbnailGallery
-          vizEntries={editedData}
-          selectedViz={selectedViz}
-          setSelectedViz={onChange}
-          onDoubleClick={onDoubleClick}
-        />
-      </RightPane>
+      <ThumbnailGallery
+        vizEntries={searchEditedData}
+        selectedViz={selectedViz}
+        setSelectedViz={onChange}
+        onDoubleClick={onDoubleClick}
+      />
     </VizPickerLayout>
   ) : (
     <DvtIconDataLabel

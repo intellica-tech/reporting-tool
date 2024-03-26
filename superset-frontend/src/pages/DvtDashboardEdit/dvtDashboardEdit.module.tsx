@@ -104,13 +104,17 @@ const StyledDashboardDroppedListItemTitle = styled.div`
   font-size: 14px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.dvt.text.bold};
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 `;
 
 const StyledDashboardDroppedListItemChart = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: calc(350px - 32px - 50px);
+  margin-top: auto;
 `;
 
 export {

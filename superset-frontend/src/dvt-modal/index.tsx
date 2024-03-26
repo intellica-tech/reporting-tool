@@ -14,11 +14,14 @@ import DvtQueryPreview from './body/query-preview';
 import DvtSaveQuery from './body/save-query';
 import DvtSaveDataset from './body/save-dataset';
 import DvtTimeRange from './body/time-range';
+import DvtDashoardFilterModal from './body/dashboard-filter';
+import DvtDatasetEdit from './body/dataset-edit';
 import {
   StyledModal,
   StyledModalCard,
   StyledModalCardBody,
 } from './dvt-modal.module';
+import DvtSaveChartModal from './body/save-chart';
 
 export interface ModalProps {
   meta: any;
@@ -47,8 +50,14 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtSaveQuery meta={meta} onClose={onClose} />;
     case 'save-dataset':
       return <DvtSaveDataset meta={meta} onClose={onClose} />;
+    case 'dataset-edit-modal':
+      return <DvtDatasetEdit meta={meta} onClose={onClose} />;
     case 'time-range':
       return <DvtTimeRange meta={meta} onClose={onClose} />;
+    case 'dashboard-filter':
+      return <DvtDashoardFilterModal meta={meta} onClose={onClose} />;
+    case 'save-chart':
+      return <DvtSaveChartModal meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -64,24 +73,22 @@ const DvtModal = () => {
 
   const size = (() => {
     switch (component) {
-      case 'alert-add-modal':
-        return 'medium';
-      case 'report-add-modal':
-        return 'medium';
       case 'delete-modal':
         return 'xsmall';
+      case 'alert-add-modal':
+      case 'report-add-modal':
+        return 'medium';
+      case 'save-query':
+      case 'save-dataset':
+      case 'time-range':
+      case 'save-chart':
+        return 'custom';
       case 'connection-add-modal':
-        return 'large';
       case 'edit-connection':
-        return 'large';
       case 'rowlevelsecurity-add-modal':
         return 'large';
-      case 'save-query':
-        return 'custom';
-      case 'save-dataset':
-        return 'custom';
-      case 'time-range':
-        return 'custom';
+      case 'dashboard-filter':
+        return 'xlarge';
       default:
         return 'small';
     }

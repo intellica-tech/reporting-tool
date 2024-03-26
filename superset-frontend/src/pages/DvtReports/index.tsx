@@ -322,47 +322,51 @@ function ReportList() {
             handleDelete={() => handleModalDelete(selectedRows)}
             handleExport={handleBulkExport}
           />
-          <DvtTable
-            data={data}
-            header={modifiedData.header}
-            selected={selectedRows}
-            setSelected={setSelectedRows}
-            checkboxActiveField="id"
-            sort={sort}
-            setSort={setSort}
-          />
+          <div style={{ flex: 1 }}>
+            <DvtTable
+              data={data}
+              header={modifiedData.header}
+              selected={selectedRows}
+              setSelected={setSelectedRows}
+              checkboxActiveField="id"
+              sort={sort}
+              setSort={setSort}
+            />
+          </div>
         </>
       ) : (
-        <DvtTitleCardList
-          data={data.map((item: any) => ({
-            id: item.id,
-            title: item.slice_name,
-            label: item.changed_by_name,
-            description: item.changed_on_delta_humanized,
-            isFavorite: item.isFavorite,
-            link: item.url,
-            paramUrl: 'chart',
-          }))}
-          title={t('Data')}
-          setFavorites={handleSetFavorites}
-          dropdown={[
-            {
-              label: t('Edit'),
-              icon: 'edit_alt',
-              onClick: (item: any) => handleEditCharts(item),
-            },
-            {
-              label: t('Export'),
-              icon: 'share',
-              onClick: (item: any) => handleSingleExport(item.id),
-            },
-            {
-              label: t('Delete'),
-              icon: 'trash',
-              onClick: (item: any) => handleModalDelete(item),
-            },
-          ]}
-        />
+        <div style={{ flex: 1 }}>
+          <DvtTitleCardList
+            data={data.map((item: any) => ({
+              id: item.id,
+              title: item.slice_name,
+              label: item.changed_by_name,
+              description: item.changed_on_delta_humanized,
+              isFavorite: item.isFavorite,
+              link: item.url,
+              paramUrl: 'chart',
+            }))}
+            title={t('Data')}
+            setFavorites={handleSetFavorites}
+            dropdown={[
+              {
+                label: t('Edit'),
+                icon: 'edit_alt',
+                onClick: (item: any) => handleEditCharts(item),
+              },
+              {
+                label: t('Export'),
+                icon: 'share',
+                onClick: (item: any) => handleSingleExport(item.id),
+              },
+              {
+                label: t('Delete'),
+                icon: 'trash',
+                onClick: (item: any) => handleModalDelete(item),
+              },
+            ]}
+          />
+        </div>
       )}
       <StyledReportsButton>
         <DvtButton
@@ -383,15 +387,15 @@ function ReportList() {
       <DvtIconDataLabel
         label={
           data.length === 0
-            ? t('No Alerts Yet')
+            ? t('No Reports Yet')
             : t('No results match your filter criteria')
         }
-        buttonLabel={data.length === 0 ? t('Alert') : t('Clear All Filter')}
-        buttonClick={() => {
-          if (data.length > 0) {
-            clearReports();
-          }
-        }}
+        buttonLabel={
+          data.length === 0
+            ? t('Create a New Graph/Chart')
+            : t('Clear All Filter')
+        }
+        buttonClick={() => history.push('/chart/add')}
       />
     </StyledReports>
   );

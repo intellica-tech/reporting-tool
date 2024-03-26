@@ -16,7 +16,11 @@ import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { SavedQueryPagination } from './dvt-saved-query.module';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
+import {
+  SavedQueryPagination,
+  StyledEmptyAlerts,
+} from './dvt-saved-query.module';
 
 function DvtSavedQuery() {
   const dispatch = useDispatch();
@@ -218,7 +222,7 @@ function DvtSavedQuery() {
     },
   ];
 
-  return (
+  return data.length > 0 ? (
     <div>
       <DvtDeselectDeleteExport
         count={selected.length}
@@ -244,6 +248,16 @@ function DvtSavedQuery() {
         />
       </SavedQueryPagination>
     </div>
+  ) : (
+    <StyledEmptyAlerts>
+      <DvtIconDataLabel
+        label={
+          data.length === 0
+            ? t('No Alerts Yet')
+            : t('No results match your filter criteria')
+        }
+      />
+    </StyledEmptyAlerts>
   );
 }
 

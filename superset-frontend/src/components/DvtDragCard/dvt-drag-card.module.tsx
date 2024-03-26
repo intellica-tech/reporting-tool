@@ -47,6 +47,7 @@ const StyledDvtCardLabel = styled.div`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.colors.dvt.primary.light1};
+  word-break: break-all;
 `;
 
 export {

@@ -33,7 +33,12 @@ import DvtButton from 'src/components/DvtButton';
 import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
-import { StyledButtons, StyledDvtDatasets } from './dvt-datasets.module';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
+import {
+  StyledButtons,
+  StyledDvtDatasets,
+  StyledEmptyDatasets,
+} from './dvt-datasets.module';
 
 function DvtDatasets() {
   const dispatch = useDispatch();
@@ -91,9 +96,14 @@ function DvtDatasets() {
     })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
+  const [datasetEditApiUrl, setDatasetEditApiUrl] = useState<string>('');
 
   const datasetApi = useFetch({
     url: datasetApiUrl,
+  });
+
+  const datasetEditPromise = useFetch({
+    url: datasetEditApiUrl,
   });
 
   useEffect(() => {
@@ -154,6 +164,10 @@ function DvtDatasets() {
     handleResourceExport('dataset', selectedIds, () => {});
   };
 
+  const handleEditDataset = (item: any) => {
+    setDatasetEditApiUrl(`dataset/${item.id}`);
+  };
+
   const header = [
     {
       id: 1,
@@ -186,7 +200,7 @@ function DvtDatasets() {
       clicks: [
         {
           icon: 'edit_alt',
-          click: () => {},
+          click: (item: any) => handleEditDataset(item),
           popperLabel: t('Edit'),
         },
         {
@@ -203,6 +217,18 @@ function DvtDatasets() {
     },
   ];
 
+  useEffect(() => {
+    if (datasetEditPromise.data) {
+      dispatch(
+        openModal({
+          component: 'dataset-edit-modal',
+          meta: { ...datasetEditPromise.data, isEdit: true },
+        }),
+      );
+      setDatasetEditApiUrl('');
+    }
+  }, [datasetEditPromise.data]);
+
   useEffect(
     () => () => {
       dispatch(dvtSidebarSetPropertyClear('datasets'));
@@ -212,7 +238,7 @@ function DvtDatasets() {
     [],
   );
 
-  return (
+  return data.length > 0 ? (
     <StyledDvtDatasets>
       <DvtDeselectDeleteExport
         count={selectedRows.length}
@@ -220,7 +246,7 @@ function DvtDatasets() {
         handleDelete={() => handleModalDelete(selectedRows)}
         handleExport={handleSelectedExport}
       />
-      <div>
+      <div style={{ flex: 1 }}>
         <DvtTable
           data={data}
           header={header}
@@ -247,6 +273,20 @@ function DvtDatasets() {
         />
       </StyledButtons>
     </StyledDvtDatasets>
+  ) : (
+    <StyledEmptyDatasets>
+      <DvtIconDataLabel
+        label={
+          data.length === 0
+            ? t('No Datasets Yet')
+            : t('No results match your filter criteria')
+        }
+        buttonLabel={
+          data.length === 0 ? t('Create a New Dataset') : t('Clear All Filter')
+        }
+        buttonClick={() => history.push('/dataset/add/')}
+      />
+    </StyledEmptyDatasets>
   );
 }
 

@@ -6,14 +6,14 @@ import {
   StyledDvtDragCard,
 } from './dvt-drag-card-list.module';
 
-interface CardProps {
+export interface DragCardDataProps {
   label: string;
   value: any;
   icon: 'question' | 'field_abc' | 'dvt-hashtag' | 'clock' | 'function_x';
 }
 
 export interface DvtDragCardListProps {
-  data: CardProps[];
+  data: DragCardDataProps[];
 }
 
 const DvtDargCardList = ({ data }: DvtDragCardListProps) => (

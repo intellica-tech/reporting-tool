@@ -594,6 +594,22 @@ const dvtSidebarSlice = createSlice({
         },
       };
     },
+    dvtSidebarSetDataPropertyUpdate: (
+      state,
+      action: PayloadAction<{ pageKey: string; key: string; value: any }>,
+    ) => ({
+      ...state,
+      data: {
+        ...state.data,
+        [action.payload.pageKey]: {
+          ...state.data[action.payload.pageKey],
+          [action.payload.key]: [
+            ...state.data[action.payload.pageKey][action.payload.key],
+            action.payload.value,
+          ],
+        },
+      },
+    }),
     dvtSidebarProfileSetTabs: (
       state,
       action: PayloadAction<{ label: string; url: string }>,
@@ -612,6 +628,7 @@ export const {
   dvtSidebarSetPropertySelectedRemove,
   dvtSidebarSetPropertyClear,
   dvtSidebarSetDataProperty,
+  dvtSidebarSetDataPropertyUpdate,
   dvtSidebarProfileSetTabs,
 } = dvtSidebarSlice.actions;
 

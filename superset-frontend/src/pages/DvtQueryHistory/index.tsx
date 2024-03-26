@@ -11,7 +11,11 @@ import DvtPagination from 'src/components/DvtPagination';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
-import { StyledSqlPagination } from './dvt-query-history.module';
+import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
+import {
+  StyledEmptyQueryHistory,
+  StyledSqlPagination,
+} from './dvt-query-history.module';
 
 function DvtQueryHistory() {
   const dispatch = useDispatch();
@@ -184,7 +188,7 @@ function DvtQueryHistory() {
     },
   ];
 
-  return (
+  return data.length > 0 ? (
     <div>
       <DvtTable
         data={data}
@@ -201,6 +205,16 @@ function DvtQueryHistory() {
         />
       </StyledSqlPagination>
     </div>
+  ) : (
+    <StyledEmptyQueryHistory>
+      <DvtIconDataLabel
+        label={
+          data.length === 0
+            ? t('No Query History Yet')
+            : t('No results match your filter criteria')
+        }
+      />
+    </StyledEmptyQueryHistory>
   );
 }
 

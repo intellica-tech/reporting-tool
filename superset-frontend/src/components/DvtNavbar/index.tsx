@@ -26,10 +26,15 @@ import useFetch from 'src/dvt-hooks/useFetch';
 import { BellOutlined } from '@ant-design/icons';
 import {
   dvtNavbarAlertSetTabs,
+  dvtNavbarChartAddSetVizType,
+  dvtNavbarChartSearchVizType,
   dvtNavbarChartsSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
-import { dvtChartSetSelectedChart } from 'src/dvt-redux/dvt-chartReducer';
+import {
+  dvtChartSetSelectedChart,
+  dvtChartSetSlice,
+} from 'src/dvt-redux/dvt-chartReducer';
 import { t } from '@superset-ui/core';
 import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import { extractIdPathname } from 'src/dvt-utils/extract-id-pathname';
@@ -58,6 +63,7 @@ import {
   NavbarProfileIcon,
   NavbarProfileIconDot,
 } from './dvt-navbar.module';
+import DvtInput from '../DvtInput';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -81,6 +87,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   const chartAddSidebarSelector = useAppSelector(
     state => state.dvtSidebar.chartAdd,
   );
+  const saveDisabled = useAppSelector(state => state.dvtChart.saveDisabled);
   const sqlQuerySelector = useAppSelector(state => state.dvtSqlhub);
   const sqlLabSidebarSelector = useAppSelector(
     state => state.dvtSidebar.sqlhub,
@@ -168,12 +175,54 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   };
 
   useEffect(() => {
+    if (history.location?.search) {
+      setTimeout(() => {
+        setGetExploreApiUrl(`explore/${history.location.search}`);
+      }, 500);
+    }
+  }, [history.location]);
+
+  useEffect(() => {
     if (getExploreApi.data) {
-      dispatch(dvtChartSetSelectedChart(getExploreApi.data.result));
-      history.push('/explore/');
-      setGetExploreApiUrl('');
+      const { result } = getExploreApi.data;
+      const datasource = result.form_data.datasource.split('__');
+
+      const urlParams = result.form_data.url_params?.datasource_id
+        ? result.form_data.url_params
+        : {
+            ...result.form_data.url_params,
+            datasource_id: datasource[0],
+            datasource_type: datasource[1],
+          };
+
+      dispatch(
+        dvtChartSetSelectedChart({
+          ...result,
+          form_data: {
+            ...result.form_data,
+            url_params: urlParams,
+          },
+        }),
+      );
+      if (result.slice) {
+        dispatch(
+          dvtChartSetSlice({
+            id: result.slice.slice_id,
+            name: result.slice.slice_name,
+          }),
+        );
+      }
+      if (!history.location?.search) {
+        history.push('/explore/');
+      }
     }
   }, [getExploreApi.data]);
+
+  useEffect(() => {
+    if (!getExploreApi.loading) {
+      setGetExploreApiUrl('');
+    }
+  }, [getExploreApi.loading]);
 
   const sqlPathname = ['/sqlhub/', '/sqlhub/history/', '/savedqueryview/list/'];
 
@@ -219,6 +268,15 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       }),
     );
   };
+
+  useEffect(
+    () => () => {
+      if (history.location.pathname === '/chart/add') {
+        dispatch(dvtNavbarChartAddSetVizType(''));
+      }
+    },
+    [history.location],
+  );
 
   return (
     <StyledDvtNavbar leftMove={leftMove}>
@@ -296,7 +354,12 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           )}
           {pathName === '/chart/add' && (
             <>
-              <div />
+              <DvtInput
+                type="search"
+                placeholder="search"
+                value={chartAddSelector.search}
+                onChange={v => dispatch(dvtNavbarChartSearchVizType(v))}
+              />
               <NavbarBottomRight>
                 <DvtButton
                   typeColour="powder"
@@ -306,7 +369,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                       ? 'primary'
                       : 'grayscale'
                   }
-                  label="Create New Chart"
+                  label={t('Create New Chart')}
                   onClick={() =>
                     chartAddSelector.vizType &&
                     chartAddSidebarSelector.dataset?.id &&
@@ -366,7 +429,14 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
               <DvtButton
                 label={t('Save')}
                 typeColour="powder"
-                onClick={() => {}}
+                onClick={() =>
+                  dispatch(
+                    openModal({
+                      component: 'save-chart',
+                    }),
+                  )
+                }
+                disabled={saveDisabled}
               />
             </>
           )}

@@ -13,7 +13,7 @@ const StyledNewDatasetsButtons = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
   padding-right: 20px;
   margin-top: auto;

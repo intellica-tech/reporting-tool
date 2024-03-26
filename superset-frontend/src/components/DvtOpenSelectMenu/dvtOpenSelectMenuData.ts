@@ -37,7 +37,7 @@ const openSelectMenuData: OpenSelectMenuDataProps = {
       },
       {
         label: t('Greater than (>)'),
-        value: '=',
+        value: '>',
       },
       {
         label: t('Greater or equal (>=)'),

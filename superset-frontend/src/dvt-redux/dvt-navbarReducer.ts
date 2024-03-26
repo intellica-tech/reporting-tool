@@ -29,6 +29,7 @@ interface DvtNavbarState {
   };
   chartAdd: {
     vizType: string;
+    search: string;
   };
   viewlist: {
     dashboard: ButtonTabsDataProps;
@@ -52,6 +53,7 @@ const initialState: DvtNavbarState = {
   },
   chartAdd: {
     vizType: '',
+    search: '',
   },
   viewlist: {
     dashboard: {
@@ -100,6 +102,13 @@ const dvtNavbarSlice = createSlice({
         vizType: action.payload,
       },
     }),
+    dvtNavbarChartSearchVizType: (state, action: PayloadAction<string>) => ({
+      ...state,
+      chartAdd: {
+        ...state.chartAdd,
+        search: action.payload,
+      },
+    }),
     dvtNavbarViewlistTabs: (
       state,
       action: PayloadAction<{ key: string; value: ButtonTabsDataProps }>,
@@ -117,6 +126,7 @@ export const {
   dvtNavbarAlertSetTabs,
   dvtNavbarChartsSetTabs,
   dvtNavbarChartAddSetVizType,
+  dvtNavbarChartSearchVizType,
   dvtNavbarViewlistTabs,
 } = dvtNavbarSlice.actions;
 

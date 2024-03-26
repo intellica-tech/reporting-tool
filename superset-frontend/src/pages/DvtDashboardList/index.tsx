@@ -145,6 +145,7 @@ function DvtDashboardList() {
           createdbyName: item.changed_by
             ? `${item.changed_by?.first_name} ${item.changed_by?.last_name}`
             : '',
+          urlEdit: `/dashboard/${item.id}/?edit=true`,
         })),
       );
       setCount(dashboardApi.data.count);
@@ -252,8 +253,7 @@ function DvtDashboardList() {
       field: 'dashboard_title',
       flex: 3,
       checkbox: true,
-      urlField: '/dashboard/',
-      urlFieldEnd: '/?edit=true',
+      urlField: 'urlEdit',
       sort: true,
     },
     { id: 2, title: t('Status'), field: 'published', sort: true },

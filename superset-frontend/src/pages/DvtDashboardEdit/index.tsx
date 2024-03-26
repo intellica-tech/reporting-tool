@@ -24,6 +24,9 @@ import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/dvt-hooks/useFetch';
 import rison from 'rison';
 import { useHistory } from 'react-router-dom';
+import { dvtChartGetDashboardEdit } from 'src/dvt-redux/dvt-dashboardEditReducer';
+import { useDispatch } from 'react-redux';
+// import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtCardDetailChartList from 'src/components/DvtCardDetailChartList';
 import DvtButton from 'src/components/DvtButton';
@@ -37,7 +40,10 @@ import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
 import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
 import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
 import DvtCheckbox from 'src/components/DvtCheckbox';
+import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
+import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtSpinner from 'src/components/DvtSpinner';
+import Icon from 'src/components/Icons/Icon';
 import {
   StyledTab,
   StyledDashboard,
@@ -53,7 +59,9 @@ import {
 } from './dvtDashboardEdit.module';
 
 function DvtDashboardList() {
+  const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
+  // const dashboardEditSelector = useAppSelector(state => state.dvtDashboardEdit);
   const [activeTab, setActiveTab] = useState<string>('charts');
   const [chartsApiUrl, setChartsApiUrl] = useState<string>('');
   const [droppedData, setDroppedData] = useState<any[]>([]);
@@ -64,9 +72,21 @@ function DvtDashboardList() {
   });
   const [searchInput, setSearchInput] = useState<string>('');
   const [showMyOnlyChart, setShowMyOnlyChart] = useState<boolean>(false);
+  const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
+  const [chartResultApiUrl, setChartResultApiUrl] = useState<string>('');
+  const [chartRenderApiUrl, setChartRenderApiUrl] = useState<string>('');
+  const [chartRenderApiBody, setChartRenderApiBody] = useState<any>(null);
 
   const getApiData = useFetch({
     url: chartsApiUrl,
+  });
+
+  const getDashboardPromise = useFetch({
+    url: dashboardApiUrl,
+  });
+
+  const getChartResultData = useFetch({
+    url: chartResultApiUrl,
   });
 
   const searchApiUrls = () =>
@@ -131,6 +151,20 @@ function DvtDashboardList() {
     }
   }, [getApiData.data]);
 
+  useEffect(() => {
+    const pathnameDashboardSplit =
+      history.location.pathname.split('/dashboard/')[1];
+    if (pathnameDashboardSplit) {
+      setDashboardApiUrl(`dashboard/${pathnameDashboardSplit.split('/')[0]}`);
+    }
+  }, [history.location.pathname]);
+
+  useEffect(() => {
+    if (getDashboardPromise.data) {
+      dispatch(dvtChartGetDashboardEdit(getDashboardPromise.data.result));
+    }
+  }, [getDashboardPromise.data]);
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
@@ -142,12 +176,7 @@ function DvtDashboardList() {
     const jsonDropItem = JSON.parse(droppedDataString);
 
     if (jsonDropItem && droppedData.length < 3) {
-      setDroppedData((prevData: any | any[]) => {
-        const newData = Array.isArray(prevData)
-          ? [...prevData, jsonDropItem]
-          : [jsonDropItem];
-        return newData;
-      });
+      setChartResultApiUrl(`chart/${jsonDropItem.id}`);
     }
   };
 
@@ -157,6 +186,89 @@ function DvtDashboardList() {
     datasource_name: t('dataset'),
     changed_on_delta_humanized: t('recent'),
   };
+
+  const {
+    ref: chartPanelRef,
+    observerRef: resizeObserverRef,
+    width: chartPanelWidth,
+    height: chartPanelHeight,
+  } = useResizeDetectorByObserver();
+
+  useEffect(() => {
+    if (getChartResultData.data) {
+      const findChart = chartData.find(
+        f => f.id === getChartResultData.data.id,
+      );
+      setDroppedData((prevData: any | any[]) => {
+        const newData = Array.isArray(prevData)
+          ? [
+              ...prevData,
+              {
+                ...findChart,
+                render: [],
+                result: getChartResultData.data.result,
+                chartStatus: 'loading',
+              },
+            ]
+          : {
+              ...findChart,
+              render: [],
+              result: getChartResultData.data.result,
+              chartStatus: 'loading',
+            };
+        return newData;
+      });
+      setChartRenderApiBody({
+        id: getChartResultData.data.id,
+        queryContext: getChartResultData.data.result.query_context,
+      });
+      setChartRenderApiUrl('chart/data');
+    }
+  }, [getChartResultData.data]);
+
+  const chartRenderPromise = useFetch({
+    url: chartRenderApiUrl,
+    method: 'POST',
+    body: chartRenderApiBody ? JSON.parse(chartRenderApiBody.queryContext) : {},
+  });
+
+  useEffect(() => {
+    const result: any = { status: '', chart: [] };
+    if (chartRenderPromise.data) {
+      result.chart = chartRenderPromise.data.result;
+      result.status = 'rendered';
+    }
+    if (chartRenderPromise.error) {
+      result.status = 'failed';
+      if (chartRenderPromise.error?.errors) {
+        result.chart = chartRenderPromise.error.errors;
+      } else if (chartRenderPromise.error?.message) {
+        result.chart = [
+          {
+            error: chartRenderPromise.error.message,
+            message: chartRenderPromise.error.message,
+          },
+        ];
+      }
+    }
+    if (chartRenderApiBody?.id && result.chart.length) {
+      const findDataRemoveAndDroppedData = droppedData.filter(
+        f => f.id !== chartRenderApiBody.id,
+      );
+      const findData = droppedData.find(f => f.id === chartRenderApiBody.id);
+      setDroppedData([
+        ...findDataRemoveAndDroppedData,
+        { ...findData, render: result.chart, chartStatus: result.status },
+      ]);
+    }
+  }, [chartRenderPromise.error, chartRenderPromise.data]);
+
+  useEffect(() => {
+    if (!chartRenderPromise.loading) {
+      setChartRenderApiBody(null);
+      setChartRenderApiUrl('');
+    }
+  }, [chartRenderPromise.loading]);
 
   return (
     <StyledDashboardEdit>
@@ -174,10 +286,39 @@ function DvtDashboardList() {
             {droppedData.map(item => (
               <StyledDashboardDroppedListItem key={item.id}>
                 <StyledDashboardDroppedListItemTitle>
-                  {item.slice_name}
+                  <div>{item.slice_name}</div>
+                  <Icon
+                    style={{ cursor: 'pointer' }}
+                    fileName="dvt-delete"
+                    onClick={() =>
+                      setDroppedData(droppedData.filter(f => f.id !== item.id))
+                    }
+                  />
                 </StyledDashboardDroppedListItemTitle>
-                <StyledDashboardDroppedListItemChart>
-                  <DvtSpinner type="grow" size="xlarge" />
+                <StyledDashboardDroppedListItemChart ref={resizeObserverRef}>
+                  {item.chartStatus === 'loading' ? (
+                    <DvtSpinner type="grow" size="xlarge" />
+                  ) : (
+                    <div
+                      style={{ height: '100%', width: '100%' }}
+                      ref={chartPanelRef}
+                    >
+                      <ChartContainer
+                        width={chartPanelWidth}
+                        height={chartPanelHeight}
+                        ownState={undefined}
+                        annotationData={undefined}
+                        chartAlert={null}
+                        chartStackTrace={null}
+                        chartId={0}
+                        chartStatus={item.chartStatus}
+                        formData={JSON.parse(item.result.params)}
+                        queriesResponse={item.render}
+                        timeout={60}
+                        vizType={item.viz_type}
+                      />
+                    </div>
+                  )}
                 </StyledDashboardDroppedListItemChart>
               </StyledDashboardDroppedListItem>
             ))}

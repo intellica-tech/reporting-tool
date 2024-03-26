@@ -20,10 +20,20 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
-    popoverLabel: 'Big Number with Trendline',
-    status: 'big_number',
+    popoverLabel: 'Funnel Chart',
+    status: 'funnel',
     icon: 'dvt-linear_chart',
   },
+  {
+    popoverLabel: 'Histogram',
+    status: 'histogram',
+    icon: 'dvt-linear_chart',
+  },
+  // {
+  //   popoverLabel: 'Big Number with Trendline',
+  //   status: 'big_number',
+  //   icon: 'dvt-linear_chart',
+  // },
   {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',

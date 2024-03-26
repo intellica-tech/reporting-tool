@@ -79,7 +79,7 @@ export interface ColumnDataProps {
 
 interface OptionDataProps {
   label: string;
-  value: number;
+  value: any;
 }
 
 interface ValuesProps {
@@ -235,7 +235,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
               const filtersAutoAddOperator =
                 type === 'filters'
                   ? values.operator?.value
-                    ? vl.python_date_format
+                    ? vl.python_date_format ||
+                      vl.type === 'TIMESTAMP WITHOUT TIME ZONE'
                       ? {
                           operator: {
                             label: t('No filter'),
@@ -252,7 +253,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                           filterType: '',
                         }
                       : {}
-                    : vl.python_date_format
+                    : vl.python_date_format ||
+                      vl.type === 'TIMESTAMP WITHOUT TIME ZONE'
                     ? {
                         operator: {
                           label: t('No filter'),
@@ -291,7 +293,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
 
               const onOptionValue =
                 values.option?.value || values.option?.length
-                  ? { option: '' }
+                  ? { option: '', comparator: '' }
                   : {};
 
               setValues({
@@ -388,6 +390,9 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                                 option: values.option?.value
                                   ? [values.option.value]
                                   : values.option,
+                                comparator: values.option?.value
+                                  ? [values.option.value]
+                                  : values.option,
                               }
                             : {
                                 option: values.option?.length
@@ -395,6 +400,9 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                                       fi => fi.value === values.option[0],
                                     )
                                   : values.option,
+                                comparator: values.option?.length
+                                  ? values.option[0]
+                                  : values.option.value,
                               }
                           : {};
 
@@ -421,9 +429,12 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                           setSelectedValues={vl => {
                             const autoAddSql = `${values.column?.column_name} ${
                               values.operator?.value
-                            } (${optionData
-                              .filter(fi => vl.includes(fi.value))
-                              .map(vm => `'${vm.label}'`)
+                            } (${vl
+                              .map(vm => {
+                                const stringOrNumber =
+                                  typeof vm === 'number' ? vm : `'${vm}'`;
+                                return stringOrNumber;
+                              })
                               .join(', ')})`;
                             const comparators = optionData
                               .filter(fi => vl.includes(fi.value))
@@ -444,9 +455,14 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                         <DvtSelect
                           selectedValue={values.option}
                           setSelectedValue={vl => {
-                            const autoAddSql = `${values.column?.column_name} ${values.operator?.value} '${vl.label}'`;
+                            const stringOrNumber =
+                              typeof vl.value === 'number'
+                                ? vl.value
+                                : `'${vl.value}'`;
+                            const autoAddSql = `${values.column?.column_name} ${values.operator?.value} ${stringOrNumber}`;
                             setValues({
                               ...values,
+                              comparator: vl.value,
                               option: vl,
                               sql: autoAddSql,
                             });

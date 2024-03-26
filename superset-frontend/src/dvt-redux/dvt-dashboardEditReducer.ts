@@ -16,35 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React from 'react';
-import {
-  StyledRadio,
-  StyledRadioCheck,
-  StyledRadioLabel,
-} from './dvt-radio.module';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface DvtRadioProps {
-  label: string;
-  value: string;
-  active: string;
-  setActive: (active: string) => void;
-  disabled?: boolean;
+interface DvtDashboardEditState {
+  get: any;
 }
 
-const DvtRadio: React.FC<DvtRadioProps> = ({
-  label,
-  value,
-  active,
-  setActive,
-  disabled = false,
-}) => (
-  <StyledRadio
-    onClick={() => !disabled && setActive(value)}
-    disabled={disabled}
-  >
-    <StyledRadioCheck active={value === active} disabled={disabled} />
-    <StyledRadioLabel>{label}</StyledRadioLabel>
-  </StyledRadio>
-);
+const initialState: DvtDashboardEditState = {
+  get: {},
+};
 
-export default DvtRadio;
+const dvtDashboardEditSlice = createSlice({
+  name: 'dvt-dashboard-edit',
+  initialState,
+  reducers: {
+    dvtChartGetDashboardEdit: (state, action: PayloadAction<any>) => ({
+      ...state,
+      get: action.payload,
+    }),
+  },
+});
+
+export const { dvtChartGetDashboardEdit } = dvtDashboardEditSlice.actions;
+
+export default dvtDashboardEditSlice.reducer;

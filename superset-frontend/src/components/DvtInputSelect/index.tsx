@@ -37,7 +37,7 @@ import {
 
 interface SelectData {
   label: string;
-  value: number;
+  value: number | string;
 }
 
 export interface DvtInputSelectProps {
@@ -68,7 +68,7 @@ const DvtInputSelect = ({
   const ref = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(ref, () => setIsOpen(false));
 
-  const toggleOption = (value: number) => {
+  const toggleOption = (value: number | string) => {
     if (selectedValues.includes(value)) {
       setSelectedValues(selectedValues.filter(val => val !== value));
     } else {
