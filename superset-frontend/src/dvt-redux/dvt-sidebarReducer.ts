@@ -533,6 +533,24 @@ const dvtSidebarSlice = createSlice({
                 },
               },
             };
+          case 'newTrainedTable':
+            return {
+              data: {
+                ...state.data,
+                newTrainedTable: {
+                  ...state.data.newTrainedTable,
+                  schema: [],
+                  selectDatabase: [],
+                  algorithm: [],
+                  targetColumnName: [],
+                  timeColumnName: [],
+                  featureColumn: [],
+                  groupColumn: [],
+                  labelColumn: [],
+                  selectCategory: [],
+                },
+              },
+            };
           default:
             return {};
         }

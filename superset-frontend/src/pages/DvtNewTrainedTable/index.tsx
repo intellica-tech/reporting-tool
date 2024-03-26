@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { useToasts } from 'src/components/MessageToasts/withToasts';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
@@ -30,12 +31,10 @@ const header = [
 
 function DvtNewTainedTable() {
   const dispatch = useDispatch();
+  const { addDangerToast } = useToasts();
   const history = useHistory();
   const newTainedTableAddSelector = useAppSelector(
     state => state.dvtSidebar.newTrainedTable,
-  );
-  const newTainedTableDataSelector = useAppSelector(
-    state => state.dvtSidebar.data.newTrainedTable,
   );
   const [getSchemaDataApiUrl, setGetSchemaDataApiUrl] = useState({
     url: '',
@@ -108,8 +107,11 @@ function DvtNewTainedTable() {
       modelInput: {
         tableName: newTainedTableAddSelector.selectDatabase?.value,
         ...(newTainedTableAddSelector.algorithm?.label === 'DBSCAN'
-          ? { epsilon: 100, minPoints: 10 }
-          : { clusterSize: 10 }),
+          ? {
+              epsilon: newTainedTableAddSelector.epsilon,
+              minPoints: newTainedTableAddSelector.minPoints,
+            }
+          : { clusterSize: newTainedTableAddSelector.clusterSize }),
       },
     },
   });
@@ -238,27 +240,12 @@ function DvtNewTainedTable() {
   const handleCreateDataset = () => {
     if (newTainedTableAddSelector.category.label === 'Segmentation') {
       setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
-      setTimeout(() => {
-        setPostSegmentationDataSetUrl('');
-      }, 200);
     } else if (newTainedTableAddSelector.algorithm?.value === 'lstm') {
       setPostDataSetUrl('lstm');
-      setTimeout(() => {
-        setPostDataSetUrl('');
-      }, 200);
     } else {
       setPostDataSetUrl('ml_and_insert/');
-      setTimeout(() => {
-        setPostDataSetUrl('');
-      }, 200);
     }
   };
-
-  useEffect(() => {
-    if (postDataset.data || postSegmentationDataset.data) {
-      history.push('/traindata');
-    }
-  }, [postDataset.data, postSegmentationDataset.data]);
 
   useEffect(
     () => () => {
@@ -313,6 +300,48 @@ function DvtNewTainedTable() {
       );
     }
   }, [newTainedTableAddSelector.category]);
+
+  useEffect(() => {
+    if (postSegmentationDataset.data?.success) {
+      addDangerToast(t('Success Add New Table'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+    }
+  }, [postSegmentationDataset.data]);
+
+  useEffect(() => {
+    if (postDataset.data?.success) {
+      addDangerToast(t('Success Add New Table'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'selectDatabase',
+          value: '',
+        }),
+      );
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'schema',
+          value: '',
+        }),
+      );
+    }
+  }, [postDataset.data]);
+
+  useEffect(() => {
+    if (!postDataset.loading) {
+      setPostDataSetUrl('');
+    }
+  }, [postDataset.loading]);
+
+  useEffect(() => {
+    if (!postSegmentationDataset.loading) {
+      setPostSegmentationDataSetUrl('');
+    }
+  }, [postSegmentationDataset.loading]);
 
   return (
     <StyledDvtNewTainedTable>
