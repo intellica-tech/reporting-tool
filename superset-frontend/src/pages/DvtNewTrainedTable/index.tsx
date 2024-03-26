@@ -191,7 +191,7 @@ function DvtNewTainedTable() {
         }),
       );
     }
-  }, [newTainedTableAddSelector.schema]);
+  }, [getSchemaDataAlready.data, newTainedTableAddSelector.schema]);
 
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
