@@ -174,7 +174,7 @@ function DvtNewTainedTable() {
   }, [newTainedTableAddSelector.category]);
 
   useEffect(() => {
-    if (getSchemaDataAlready.data) {
+    if (newTainedTableAddSelector.schema) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
@@ -191,7 +191,7 @@ function DvtNewTainedTable() {
         }),
       );
     }
-  }, [getSchemaDataAlready.data]);
+  }, [newTainedTableAddSelector.schema]);
 
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
