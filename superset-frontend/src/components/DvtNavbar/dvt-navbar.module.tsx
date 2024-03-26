@@ -92,6 +92,24 @@ const NavbarSearchGroup = styled.div`
   font-weight: 500;
 `;
 
+const StyledFlexCenter = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+`;
+
+const StyledTransparentInput = styled.input`
+  height: 40px;
+  min-width: 300px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: auto;
+`;
+
 export {
   StyledDvtNavbar,
   NavbarTop,
@@ -102,4 +120,6 @@ export {
   NavbarSearchGroup,
   NavbarProfileIcon,
   NavbarProfileIconDot,
+  StyledFlexCenter,
+  StyledTransparentInput,
 };

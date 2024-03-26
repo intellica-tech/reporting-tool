@@ -23,7 +23,11 @@ interface DvtDashboardEditState {
 }
 
 const initialState: DvtDashboardEditState = {
-  get: {},
+  get: {
+    id: null,
+    dashboard_title: '',
+    published: false,
+  },
 };
 
 const dvtDashboardEditSlice = createSlice({
@@ -34,9 +38,20 @@ const dvtDashboardEditSlice = createSlice({
       ...state,
       get: action.payload,
     }),
+    dvtChartGetDashboardEditSetValue: (
+      state,
+      action: PayloadAction<{ key: string; value: any }>,
+    ) => ({
+      ...state,
+      get: {
+        ...state.get,
+        [action.payload.key]: action.payload.value,
+      },
+    }),
   },
 });
 
-export const { dvtChartGetDashboardEdit } = dvtDashboardEditSlice.actions;
+export const { dvtChartGetDashboardEdit, dvtChartGetDashboardEditSetValue } =
+  dvtDashboardEditSlice.actions;
 
 export default dvtDashboardEditSlice.reducer;

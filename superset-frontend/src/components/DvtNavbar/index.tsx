@@ -31,6 +31,7 @@ import {
   dvtNavbarChartsSetTabs,
   dvtNavbarViewlistTabs,
 } from 'src/dvt-redux/dvt-navbarReducer';
+import { dvtChartGetDashboardEditSetValue } from 'src/dvt-redux/dvt-dashboardEditReducer';
 import {
   dvtChartSetSelectedChart,
   dvtChartSetSlice,
@@ -62,8 +63,11 @@ import {
   NavbarSearchGroup,
   NavbarProfileIcon,
   NavbarProfileIconDot,
+  StyledFlexCenter,
+  StyledTransparentInput,
 } from './dvt-navbar.module';
 import DvtInput from '../DvtInput';
+import DvtFavorite from '../DvtFavorite';
 
 export interface DvtNavbarProps {
   pathName: string;
@@ -93,8 +97,13 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     state => state.dvtSidebar.sqlhub,
   );
   const viewListSelector = useAppSelector(state => state.dvtNavbar.viewlist);
+  const dashboardEditSelector = useAppSelector(
+    state => state.dvtDashboardEdit.get,
+  );
   const [activeData, setActiveData] = useState<ButtonTabsDataProps[]>([]);
   const [languages, setLanguages] = useState<LanguagesProps[]>([]);
+  const [dashboardEditFavorite, setDashboardEditFavorite] =
+    useState<boolean>(false);
 
   const pathTitles = (pathname: string) => {
     switch (pathname) {
@@ -269,6 +278,51 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     );
   };
 
+  const [dashboardFavoriteUrl, setDashboardFavoriteUrl] = useState('');
+  const [dashboardPublishedUrl, setDashboardPublishedUrl] = useState('');
+
+  const dashboardFavoritePromise = useFetch({
+    url: dashboardFavoriteUrl,
+    method: dashboardEditFavorite ? 'DELETE' : 'POST',
+  });
+
+  const dashboardPublishedPromise = useFetch({
+    url: dashboardPublishedUrl,
+    method: 'PUT',
+    body: {
+      published: !dashboardEditSelector.published,
+    },
+  });
+
+  useEffect(() => {
+    if (dashboardFavoritePromise.data?.result === 'OK') {
+      setDashboardEditFavorite(!dashboardEditFavorite);
+    }
+  }, [dashboardFavoritePromise.data]);
+
+  useEffect(() => {
+    if (!dashboardFavoritePromise.loading) {
+      setDashboardFavoriteUrl('');
+    }
+  }, [dashboardFavoritePromise.loading]);
+
+  useEffect(() => {
+    if (dashboardPublishedPromise.data) {
+      dispatch(
+        dvtChartGetDashboardEditSetValue({
+          key: 'published',
+          value: dashboardPublishedPromise.data.result.published,
+        }),
+      );
+    }
+  }, [dashboardPublishedPromise.data]);
+
+  useEffect(() => {
+    if (!dashboardPublishedPromise.loading) {
+      setDashboardPublishedUrl('');
+    }
+  }, [dashboardPublishedPromise.loading]);
+
   useEffect(
     () => () => {
       if (history.location.pathname === '/chart/add') {
@@ -442,7 +496,44 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
           )}
           {pathName === extractIdPathname(pathName, 'dashboard') && (
             <>
-              <div />
+              <StyledFlexCenter>
+                <StyledTransparentInput
+                  value={dashboardEditSelector.dashboard_title}
+                  placeholder={t('Add the name of the dashboard')}
+                  onChange={e =>
+                    dispatch(
+                      dvtChartGetDashboardEditSetValue({
+                        key: 'dashboard_title',
+                        value: e.target.value,
+                      }),
+                    )
+                  }
+                />
+                <DvtFavorite
+                  active={dashboardEditFavorite}
+                  setActive={() =>
+                    setDashboardFavoriteUrl(
+                      `dashboard/${dashboardEditSelector.id}/favorites/`,
+                    )
+                  }
+                />
+                <DvtButton
+                  bold
+                  colour="grayscale"
+                  typeColour="powder"
+                  size="small"
+                  label={
+                    dashboardEditSelector.published
+                      ? t('Published')
+                      : t('Draft')
+                  }
+                  onClick={() =>
+                    setDashboardPublishedUrl(
+                      `dashboard/${dashboardEditSelector.id}`,
+                    )
+                  }
+                />
+              </StyledFlexCenter>
               <NavbarBottomRight>
                 <DvtButton
                   size="small"
