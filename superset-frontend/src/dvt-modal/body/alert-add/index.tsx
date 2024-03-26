@@ -178,12 +178,10 @@ const DvtAlertAdd = ({ meta, onClose }: ModalProps) => {
     }));
 
   useEffect(() => {
-    if (apiUrl) {
-      setTimeout(() => {
-        setApiUrl('');
-      }, 2000);
+    if (!alertAddData.loading) {
+      setApiUrl('');
     }
-  }, [apiUrl]);
+  }, [alertAddData.loading]);
 
   useEffect(() => {
     if (meta?.isEdit) {

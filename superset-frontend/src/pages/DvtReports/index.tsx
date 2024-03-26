@@ -174,6 +174,18 @@ function ReportList() {
     }
   }, [reportsSelector]);
 
+  useEffect(() => {
+    if (!reportData.loading) {
+      setReportApiUrl('');
+    }
+  }, [reportData.loading]);
+
+  useEffect(() => {
+    if (!reportEditPromise.loading) {
+      setReportApiEditUrl('');
+    }
+  }, [reportEditPromise.loading]);
+
   const clearReports = () => {
     dispatch(dvtSidebarSetPropertyClear('reports'));
   };
@@ -225,9 +237,6 @@ function ReportList() {
 
   const handleEditCharts = (item: any) => {
     setReportApiEditUrl(`chart/${item.id}`);
-    setTimeout(() => {
-      setReportApiEditUrl('');
-    }, 500);
   };
 
   const handleSingleExport = (id: number) => {
