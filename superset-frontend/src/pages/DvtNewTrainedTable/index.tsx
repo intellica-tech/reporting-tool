@@ -228,7 +228,7 @@ function DvtNewTainedTable() {
         }
       });
     }
-  }, [getTableData.data]);
+  }, [getTableData.data, newTainedTableAddSelector.algorithm]);
 
   const handleCreateDataset = () => {
     if (newTainedTableAddSelector.category.label === 'Segmentation') {
