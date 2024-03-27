@@ -67,30 +67,23 @@ function DvtNewTainedTable() {
               newTainedTableAddSelector.targetColumnName?.value,
             time_column_name: newTainedTableAddSelector.timeColumnName?.value,
           }
-        : newTainedTableAddSelector.algorithm?.value === 'percentile'
+        : newTainedTableAddSelector.category?.value === 'statistical'
         ? {
             algorithm_name: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
             extra_data: {
-              percentile: newTainedTableAddSelector.percentile,
-            },
-          }
-        : newTainedTableAddSelector.algorithm?.value === 't_test' ||
-          newTainedTableAddSelector.algorithm?.value === 'z_test'
-        ? {
-            algorithm_name: newTainedTableAddSelector.algorithm?.value,
-            table_name: newTainedTableAddSelector.selectDatabase?.value,
-            extra_data: {
-              feature_column: newTainedTableAddSelector.featureColumn?.value,
-              group_column: newTainedTableAddSelector.groupColumn?.value,
-            },
-          }
-        : newTainedTableAddSelector.algorithm?.value === 'linear_regression'
-        ? {
-            algorithm_name: newTainedTableAddSelector.algorithm?.value,
-            table_name: newTainedTableAddSelector.selectDatabase?.value,
-            extra_data: {
-              label_column: newTainedTableAddSelector.labelColumn?.value,
+              percentile: newTainedTableAddSelector.percentile
+                ? newTainedTableAddSelector.percentile
+                : undefined,
+              feature_column: newTainedTableAddSelector.featureColumn?.value
+                ? newTainedTableAddSelector.featureColumn?.value
+                : undefined,
+              group_column: newTainedTableAddSelector.groupColumn?.value
+                ? newTainedTableAddSelector.groupColumn?.value
+                : undefined,
+              label_column: newTainedTableAddSelector.labelColumn?.value
+                ? newTainedTableAddSelector.labelColumn?.value
+                : undefined,
             },
           }
         : {
@@ -235,7 +228,7 @@ function DvtNewTainedTable() {
         }
       });
     }
-  }, [getTableData.data]);
+  }, [getTableData.data, newTainedTableAddSelector.algorithm]);
 
   const handleCreateDataset = () => {
     if (newTainedTableAddSelector.category.label === 'Segmentation') {
