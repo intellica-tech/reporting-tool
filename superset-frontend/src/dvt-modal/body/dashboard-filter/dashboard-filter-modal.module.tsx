@@ -84,6 +84,7 @@ const StyledDashboardFilterFlexColumnGroup = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
+  gap: 10px;
 `;
 
 const StyledDashboardFilterFlexGroup = styled.div`

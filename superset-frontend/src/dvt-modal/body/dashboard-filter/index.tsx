@@ -14,6 +14,8 @@ import DvtDropdown from 'src/components/DvtDropdown';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtTextarea from 'src/components/DvtTextarea';
 import DvtRadioList from 'src/components/DvtRadioList';
+import DvtInputDrop from 'src/components/DvtInputDrop';
+import { ColumnDataProps } from 'src/components/DvtOpenSelectMenu';
 import {
   StyledDashboardBody,
   StyledDashboardFilter,
@@ -27,8 +29,6 @@ import {
   StyledDashboardFilterRight,
   StyledDashboardFilterScoping,
 } from './dashboard-filter-modal.module';
-import DvtInputDrop from 'src/components/DvtInputDrop';
-import { ColumnDataProps } from 'src/components/DvtOpenSelectMenu';
 
 const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
   const [activeTab, setActiveTab] = useState<any>({
@@ -333,7 +333,7 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                             }}
                           />
                           {filteredItem.preFilterAvailable && (
-                            <div style={{ width: '200px' }}>
+                            <StyledDashboardFilterFlexColumnGroup>
                               <DvtInputDrop
                                 label="PRE-FILTER"
                                 droppedData={filteredItem.preFilter}
@@ -360,7 +360,7 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                                 datasourceApi=""
                                 type="filters"
                               />
-                            </div>
+                            </StyledDashboardFilterFlexColumnGroup>
                           )}
                           <DvtCheckbox
                             label={t('Sort filter values')}
@@ -374,7 +374,7 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                             }}
                           />
                           {filteredItem.sortFilter && (
-                            <div style={{ width: '400px' }}>
+                            <StyledDashboardFilterFlexColumnGroup>
                               <DvtRadioList
                                 active={filteredItem.sortType}
                                 setActive={selected => {
@@ -402,7 +402,7 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                                 }}
                                 typeDesign="form"
                               />
-                            </div>
+                            </StyledDashboardFilterFlexColumnGroup>
                           )}
                         </StyledDashboardFilterCollapse>
                       </DvtCollapse>
