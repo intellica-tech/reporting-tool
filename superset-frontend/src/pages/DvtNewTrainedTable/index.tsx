@@ -303,7 +303,7 @@ function DvtNewTainedTable() {
 
   useEffect(() => {
     if (postSegmentationDataset.data?.success) {
-      addDangerToast(t('Success Add New Table'));
+      addDangerToast(t('Process initiated, results loading...'));
       setData([]);
       dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
     }
@@ -311,7 +311,7 @@ function DvtNewTainedTable() {
 
   useEffect(() => {
     if (postDataset.data?.success) {
-      addDangerToast(t('Success Add New Table'));
+      addDangerToast(t('Process initiated, results loading...'));
       setData([]);
       dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
       dispatch(
