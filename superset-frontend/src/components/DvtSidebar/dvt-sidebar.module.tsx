@@ -66,7 +66,8 @@ const StyledDvtSidebarBody = styled.div<StyledDvtSidebarBodyProps>`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: ${({ pathName }) => (pathName === '/welcome/' ? 40 : 12)}px;
+  gap: ${({ pathName }) =>
+    pathName === '/welcome/' ? 40 : pathName === '/traindata/' ? 0 : 12}px;
 `;
 
 const StyledDvtSidebarBodyItem = styled.div`

@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
+import { useToasts } from 'src/components/MessageToasts/withToasts';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
 import {
   dvtSidebarSetDataProperty,
+  dvtSidebarSetProperty,
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import useFetch from 'src/dvt-hooks/useFetch';
@@ -29,6 +31,7 @@ const header = [
 
 function DvtNewTainedTable() {
   const dispatch = useDispatch();
+  const { addDangerToast } = useToasts();
   const history = useHistory();
   const newTainedTableAddSelector = useAppSelector(
     state => state.dvtSidebar.newTrainedTable,
@@ -45,7 +48,6 @@ function DvtNewTainedTable() {
     useState('');
   const [data, setData] = useState([]);
   const [dataSchema, setDataSchema] = useState<any[]>([]);
-
   const getSchemaAlreadyFiltersUrl = (page: number) =>
     `dataset/?q=(filters:!((col:database,opr:rel_o_m,value:${newTainedTableAddSelector.database.value}),(col:schema,opr:eq,value:${newTainedTableAddSelector.schema.value}),(col:sql,opr:dataset_is_null_or_empty,value:!t)),page:${page})`;
 
@@ -58,15 +60,41 @@ function DvtNewTainedTable() {
     url: postDataSetUrl,
     method: 'POST',
     body:
-      newTainedTableAddSelector.algorithm_name?.value === 'lstm'
+      newTainedTableAddSelector.algorithm?.value === 'lstm'
         ? {
             source_table_name: newTainedTableAddSelector.selectDatabase?.value,
             target_column_name:
               newTainedTableAddSelector.targetColumnName?.value,
             time_column_name: newTainedTableAddSelector.timeColumnName?.value,
           }
+        : newTainedTableAddSelector.algorithm?.value === 'percentile'
+        ? {
+            algorithm: newTainedTableAddSelector.algorithm?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              percentile: newTainedTableAddSelector.percentile,
+            },
+          }
+        : newTainedTableAddSelector.algorithm?.value === 't_test' ||
+          newTainedTableAddSelector.algorithm?.value === 'z_test'
+        ? {
+            algorithm: newTainedTableAddSelector.algorithm?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              feature_column: newTainedTableAddSelector.featureColumn?.value,
+              group_column: newTainedTableAddSelector.groupColumn?.value,
+            },
+          }
+        : newTainedTableAddSelector.algorithm?.value === 'linear_regression'
+        ? {
+            algorithm: newTainedTableAddSelector.algorithm?.value,
+            table_name: newTainedTableAddSelector.selectDatabase?.value,
+            extra_data: {
+              label_column: newTainedTableAddSelector.labelColumn?.value,
+            },
+          }
         : {
-            algorithm_name: newTainedTableAddSelector.algorithm_name?.value,
+            algorithm: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
           },
   });
@@ -75,12 +103,15 @@ function DvtNewTainedTable() {
     url: postSegmentationDataSetUrl,
     method: 'POST',
     body: {
-      algorithmName: newTainedTableAddSelector.algorithm_name?.label,
+      algorithmName: newTainedTableAddSelector.algorithm?.label,
       modelInput: {
         tableName: newTainedTableAddSelector.selectDatabase?.value,
-        ...(newTainedTableAddSelector.algorithm_name?.label === 'DBSCAN'
-          ? { epsilon: 100, minPoints: 10 }
-          : { clusterSize: 10 }),
+        ...(newTainedTableAddSelector.algorithm?.label === 'DBSCAN'
+          ? {
+              epsilon: newTainedTableAddSelector.epsilon,
+              minPoints: newTainedTableAddSelector.minPoints,
+            }
+          : { clusterSize: newTainedTableAddSelector.clusterSize }),
       },
     },
   });
@@ -124,8 +155,26 @@ function DvtNewTainedTable() {
     }
   }, [getSchemaData.data]);
 
+  const keys = [
+    { key: 'targetColumnName' },
+    { key: 'timeColumnName' },
+    { key: 'featureColumn' },
+    { key: 'groupColumn' },
+    { key: 'labelColumn' },
+  ];
+
   useEffect(() => {
-    if (getSchemaDataAlready.data) {
+    dispatch(
+      dvtSidebarSetProperty({
+        pageKey: 'newTrainedTable',
+        key: 'algorithm',
+        value: '',
+      }),
+    );
+  }, [newTainedTableAddSelector.category]);
+
+  useEffect(() => {
+    if (newTainedTableAddSelector.schema) {
       dispatch(
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
@@ -142,7 +191,7 @@ function DvtNewTainedTable() {
         }),
       );
     }
-  }, [getSchemaDataAlready.data]);
+  }, [getSchemaDataAlready.data, newTainedTableAddSelector.schema]);
 
   useEffect(() => {
     if (newTainedTableAddSelector.selectDatabase?.value) {
@@ -155,42 +204,144 @@ function DvtNewTainedTable() {
   useEffect(() => {
     if (getTableData.data) {
       setData(getTableData.data.columns);
+      keys.forEach(({ key }) => {
+        if (newTainedTableAddSelector.selectDatabase) {
+          dispatch(
+            dvtSidebarSetDataProperty({
+              pageKey: 'newTrainedTable',
+              key,
+              value: getTableData.data.columns.map((item: any) => ({
+                value: item.name,
+                label: item.name,
+              })),
+            }),
+          );
+        }
+      });
+    }
+  }, [getTableData.data]);
+
+  useEffect(() => {
+    if (getTableData.data) {
+      keys.forEach(({ key }) => {
+        if (newTainedTableAddSelector.selectDatabase) {
+          dispatch(
+            dvtSidebarSetProperty({
+              pageKey: 'newTrainedTable',
+              key,
+              value: '',
+            }),
+          );
+        }
+      });
     }
   }, [getTableData.data]);
 
   const handleCreateDataset = () => {
-    if (newTainedTableAddSelector.selectCategory.label === 'Segmentation') {
+    if (newTainedTableAddSelector.category.label === 'Segmentation') {
       setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
-      setTimeout(() => {
-        setPostSegmentationDataSetUrl('');
-      }, 200);
-    } else if (newTainedTableAddSelector.algorithm_name?.value === 'lstm') {
+    } else if (newTainedTableAddSelector.algorithm?.value === 'lstm') {
       setPostDataSetUrl('lstm');
-      setTimeout(() => {
-        setPostDataSetUrl('');
-      }, 200);
     } else {
       setPostDataSetUrl('ml_and_insert/');
-      setTimeout(() => {
-        setPostDataSetUrl('');
-      }, 200);
     }
   };
 
-  useEffect(() => {
-    if (postDataset.data || postSegmentationDataset.data) {
-      history.push('/traindata');
-    }
-  }, [postDataset.data, postSegmentationDataset.data]);
-
   useEffect(
     () => () => {
-      dispatch(dvtSidebarSetPropertyClear('datasetAdd'));
-      setData([]);
-      setDataSchema([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
     },
     [],
   );
+
+  useEffect(() => {
+    if (newTainedTableAddSelector.category?.value === 'timeSeries') {
+      dispatch(
+        dvtSidebarSetDataProperty({
+          pageKey: 'newTrainedTable',
+          key: 'algorithm',
+          value: [{ value: 'lstm', label: 'LSTM' }],
+        }),
+      );
+    } else if (newTainedTableAddSelector.category?.value === 'statistical') {
+      dispatch(
+        dvtSidebarSetDataProperty({
+          pageKey: 'newTrainedTable',
+          key: 'algorithm',
+          value: [
+            { value: 'cumulative_sum', label: 'Cumulative sum' },
+            { value: 'mean', label: 'Mean' },
+            { value: 'median', label: 'Median' },
+            { value: 'min_max', label: 'Min Max' },
+            { value: 'variance', label: 'Variance' },
+            { value: 'percentile', label: 'Percentile' },
+            { value: 'skewness', label: 'Skewness' },
+            { value: 'kurtosis', label: 'Kurtosis' },
+            { value: 'histogram', label: 'Histogram' },
+            { value: 'correlation', label: 'Correlation' },
+            { value: 't_test', label: 'T-test' },
+            { value: 'z_test', label: 'Z-test' },
+            { value: 'chi_square', label: 'Chi square' },
+            { value: 'linear_regression', label: 'Linear regression' },
+          ],
+        }),
+      );
+    } else if (newTainedTableAddSelector.category?.value === 'segmentation') {
+      dispatch(
+        dvtSidebarSetDataProperty({
+          pageKey: 'newTrainedTable',
+          key: 'algorithm',
+          value: [
+            { value: 'kmeans', label: 'KMeans' },
+            { value: 'gmm', label: 'GMM' },
+            { value: 'dbscan', label: 'DBSCAN' },
+          ],
+        }),
+      );
+    }
+  }, [newTainedTableAddSelector.category]);
+
+  useEffect(() => {
+    if (postSegmentationDataset.data?.success) {
+      addDangerToast(t('Success Add New Table'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+    }
+  }, [postSegmentationDataset.data]);
+
+  useEffect(() => {
+    if (postDataset.data?.success) {
+      addDangerToast(t('Success Add New Table'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'selectDatabase',
+          value: '',
+        }),
+      );
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'schema',
+          value: '',
+        }),
+      );
+    }
+  }, [postDataset.data]);
+
+  useEffect(() => {
+    if (!postDataset.loading) {
+      setPostDataSetUrl('');
+    }
+  }, [postDataset.loading]);
+
+  useEffect(() => {
+    if (!postSegmentationDataset.loading) {
+      setPostSegmentationDataSetUrl('');
+    }
+  }, [postSegmentationDataset.loading]);
 
   return (
     <StyledDvtNewTainedTable>
@@ -226,7 +377,7 @@ function DvtNewTainedTable() {
           }
           onClick={() =>
             newTainedTableAddSelector.selectDatabase?.value &&
-            newTainedTableAddSelector.algorithm_name?.value &&
+            newTainedTableAddSelector.algorithm?.value &&
             handleCreateDataset()
           }
         />
