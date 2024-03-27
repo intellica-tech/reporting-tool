@@ -145,7 +145,7 @@ function DvtDashboardList() {
           createdbyName: item.changed_by
             ? `${item.changed_by?.first_name} ${item.changed_by?.last_name}`
             : '',
-          urlEdit: `/dashboard/${item.id}/?edit=true`,
+          urlEdit: `/dashboard/${item.id}/`,
         })),
       );
       setCount(dashboardApi.data.count);

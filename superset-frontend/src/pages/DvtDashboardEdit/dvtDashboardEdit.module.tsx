@@ -80,12 +80,14 @@ const StyledChartFilter = styled.div`
 `;
 
 const StyledDashboardDroppedList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  padding: 0 20px;
 `;
 
-const StyledDashboardDroppedListItem = styled.div`
+interface StyledDashboardDroppedListItemProps {
+  isEdit: boolean;
+}
+
+const StyledDashboardDroppedListItem = styled.div<StyledDashboardDroppedListItemProps>`
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
   height: 350px;
   flex: 1;
@@ -93,11 +95,16 @@ const StyledDashboardDroppedListItem = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 16px;
-  cursor: move;
 
-  &:hover {
-    outline: 1px dashed ${({ theme }) => theme.colors.dvt.primary.light1};
-  }
+  ${({ isEdit, theme }) =>
+    isEdit &&
+    `
+      cursor: move;
+
+      &:hover {
+        outline: 1px dashed ${theme.colors.dvt.primary.base};
+      }
+  `};
 `;
 
 const StyledDashboardDroppedListItemTitle = styled.div`
@@ -117,6 +124,32 @@ const StyledDashboardDroppedListItemChart = styled.div`
   margin-top: auto;
 `;
 
+interface StyledDashboardDroppedRowProps {
+  isEdit: boolean;
+}
+
+const StyledDashboardDroppedRow = styled.div<StyledDashboardDroppedRowProps>`
+  ${({ isEdit, theme }) =>
+    isEdit && `border: 1px dashed ${theme.colors.dvt.grayscale.light1}`};
+  position: relative;
+  width: 100%;
+  height: fit-content;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+`;
+
+const StyledDashboardDroppedRowOptions = styled.div`
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+`;
+
 export {
   StyledDashboardEdit,
   StyledDashboard,
@@ -129,4 +162,6 @@ export {
   StyledDashboardDroppedListItem,
   StyledDashboardDroppedListItemTitle,
   StyledDashboardDroppedListItemChart,
+  StyledDashboardDroppedRow,
+  StyledDashboardDroppedRowOptions,
 };

@@ -23,10 +23,14 @@ import { t } from '@superset-ui/core';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import useFetch from 'src/dvt-hooks/useFetch';
 import rison from 'rison';
-import { useHistory } from 'react-router-dom';
-import { dvtChartGetDashboardEdit } from 'src/dvt-redux/dvt-dashboardEditReducer';
+import { useHistory, useLocation } from 'react-router-dom';
+import {
+  dvtChartGetDashboardEdit,
+  dvtChartGetDashboardEditClear,
+  dvtChartGetDashboardEditSetValue,
+} from 'src/dvt-redux/dvt-dashboardEditReducer';
 import { useDispatch } from 'react-redux';
-// import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
+import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtCardDetailChartList from 'src/components/DvtCardDetailChartList';
 import DvtButton from 'src/components/DvtButton';
@@ -40,10 +44,6 @@ import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
 import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
 import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
 import DvtCheckbox from 'src/components/DvtCheckbox';
-import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
-import ChartContainer from 'src/components/Chart/ChartContainer';
-import DvtSpinner from 'src/components/DvtSpinner';
-import Icon from 'src/components/Icons/Icon';
 import {
   StyledTab,
   StyledDashboard,
@@ -53,15 +53,18 @@ import {
   StyledChartList,
   StyledChartFilter,
   StyledDashboardDroppedList,
-  StyledDashboardDroppedListItem,
-  StyledDashboardDroppedListItemTitle,
-  StyledDashboardDroppedListItemChart,
 } from './dvtDashboardEdit.module';
+import DvtDashboardEditChart from './components/DvtDashboardEditChart';
+import DvtDashboardEditRow from './components/DvtDashboardEditRow';
 
 function DvtDashboardList() {
   const dispatch = useDispatch();
   const history = useHistory<{ from: string }>();
-  // const dashboardEditSelector = useAppSelector(state => state.dvtDashboardEdit);
+  const location = useLocation();
+  const isEditPathname = location.search === '?edit=true';
+  const dashboardEditSelector = useAppSelector(
+    state => state.dvtDashboardEdit.get,
+  );
   const [activeTab, setActiveTab] = useState<string>('charts');
   const [chartsApiUrl, setChartsApiUrl] = useState<string>('');
   const [droppedData, setDroppedData] = useState<any[]>([]);
@@ -76,6 +79,39 @@ function DvtDashboardList() {
   const [chartResultApiUrl, setChartResultApiUrl] = useState<string>('');
   const [chartRenderApiUrl, setChartRenderApiUrl] = useState<string>('');
   const [chartRenderApiBody, setChartRenderApiBody] = useState<any>(null);
+
+  const firstCreatePosition = {
+    DASHBOARD_VERSION_KEY: 'v2',
+    GRID_ID: {
+      children: [],
+      id: 'GRID_ID',
+      parents: ['ROOT_ID'],
+      type: 'GRID',
+    },
+    HEADER_ID: {
+      id: 'HEADER_ID',
+      meta: {
+        text: dashboardEditSelector.dashboard_title,
+      },
+      type: 'HEADER',
+    },
+    ROOT_ID: {
+      children: ['GRID_ID'],
+      id: 'ROOT_ID',
+      type: 'ROOT',
+    },
+  };
+
+  const position = dashboardEditSelector.position_json;
+
+  const setPosition = (positionObjectItem: any) => {
+    dispatch(
+      dvtChartGetDashboardEditSetValue({
+        key: 'position_json',
+        value: positionObjectItem,
+      }),
+    );
+  };
 
   const getApiData = useFetch({
     url: chartsApiUrl,
@@ -136,6 +172,12 @@ function DvtDashboardList() {
     setChartsApiUrl(searchApiUrls);
   }, [searchInput, sortType, showMyOnlyChart]);
 
+  const generateUniqueID = (prefix: string) => {
+    const randomString = Math.random().toString(36).substr(2, 10);
+    const uniqueID = `${prefix}-${randomString}`;
+    return uniqueID;
+  };
+
   useEffect(() => {
     if (getApiData.data) {
       const sliceData = getApiData.data.result.map((item: any) => ({
@@ -161,7 +203,14 @@ function DvtDashboardList() {
 
   useEffect(() => {
     if (getDashboardPromise.data) {
-      dispatch(dvtChartGetDashboardEdit(getDashboardPromise.data.result));
+      dispatch(
+        dvtChartGetDashboardEdit({
+          ...getDashboardPromise.data.result,
+          position_json: JSON.parse(
+            getDashboardPromise.data.result.position_json,
+          ),
+        }),
+      );
     }
   }, [getDashboardPromise.data]);
 
@@ -175,6 +224,86 @@ function DvtDashboardList() {
     const droppedDataString = e.dataTransfer.getData('drag-drop');
     const jsonDropItem = JSON.parse(droppedDataString);
 
+    const rowUnique = generateUniqueID('ROW');
+    const chartUnique = generateUniqueID('CHART');
+
+    const rowCreate = {
+      [rowUnique]: {
+        children: [chartUnique],
+        id: rowUnique,
+        meta: {
+          background: 'BACKGROUND_TRANSPARENT',
+        },
+        parents: ['ROOT_ID', 'GRID_ID'],
+        type: 'ROW',
+      },
+    };
+
+    const chartCreate = {
+      [chartUnique]: {
+        children: [],
+        id: chartUnique,
+        meta: {
+          chartId: jsonDropItem.id,
+          height: 50,
+          sliceName: jsonDropItem.slice_name,
+          width: 4,
+        },
+        parents: ['ROOT_ID', 'GRID_ID', rowUnique],
+        type: 'CHART',
+      },
+    };
+
+    setPosition({
+      ...firstCreatePosition,
+      GRID_ID: {
+        ...firstCreatePosition.GRID_ID,
+        children: [rowUnique],
+      },
+      ...rowCreate,
+      ...chartCreate,
+    });
+
+    if (jsonDropItem && droppedData.length < 3) {
+      setChartResultApiUrl(`chart/${jsonDropItem.id}`);
+    }
+  };
+
+  const handleDropRow = (
+    e: React.DragEvent<HTMLDivElement>,
+    rowObjectName: string,
+  ) => {
+    e.preventDefault();
+
+    const droppedDataString = e.dataTransfer.getData('drag-drop');
+    const jsonDropItem = JSON.parse(droppedDataString);
+
+    const chartUnique = generateUniqueID('CHART');
+
+    const chartCreate = {
+      [chartUnique]: {
+        children: [],
+        id: chartUnique,
+        meta: {
+          chartId: jsonDropItem.id,
+          height: 50,
+          sliceName: jsonDropItem.slice_name,
+          width: 4,
+        },
+        parents: ['ROOT_ID', 'GRID_ID', rowObjectName],
+        type: 'CHART',
+      },
+    };
+
+    setPosition({
+      ...position,
+      [rowObjectName]: {
+        ...position[rowObjectName],
+        children: [...position[rowObjectName].children, chartUnique],
+      },
+      ...chartCreate,
+    });
+
     if (jsonDropItem && droppedData.length < 3) {
       setChartResultApiUrl(`chart/${jsonDropItem.id}`);
     }
@@ -187,12 +316,32 @@ function DvtDashboardList() {
     changed_on_delta_humanized: t('recent'),
   };
 
-  const {
-    ref: chartPanelRef,
-    observerRef: resizeObserverRef,
-    width: chartPanelWidth,
-    height: chartPanelHeight,
-  } = useResizeDetectorByObserver();
+  const [firstOpenFetched, setFirstOpenFetched] = useState(true);
+  const [getDroppedFetch, setGetDroppedFetch] = useState<any[]>([]);
+
+  const chartIds: any = dashboardEditSelector.position_json
+    ? Object.keys(dashboardEditSelector.position_json)
+        .filter(o => !!o.split('CHART-')[1])
+        .map(field => dashboardEditSelector.position_json[field].meta.chartId)
+    : [];
+
+  useEffect(() => {
+    if (
+      dashboardEditSelector.position_json !== null &&
+      chartIds.length &&
+      firstOpenFetched
+    ) {
+      setGetDroppedFetch(chartIds);
+      setFirstOpenFetched(false);
+    }
+  }, [chartIds, firstOpenFetched, dashboardEditSelector.position_json]);
+
+  useEffect(() => {
+    if (getDroppedFetch.length) {
+      const findItemId = getDroppedFetch.find((item: any) => item);
+      setChartResultApiUrl(`chart/${findItemId}`);
+    }
+  }, [getDroppedFetch.length]);
 
   useEffect(() => {
     if (getChartResultData.data) {
@@ -260,6 +409,11 @@ function DvtDashboardList() {
         ...findDataRemoveAndDroppedData,
         { ...findData, render: result.chart, chartStatus: result.status },
       ]);
+      if (getDroppedFetch.length) {
+        setGetDroppedFetch(
+          getDroppedFetch.filter((item: any) => item !== chartRenderApiBody.id),
+        );
+      }
     }
   }, [chartRenderPromise.error, chartRenderPromise.data]);
 
@@ -270,125 +424,210 @@ function DvtDashboardList() {
     }
   }, [chartRenderPromise.loading]);
 
+  const handleRemoveRow = (rowObjectName: string) => {
+    const beforePosition = { ...position };
+    const rowChildren = position[rowObjectName].children;
+
+    const removeChidrenDroppedData = droppedData.filter(
+      (f: any) =>
+        !rowChildren.some((s: any) => position[s].meta.chartId === f.id),
+    );
+
+    for (let i = 0; i < rowChildren.length; i += 1) {
+      const element = rowChildren[i];
+      delete beforePosition[element];
+    }
+
+    delete beforePosition[rowObjectName];
+
+    setPosition({
+      ...beforePosition,
+      GRID_ID: {
+        ...position.GRID_ID,
+        children: position.GRID_ID.children.filter(
+          (f: string) => f !== rowObjectName,
+        ),
+      },
+    });
+
+    setDroppedData(removeChidrenDroppedData);
+  };
+
+  const handleRemoveChart = (
+    rowObjectName: string,
+    chartObjectName: string,
+    id: number,
+  ) => {
+    const beforePosition = { ...position };
+    const rowChildren = position[rowObjectName].children;
+
+    delete beforePosition[chartObjectName];
+
+    if (rowChildren.length === 1) {
+      delete beforePosition[rowObjectName];
+      beforePosition.GRID_ID = {
+        ...position.GRID_ID,
+        children: position.GRID_ID.children.filter(
+          (f: string) => f !== rowObjectName,
+        ),
+      };
+    } else {
+      beforePosition[rowObjectName] = {
+        ...position[rowObjectName],
+        children: position[rowObjectName].children.filter(
+          (f: string) => f !== chartObjectName,
+        ),
+      };
+    }
+
+    setPosition({
+      ...beforePosition,
+    });
+
+    setDroppedData(droppedData.filter(f => f.id !== id));
+  };
+
+  useEffect(
+    () => () => {
+      dispatch(dvtChartGetDashboardEditClear());
+    },
+    [],
+  );
+
   return (
     <StyledDashboardEdit>
-      <StyledDashboard onDragOver={handleDragOver} onDrop={handleDrop}>
+      <StyledDashboard>
         {droppedData.length === 0 ? (
-          <DvtIconDataLabel
-            description="You can create a new chart or use existinh ones from the panel on the right"
-            icon="square"
-            label="Drag and drop components and charts to the dashboard"
-            buttonLabel="+ Create a New Chart"
-            buttonClick={() => history.push('/chart/add')}
-          />
+          <div
+            style={{ width: '100%', height: '100%' }}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
+            <DvtIconDataLabel
+              description={
+                isEditPathname
+                  ? t(
+                      'You can create a new chart or use existinh ones from the panel on the right',
+                    )
+                  : t(
+                      'Go to the edit mode to configure the dashboard and add charts',
+                    )
+              }
+              icon="square"
+              label={
+                isEditPathname
+                  ? t('Drag and drop components and charts to the dashboard')
+                  : t('There are no charts added to this dashboard')
+              }
+              buttonLabel={
+                isEditPathname
+                  ? t('+ Create a new chart')
+                  : t('Edit the dashboard')
+              }
+              buttonClick={() =>
+                isEditPathname
+                  ? history.push('/chart/add')
+                  : history.push(`${location.pathname}?edit=true`)
+              }
+            />
+          </div>
         ) : (
           <StyledDashboardDroppedList>
-            {droppedData.map(item => (
-              <StyledDashboardDroppedListItem key={item.id}>
-                <StyledDashboardDroppedListItemTitle>
-                  <div>{item.slice_name}</div>
-                  <Icon
-                    style={{ cursor: 'pointer' }}
-                    fileName="dvt-delete"
-                    onClick={() =>
-                      setDroppedData(droppedData.filter(f => f.id !== item.id))
-                    }
-                  />
-                </StyledDashboardDroppedListItemTitle>
-                <StyledDashboardDroppedListItemChart ref={resizeObserverRef}>
-                  {item.chartStatus === 'loading' ? (
-                    <DvtSpinner type="grow" size="xlarge" />
-                  ) : (
-                    <div
-                      style={{ height: '100%', width: '100%' }}
-                      ref={chartPanelRef}
-                    >
-                      <ChartContainer
-                        width={chartPanelWidth}
-                        height={chartPanelHeight}
-                        ownState={undefined}
-                        annotationData={undefined}
-                        chartAlert={null}
-                        chartStackTrace={null}
-                        chartId={0}
-                        chartStatus={item.chartStatus}
-                        formData={JSON.parse(item.result.params)}
-                        queriesResponse={item.render}
-                        timeout={60}
-                        vizType={item.viz_type}
+            {position.GRID_ID.children.map((gRow: string) => (
+              <DvtDashboardEditRow
+                key={gRow}
+                deleteClick={() => handleRemoveRow(gRow)}
+                onDrop={e => handleDropRow(e, gRow)}
+                isEdit={isEditPathname}
+              >
+                {position[gRow]?.children.map((rItem: string) => {
+                  const findItem = droppedData.find(
+                    dropItem => dropItem.id === position[rItem].meta.chartId,
+                  );
+                  return (
+                    findItem?.id && (
+                      <DvtDashboardEditChart
+                        key={rItem}
+                        item={findItem}
+                        deleteClick={() =>
+                          handleRemoveChart(gRow, rItem, findItem.id)
+                        }
+                        isEdit={isEditPathname}
                       />
-                    </div>
-                  )}
-                </StyledDashboardDroppedListItemChart>
-              </StyledDashboardDroppedListItem>
+                    )
+                  );
+                })}
+              </DvtDashboardEditRow>
             ))}
           </StyledDashboardDroppedList>
         )}
       </StyledDashboard>
-      <StyledTab>
-        <StyledTabsGroup>
-          <StyledTabs
-            activeTab={activeTab === 'charts'}
-            onClick={() => setActiveTab('charts')}
-          >
-            Charts
-          </StyledTabs>
-          <StyledTabs
-            activeTab={activeTab === 'layoutElements'}
-            onClick={() => setActiveTab('layoutElements')}
-          >
-            Layout Elements
-          </StyledTabs>
-        </StyledTabsGroup>
-        {activeTab === 'charts' && (
-          <StyledChartList>
-            <DvtButton
-              label="+ Create a New Chart"
-              onClick={() => history.push('/chart/add')}
-              size="small"
-              typeColour="powder"
-            />
-            <StyledChartFilter>
-              <DvtInput
-                onChange={setSearchInput}
-                placeholder="Filter your charts"
+      {isEditPathname && (
+        <StyledTab>
+          <StyledTabsGroup>
+            <StyledTabs
+              activeTab={activeTab === 'charts'}
+              onClick={() => setActiveTab('charts')}
+            >
+              {t('Charts')}
+            </StyledTabs>
+            <StyledTabs
+              activeTab={activeTab === 'layoutElements'}
+              onClick={() => setActiveTab('layoutElements')}
+            >
+              {t('Layout Elements')}
+            </StyledTabs>
+          </StyledTabsGroup>
+          {activeTab === 'charts' && (
+            <StyledChartList>
+              <DvtButton
+                label="+ Create a New Chart"
+                onClick={() => history.push('/chart/add')}
                 size="small"
-                type="text"
-                typeDesign="chartsForm"
-                value={searchInput}
+                typeColour="powder"
               />
-              <DvtSelect
-                data={Object.entries(KEYS_TO_SORT).map(([key, label]) => ({
-                  label: t('Sort by %s', label),
-                  value: key,
-                }))}
-                placeholder="Short by recent"
-                selectedValue={sortType}
-                setSelectedValue={setsortType}
+              <StyledChartFilter>
+                <DvtInput
+                  onChange={setSearchInput}
+                  placeholder="Filter your charts"
+                  size="small"
+                  type="text"
+                  typeDesign="chartsForm"
+                  value={searchInput}
+                />
+                <DvtSelect
+                  data={Object.entries(KEYS_TO_SORT).map(([key, label]) => ({
+                    label: t('Sort by %s', label),
+                    value: key,
+                  }))}
+                  placeholder="Short by recent"
+                  selectedValue={sortType}
+                  setSelectedValue={setsortType}
+                />
+              </StyledChartFilter>
+              <DvtCheckbox
+                label={t('Show only my charts')}
+                checked={showMyOnlyChart}
+                onChange={setShowMyOnlyChart}
               />
-            </StyledChartFilter>
-            <DvtCheckbox
-              label={t('Show only my charts')}
-              checked={showMyOnlyChart}
-              onChange={setShowMyOnlyChart}
-            />
-            <DvtCardDetailChartList
-              data={chartData}
-              added={droppedData.map((v: { id: number }) => v.id)}
-            />
-          </StyledChartList>
-        )}
-        {activeTab === 'layoutElements' && (
-          <>
-            <NewTabs />
-            <NewRow />
-            <NewColumn />
-            <NewHeader />
-            <NewMarkdown />
-            <NewDivider />
-          </>
-        )}
-      </StyledTab>
+              <DvtCardDetailChartList
+                data={chartData}
+                added={droppedData.map((v: { id: number }) => v.id)}
+              />
+            </StyledChartList>
+          )}
+          {activeTab === 'layoutElements' && (
+            <>
+              <NewTabs />
+              <NewRow />
+              <NewColumn />
+              <NewHeader />
+              <NewMarkdown />
+              <NewDivider />
+            </>
+          )}
+        </StyledTab>
+      )}
     </StyledDashboardEdit>
   );
 }

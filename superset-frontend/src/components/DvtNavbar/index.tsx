@@ -184,7 +184,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
   };
 
   useEffect(() => {
-    if (history.location?.search) {
+    if (history.location.pathname === '/explore/' && history.location?.search) {
       setTimeout(() => {
         setGetExploreApiUrl(`explore/${history.location.search}`);
       }, 500);
@@ -278,8 +278,13 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
     );
   };
 
+  const [dashboardFavoriteGetUrl, setDashboardFavoriteGetUrl] = useState('');
   const [dashboardFavoriteUrl, setDashboardFavoriteUrl] = useState('');
   const [dashboardPublishedUrl, setDashboardPublishedUrl] = useState('');
+
+  const dashboardGetFavoritePromise = useFetch({
+    url: dashboardFavoriteGetUrl,
+  });
 
   const dashboardFavoritePromise = useFetch({
     url: dashboardFavoriteUrl,
@@ -293,6 +298,28 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       published: !dashboardEditSelector.published,
     },
   });
+
+  useEffect(() => {
+    if (dashboardEditSelector.id) {
+      setDashboardFavoriteGetUrl(
+        `dashboard/favorite_status/?q=!(${dashboardEditSelector.id})`,
+      );
+    }
+  }, [dashboardEditSelector.id]);
+
+  useEffect(() => {
+    if (dashboardGetFavoritePromise.data) {
+      setDashboardEditFavorite(
+        dashboardGetFavoritePromise.data.result[0].value,
+      );
+    }
+  }, [dashboardGetFavoritePromise.data]);
+
+  useEffect(() => {
+    if (!dashboardGetFavoritePromise.loading) {
+      setDashboardFavoriteGetUrl('');
+    }
+  }, [dashboardGetFavoritePromise.loading]);
 
   useEffect(() => {
     if (dashboardFavoritePromise.data?.result === 'OK') {
@@ -322,6 +349,88 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       setDashboardPublishedUrl('');
     }
   }, [dashboardPublishedPromise.loading]);
+
+  const [dashboardEditUrl, setDashboardEditUrl] = useState({
+    url: '',
+    body: {},
+  });
+
+  const dashboardEditPromise = useFetch({
+    url: dashboardEditUrl.url,
+    method: 'PUT',
+    body: dashboardEditUrl.body,
+  });
+
+  useEffect(() => {
+    if (dashboardEditPromise.data) {
+      history.push(`/dashboard/${dashboardEditSelector.id}/`);
+    }
+  }, [dashboardEditPromise.data]);
+
+  useEffect(() => {
+    if (!dashboardEditPromise.loading) {
+      setDashboardEditUrl({
+        url: '',
+        body: {},
+      });
+    }
+  }, [dashboardEditPromise.loading]);
+
+  const handleDashboardSave = () => {
+    if (dashboardEditSelector.position_json !== '{}') {
+      const chartIds = dashboardEditSelector.position_json
+        ? Object.keys(dashboardEditSelector.position_json)
+            .filter(o => !!o.split('CHART-')[1])
+            .map(
+              field => dashboardEditSelector.position_json[field].meta.chartId,
+            )
+        : [];
+
+      const chartConfiguration = {};
+
+      for (let i = 0; i < chartIds.length; i += 1) {
+        const element = chartIds[i];
+        chartConfiguration[String(element)] = {
+          id: element,
+          crossFilters: { scope: 'global', chartsInScope: [] },
+        };
+      }
+
+      const jsonMetadata = {
+        chart_configuration: chartConfiguration,
+        global_chart_configuration: {
+          scope: { rootPath: ['ROOT_ID'], excluded: [] },
+          chartsInScope: chartIds,
+        },
+        color_scheme: '',
+        positions: dashboardEditSelector.position_json,
+        refresh_frequency: 0,
+        shared_label_colors: {},
+        color_scheme_domain: [],
+        expanded_slices: {},
+        label_colors: {},
+        timed_refresh_immune_slices: [],
+        cross_filters_enabled: true,
+        default_filters: '{}',
+        filter_scopes: {},
+      };
+
+      const dashboardPutBody = {
+        certified_by: '',
+        certification_details: '',
+        css: '',
+        dashboard_title: dashboardEditSelector.dashboard_title,
+        slug: null,
+        owners: [1],
+        json_metadata: JSON.stringify(jsonMetadata),
+      };
+
+      setDashboardEditUrl({
+        url: `dashboard/${dashboardEditSelector.id}`,
+        body: dashboardPutBody,
+      });
+    }
+  };
 
   useEffect(
     () => () => {
@@ -498,6 +607,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
             <>
               <StyledFlexCenter>
                 <StyledTransparentInput
+                  disabled={history.location.search !== '?edit=true'}
                   value={dashboardEditSelector.dashboard_title}
                   placeholder={t('Add the name of the dashboard')}
                   onChange={e =>
@@ -517,34 +627,55 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
                     )
                   }
                 />
-                <DvtButton
-                  bold
-                  colour="grayscale"
-                  typeColour="powder"
-                  size="small"
-                  label={
-                    dashboardEditSelector.published
-                      ? t('Published')
-                      : t('Draft')
-                  }
-                  onClick={() =>
-                    setDashboardPublishedUrl(
-                      `dashboard/${dashboardEditSelector.id}`,
-                    )
-                  }
-                />
+                {history.location.search !== '?edit=true' && (
+                  <DvtButton
+                    bold
+                    colour="grayscale"
+                    typeColour="powder"
+                    size="small"
+                    label={
+                      dashboardEditSelector.published
+                        ? t('Published')
+                        : t('Draft')
+                    }
+                    onClick={() =>
+                      setDashboardPublishedUrl(
+                        `dashboard/${dashboardEditSelector.id}`,
+                      )
+                    }
+                  />
+                )}
               </StyledFlexCenter>
               <NavbarBottomRight>
-                <DvtButton
-                  size="small"
-                  bold
-                  label="CANCEL"
-                  onClick={() => {
-                    history.push('/dashboard/list/');
-                  }}
-                  colour="grayscale"
-                />
-                <DvtButton size="small" bold label="SAVE" onClick={() => {}} />
+                {history.location.search === '?edit=true' ? (
+                  <>
+                    <DvtButton
+                      size="small"
+                      bold
+                      label="DISCARD"
+                      onClick={() => {
+                        history.push(history.location.pathname);
+                      }}
+                      typeColour="powder"
+                    />
+                    <DvtButton
+                      size="small"
+                      bold
+                      label="SAVE"
+                      onClick={handleDashboardSave}
+                      loading={dashboardEditPromise.loading}
+                    />
+                  </>
+                ) : (
+                  <DvtButton
+                    size="small"
+                    bold
+                    label={t('EDIT DASHBOARD')}
+                    onClick={() =>
+                      history.push(`${history.location.pathname}?edit=true`)
+                    }
+                  />
+                )}
               </NavbarBottomRight>
             </>
           )}

@@ -27,6 +27,7 @@ const initialState: DvtDashboardEditState = {
     id: null,
     dashboard_title: '',
     published: false,
+    position_json: null,
   },
 };
 
@@ -48,10 +49,22 @@ const dvtDashboardEditSlice = createSlice({
         [action.payload.key]: action.payload.value,
       },
     }),
+    dvtChartGetDashboardEditClear: (state, action: PayloadAction) => ({
+      ...state,
+      get: {
+        id: null,
+        dashboard_title: '',
+        published: false,
+        position_json: null,
+      },
+    }),
   },
 });
 
-export const { dvtChartGetDashboardEdit, dvtChartGetDashboardEditSetValue } =
-  dvtDashboardEditSlice.actions;
+export const {
+  dvtChartGetDashboardEdit,
+  dvtChartGetDashboardEditSetValue,
+  dvtChartGetDashboardEditClear,
+} = dvtDashboardEditSlice.actions;
 
 export default dvtDashboardEditSlice.reducer;
