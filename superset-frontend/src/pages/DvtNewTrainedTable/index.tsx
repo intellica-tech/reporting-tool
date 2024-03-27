@@ -69,7 +69,7 @@ function DvtNewTainedTable() {
           }
         : newTainedTableAddSelector.algorithm?.value === 'percentile'
         ? {
-            algorithm: newTainedTableAddSelector.algorithm?.value,
+            algorithm_name: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
             extra_data: {
               percentile: newTainedTableAddSelector.percentile,
@@ -78,7 +78,7 @@ function DvtNewTainedTable() {
         : newTainedTableAddSelector.algorithm?.value === 't_test' ||
           newTainedTableAddSelector.algorithm?.value === 'z_test'
         ? {
-            algorithm: newTainedTableAddSelector.algorithm?.value,
+            algorithm_name: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
             extra_data: {
               feature_column: newTainedTableAddSelector.featureColumn?.value,
@@ -87,14 +87,14 @@ function DvtNewTainedTable() {
           }
         : newTainedTableAddSelector.algorithm?.value === 'linear_regression'
         ? {
-            algorithm: newTainedTableAddSelector.algorithm?.value,
+            algorithm_name: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
             extra_data: {
               label_column: newTainedTableAddSelector.labelColumn?.value,
             },
           }
         : {
-            algorithm: newTainedTableAddSelector.algorithm?.value,
+            algorithm_name: newTainedTableAddSelector.algorithm?.value,
             table_name: newTainedTableAddSelector.selectDatabase?.value,
           },
   });
