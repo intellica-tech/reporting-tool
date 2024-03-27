@@ -105,14 +105,6 @@ const SourceInputContainer = styled.div`
   gap: 15px;
 `;
 
-const MetricsBody = styled.div`
-  background-color: ${({ theme }) => theme.colors.dvt.grayscale.light2};
-  margin: 0px 27px 16px 27px;
-  border-radius: 12px;
-  padding: 18px 28px;
-  gap: 15px;
-`;
-
 const MetricsButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -124,6 +116,19 @@ const ColumnsBody = styled.div`
   border-radius: 12px;
   padding: 18px 28px;
   gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
 `;
 
 const ColumnsButtonContainer = styled.div`
@@ -161,7 +166,6 @@ export {
   SourceLockContainer,
   SourceCheckboxContainer,
   SourceInputContainer,
-  MetricsBody,
   MetricsButtonContainer,
   ColumnsBody,
   ColumnsButtonContainer,

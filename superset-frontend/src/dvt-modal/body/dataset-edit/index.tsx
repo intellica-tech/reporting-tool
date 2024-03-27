@@ -25,7 +25,6 @@ import {
   SettingsBody,
   ModalInfoTextContainer,
   MetricsButtonContainer,
-  MetricsBody,
   ColumnsBody,
   ColumnsButtonContainer,
   ModalHeader,
@@ -65,7 +64,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
     (column: any) => !column.expression,
   );
 
-  const [owners, setOwners] = useState<any[]>([]);
   const [syncApiUrl, setSyncApiUrl] = useState<string>('');
 
   const [modalData, setModalData] = useState<any>({
@@ -140,7 +138,10 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           column_name: a.column_name,
           description: a.description,
           expression: a.expression,
-          extra: a.extra,
+          extra: JSON.stringify({
+            certified_by: a.certified_by,
+            details: a.details,
+          }),
           filterable: a.filterable,
           groupby: a.groupby,
           id: a.id,
@@ -160,8 +161,10 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           python_date_format: calculatedColumnItem.python_date_format,
           type: calculatedColumnItem.type,
           verbose_name: calculatedColumnItem.verbose_name,
-          certified_by: calculatedColumnItem.certified_by,
-          details: calculatedColumnItem.details,
+          extra: JSON.stringify({
+            certified_by: calculatedColumnItem.certified_by,
+            details: calculatedColumnItem.details,
+          }),
         })),
       ],
       database_id: modalData.database_id,
@@ -189,7 +192,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       }),
       normalize_columns: modalData.normalize_columns,
       offset: modalData.offset,
-      owners,
+      owners: modalData.owners,
       schema: modalData.schema,
       sql: modalData.sql,
       table_name: modalData.table_name.label,
@@ -278,6 +281,11 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   ];
 
   const columnsHeader = [
+    {
+      id: 0,
+      collapse: true,
+      title: '',
+    },
     { id: 1, title: t('Column'), field: 'column_name', sort: true },
     { id: 2, title: t('Data Type'), field: 'type', sort: true },
     {
@@ -323,9 +331,56 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
         },
       ],
     },
+    {
+      id: 9,
+      field: 'verbose_name',
+      title: 'LABEL',
+      placeholder: 'Label',
+      input: true,
+      collapseField: true,
+    },
+    {
+      id: 10,
+      field: 'description',
+      title: 'DESCRIPTION',
+      placeholder: 'Description',
+      input: true,
+      collapseField: true,
+    },
+    {
+      id: 12,
+      field: 'python_date_format',
+      title: 'DATETIME FORMAT',
+      placeholder: '%Y/%m/%d',
+      input: true,
+      collapseField: true,
+    },
+    {
+      id: 13,
+      field: 'certified_by',
+      title: 'CERTIFIED BY',
+      placeholder: 'Certified by',
+      input: true,
+      collapseField: true,
+      extra: true,
+    },
+    {
+      id: 14,
+      field: 'details',
+      title: 'CERTIFICATION DETAILS',
+      placeholder: 'Certification details',
+      input: true,
+      collapseField: true,
+      extra: true,
+    },
   ];
 
   const calculatedHeader = [
+    {
+      id: 0,
+      collapse: true,
+      title: '',
+    },
     {
       id: 1,
       title: t('Column'),
@@ -378,6 +433,71 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
         },
       ],
     },
+    {
+      id: 8,
+      field: 'expression',
+      title: 'SQL EXPRESSION',
+      placeholder: 'SELECT ...',
+      editor: true,
+      collapseField: true,
+    },
+    {
+      id: 9,
+      field: 'verbose_name',
+      title: 'LABEL',
+      placeholder: 'Label',
+      input: true,
+      collapseField: true,
+    },
+    {
+      id: 10,
+      field: 'description',
+      title: 'DESCRIPTION',
+      placeholder: 'Description',
+      input: true,
+      collapseField: true,
+    },
+    {
+      id: 11,
+      field: 'type',
+      title: 'DATA TYPE',
+      placeholder: 'Select ...',
+      collapseField: true,
+      select: true,
+      selectData: [
+        { label: 'STRING', value: 'STRING' },
+        { label: 'NUMERIC', value: 'NUMERIC' },
+        { label: 'DATETIME', value: 'DATETIME' },
+        { label: 'BOOLEAN', value: 'BOOLEAN' },
+      ],
+    },
+    {
+      id: 12,
+      field: 'python_date_format',
+      title: 'DATETIME FORMAT',
+      placeholder: '%Y/%m/%d',
+      input: true,
+      collapseField: true,
+      extra: true,
+    },
+    {
+      id: 13,
+      field: 'certified_by',
+      title: 'CERTIFIED BY',
+      placeholder: 'Certified by',
+      input: true,
+      collapseField: true,
+      extra: true,
+    },
+    {
+      id: 14,
+      field: 'details',
+      title: 'CERTIFICATION DETAILS',
+      placeholder: 'Certification details',
+      input: true,
+      collapseField: true,
+      extra: true,
+    },
   ];
 
   const [sort, setSort] = useState<DvtTableSortProps>({
@@ -390,15 +510,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       label: item.text,
       value: item.value,
     })) || [];
-
-  useEffect(() => {
-    if (ownersFetch.data?.result) {
-      const ownersValues = ownersFetch.data.result.map(
-        (item: any) => item.value,
-      );
-      setOwners(ownersValues);
-    }
-  }, [ownersFetch.data]);
 
   const [autocompleteSelected, setAutocompleteSelected] =
     useState<boolean>(false);
@@ -453,57 +564,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
 
   const generateId = () => Math.random().toString(36).slice(2, 11);
 
-  const fields = [
-    {
-      label: 'SQL EXPRESSION',
-      placeholder: 'SELECT ...',
-      type: 'sqlEditor',
-      fieldName: 'expression',
-    },
-    {
-      label: 'LABEL',
-      placeholder: 'Label',
-      type: 'input',
-      fieldName: 'verbose_name',
-    },
-    {
-      label: 'DESCRIPTION',
-      placeholder: 'Description',
-      type: 'input',
-      fieldName: 'description',
-    },
-    {
-      label: 'DATA TYPE',
-      placeholder: 'Select ...',
-      type: 'select',
-      fieldName: 'typeData',
-      data: [
-        { label: 'STRING', value: 'STRING' },
-        { label: 'NUMERIC', value: 'NUMERIC' },
-        { label: 'DATETIME', value: 'DATETIME' },
-        { label: 'BOOLEAN', value: 'BOOLEAN' },
-      ],
-    },
-    {
-      label: 'DATETIME FORMAT',
-      placeholder: '%Y/%m/%d',
-      type: 'input',
-      fieldName: 'python_date_format',
-    },
-    {
-      label: 'CERTIFIED BY',
-      placeholder: 'Certified by',
-      type: 'input',
-      fieldName: 'certified_by',
-    },
-    {
-      label: 'CERTIFICATION DETAILS',
-      placeholder: 'Certification details',
-      type: 'input',
-      fieldName: 'details',
-    },
-  ];
-
   const updateModalDataColumns = (newColumns: any[]) => {
     setModalData((prevData: any) => ({
       ...prevData,
@@ -535,6 +595,13 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       setSyncApiUrl('');
     }
   }, [syncApi.data]);
+
+  useEffect(() => {
+    if (meta.result.owners) {
+      const ownersValues = meta.result.owners.map((item: any) => item.id);
+      setModalData({ ...modalData, owners: ownersValues });
+    }
+  }, []);
 
   return (
     <StyledDatasetEdit>
@@ -690,7 +757,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           )}
         </SourceBody>
       ) : input.tabs.value === 'metrics' ? (
-        <MetricsBody>
+        <ColumnsBody>
           <MetricsButtonContainer>
             <DvtButton
               label={t('Add Item')}
@@ -703,7 +770,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             setData={setMetricsColumn}
             header={metricsHeader}
           />
-        </MetricsBody>
+        </ColumnsBody>
       ) : input.tabs.value === 'columns' ? (
         <ColumnsBody>
           <ColumnsButtonContainer>
@@ -726,7 +793,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           />
         </ColumnsBody>
       ) : input.tabs.value === 'calculated_columns' ? (
-        <MetricsBody>
+        <ColumnsBody>
           <MetricsButtonContainer>
             <DvtButton
               label={t('Add Item')}
@@ -744,9 +811,8 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             setActiveRadio={row => {
               setInput({ ...input, activeRadio: row });
             }}
-            collapseData={fields}
           />
-        </MetricsBody>
+        </ColumnsBody>
       ) : input.tabs.value === 'settings' ? (
         <SettingsBody>
           <SettingsBlock>
@@ -775,7 +841,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <DvtCheckbox
               label="Whether to populate autocomplete filters option"
               checked={autocompleteSelected}
-              onChange={selected => {
+              onChange={() => {
                 setAutocompleteSelected(!autocompleteSelected);
               }}
             />
@@ -806,8 +872,10 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <DvtInputSelect
               data={ownersOptions}
               label="Owners"
-              selectedValues={owners}
-              setSelectedValues={selection => setOwners(selection)}
+              selectedValues={modalData.owners}
+              setSelectedValues={selection =>
+                setModalData({ ...modalData, owners: selection })
+              }
               typeDesign="form"
             />
           </SettingsBlock>

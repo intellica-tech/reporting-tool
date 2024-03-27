@@ -75,10 +75,16 @@ interface HeaderProps {
   modalLabel?: string;
   input?: boolean;
   editor?: boolean;
+  select?: boolean;
+  selectData?: any[];
   checkboxData?: boolean;
   checkboxField?: boolean;
   radio?: boolean;
   disabledRadioField?: string;
+  collapse?: boolean;
+  collapseField?: boolean;
+  placeholder?: string;
+  extra?: boolean;
 }
 
 export interface DvtTableSortProps {
@@ -99,7 +105,6 @@ export interface DvtTableProps {
   setSort?: (args: any) => void;
   activeRadio?: string;
   setActiveRadio?: (row: any) => void;
-  collapseData?: any[];
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -115,11 +120,11 @@ const DvtTable: React.FC<DvtTableProps> = ({
   setSort,
   activeRadio = '',
   setActiveRadio = () => {},
-  collapseData,
 }) => {
   const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
   const [openRow, setOpenRow] = useState<number | null>(null);
+  const [collapseRowId, setCollapseRowId] = useState<string>('');
 
   const formatDateTime = (dateTimeString: string) => {
     const [datePart, timePart] = dateTimeString.split(' ');
@@ -202,57 +207,59 @@ const DvtTable: React.FC<DvtTableProps> = ({
       <StyledTableTable>
         <StyledTabletHead>
           <StyledTableTitle>
-            {header.map((column, columnIndex) => (
-              <StyledTableTh
-                key={columnIndex}
-                flex={(column.flex || 1) * columnsWithDefaults}
-              >
-                {column.checkbox && (
-                  <StyledTableCheckbox>
-                    <Checkbox
-                      indeterminate={indeterminate}
-                      onChange={onCheckAllChange}
-                      checked={checkAll}
-                    />
-                  </StyledTableCheckbox>
-                )}
-                {column.sort ? (
-                  <StyledTableThSort
-                    onClick={() =>
-                      !!setSort &&
-                      setSort({
-                        column: column.field,
-                        direction:
-                          column.field === sort?.column
-                            ? sort?.direction === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'asc',
-                      })
-                    }
-                  >
-                    {column.title}
-                    <StyledTableThSortRotate
-                      asc={
-                        column.field === sort?.column &&
-                        sort?.direction === 'asc'
+            {header
+              .filter((header: any) => !header.collapseField)
+              .map((column, columnIndex) => (
+                <StyledTableTh
+                  key={columnIndex}
+                  flex={(column.flex || 1) * columnsWithDefaults}
+                >
+                  {column.checkbox && (
+                    <StyledTableCheckbox>
+                      <Checkbox
+                        indeterminate={indeterminate}
+                        onChange={onCheckAllChange}
+                        checked={checkAll}
+                      />
+                    </StyledTableCheckbox>
+                  )}
+                  {column.sort ? (
+                    <StyledTableThSort
+                      onClick={() =>
+                        !!setSort &&
+                        setSort({
+                          column: column.field,
+                          direction:
+                            column.field === sort?.column
+                              ? sort?.direction === 'desc'
+                                ? 'asc'
+                                : 'desc'
+                              : 'asc',
+                        })
                       }
                     >
-                      <Icon
-                        fileName="dvt-sort"
-                        iconColor={
-                          column.field === sort?.column
-                            ? supersetTheme.colors.dvt.primary.base
-                            : supersetTheme.colors.grayscale.dark2
+                      {column.title}
+                      <StyledTableThSortRotate
+                        asc={
+                          column.field === sort?.column &&
+                          sort?.direction === 'asc'
                         }
-                      />
-                    </StyledTableThSortRotate>
-                  </StyledTableThSort>
-                ) : (
-                  column.title
-                )}
-              </StyledTableTh>
-            ))}
+                      >
+                        <Icon
+                          fileName="dvt-sort"
+                          iconColor={
+                            column.field === sort?.column
+                              ? supersetTheme.colors.dvt.primary.base
+                              : supersetTheme.colors.grayscale.dark2
+                          }
+                        />
+                      </StyledTableThSortRotate>
+                    </StyledTableThSort>
+                  ) : (
+                    column.title
+                  )}
+                </StyledTableTh>
+              ))}
           </StyledTableTitle>
         </StyledTabletHead>
         <StyledTableTbody>
@@ -269,6 +276,14 @@ const DvtTable: React.FC<DvtTableProps> = ({
                   {header.map((column, columnIndex) => (
                     <StyledTableTd key={columnIndex}>
                       <StyledTableIcon>
+                        {column.collapse && (
+                          <StyledTableCheckbox>
+                            <Icon
+                              fileName="plus_large"
+                              onClick={() => setCollapseRowId(row.id)}
+                            />
+                          </StyledTableCheckbox>
+                        )}
                         {column.checkbox && columnIndex === 0 && (
                           <StyledTableCheckbox>
                             <Checkbox
@@ -290,7 +305,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                             />
                           </StyledTableCheckbox>
                         )}
-                        {column.input && (
+                        {column.input && !column.collapseField && (
                           <StyledTableInput>
                             <DvtInput
                               value={column.field ? row[column.field] : ''}
@@ -305,7 +320,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
                           </StyledTableInput>
                         )}
 
-                        {column.editor && (
+                        {column.editor && !column.collapseField && (
                           <StyledTableEditor>
                             <DvtAceEditor
                               mode="sql"
@@ -499,26 +514,24 @@ const DvtTable: React.FC<DvtTableProps> = ({
                     </StyledTableTd>
                   ))}
                 </StyledTableTr>
-                {row.collapse && (
+                {collapseRowId === row.id && (
                   <StyledTableTr>
                     <StyledTableTd colSpan={header.length}>
                       <StyledTableCollapse>
-                        {collapseData?.map(field => (
+                        {header.map(column => (
                           <>
-                            {field.type === 'sqlEditor' && (
+                            {column.editor && column.collapseField && (
                               <>
-                                {field.label}
+                                {column.title}
                                 <DvtAceEditor
                                   mode="sql"
-                                  placeholder={field.placeholder}
-                                  value={
-                                    field.fieldName ? row[field.fieldName] : ''
-                                  }
+                                  placeholder={column.placeholder}
+                                  value={column.field ? row[column.field] : ''}
                                   onChange={newValue =>
                                     handleInputChange(
                                       newValue,
                                       row.id,
-                                      field.fieldName ? field.fieldName : '',
+                                      column.field ? column.field : '',
                                     )
                                   }
                                   height="200px"
@@ -526,37 +539,46 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                 />
                               </>
                             )}
-                            {field.type === 'input' && (
+                            {column.input && column.collapseField && (
                               <DvtInput
-                                label={field.label}
+                                label={column.title}
                                 value={
-                                  field.fieldName ? row[field.fieldName] : ''
+                                  column.field && column.extra && row.extra
+                                    ? JSON.parse(row.extra)[column.field]
+                                    : column.field && row[column.field]
+                                    ? row[column.field]
+                                    : ''
                                 }
                                 onChange={newValue =>
                                   handleInputChange(
                                     newValue,
                                     row.id,
-                                    field.fieldName ? field.fieldName : '',
+                                    column.field ? column.field : '',
                                   )
                                 }
-                                placeholder={field.placeholder}
+                                placeholder={column.placeholder}
                               />
                             )}
-                            {field.type === 'select' && (
+                            {column.select && column.collapseField && (
                               <DvtSelect
-                                data={field.data}
+                                data={column.selectData || []}
                                 selectedValue={
-                                  field.fieldName ? row[field.fieldName] : ''
+                                  column.field
+                                    ? {
+                                        value: row[column.field],
+                                        label: row[column.field],
+                                      }
+                                    : ''
                                 }
                                 setSelectedValue={newValue =>
                                   handleInputChange(
-                                    newValue,
+                                    newValue.value,
                                     row.id,
-                                    field.fieldName,
+                                    column.field ? column.field : '',
                                   )
                                 }
-                                label={field.label}
-                                placeholder={field.placeholder}
+                                label={column.title}
+                                placeholder={column.placeholder}
                               />
                             )}
                           </>
