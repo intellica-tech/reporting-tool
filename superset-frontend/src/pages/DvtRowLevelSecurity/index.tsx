@@ -127,7 +127,6 @@ function DvtRowLevelSecurity() {
         meta: { item, type: 'rowlevelsecurity', title: 'rules' },
       }),
     );
-    setRowLevelSecurityApiUrl('');
   };
 
   const handleEdit = (item: any) => {

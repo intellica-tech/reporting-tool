@@ -186,6 +186,12 @@ function ReportList() {
     }
   }, [reportEditPromise.loading]);
 
+  useEffect(() => {
+    if (!favoriteData.loading) {
+      setFavoriteApiUrl('');
+    }
+  }, [favoriteData.loading]);
+
   const clearReports = () => {
     dispatch(dvtSidebarSetPropertyClear('reports'));
   };
@@ -255,8 +261,6 @@ function ReportList() {
         meta: { item, type: 'chart', title: 'chart' },
       }),
     );
-    setReportApiUrl('');
-    setFavoriteApiUrl('');
   };
 
   const modifiedData = {

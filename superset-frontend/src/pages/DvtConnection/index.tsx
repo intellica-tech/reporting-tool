@@ -109,12 +109,6 @@ function DvtConnection() {
   }, [connectionApi.data]);
 
   useEffect(() => {
-    if (!connectionApi.loading) {
-      setConnectionApiUrl('');
-    }
-  }, [connectionApi.loading]);
-
-  useEffect(() => {
     if (!connectionEditPromise.loading) {
       setConnectionEditApiUrl('');
     }
