@@ -295,29 +295,33 @@ function DvtNewTainedTable() {
   }, [newTainedTableAddSelector.category]);
 
   useEffect(() => {
-    addDangerToast(t('Process initiated, results loading...'));
-    setData([]);
-    dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+    if (postSegmentationDataset.data?.success) {
+      addDangerToast(t('Process initiated, results loading...'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+    }
   }, [postSegmentationDataset.data]);
 
   useEffect(() => {
-    addDangerToast(t('Process initiated, results loading...'));
-    setData([]);
-    dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
-    dispatch(
-      dvtSidebarSetProperty({
-        pageKey: 'newTrainedTable',
-        key: 'selectDatabase',
-        value: '',
-      }),
-    );
-    dispatch(
-      dvtSidebarSetProperty({
-        pageKey: 'newTrainedTable',
-        key: 'schema',
-        value: '',
-      }),
-    );
+    if (postDataset.data?.success) {
+      addDangerToast(t('Process initiated, results loading...'));
+      setData([]);
+      dispatch(dvtSidebarSetPropertyClear('newTrainedTable'));
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'selectDatabase',
+          value: '',
+        }),
+      );
+      dispatch(
+        dvtSidebarSetProperty({
+          pageKey: 'newTrainedTable',
+          key: 'schema',
+          value: '',
+        }),
+      );
+    }
   }, [postDataset.data]);
 
   useEffect(() => {
