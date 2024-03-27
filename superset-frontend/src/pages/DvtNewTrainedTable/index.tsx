@@ -73,7 +73,7 @@ function DvtNewTainedTable() {
             table_name: newTainedTableAddSelector.selectDatabase?.value,
             extra_data: {
               percentile: newTainedTableAddSelector.percentile
-                ? newTainedTableAddSelector.percentile
+                ? parseFloat(newTainedTableAddSelector.percentile)
                 : undefined,
               feature_column: newTainedTableAddSelector.featureColumn?.value
                 ? newTainedTableAddSelector.featureColumn?.value
