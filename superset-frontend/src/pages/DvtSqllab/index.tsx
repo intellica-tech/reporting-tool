@@ -180,10 +180,10 @@ function DvtSqllab() {
   }, [selectedSeeTableSchemaApi.loading]);
 
   useEffect(() => {
-    if(!executePromiseApi.loading){
-      setExecutePromiseUrl('')
+    if (!executePromiseApi.loading) {
+      setExecutePromiseUrl('');
     }
-  },[executePromiseApi.loading]);
+  }, [executePromiseApi.loading]);
 
   useEffect(() => {
     if (getSchemaApi.data) {
