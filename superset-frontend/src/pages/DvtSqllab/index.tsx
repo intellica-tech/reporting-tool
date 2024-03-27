@@ -175,9 +175,15 @@ function DvtSqllab() {
 
   useEffect(() => {
     if (!selectedSeeTableSchemaApi.loading) {
-      setExecutePromiseUrl('');
+      setSelectedSeeTableSchemaApiUrl('');
     }
   }, [selectedSeeTableSchemaApi.loading]);
+
+  useEffect(() => {
+    if(!executePromiseApi.loading){
+      setExecutePromiseUrl('')
+    }
+  },[executePromiseApi.loading]);
 
   useEffect(() => {
     if (getSchemaApi.data) {
