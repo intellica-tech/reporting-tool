@@ -27,6 +27,8 @@ import {
   StyledDashboardFilterRight,
   StyledDashboardFilterScoping,
 } from './dashboard-filter-modal.module';
+import DvtInputDrop from 'src/components/DvtInputDrop';
+import { ColumnDataProps } from 'src/components/DvtOpenSelectMenu';
 
 const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
   const [activeTab, setActiveTab] = useState<any>({
@@ -55,10 +57,14 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
       inverseSelection: false,
       activeRadio: 'radio1',
       allPanels: false,
+      sortType: 'asc',
+      sortValue: '',
+      preFilter: [],
     },
   ]);
 
   const [apiUrl, setApiUrl] = useState<string>('');
+  const [apisortUrl, setApiSortUrl] = useState<string>('');
 
   const datasetData = useFetch({
     url: 'dataset/?q=(columns:!(id,table_name,database.database_name,schema),filters:!((col:table_name,opr:ct,value:%27%27)),order_column:table_name,order_direction:asc,page:0,page_size:100)',
@@ -66,6 +72,10 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
 
   const columnData = useFetch({
     url: apiUrl,
+  });
+
+  const sortData = useFetch({
+    url: apisortUrl,
   });
 
   useEffect(() => {
@@ -88,6 +98,26 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
     columnData.data?.result.columns?.map((item: any) => ({
       label: item.column_name,
       value: item.is_dttm,
+    })) || [];
+
+  const columnOpenSelect: ColumnDataProps[] =
+    columnData.data?.result.columns?.map((item: any) => ({
+      advanced_data_type: item.advanced_data_type,
+      certification_details: item.certification_details,
+      certified_by: item.certified_by,
+      column_name: item.column_name,
+      description: item.description,
+      expression: item.expression,
+      filterable: item.filterable,
+      groupby: item.groupby,
+      id: item.id,
+      is_certified: item.is_certified,
+      is_dttm: item.is_dttm,
+      python_date_format: item.python_date_format,
+      type: item.type,
+      type_generic: item.type_generic,
+      verbose_name: item.verbose_name,
+      warning_markdown: item.warning_markdown,
     })) || [];
 
   const generateId = () => {
@@ -152,6 +182,22 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
       return updatedMenu;
     });
   };
+
+  useEffect(() => {
+    if (leftMenu.find(item => item.id === activeId)?.dataset?.value) {
+      setApiSortUrl(
+        `/dataset/${
+          leftMenu.find(item => item.id === activeId)?.dataset.value
+        }?q=(columns:!(columns.column_name,columns.expression,columns.filterable,columns.is_dttm,columns.type,columns.verbose_name,database.id,database.database_name,datasource_type,filter_select_enabled,id,is_sqllab_view,main_dttm_col,metrics.metric_name,metrics.verbose_name,schema,sql,table_name))`,
+      );
+    }
+  }, [leftMenu.find(item => item.id === activeId)?.dataset]);
+
+  const sortOptions: { label: string; value: string }[] =
+    sortData.data?.result.metrics?.map((item: any) => ({
+      label: item.verbose_name,
+      value: item.metric_name,
+    })) || [];
 
   return (
     <StyledDashboardFilter>
@@ -286,6 +332,36 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                               );
                             }}
                           />
+                          {filteredItem.preFilterAvailable && (
+                            <div style={{ width: '200px' }}>
+                              <DvtInputDrop
+                                label="PRE-FILTER"
+                                droppedData={filteredItem.preFilter}
+                                setDroppedData={selected =>
+                                  handleSelectValue(
+                                    activeId,
+                                    selected,
+                                    'preFilter',
+                                  )
+                                }
+                                multiple
+                                savedType="metric"
+                                columnData={columnOpenSelect || []}
+                                datasourceApi=""
+                                type="filters"
+                              />
+                              <DvtInputDrop
+                                label="TIME RANGE"
+                                droppedData={[]}
+                                setDroppedData={() => {}}
+                                multiple
+                                savedType="metric"
+                                columnData={columnOpenSelect || []}
+                                datasourceApi=""
+                                type="filters"
+                              />
+                            </div>
+                          )}
                           <DvtCheckbox
                             label={t('Sort filter values')}
                             checked={filteredItem.sortFilter}
@@ -297,6 +373,37 @@ const DvtDashoardFilterModal = ({ onClose }: ModalProps) => {
                               );
                             }}
                           />
+                          {filteredItem.sortFilter && (
+                            <div style={{ width: '400px' }}>
+                              <DvtRadioList
+                                active={filteredItem.sortType}
+                                setActive={selected => {
+                                  handleSelectValue(
+                                    activeId,
+                                    selected,
+                                    'sortType',
+                                  );
+                                }}
+                                data={[
+                                  { label: 'Sort ascending', value: 'asc' },
+                                  { label: 'Sort descending', value: 'dsc' },
+                                ]}
+                              />
+                              <DvtSelect
+                                label="SORT METRIC"
+                                data={sortOptions}
+                                selectedValue={filteredItem.sortValue}
+                                setSelectedValue={selected => {
+                                  handleSelectValue(
+                                    activeId,
+                                    selected,
+                                    'sortValue',
+                                  );
+                                }}
+                                typeDesign="form"
+                              />
+                            </div>
+                          )}
                         </StyledDashboardFilterCollapse>
                       </DvtCollapse>
                       <DvtCollapse
