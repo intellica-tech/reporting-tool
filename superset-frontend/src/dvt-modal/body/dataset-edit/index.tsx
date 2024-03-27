@@ -153,14 +153,22 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           verbose_name: a.verbose_name,
         })),
         ...(calculatedColumn || []).map(calculatedColumnItem => ({
+          advanced_data_type: calculatedColumnItem.advanced_data_type,
           column_name: calculatedColumnItem.column_name,
           description: calculatedColumnItem.description,
           expression: calculatedColumnItem.expression,
           filterable: calculatedColumnItem.filterable,
           groupby: calculatedColumnItem.groupby,
+          id:
+            typeof calculatedColumnItem?.id === 'number'
+              ? calculatedColumnItem.id
+              : undefined,
+          is_active: calculatedColumnItem.is_active,
+          is_dttm: calculatedColumnItem.is_dttm,
           python_date_format: calculatedColumnItem.python_date_format,
           type: calculatedColumnItem.type,
           verbose_name: calculatedColumnItem.verbose_name,
+          uuid: calculatedColumnItem.uuid,
           extra: JSON.stringify({
             certified_by: calculatedColumnItem.certified_by,
             details: calculatedColumnItem.details,
@@ -478,7 +486,6 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
       placeholder: '%Y/%m/%d',
       input: true,
       collapseField: true,
-      extra: true,
     },
     {
       id: 13,
