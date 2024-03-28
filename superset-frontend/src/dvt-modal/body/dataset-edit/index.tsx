@@ -824,7 +824,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <ModalInfoText>{t('Basic')}</ModalInfoText>
             <DvtInput
               label="Description"
-              value={modalData.description}
+              value={modalData.description || ''}
               onChange={value =>
                 setModalData({ ...modalData, description: value })
               }
@@ -832,7 +832,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             />
             <DvtInput
               label="Default URL"
-              value={modalData.default_endpoint}
+              value={modalData.default_endpoint || ''}
               onChange={value =>
                 setModalData({ ...modalData, default_endpoint: value })
               }
@@ -865,7 +865,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             </ModalInfoText>
             <DvtInput
               label="Extra"
-              value={modalData.extra}
+              value={modalData.extra || ''}
               onChange={value => setModalData({ ...modalData, extra: value })}
               typeDesign="form"
             />
@@ -888,7 +888,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             <ModalInfoText>{t('Advanced')}</ModalInfoText>
             <DvtInput
               label="Cache Timeout"
-              value={modalData.cache_timeout}
+              value={modalData.cache_timeout || ''}
               onChange={value =>
                 setModalData({ ...modalData, cache_timeout: value })
               }
@@ -901,7 +901,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             </ModalInfoText>
             <DvtInput
               label="Hours Offset"
-              value={modalData.offset}
+              value={modalData.offset || ''}
               onChange={value => setModalData({ ...modalData, offset: value })}
               typeDesign="form"
             />
@@ -912,7 +912,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
             </ModalInfoText>
             <DvtInput
               label="Template Parameters"
-              value={modalData.template_params}
+              value={modalData.template_params || ''}
               onChange={value =>
                 setModalData({ ...modalData, template_params: value })
               }
