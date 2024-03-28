@@ -337,11 +337,11 @@ function DvtDashboardList() {
   }, [chartIds, firstOpenFetched, dashboardEditSelector.position_json]);
 
   useEffect(() => {
-    if (getDroppedFetch.length) {
+    if (getDroppedFetch.length && chartData.length) {
       const findItemId = getDroppedFetch.find((item: any) => item);
       setChartResultApiUrl(`chart/${findItemId}`);
     }
-  }, [getDroppedFetch.length]);
+  }, [getDroppedFetch.length, chartData.length]);
 
   useEffect(() => {
     if (getChartResultData.data) {
