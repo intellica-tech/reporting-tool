@@ -94,6 +94,8 @@ function DvtDashboardList() {
     })}`;
 
   const [dashboardApiUrl, setDashboardApiUrl] = useState<string>('');
+  const [dashboardApiFetched, setDashboardApiFetched] =
+    useState<boolean>(false);
   const [dashboardAddApiUrl, setDashboardAddApiUrl] = useState<string>('');
 
   const dashboardAdd = useFetch({
@@ -150,14 +152,17 @@ function DvtDashboardList() {
       );
       setCount(dashboardApi.data.count);
       setSelectedRows([]);
+      if (!dashboardApiFetched) {
+        setDashboardApiFetched(true);
+      }
     }
   }, [dashboardApi.data]);
 
   useEffect(() => {
-    if (!dashboardApi.loading) {
+    if (!dashboardApi.loading && dashboardApiFetched) {
       setDashboardApiUrl('');
     }
-  }, [dashboardApi.loading]);
+  }, [dashboardApi.loading, dashboardApiFetched]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

@@ -84,6 +84,8 @@ function DvtConnection() {
     })}`;
 
   const [connectionApiUrl, setConnectionApiUrl] = useState<string>('');
+  const [connectionApiFetched, setConnectionApiFetched] =
+    useState<boolean>(false);
   const [connectionEditApiUrl, setConnectionEditApiUrl] = useState<string>('');
 
   const connectionApi = useFetch({
@@ -104,6 +106,9 @@ function DvtConnection() {
         })),
       );
       setCount(connectionApi.data.count);
+      if (!connectionApiFetched) {
+        setConnectionApiFetched(true);
+      }
       // setSelectedRows([]);
     }
   }, [connectionApi.data]);
@@ -132,10 +137,10 @@ function DvtConnection() {
   }, [connectionSelector]);
 
   useEffect(() => {
-    if (!connectionApi.loading) {
+    if (!connectionApi.loading && connectionApiFetched) {
       setConnectionApiUrl('');
     }
-  }, [connectionApi.loading]);
+  }, [connectionApi.loading, connectionApiFetched]);
 
   const clearConnection = () => {
     dispatch(dvtSidebarSetPropertyClear('connection'));

@@ -83,6 +83,7 @@ function AlertList() {
     })}`;
 
   const [alertApiUrl, setAlertApiUrl] = useState<string>('');
+  const [alertApiFetched, setAlertApiFetched] = useState<boolean>(false);
 
   const alertApi = useFetch({
     url: alertApiUrl,
@@ -105,9 +106,17 @@ function AlertList() {
       setData(getData);
       setCount(alertApi.data.count);
       setSelectedRows([]);
-      setAlertApiUrl('');
+      if (!alertApiFetched) {
+        setAlertApiFetched(true);
+      }
     }
   }, [alertApi.data]);
+
+  useEffect(() => {
+    if (!alertApi.loading && alertApiFetched) {
+      setAlertApiUrl('');
+    }
+  }, [alertApi.loading, alertApiFetched]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {

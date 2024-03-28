@@ -96,6 +96,7 @@ function DvtDatasets() {
     })}`;
 
   const [datasetApiUrl, setDatasetApiUrl] = useState<string>('');
+  const [datasetApiFetched, setDatasetApiFetched] = useState<boolean>(false);
   const [datasetEditApiUrl, setDatasetEditApiUrl] = useState<string>('');
 
   const datasetApi = useFetch({
@@ -124,8 +125,17 @@ function DvtDatasets() {
       );
       setCount(datasetApi.data.count);
       setSelectedRows([]);
+      if (!datasetApiFetched) {
+        setDatasetApiFetched(true);
+      }
     }
   }, [datasetApi.data]);
+
+  useEffect(() => {
+    if (!datasetApi.loading && datasetApiFetched) {
+      setDatasetApiUrl('');
+    }
+  }, [datasetApi.loading, datasetApiFetched]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
@@ -152,7 +162,6 @@ function DvtDatasets() {
         meta: { item, type: 'dataset', title: 'dataset' },
       }),
     );
-    setDatasetApiUrl('');
   };
 
   const handleSingleExport = (id: number) => {
