@@ -21,8 +21,6 @@ import { styled } from '@superset-ui/core';
 const StyledConnectionAdd = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
   gap: 15px;
 `;
 
