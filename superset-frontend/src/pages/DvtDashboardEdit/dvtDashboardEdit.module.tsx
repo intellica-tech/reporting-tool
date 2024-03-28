@@ -124,16 +124,21 @@ const StyledDashboardDroppedListItemChart = styled.div`
   margin-top: auto;
 `;
 
-interface StyledDashboardDroppedRowProps {
+const StyledDashboardDroppedRow = styled.div`
+  position: relative;
+  width: calc(100% + 32px);
+  height: fit-content;
+  margin-left: -32px;
+  padding-left: 32px;
+`;
+
+interface StyledDashboardDroppedRowGridProps {
   isEdit: boolean;
 }
 
-const StyledDashboardDroppedRow = styled.div<StyledDashboardDroppedRowProps>`
+const StyledDashboardDroppedRowGrid = styled.div<StyledDashboardDroppedRowGridProps>`
   ${({ isEdit, theme }) =>
     isEdit && `border: 1px dashed ${theme.colors.dvt.grayscale.light1}`};
-  position: relative;
-  width: 100%;
-  height: fit-content;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
@@ -142,7 +147,7 @@ const StyledDashboardDroppedRow = styled.div<StyledDashboardDroppedRowProps>`
 const StyledDashboardDroppedRowOptions = styled.div`
   position: absolute;
   top: 50%;
-  left: -30px;
+  left: 2px;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
@@ -163,5 +168,6 @@ export {
   StyledDashboardDroppedListItemTitle,
   StyledDashboardDroppedListItemChart,
   StyledDashboardDroppedRow,
+  StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
 };

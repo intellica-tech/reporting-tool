@@ -18,10 +18,11 @@
  * under the License.
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import Icon from 'src/components/Icons/Icon';
 import {
   StyledDashboardDroppedRow,
+  StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
 } from '../dvtDashboardEdit.module';
 
@@ -37,19 +38,28 @@ const DvtDashboardEditRow = ({
   deleteClick,
   onDrop,
   isEdit = false,
-}: DvtDashboardEditRowProps) => (
-  <StyledDashboardDroppedRow
-    onDragOver={e => e.preventDefault()}
-    onDrop={onDrop}
-    isEdit={isEdit}
-  >
-    {isEdit && (
-      <StyledDashboardDroppedRowOptions>
-        <Icon fileName="dvt-delete" onClick={deleteClick} />
-      </StyledDashboardDroppedRowOptions>
-    )}
-    {children}
-  </StyledDashboardDroppedRow>
-);
+}: DvtDashboardEditRowProps) => {
+  const [onHover, setOnHover] = useState(false);
+
+  return (
+    <StyledDashboardDroppedRow
+      onMouseLeave={() => setOnHover(false)}
+      onMouseOver={() => setOnHover(true)}
+    >
+      {isEdit && onHover && (
+        <StyledDashboardDroppedRowOptions>
+          <Icon fileName="dvt-delete" onClick={deleteClick} />
+        </StyledDashboardDroppedRowOptions>
+      )}
+      <StyledDashboardDroppedRowGrid
+        onDragOver={e => e.preventDefault()}
+        onDrop={onDrop}
+        isEdit={isEdit}
+      >
+        {children}
+      </StyledDashboardDroppedRowGrid>
+    </StyledDashboardDroppedRow>
+  );
+};
 
 export default DvtDashboardEditRow;
