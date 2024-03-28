@@ -82,10 +82,13 @@ function DvtRowLevelSecurity() {
   }, [rowLevelSecuritySelector, sort]);
 
   useEffect(() => {
-    setRowLevelSecurityApiUrl('rowlevelsecurity/');
-    setTimeout(() => {
+    if (!rowLevelSecurityData.loading) {
       setRowLevelSecurityApiUrl('');
-    }, 500);
+    }
+  }, [rowLevelSecurityData.loading]);
+
+  useEffect(() => {
+    setRowLevelSecurityApiUrl('rowlevelsecurity/');
   }, []);
 
   useEffect(() => {
@@ -99,9 +102,6 @@ function DvtRowLevelSecurity() {
   useEffect(() => {
     if (modalAddSuccess === 'Success') {
       setRowLevelSecurityApiUrl('rowlevelsecurity/');
-      setTimeout(() => {
-        setRowLevelSecurityApiUrl('');
-      }, 500);
       dispatch(dvtRowLevelSecurityAddStatus(''));
     }
   }, [modalAddSuccess]);
@@ -127,7 +127,6 @@ function DvtRowLevelSecurity() {
         meta: { item, type: 'rowlevelsecurity', title: 'rules' },
       }),
     );
-    setRowLevelSecurityApiUrl('');
   };
 
   const handleEdit = (item: any) => {

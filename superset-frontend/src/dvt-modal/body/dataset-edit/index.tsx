@@ -586,12 +586,10 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
   }, [editDatasetData.data]);
 
   useEffect(() => {
-    if (apiUrl) {
-      setTimeout(() => {
-        setApiUrl('');
-      }, 2000);
+    if (!editDatasetData.loading) {
+      setApiUrl('');
     }
-  }, [apiUrl]);
+  }, [editDatasetData.loading]);
 
   useEffect(() => {
     if (syncApi.data?.result) {

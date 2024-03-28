@@ -262,13 +262,16 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     }
   }, [meta]);
 
+  useEffect(() => {
+    if (!connectionAddData.loading) {
+      setApiUrl('');
+    }
+  }, [connectionAddData.loading]);
+
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
       setApiUrl('database/validate_parameters/');
-      setTimeout(() => {
-        setApiUrl('');
-      }, 500);
     }
   };
 

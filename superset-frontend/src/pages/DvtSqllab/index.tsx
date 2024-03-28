@@ -52,7 +52,6 @@ function DvtSqllab() {
     label: t('RESULTS'),
     value: 'results',
   });
-  const [loading, setLoading] = useState<boolean>(false);
   const [resultHeader, setResultHeader] = useState<any[]>([]);
   const [resultData, setResultData] = useState<any[]>([]);
   const [resultSort, setResultSort] = useState<DvtTableSortProps>({
@@ -175,6 +174,18 @@ function DvtSqllab() {
   }, [sqlhubSidebarSelector]);
 
   useEffect(() => {
+    if (!selectedSeeTableSchemaApi.loading) {
+      setSelectedSeeTableSchemaApiUrl('');
+    }
+  }, [selectedSeeTableSchemaApi.loading]);
+
+  useEffect(() => {
+    if (!executePromiseApi.loading) {
+      setExecutePromiseUrl('');
+    }
+  }, [executePromiseApi.loading]);
+
+  useEffect(() => {
     if (getSchemaApi.data) {
       dispatch(
         dvtSidebarSetDataProperty({
@@ -232,7 +243,6 @@ function DvtSqllab() {
         setResultHeader(headerFormation);
         setResultData(executePromiseApi.data.data);
       }
-      setLoading(false);
     }
   }, [executePromiseApi.data]);
 
@@ -254,11 +264,7 @@ function DvtSqllab() {
   }, [resultSort]);
 
   const handleRun = () => {
-    setLoading(true);
     setExecutePromiseUrl('sqllab/execute/');
-    setTimeout(() => {
-      setExecutePromiseUrl('');
-    }, 500);
   };
 
   useEffect(
@@ -304,7 +310,7 @@ function DvtSqllab() {
         value={sqlValue}
         setValue={setSqlValue}
         clickRun={handleRun}
-        loading={loading}
+        loading={executePromiseApi.loading}
       />
       <StyledSqlhubBottom>
         <DvtButtonTabs
@@ -312,7 +318,7 @@ function DvtSqllab() {
           setActive={setTabActive}
           data={tabs}
         />
-        {loading ? (
+        {executePromiseApi.loading ? (
           <SpinnerContainer>
             <DvtSpinner type="grow" size="xlarge" />
           </SpinnerContainer>

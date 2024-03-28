@@ -109,10 +109,10 @@ function DvtConnection() {
   }, [connectionApi.data]);
 
   useEffect(() => {
-    if (!connectionApi.loading) {
-      setConnectionApiUrl('');
+    if (!connectionEditPromise.loading) {
+      setConnectionEditApiUrl('');
     }
-  }, [connectionApi.loading]);
+  }, [connectionEditPromise.loading]);
 
   useEffect(() => {
     if (deleteSuccessStatus) {
@@ -130,6 +130,12 @@ function DvtConnection() {
       setConnectionApiUrl(searchApiUrls(page));
     }
   }, [connectionSelector]);
+
+  useEffect(() => {
+    if (!connectionApi.loading) {
+      setConnectionApiUrl('');
+    }
+  }, [connectionApi.loading]);
 
   const clearConnection = () => {
     dispatch(dvtSidebarSetPropertyClear('connection'));
@@ -158,9 +164,6 @@ function DvtConnection() {
 
   const handleEditConnection = (item: any) => {
     setConnectionEditApiUrl(`database/${item.id}/connection`);
-    setTimeout(() => {
-      setConnectionEditApiUrl('');
-    }, 500);
   };
 
   const modifiedData = {
