@@ -275,7 +275,27 @@ function DvtWelcome() {
           }))}
           setFavorites={handleSetFavorites}
           dropdown={[
-            { label: t('Edit'), icon: 'edit_alt', onClick: () => {} },
+            {
+              label: t('Edit'),
+              icon: 'edit_alt',
+              onClick: item => {
+                if (item.paramUrl === 'dashboard') {
+                  dispatch(
+                    openModal({
+                      component: 'edit-dashboard',
+                      meta: item,
+                    }),
+                  );
+                } else if (item.paramUrl === 'chart') {
+                  dispatch(
+                    openModal({
+                      component: 'edit-chart',
+                      meta: item,
+                    }),
+                  );
+                }
+              },
+            },
             {
               label: t('Export'),
               icon: 'share',
