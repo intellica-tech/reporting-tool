@@ -7,7 +7,7 @@ const connectionCreateValidation = {
     if (!value) {
       return t('This is a required field');
     }
-    if (!ipAddressRegex.test(value)) {
+    if (value !== 'db' && !ipAddressRegex.test(value)) {
       return t('is not a valid IP address.');
     }
     return undefined;
