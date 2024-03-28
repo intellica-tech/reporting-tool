@@ -146,7 +146,6 @@ function AlertList() {
         meta: { item, type: 'report', title: 'report' },
       }),
     );
-    setAlertApiUrl('');
   };
 
   const clearAlerts = () => {

@@ -127,7 +127,6 @@ function ReportList() {
       }));
       setData(editedDatas);
       setCount(reportData.data.count);
-      setFavoriteApiUrl('');
       setDataOnReady(true);
       setSelectedRows([]);
       if (!reportApiFetched) {
