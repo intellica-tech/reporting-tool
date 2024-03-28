@@ -19,14 +19,14 @@
 import { styled } from '@superset-ui/core';
 
 interface TableProps {
-  onScrollTable?: boolean;
-  scrollMaxHeight?: string;
+  $onScrollTable: boolean;
+  scrollMaxHeight: string;
 }
 
 const StyledTable = styled.div<TableProps>`
   width: 100%;
   max-height: ${({ scrollMaxHeight }) => scrollMaxHeight};
-  overflow-x: ${({ onScrollTable }) => (onScrollTable ? 'auto' : 'hidden')};
+  overflow-x: ${({ $onScrollTable }) => ($onScrollTable ? 'auto' : 'hidden')};
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
@@ -76,8 +76,8 @@ const StyledTableTable = styled.table`
 `;
 
 const StyledTabletHead = styled.thead<TableProps>`
-  ${({ onScrollTable, theme }) =>
-    onScrollTable
+  ${({ $onScrollTable, theme }) =>
+    $onScrollTable
       ? `
         position: sticky;
         top: 0;

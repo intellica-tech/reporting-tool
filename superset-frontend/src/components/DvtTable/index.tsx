@@ -122,7 +122,7 @@ const DvtTable: React.FC<DvtTableProps> = ({
   setSort,
   activeRadio = '',
   setActiveRadio = () => {},
-  onScroll,
+  onScroll = false,
   scrollMaxHeight = '100%',
 }) => {
   const dispatch = useDispatch();
@@ -207,9 +207,12 @@ const DvtTable: React.FC<DvtTableProps> = ({
   };
 
   return (
-    <StyledTable onScrollTable={onScroll} scrollMaxHeight={scrollMaxHeight}>
+    <StyledTable $onScrollTable={onScroll} scrollMaxHeight={scrollMaxHeight}>
       <StyledTableTable>
-        <StyledTabletHead>
+        <StyledTabletHead
+          $onScrollTable={onScroll}
+          scrollMaxHeight={scrollMaxHeight}
+        >
           <StyledTableTitle>
             {header
               .filter((header: any) => !header.collapseField)
