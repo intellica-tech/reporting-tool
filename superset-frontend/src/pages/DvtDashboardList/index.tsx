@@ -198,7 +198,6 @@ function DvtDashboardList() {
         meta: { item, type: 'dashboard', title: 'dashboard' },
       }),
     );
-    setDashboardApiUrl(''); // sen bu yapmıştın delete sonra otomatik api gelsin bi tane bu ama
   };
 
   const handleSingleExport = (id: number) => {
