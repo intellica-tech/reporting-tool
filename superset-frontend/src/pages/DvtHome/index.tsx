@@ -78,7 +78,7 @@ const formatRecentData = (data: any[]) =>
     label: '',
     description: `Modified ${item.time_delta_humanized}`,
     isFavorite: null,
-    link: item.item_url,
+    link: item.item_url.replace('/superset/', '/'),
   }));
 
 function DvtWelcome() {
