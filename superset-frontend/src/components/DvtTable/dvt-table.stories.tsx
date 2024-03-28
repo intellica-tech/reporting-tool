@@ -424,3 +424,57 @@ ActiveColumn.args = {
     },
   ],
 };
+
+export const ScrollExample = (args: DvtTableProps) => (
+  <div
+    style={{
+      width: 1440,
+      height: 1050,
+      backgroundColor: '#F8FAFC',
+      padding: 32,
+    }}
+  >
+    <DvtTable {...args} data={TableData.defaultData} />
+  </div>
+);
+
+ScrollExample.args = {
+  header: [
+    {
+      title: 'Name',
+      field: 'name',
+      icon: 'dvt-folder',
+      urlField: 'link',
+      flex: 3,
+    },
+    { title: 'Type', field: 'type' },
+    { title: 'Database', field: 'database' },
+    { title: 'Schema', field: 'schema' },
+    { title: 'Modified Date', field: 'date' },
+    { title: 'Modified By', field: 'modifiedBy' },
+    { title: 'Owners', field: 'owners' },
+    {
+      title: 'Action',
+      clicks: [
+        {
+          icon: 'edit_alt',
+          click: () => {},
+          popperLabel: 'Edit',
+        },
+
+        {
+          icon: 'share',
+          click: () => {},
+          popperLabel: 'Export',
+        },
+        {
+          icon: 'trash',
+          click: () => {},
+          popperLabel: 'Share',
+        },
+      ],
+    },
+  ],
+  onscroll: true,
+  scrollMaxHeight: '250px',
+};
