@@ -18,7 +18,7 @@
  * under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtSpinner from 'src/components/DvtSpinner';
@@ -46,12 +46,18 @@ const DvtDashboardEditChart = ({
     width: chartPanelWidth,
     height: chartPanelHeight,
   } = useResizeDetectorByObserver();
+  const [onHover, setOnHover] = useState(false);
 
   return (
-    <StyledDashboardDroppedListItem key={item.id} isEdit={isEdit}>
+    <StyledDashboardDroppedListItem
+      key={item.id}
+      isEdit={isEdit}
+      onMouseLeave={() => setOnHover(false)}
+      onMouseOver={() => setOnHover(true)}
+    >
       <StyledDashboardDroppedListItemTitle>
         <div>{item.slice_name}</div>
-        {isEdit && (
+        {isEdit && onHover && (
           <Icon
             style={{ cursor: 'pointer' }}
             fileName="dvt-delete"
