@@ -107,6 +107,7 @@ function ReportList() {
     })}`;
 
   const [reportApiUrl, setReportApiUrl] = useState<string>('');
+  const [reportApiFetched, setReportApiFetched] = useState<boolean>(false);
   const [reportApiEditUrl, setReportApiEditUrl] = useState<string>('');
   const [favoriteApiUrl, setFavoriteApiUrl] = useState<string>('');
 
@@ -129,8 +130,17 @@ function ReportList() {
       setFavoriteApiUrl('');
       setDataOnReady(true);
       setSelectedRows([]);
+      if (!reportApiFetched) {
+        setReportApiFetched(true);
+      }
     }
   }, [reportData.data]);
+
+  useEffect(() => {
+    if (!reportData.loading && reportApiFetched) {
+      setReportApiUrl('');
+    }
+  }, [reportData.loading, reportApiFetched]);
 
   useEffect(() => {
     if (dataOnReady && data.length > 0) {
@@ -173,12 +183,6 @@ function ReportList() {
       setReportApiUrl(searchApiUrls(page));
     }
   }, [reportsSelector]);
-
-  useEffect(() => {
-    if (!reportData.loading) {
-      setReportApiUrl('');
-    }
-  }, [reportData.loading]);
 
   useEffect(() => {
     if (!reportEditPromise.loading) {
