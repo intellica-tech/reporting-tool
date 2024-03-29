@@ -135,6 +135,58 @@ const DvtChart = () => {
     x: [],
     y: [],
     size: [],
+    all_columns_x: [],
+    all_columns_y: [],
+    linear_color_scheme: {
+      label: 'Superset Sequential #1',
+      value: 'superset_seq_1',
+    },
+    xscale_interval: {
+      label: '1',
+      value: 1,
+    },
+    yscale_interval: {
+      label: '1',
+      value: 1,
+    },
+    canvas_image_rendering: {
+      label: t('pixelated (Sharp)'),
+      value: 'pixelated',
+    },
+    normalize_across: {
+      label: t('heatmap'),
+      value: 'heatmap',
+    },
+    left_margin: {
+      label: t('auto'),
+      value: 'auto',
+    },
+    bottom_margin: {
+      label: t('auto'),
+      value: 'auto',
+    },
+    y_axis_bounds: [null, null],
+    y_axis_format: {
+      label: t('Adaptive formatting'),
+      value: 'SMART_NUMBER',
+    },
+    time_format: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    currency_format: {},
+    sort_x_axis: {
+      label: t('Axis ascending'),
+      value: 'alpha_asc',
+    },
+    sort_y_axis: {
+      label: t('Axis ascending'),
+      value: 'alpha_asc',
+    },
+    show_legend: true,
+    show_perc: true,
+    show_values: false,
+    normalized: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -158,6 +210,8 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
+  const onlyExploreJson = ['heatmap'];
+
   useEffect(() => {
     if (history.location.search && selectedChart?.form_data) {
       if (history.location.search.split('?slice_id=')[1]) {
@@ -174,7 +228,7 @@ const DvtChart = () => {
                 values: {
                   saved: '',
                   column: selectedChart.dataset.columns.find(
-                    (f: any) => f.column_name === getFormData.granularity_sqla,
+                    (f: any) => f?.column_name === getFormData.granularity_sqla,
                   ),
                   operator: {
                     label: getFormData.time_range,
@@ -213,7 +267,7 @@ const DvtChart = () => {
                 ].find((f: any) => f.value === fixOperator(v.operator));
 
           const findColumn = selectedChart?.dataset.columns.find(
-            (f: any) => f.column_name === v.subject,
+            (f: any) => f?.column_name === v.subject,
           );
 
           const onTimeRange =
@@ -299,11 +353,11 @@ const DvtChart = () => {
           }
           if (typeof v === 'string') {
             const findItem = selectedChart?.dataset.columns.find(
-              (f: any) => f.column_name === v,
+              (f: any) => f?.column_name === v,
             );
             return {
               id: moment().unix(),
-              label: findItem.column_name,
+              label: findItem?.column_name,
               values: {
                 saved: '',
                 column: findItem,
@@ -311,7 +365,7 @@ const DvtChart = () => {
                 aggregate: '',
                 option: '',
                 comparator: '',
-                sql: findItem.column_name,
+                sql: findItem?.column_name,
                 expressionType: 'SIMPLE',
                 clause: 'WHERE',
               },
@@ -333,9 +387,9 @@ const DvtChart = () => {
                 ? v.sqlExpression
                 : v?.aggregate
                 ? v.aggregate === 'COUNT_DISTINCT'
-                  ? `COUNT(DISTINCT ${v.column.column_name})`
-                  : `${v.aggregate}(${v.column.column_name})`
-                : v.column.column_name,
+                  ? `COUNT(DISTINCT ${v.column?.column_name})`
+                  : `${v.aggregate}(${v.column?.column_name})`
+                : v.column?.column_name,
               expressionType: v?.expressionType ? v.expressionType : '',
               clause: 'WHERE',
             },
@@ -523,10 +577,106 @@ const DvtChart = () => {
           x: emptyArrayOrOneFindItem(getFormData.x),
           y: emptyArrayOrOneFindItem(getFormData.y),
           size: emptyArrayOrOneFindItem(getFormData.size),
+          all_columns_x: emptyArrayOrOneFindItem(getFormData.all_columns_x),
+          all_columns_y: emptyArrayOrOneFindItem(getFormData.all_columns_y),
+          linear_color_scheme: getFormData?.linear_color_scheme
+            ? chartFormsOption.linear_color_scheme.find(
+                f => f.value === getFormData.linear_color_scheme,
+              )
+            : {
+                label: 'Superset Sequential #1',
+                value: 'superset_seq_1',
+              },
+          xscale_interval: {
+            label: '1',
+            value: 1,
+          },
+          yscale_interval: {
+            label: '1',
+            value: 1,
+          },
+          canvas_image_rendering: getFormData?.canvas_image_rendering
+            ? chartFormsOption.canvas_image_rendering.find(
+                f => f.value === getFormData.canvas_image_rendering,
+              )
+            : {
+                label: t('pixelated (Sharp)'),
+                value: 'pixelated',
+              },
+          normalize_across: getFormData?.normalize_across
+            ? chartFormsOption.normalize_across.find(
+                f => f.value === getFormData.normalize_across,
+              )
+            : {
+                label: t('heatmap'),
+                value: 'heatmap',
+              },
+          left_margin: getFormData?.left_margin
+            ? chartFormsOption.left_margin.find(
+                f => f.value === getFormData.left_margin,
+              )
+            : {
+                label: t('auto'),
+                value: 'auto',
+              },
+          bottom_margin: getFormData?.bottom_margin
+            ? chartFormsOption.bottom_margin.find(
+                f => f.value === getFormData.bottom_margin,
+              )
+            : {
+                label: t('auto'),
+                value: 'auto',
+              },
+          y_axis_bounds: [null, null],
+          y_axis_format: getFormData?.y_axis_format
+            ? chartFormsOption.y_axis_format.find(
+                f => f.value === getFormData.y_axis_format,
+              )
+            : {
+                label: t('Adaptive formatting'),
+                value: 'SMART_NUMBER',
+              },
+          time_format: getFormData?.time_format
+            ? chartFormsOption.time_format.find(
+                f => f.value === getFormData.time_format,
+              )
+            : {
+                label: t('Adaptive formatting'),
+                value: 'smart_date',
+              },
+          currency_format: {},
+          sort_x_axis: getFormData?.sort_x_axis
+            ? chartFormsOption.sort_x_axis.find(
+                f => f.value === getFormData.sort_x_axis,
+              )
+            : {
+                label: t('Axis ascending'),
+                value: 'alpha_asc',
+              },
+          sort_y_axis: getFormData?.sort_y_axis
+            ? chartFormsOption.sort_y_axis.find(
+                f => f.value === getFormData.sort_y_axis,
+              )
+            : {
+                label: t('Axis ascending'),
+                value: 'alpha_asc',
+              },
+          show_legend: getFormData?.show_legend !== false,
+          show_perc: getFormData?.show_perc !== false,
+          show_values: getFormData?.show_values
+            ? getFormData.show_values
+            : false,
+          normalized: getFormData?.show_values
+            ? getFormData.show_values
+            : false,
         });
 
         setChartStatus('loading');
-        setChartApiUrl('chart/data');
+        setChartApiUrl(
+          onlyExploreJson.includes(getFormData.viz_type)
+            ? 'explore_json'
+            : 'chart/data',
+        );
 
         // {"slice_id":${
         //     history.location.search.split('?slice_id=')[1]
@@ -676,6 +826,13 @@ const DvtChart = () => {
     }
   };
 
+  const checkObjectFormation = (value: string) => {
+    if (typeof value === 'object' && Object.keys(value).length > 0) {
+      return value;
+    }
+    return undefined;
+  };
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -728,16 +885,17 @@ const DvtChart = () => {
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
       markerSize: 6,
       orientation: 'vertical',
-      show_legend: true,
+      show_legend: active === 'heatmap' ? values.show_legend : true,
       legendType: 'scroll',
       legendOrientation: 'top',
       max_bubble_size: '25',
       x_axis_time_format: 'smart_date',
       rich_tooltip: true,
       tooltipTimeFormat: 'smart_date',
-      y_axis_format: 'SMART_NUMBER',
+      y_axis_format:
+        active === 'heatmap' ? values.y_axis_format.value : 'SMART_NUMBER',
       truncateXAxis: true,
-      y_axis_bounds: [null, null],
+      y_axis_bounds: active === 'heatmap' ? values.y_axis_bounds : [null, null],
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -748,7 +906,10 @@ const DvtChart = () => {
       area: undefined,
       cache_timeout: undefined,
       contributionMode: withoutValueForNull(values.contributionMode),
-      currency_format: undefined,
+      currency_format:
+        active === 'heatmap'
+          ? checkObjectFormation(values.currency_format)
+          : undefined,
       forecastEnabled: values.forecastEnabled,
       forecastSeasonalityDaily: withoutValueForNull(
         values.forecastSeasonalityDaily,
@@ -798,9 +959,14 @@ const DvtChart = () => {
       sort_by_metric: values.sort_by_metric,
       subheader: values.subheader,
       subheader_font_size: 0.15,
-      time_format: 'smart_date',
+      time_format:
+        active === 'heatmap' ? values.time_format.value : 'smart_date',
       all_columns: droppedOnlyLabels('all_columns'),
-      all_columns_x: droppedOnlyLabels('all_columns'),
+      all_columns_x:
+        active === 'heatmap'
+          ? droppedOnlyLabels('all_columns_x')[0]
+          : droppedOnlyLabels('all_columns'),
+      all_columns_y: droppedOnlyLabels('all_columns_y')[0],
       color_pn: true,
       query_mode: values.query_mode.value,
       include_time:
@@ -826,6 +992,18 @@ const DvtChart = () => {
       y: metricsFormation('y')[0],
       show_tooltip_labels: true,
       tooltip_label_type: 5,
+      linear_color_scheme: values.linear_color_scheme.value,
+      xscale_interval: values.xscale_interval.value,
+      yscale_interval: values.yscale_interval.value,
+      canvas_image_rendering: values.canvas_image_rendering.value,
+      normalize_across: values.normalize_across.value,
+      left_margin: values.left_margin.value,
+      bottom_margin: values.bottom_margin.value,
+      sort_x_axis: values.sort_x_axis.value,
+      sort_y_axis: values.sort_y_axis.value,
+      show_perc: values.show_perc,
+      show_values: values.show_values,
+      normalized: values.normalized,
     },
     queries: [
       {
@@ -912,6 +1090,7 @@ const DvtChart = () => {
             filteredQuery[key] = q[key];
           }
         });
+
         return filteredQuery;
       });
     } else {
@@ -939,28 +1118,67 @@ const DvtChart = () => {
     }
   }, [modalComponent]);
 
+  const formData = new FormData();
+  formData.append(
+    'form_data',
+    JSON.stringify(onlyVizChartFindFormPayload('form_data')),
+  );
+
+  const chartConfig = onlyExploreJson.includes(active)
+    ? {
+        defaultParam: '/',
+        headers: {
+          'Content-Disposition': 'form-data; name="form_data"',
+        },
+        body: formData,
+        formData: true,
+        withoutJson: true,
+      }
+    : {
+        body: {
+          ...formDataObj,
+          form_data: onlyVizChartFindFormPayload('form_data'),
+          queries: onlyVizChartFindFormPayload('queries'),
+        },
+      };
+
+  const chartResultsConfig = onlyExploreJson.includes(active)
+    ? {
+        defaultParam: '/',
+        headers: {
+          'Content-Disposition': 'form-data; name="form_data"',
+        },
+        body: formData,
+        formData: true,
+        withoutJson: true,
+      }
+    : {
+        body: {
+          ...formDataObj,
+          form_data: {
+            ...onlyVizChartFindFormPayload('form_data'),
+            result_type: 'results',
+          },
+          queries: onlyVizChartFindFormPayload('queries'),
+          result_type: 'results',
+        },
+      };
+
   const chartFullPromise = useFetch({
     url: chartApiUrl,
     method: 'POST',
-    body: {
-      ...formDataObj,
-      form_data: onlyVizChartFindFormPayload('form_data'),
-      queries: onlyVizChartFindFormPayload('queries'),
-    },
+    ...chartConfig,
   });
 
+  const resultUrlExploreJson =
+    chartApiUrl && onlyExploreJson.includes(active)
+      ? `${chartApiUrl}?results=true`
+      : chartApiUrl;
+
   const chartResultsPromise = useFetch({
-    url: chartApiUrl,
+    url: resultUrlExploreJson,
     method: 'POST',
-    body: {
-      ...formDataObj,
-      form_data: {
-        ...onlyVizChartFindFormPayload('form_data'),
-        result_type: 'results',
-      },
-      queries: onlyVizChartFindFormPayload('queries'),
-      result_type: 'results',
-    },
+    ...chartResultsConfig,
   });
 
   // const formData = new FormData();
@@ -978,7 +1196,7 @@ const DvtChart = () => {
 
   // const exploreJsonPromise = useFetch({
   //   url: exploreJsonUrl,
-  //   defaultParam: '/superset/',
+  //   defaultParam: '/',
   //   method: 'POST',
   //   headers: {
   //     'Content-Disposition': 'form-data; name="form_data"',
@@ -990,7 +1208,7 @@ const DvtChart = () => {
 
   // const exploreJsonResultsPromise = useFetch({
   //   url: exploreJsonResultsUrl,
-  //   defaultParam: '/superset/',
+  //   defaultParam: '/',
   //   method: 'POST',
   //   headers: {
   //     'Content-Disposition': 'form-data; name="form_data"',
@@ -1039,7 +1257,10 @@ const DvtChart = () => {
 
   useEffect(() => {
     if (chartResultsPromise.data) {
-      const firstObjectItem = chartResultsPromise.data.result[0].colnames;
+      const onlyExploreJsonResult = onlyExploreJson.includes(active)
+        ? chartResultsPromise.data
+        : chartResultsPromise.data.result[0];
+      const firstObjectItem = onlyExploreJsonResult.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
         title: v,
@@ -1047,7 +1268,7 @@ const DvtChart = () => {
         sort: true,
       }));
       setResultHeader(headerFormation);
-      setResultData(chartResultsPromise.data.result[0].data);
+      setResultData(onlyExploreJsonResult.data);
     }
   }, [chartResultsPromise.data]);
 
@@ -1146,6 +1367,12 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
         return !values.metric.length;
+      case 'heatmap':
+        return !(
+          values.all_columns_x.length &&
+          values.all_columns_y.length &&
+          values.metric.length
+        );
 
       default:
         return false;
@@ -1337,7 +1564,11 @@ const DvtChart = () => {
             bold
             onClick={() => {
               setChartStatus('loading');
-              setChartApiUrl('chart/data');
+              setChartApiUrl(
+                onlyExploreJson.includes(active)
+                  ? 'explore_json'
+                  : 'chart/data',
+              );
             }}
           />
         </CreateChartBottom>

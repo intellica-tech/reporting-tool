@@ -1,4 +1,10 @@
 import { t } from '@superset-ui/core';
+import schemes from 'packages/superset-ui-core/src/color/colorSchemes/sequential/d3';
+import schemesTwo from 'packages/superset-ui-core/src/color/colorSchemes/sequential/common';
+import {
+  D3_FORMAT_OPTIONS,
+  D3_TIME_FORMAT_OPTIONS,
+} from 'src/explore/controls';
 
 const forecastSeasonality = [
   {
@@ -14,6 +20,69 @@ const forecastSeasonality = [
     value: 'false',
   },
 ];
+
+const leftOrBottomMargin = [
+  {
+    label: t('auto'),
+    value: 'auto',
+  },
+  {
+    label: '50',
+    value: 50,
+  },
+  {
+    label: '75',
+    value: 75,
+  },
+  {
+    label: '100',
+    value: 100,
+  },
+  {
+    label: '125',
+    value: 125,
+  },
+  {
+    label: '150',
+    value: 150,
+  },
+  {
+    label: '200',
+    value: 200,
+  },
+];
+
+const sortAxisChoices = [
+  {
+    label: t('Axis ascending'),
+    value: 'alpha_asc',
+  },
+  {
+    label: t('Axis descending'),
+    value: 'alpha_desc',
+  },
+  {
+    label: t('Metric ascending'),
+    value: 'value_asc',
+  },
+  {
+    label: t('Metric descending'),
+    value: 'value_desc',
+  },
+];
+
+const minAndMaxNumberValues = (min: number, max: number) => {
+  const result = [];
+  for (let i = min; i < max; i += 1) {
+    result.push({
+      label: String(i),
+      value: i,
+    });
+  }
+  return result;
+};
+
+const oneBetweenFifty = minAndMaxNumberValues(1, 50);
 
 const chartFormsOption = {
   time_grain_sqla: [
@@ -397,6 +466,48 @@ const chartFormsOption = {
       value: 200,
     },
   ],
+  linear_color_scheme: [...schemes, ...schemesTwo].map((item: any) => ({
+    label: item.label,
+    value: item.id,
+  })),
+  xscale_interval: oneBetweenFifty,
+  yscale_interval: oneBetweenFifty,
+  canvas_image_rendering: [
+    {
+      label: t('pixelated (Sharp)'),
+      value: 'pixelated',
+    },
+    {
+      label: t('auto (Smooth)'),
+      value: 'auto',
+    },
+  ],
+  normalize_across: [
+    {
+      label: t('heatmap'),
+      value: 'heatmap',
+    },
+    {
+      label: t('x'),
+      value: 'x',
+    },
+    {
+      label: t('y'),
+      value: 'y',
+    },
+  ],
+  left_margin: leftOrBottomMargin,
+  bottom_margin: leftOrBottomMargin,
+  y_axis_format: D3_FORMAT_OPTIONS.map((item: any) => ({
+    label: item[1],
+    value: item[0],
+  })),
+  time_format: D3_TIME_FORMAT_OPTIONS.map((item: any) => ({
+    label: item[1],
+    value: item[0],
+  })),
+  sort_x_axis: sortAxisChoices,
+  sort_y_axis: sortAxisChoices,
 };
 
 export { forecastSeasonality, chartFormsOption };
