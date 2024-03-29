@@ -431,7 +431,7 @@ export const ScrollExample = (args: DvtTableProps) => (
       width: 1440,
       height: 1050,
       backgroundColor: '#F8FAFC',
-      padding: 32,
+      padding: 30,
     }}
   >
     <DvtTable {...args} data={TableData.defaultData} />
