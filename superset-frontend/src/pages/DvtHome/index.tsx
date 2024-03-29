@@ -46,7 +46,7 @@ const formatDashboardData = (data: any[]) =>
     label: item.changed_by_name,
     description: `Modified ${item.changed_on_delta_humanized}`,
     isFavorite: false,
-    link: item.url,
+    link: item.url.replace('/superset/', '/'),
     paramUrl: 'dashboard',
   }));
 
