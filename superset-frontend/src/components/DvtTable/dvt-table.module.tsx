@@ -25,8 +25,14 @@ interface TableProps {
 
 const StyledTable = styled.div<TableProps>`
   width: 100%;
-  max-height: ${({ scrollMaxHeight }) => scrollMaxHeight};
-  overflow-x: ${({ $onScrollTable }) => ($onScrollTable ? 'auto' : 'hidden')};
+
+  ${({ $onScrollTable, scrollMaxHeight }) =>
+    $onScrollTable
+      ? `
+        max-height: ${scrollMaxHeight};
+        overflow-x: auto;
+      `
+      : ''};
 
   &::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
