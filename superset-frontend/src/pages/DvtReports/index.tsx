@@ -29,6 +29,7 @@ import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
+import { dvtChartEditStatus } from 'src/dvt-redux/dvt-chartReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
@@ -36,7 +37,6 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
-import { dvtChartEditStatus } from 'src/dvt-redux/dvt-chartReducer';
 
 function ReportList() {
   const dispatch = useDispatch();
