@@ -36,6 +36,7 @@ import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
 import DvtTitleCardList from 'src/components/DvtTitleCardList';
 import DvtDeselectDeleteExport from 'src/components/DvtDeselectDeleteExport';
 import { StyledReports, StyledReportsButton } from './dvt-reports.module';
+import { dvtChartEditStatus } from 'src/dvt-redux/dvt-chartReducer';
 
 function ReportList() {
   const dispatch = useDispatch();
@@ -46,6 +47,9 @@ function ReportList() {
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
+  );
+  const chartEditStatus = useAppSelector(
+    state => state.dvtChart.chartEditStatus,
   );
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -173,8 +177,11 @@ function ReportList() {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
+    if (chartEditStatus) {
+      dispatch(dvtChartEditStatus(''));
+    }
     setReportApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page, sort]);
+  }, [deleteSuccessStatus, chartEditStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -210,6 +217,12 @@ function ReportList() {
     url: favoriteUrl.url,
     method: favoriteUrl.isFavorite ? 'DELETE' : 'POST',
   });
+
+  useEffect(() => {
+    if (!favoritePromise.loading) {
+      setFavoriteUrl({ url: '', title: '', id: 0, isFavorite: false });
+    }
+  }, [favoritePromise.loading]);
 
   useEffect(() => {
     if (favoritePromise.data?.result === 'OK') {
