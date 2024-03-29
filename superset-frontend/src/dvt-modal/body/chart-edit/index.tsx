@@ -27,11 +27,9 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   });
   const [chartApi, setChartApi] = useState<string>('');
 
-  const chartItemApi = useFetch({ url: `chart/${meta.id}` });
-
   useEffect(() => {
-    if (chartItemApi.data) {
-      const { result } = chartItemApi.data;
+    if (meta) {
+      const { result } = meta;
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
@@ -44,7 +42,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [chartItemApi.data]);
+  }, [meta]);
 
   const updateChartData = useFetch({
     url: chartApi,
