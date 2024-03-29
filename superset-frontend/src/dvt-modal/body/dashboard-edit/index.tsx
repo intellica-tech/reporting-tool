@@ -22,11 +22,17 @@ import { ModalProps } from 'src/dvt-modal';
 import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
+import Icon from 'src/components/Icons/Icon';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
-import DvtCollapse from 'src/components/DvtCollapse';
 import DvtModalHeader from 'src/components/DvtModalHeader';
+import {
+  StyledCollapse,
+  StyledCollapseGroup,
+  StyledCollapseIcon,
+  StyledCollapseLabel,
+} from 'src/components/DvtCollapse/dvt-collapse.module';
 import {
   StyledDashboardEdit,
   StyledDashboardEditBody,
@@ -173,9 +179,20 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
             />
           </StyledDashboardEditInput>
         </StyledDashboardEditGroup>
-        <DvtCollapse label="ADVANCED" isOpen={isOpen} setIsOpen={setIsOpen}>
-          <DvtJsonEditor value={jsonValue} onChange={setJsonValue} />
-        </DvtCollapse>
+        <StyledCollapse bgTransparent={false}>
+          <StyledCollapseGroup>
+            <StyledCollapseLabel onClick={() => setIsOpen(!isOpen)}>
+              {t('ADVANCED')}
+            </StyledCollapseLabel>
+            <StyledCollapseIcon
+              isOpen={isOpen}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <Icon fileName="caret_down" iconSize="xxl" />
+            </StyledCollapseIcon>
+          </StyledCollapseGroup>
+        </StyledCollapse>
+        {isOpen && <DvtJsonEditor value={jsonValue} onChange={setJsonValue} />}
       </StyledDashboardEditBody>
     </StyledDashboardEdit>
   );
