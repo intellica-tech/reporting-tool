@@ -87,7 +87,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
       <StyledChartEditBody>
         <StyledChartEditGroup>
           <StyledChartEditInput>
-            {meta.result.dashboards.dashboard_title}
+            {meta.title}
             <DvtInput
               value={values.title}
               label={t('Name')}

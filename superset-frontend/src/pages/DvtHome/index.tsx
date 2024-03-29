@@ -46,7 +46,7 @@ const formatDashboardData = (data: any[]) =>
     label: item.changed_by_name,
     description: `Modified ${item.changed_on_delta_humanized}`,
     isFavorite: false,
-    link: item.url,
+    link: item.url.replace('/superset/', '/'),
     paramUrl: 'dashboard',
   }));
 
@@ -78,7 +78,7 @@ const formatRecentData = (data: any[]) =>
     label: '',
     description: `Modified ${item.time_delta_humanized}`,
     isFavorite: null,
-    link: item.item_url,
+    link: item.item_url.replace('/superset/', '/'),
   }));
 
 function DvtWelcome() {
@@ -275,7 +275,27 @@ function DvtWelcome() {
           }))}
           setFavorites={handleSetFavorites}
           dropdown={[
-            { label: t('Edit'), icon: 'edit_alt', onClick: () => {} },
+            {
+              label: t('Edit'),
+              icon: 'edit_alt',
+              onClick: item => {
+                if (item.paramUrl === 'dashboard') {
+                  dispatch(
+                    openModal({
+                      component: 'edit-dashboard',
+                      meta: item,
+                    }),
+                  );
+                } else if (item.paramUrl === 'chart') {
+                  dispatch(
+                    openModal({
+                      component: 'edit-chart',
+                      meta: item,
+                    }),
+                  );
+                }
+              },
+            },
             {
               label: t('Export'),
               icon: 'share',
