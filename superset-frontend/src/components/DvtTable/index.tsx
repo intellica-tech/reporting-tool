@@ -105,6 +105,8 @@ export interface DvtTableProps {
   setSort?: (args: any) => void;
   activeRadio?: string;
   setActiveRadio?: (row: any) => void;
+  onScroll?: boolean;
+  scrollMaxHeight?: string;
 }
 
 const DvtTable: React.FC<DvtTableProps> = ({
@@ -120,6 +122,8 @@ const DvtTable: React.FC<DvtTableProps> = ({
   setSort,
   activeRadio = '',
   setActiveRadio = () => {},
+  onScroll = false,
+  scrollMaxHeight = '100%',
 }) => {
   const dispatch = useDispatch();
   const { addDangerToast } = useToasts();
@@ -203,9 +207,12 @@ const DvtTable: React.FC<DvtTableProps> = ({
   };
 
   return (
-    <StyledTable>
+    <StyledTable $onScrollTable={onScroll} scrollMaxHeight={scrollMaxHeight}>
       <StyledTableTable>
-        <StyledTabletHead>
+        <StyledTabletHead
+          $onScrollTable={onScroll}
+          scrollMaxHeight={scrollMaxHeight}
+        >
           <StyledTableTitle>
             {header
               .filter((header: any) => !header.collapseField)
@@ -262,224 +269,195 @@ const DvtTable: React.FC<DvtTableProps> = ({
               ))}
           </StyledTableTitle>
         </StyledTabletHead>
-        <StyledTableTbody>
-          {[...data]
-            .sort((a, b) => a.id - b.id)
-            .map((row, rowIndex) => (
-              <>
-                <StyledTableTr
-                  key={rowIndex}
-                  onClick={() => onRowClick?.(row)}
-                  onMouseOver={() => setOpenRow(rowIndex)}
-                  onMouseOut={() => setOpenRow(null)}
-                >
-                  {header.map((column, columnIndex) => (
-                    <StyledTableTd key={columnIndex}>
-                      <StyledTableIcon>
-                        {column.collapse && (
-                          <StyledTableCheckbox>
-                            <Icon
-                              fileName="plus_large"
-                              onClick={() => setCollapseRowId(row.id)}
-                            />
-                          </StyledTableCheckbox>
-                        )}
-                        {column.checkbox && columnIndex === 0 && (
+        {[...data]
+          .sort((a, b) => a.id - b.id)
+          .map((row, rowIndex) => (
+            <StyledTableTbody key={rowIndex}>
+              <StyledTableTr
+                onClick={() => onRowClick?.(row)}
+                onMouseOver={() => setOpenRow(rowIndex)}
+                onMouseOut={() => setOpenRow(null)}
+              >
+                {header.map((column, columnIndex) => (
+                  <StyledTableTd key={columnIndex}>
+                    <StyledTableIcon>
+                      {column.collapse && (
+                        <StyledTableCheckbox>
+                          <Icon
+                            fileName="plus_large"
+                            onClick={() => setCollapseRowId(row.id)}
+                          />
+                        </StyledTableCheckbox>
+                      )}
+                      {column.checkbox && columnIndex === 0 && (
+                        <StyledTableCheckbox>
+                          <Checkbox
+                            checked={selected.some(
+                              item =>
+                                item[checkboxActiveField] ===
+                                row[checkboxActiveField],
+                            )}
+                            onChange={e => {
+                              const checkedRows = e.target.checked
+                                ? [...selected, row]
+                                : selected.filter(
+                                    item =>
+                                      item[checkboxActiveField] !==
+                                      row[checkboxActiveField],
+                                  );
+                              setSelected(checkedRows);
+                            }}
+                          />
+                        </StyledTableCheckbox>
+                      )}
+                      {column.input && !column.collapseField && (
+                        <StyledTableInput>
+                          <DvtInput
+                            value={column.field ? row[column.field] : ''}
+                            onChange={newValue =>
+                              handleInputChange(
+                                newValue,
+                                row.id,
+                                column.field ? column.field : '',
+                              )
+                            }
+                          />
+                        </StyledTableInput>
+                      )}
+
+                      {column.editor && !column.collapseField && (
+                        <StyledTableEditor>
+                          <DvtAceEditor
+                            mode="sql"
+                            placeholder="SELECT..."
+                            value={column.field ? row[column.field] : ''}
+                            onChange={newValue =>
+                              handleInputChange(
+                                newValue,
+                                row.id,
+                                column.field ? column.field : '',
+                              )
+                            }
+                            height="60px"
+                            fontSize={16}
+                          />
+                        </StyledTableEditor>
+                      )}
+                      {column.checkboxData && (
+                        <StyledTableCollapseCheckbox>
                           <StyledTableCheckbox>
                             <Checkbox
-                              checked={selected.some(
-                                item =>
-                                  item[checkboxActiveField] ===
-                                  row[checkboxActiveField],
-                              )}
-                              onChange={e => {
-                                const checkedRows = e.target.checked
-                                  ? [...selected, row]
-                                  : selected.filter(
-                                      item =>
-                                        item[checkboxActiveField] !==
-                                        row[checkboxActiveField],
-                                    );
-                                setSelected(checkedRows);
-                              }}
+                              onChange={e =>
+                                handleInputChange(
+                                  e.target.checked,
+                                  row.id,
+                                  column.field ? column.field : '',
+                                )
+                              }
+                              checked={column.field ? row[column.field] : false}
                             />
                           </StyledTableCheckbox>
-                        )}
-                        {column.input && !column.collapseField && (
-                          <StyledTableInput>
-                            <DvtInput
-                              value={column.field ? row[column.field] : ''}
-                              onChange={newValue =>
-                                handleInputChange(
-                                  newValue,
-                                  row.id,
-                                  column.field ? column.field : '',
-                                )
-                              }
-                            />
-                          </StyledTableInput>
-                        )}
-
-                        {column.editor && !column.collapseField && (
-                          <StyledTableEditor>
-                            <DvtAceEditor
-                              mode="sql"
-                              placeholder="SELECT..."
-                              value={column.field ? row[column.field] : ''}
-                              onChange={newValue =>
-                                handleInputChange(
-                                  newValue,
-                                  row.id,
-                                  column.field ? column.field : '',
-                                )
-                              }
-                              height="60px"
-                              fontSize={16}
-                            />
-                          </StyledTableEditor>
-                        )}
-                        {column.checkboxData && (
-                          <StyledTableCollapseCheckbox>
-                            <StyledTableCheckbox>
-                              <Checkbox
-                                onChange={e =>
-                                  handleInputChange(
-                                    e.target.checked,
-                                    row.id,
-                                    column.field ? column.field : '',
-                                  )
-                                }
-                                checked={
-                                  column.field ? row[column.field] : false
-                                }
-                              />
-                            </StyledTableCheckbox>
-                          </StyledTableCollapseCheckbox>
-                        )}
-                        {column.radio && (
-                          <StyledTableCollapseCheckbox>
-                            <DvtRadioList
-                              data={[
-                                {
-                                  label: '',
-                                  value: column.field ? row[column.field] : '',
-                                  disabled: !(
-                                    column.disabledRadioField &&
-                                    row[column.disabledRadioField]
-                                  ),
-                                },
-                              ]}
-                              active={activeRadio}
-                              setActive={setActiveRadio}
-                            />
-                          </StyledTableCollapseCheckbox>
-                        )}
-                        {column.icon && (
-                          <Icon
-                            onClick={column.iconClick}
-                            fileName={
-                              row.active
-                                ? column.iconActive || 'dvt-folder-active'
-                                : column.icon || 'dvt-folder'
-                            }
-                            iconSize="xl"
-                            css={(theme: SupersetTheme) => ({
-                              color: theme.colors.grayscale.dark2,
-                              marginRight: '14px',
-                              fontSize: '20px',
-                            })}
+                        </StyledTableCollapseCheckbox>
+                      )}
+                      {column.radio && (
+                        <StyledTableCollapseCheckbox>
+                          <DvtRadioList
+                            data={[
+                              {
+                                label: '',
+                                value: column.field ? row[column.field] : '',
+                                disabled: !(
+                                  column.disabledRadioField &&
+                                  row[column.disabledRadioField]
+                                ),
+                              },
+                            ]}
+                            active={activeRadio}
+                            setActive={setActiveRadio}
                           />
-                        )}
-                        {column.isFavorite && (
-                          <StyledTableTbody
-                            onClick={() =>
-                              handleFavouriteData(row, column?.isFavoriteApiUrl)
+                        </StyledTableCollapseCheckbox>
+                      )}
+                      {column.icon && (
+                        <Icon
+                          onClick={column.iconClick}
+                          fileName={
+                            row.active
+                              ? column.iconActive || 'dvt-folder-active'
+                              : column.icon || 'dvt-folder'
+                          }
+                          iconSize="xl"
+                          css={(theme: SupersetTheme) => ({
+                            color: theme.colors.grayscale.dark2,
+                            marginRight: '14px',
+                            fontSize: '20px',
+                          })}
+                        />
+                      )}
+                      {column.isFavorite && (
+                        <StyledTableTbody
+                          onClick={() =>
+                            handleFavouriteData(row, column?.isFavoriteApiUrl)
+                          }
+                        >
+                          {row.isFavorite ? (
+                            <Icons.StarFilled
+                              iconSize="xl"
+                              iconColor={supersetTheme.colors.alert.base}
+                            />
+                          ) : (
+                            <Icons.StarOutlined
+                              iconSize="xl"
+                              iconColor={supersetTheme.colors.dvt.text.bold}
+                            />
+                          )}
+                        </StyledTableTbody>
+                      )}
+                      {column.modal && column.field && (
+                        <StyledTableUrl
+                          onClick={() => {
+                            dispatch(
+                              openModal({
+                                component: column.modal ? column.modal : '',
+                                meta: row,
+                              }),
+                            );
+                          }}
+                        >
+                          {column.modalLabel ? column.modalLabel : t('Select')}
+                        </StyledTableUrl>
+                      )}
+                      {column.urlField && column.field && (
+                        <StyledTableUrl
+                          onClick={() => {
+                            if (column.urlField) {
+                              history.push(row[column.urlField]);
                             }
-                          >
-                            {row.isFavorite ? (
-                              <Icons.StarFilled
-                                iconSize="xl"
-                                iconColor={supersetTheme.colors.alert.base}
-                              />
-                            ) : (
-                              <Icons.StarOutlined
-                                iconSize="xl"
-                                iconColor={supersetTheme.colors.dvt.text.bold}
-                              />
-                            )}
-                          </StyledTableTbody>
-                        )}
-                        {column.modal && column.field && (
-                          <StyledTableUrl
-                            onClick={() => {
-                              dispatch(
-                                openModal({
-                                  component: column.modal ? column.modal : '',
-                                  meta: row,
-                                }),
-                              );
-                            }}
-                          >
-                            {column.modalLabel
-                              ? column.modalLabel
-                              : t('Select')}
-                          </StyledTableUrl>
-                        )}
-                        {column.urlField && column.field && (
-                          <StyledTableUrl
-                            onClick={() => {
-                              if (column.urlField) {
-                                history.push(row[column.urlField]);
-                              }
-                            }}
-                          >
-                            {row[column.field]}
-                          </StyledTableUrl>
-                        )}
-                        {column.field === 'date' ? (
-                          <>
-                            {formatDateTime(row[column.field]).date}
-                            <br />
-                            {formatDateTime(row[column.field]).time}
-                          </>
-                        ) : (
-                          <>
-                            {column.clicks?.map(
-                              (
-                                clicks: {
-                                  icon: string;
-                                  click: (row: any) => void;
-                                  colour: string;
-                                  popperLabel?: string;
-                                },
-                                index,
-                              ) => (
-                                <React.Fragment key={index}>
-                                  {clicks.popperLabel && (
-                                    <DvtPopper label={clicks.popperLabel}>
-                                      <Icon
-                                        onClick={() => clicks.click(row)}
-                                        fileName={clicks.icon}
-                                        iconColor={
-                                          clicks.colour ||
-                                          supersetTheme.colors.grayscale.dark2
-                                        }
-                                        iconSize="xl"
-                                        style={{
-                                          marginRight: 3.6,
-                                          visibility: column.showHover
-                                            ? openRow === rowIndex
-                                              ? 'visible'
-                                              : 'hidden'
-                                            : 'visible',
-                                          height: '56px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                        }}
-                                      />
-                                    </DvtPopper>
-                                  )}
-                                  {!clicks.popperLabel && (
+                          }}
+                        >
+                          {row[column.field]}
+                        </StyledTableUrl>
+                      )}
+                      {column.field === 'date' ? (
+                        <>
+                          {formatDateTime(row[column.field]).date}
+                          <br />
+                          {formatDateTime(row[column.field]).time}
+                        </>
+                      ) : (
+                        <>
+                          {column.clicks?.map(
+                            (
+                              clicks: {
+                                icon: string;
+                                click: (row: any) => void;
+                                colour: string;
+                                popperLabel?: string;
+                              },
+                              index,
+                            ) => (
+                              <React.Fragment key={index}>
+                                {clicks.popperLabel && (
+                                  <DvtPopper label={clicks.popperLabel}>
                                     <Icon
                                       onClick={() => clicks.click(row)}
                                       fileName={clicks.icon}
@@ -495,60 +473,61 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                             ? 'visible'
                                             : 'hidden'
                                           : 'visible',
+                                        height: '56px',
+                                        display: 'flex',
+                                        alignItems: 'center',
                                       }}
                                     />
-                                  )}
-                                </React.Fragment>
-                              ),
-                            )}
+                                  </DvtPopper>
+                                )}
+                                {!clicks.popperLabel && (
+                                  <Icon
+                                    onClick={() => clicks.click(row)}
+                                    fileName={clicks.icon}
+                                    iconColor={
+                                      clicks.colour ||
+                                      supersetTheme.colors.grayscale.dark2
+                                    }
+                                    iconSize="xl"
+                                    style={{
+                                      marginRight: 3.6,
+                                      visibility: column.showHover
+                                        ? openRow === rowIndex
+                                          ? 'visible'
+                                          : 'hidden'
+                                        : 'visible',
+                                    }}
+                                  />
+                                )}
+                              </React.Fragment>
+                            ),
+                          )}
 
-                            {column.field !== 'action' &&
-                              !column.input &&
-                              !column.editor &&
-                              !column.radio &&
-                              column.field &&
-                              !column.urlField && <>{row[column.field]}</>}
-                          </>
-                        )}
-                      </StyledTableIcon>
-                    </StyledTableTd>
-                  ))}
-                </StyledTableTr>
-                {collapseRowId === row.id && (
-                  <StyledTableTr>
-                    <StyledTableTd colSpan={header.length}>
-                      <StyledTableCollapse>
-                        {header.map(column => (
-                          <>
-                            {column.editor && column.collapseField && (
-                              <>
-                                {column.title}
-                                <DvtAceEditor
-                                  mode="sql"
-                                  placeholder={column.placeholder}
-                                  value={column.field ? row[column.field] : ''}
-                                  onChange={newValue =>
-                                    handleInputChange(
-                                      newValue,
-                                      row.id,
-                                      column.field ? column.field : '',
-                                    )
-                                  }
-                                  height="200px"
-                                  fontSize={16}
-                                />
-                              </>
-                            )}
-                            {column.input && column.collapseField && (
-                              <DvtInput
-                                label={column.title}
-                                value={
-                                  column.field && column.extra && row.extra
-                                    ? JSON.parse(row.extra)[column.field]
-                                    : column.field && row[column.field]
-                                    ? row[column.field]
-                                    : ''
-                                }
+                          {column.field !== 'action' &&
+                            !column.input &&
+                            !column.editor &&
+                            !column.radio &&
+                            column.field &&
+                            !column.urlField && <>{row[column.field]}</>}
+                        </>
+                      )}
+                    </StyledTableIcon>
+                  </StyledTableTd>
+                ))}
+              </StyledTableTr>
+              {collapseRowId === row.id && (
+                <StyledTableTr>
+                  <StyledTableTd colSpan={header.length}>
+                    <StyledTableCollapse>
+                      {header.map(column => (
+                        <>
+                          {column.editor && column.collapseField && (
+                            <>
+                              {column.title}
+                              <DvtAceEditor
+                                mode="sql"
+                                placeholder={column.placeholder}
+                                value={column.field ? row[column.field] : ''}
                                 onChange={newValue =>
                                   handleInputChange(
                                     newValue,
@@ -556,40 +535,61 @@ const DvtTable: React.FC<DvtTableProps> = ({
                                     column.field ? column.field : '',
                                   )
                                 }
-                                placeholder={column.placeholder}
+                                height="200px"
+                                fontSize={16}
                               />
-                            )}
-                            {column.select && column.collapseField && (
-                              <DvtSelect
-                                data={column.selectData || []}
-                                selectedValue={
-                                  column.field
-                                    ? {
-                                        value: row[column.field],
-                                        label: row[column.field],
-                                      }
-                                    : ''
-                                }
-                                setSelectedValue={newValue =>
-                                  handleInputChange(
-                                    newValue.value,
-                                    row.id,
-                                    column.field ? column.field : '',
-                                  )
-                                }
-                                label={column.title}
-                                placeholder={column.placeholder}
-                              />
-                            )}
-                          </>
-                        ))}
-                      </StyledTableCollapse>
-                    </StyledTableTd>
-                  </StyledTableTr>
-                )}
-              </>
-            ))}
-        </StyledTableTbody>
+                            </>
+                          )}
+                          {column.input && column.collapseField && (
+                            <DvtInput
+                              label={column.title}
+                              value={
+                                column.field && column.extra && row.extra
+                                  ? JSON.parse(row.extra)[column.field]
+                                  : column.field && row[column.field]
+                                  ? row[column.field]
+                                  : ''
+                              }
+                              onChange={newValue =>
+                                handleInputChange(
+                                  newValue,
+                                  row.id,
+                                  column.field ? column.field : '',
+                                )
+                              }
+                              placeholder={column.placeholder}
+                            />
+                          )}
+                          {column.select && column.collapseField && (
+                            <DvtSelect
+                              data={column.selectData || []}
+                              selectedValue={
+                                column.field
+                                  ? {
+                                      value: row[column.field],
+                                      label: row[column.field],
+                                    }
+                                  : ''
+                              }
+                              setSelectedValue={newValue =>
+                                handleInputChange(
+                                  newValue.value,
+                                  row.id,
+                                  column.field ? column.field : '',
+                                )
+                              }
+                              label={column.title}
+                              placeholder={column.placeholder}
+                            />
+                          )}
+                        </>
+                      ))}
+                    </StyledTableCollapse>
+                  </StyledTableTd>
+                </StyledTableTr>
+              )}
+            </StyledTableTbody>
+          ))}
       </StyledTableTable>
     </StyledTable>
   );
