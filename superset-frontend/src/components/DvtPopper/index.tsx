@@ -42,12 +42,43 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [childWidth, setChildWidth] = useState<number>(0);
+  const [childHeight, setChildHeight] = useState<number>(0);
+
+  const [popperTop, setPopperTop] = useState<number>(0);
+  const [popperLeft, setPopperLeft] = useState<number>(0);
+
+  const handleMouseEnter = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    const divRect = ref.current?.getBoundingClientRect();
+    if (!divRect) return;
+
+    const mouseX = window.innerWidth;
+    const mouseY = window.innerHeight;
+
+    const divCenterX = mouseX - divRect.left;
+    const divCenterY = mouseY - divRect.top;
+
+    setPopperLeft(divCenterX);
+    setPopperTop(divCenterY);
+    setIsHovered(true);
+    console.log(popperTop);
+  };
 
   useEffect(() => {
     if (ref.current) {
       setChildWidth(ref.current.offsetWidth / 2);
+      setChildHeight(ref.current.offsetHeight / 2);
     }
   }, [ref]);
+
+  useEffect(() => {
+    window.addEventListener('wheel', e => {
+      if (isHovered) {
+        setIsHovered(false);
+      }
+    });
+  }, [isHovered]);
 
   const setMinWidth = (numberic: number) => {
     let fixMinWidth: string | number = 'auto';
@@ -65,12 +96,18 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
 
   return (
     <StyledPopperGroup
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <StyledPopper ref={ref}>{children} </StyledPopper>
+      <StyledPopper ref={ref}>{children}</StyledPopper>
       {isHovered && (
-        <StyledPopperAbsolute direction={direction} childWidth={childWidth}>
+        <StyledPopperAbsolute
+          direction={direction}
+          top={popperTop}
+          left={popperLeft}
+          childWidth={childWidth}
+          childHeight={childHeight}
+        >
           <StyledPopperBody
             fontSize={size}
             style={{
