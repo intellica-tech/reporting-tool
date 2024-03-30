@@ -736,12 +736,12 @@ const DvtChartData: DvtChartDataProps[] = [
               {
                 name: 'symbolPosition',
                 placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.bottom_margin,
+                options: chartFormsOption.currency_format.symbolPosition,
               },
               {
                 name: 'symbol',
                 placeholder: t('Currency'),
-                options: chartFormsOption.bottom_margin,
+                options: chartFormsOption.currency_format.symbol,
               },
             ],
           },

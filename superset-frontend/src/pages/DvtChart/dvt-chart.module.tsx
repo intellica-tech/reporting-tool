@@ -55,6 +55,13 @@ const CreateChartCenterCollapseInGap = styled.div`
   gap: 20px;
 `;
 
+const CreateChartCenterCollapseInGapFlexRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: flex-end;
+  gap: 10px;
+`;
+
 const CreateChartBottom = styled.div`
   display: flex;
   justify-content: center;
@@ -157,6 +164,7 @@ export {
   CreateChartTop,
   CreateChartCenter,
   CreateChartCenterCollapseInGap,
+  CreateChartCenterCollapseInGapFlexRow,
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,

@@ -40,6 +40,7 @@ import {
   CreateChartTop,
   CreateChartCenter,
   CreateChartCenterCollapseInGap,
+  CreateChartCenterCollapseInGapFlexRow,
   CreateChartBottom,
   RightPreview,
   RightPreviewTop,
@@ -165,7 +166,7 @@ const DvtChart = () => {
       label: t('auto'),
       value: 'auto',
     },
-    y_axis_bounds: [null, null],
+    y_axis_bounds: {},
     y_axis_format: {
       label: t('Adaptive formatting'),
       value: 'SMART_NUMBER',
@@ -587,14 +588,22 @@ const DvtChart = () => {
                 label: 'Superset Sequential #1',
                 value: 'superset_seq_1',
               },
-          xscale_interval: {
-            label: '1',
-            value: 1,
-          },
-          yscale_interval: {
-            label: '1',
-            value: 1,
-          },
+          xscale_interval: getFormData?.xscale_interval
+            ? chartFormsOption.xscale_interval.find(
+                f => f.value === getFormData.xscale_interval,
+              )
+            : {
+                label: '1',
+                value: 1,
+              },
+          yscale_interval: getFormData?.yscale_interval
+            ? chartFormsOption.yscale_interval.find(
+                f => f.value === getFormData.yscale_interval,
+              )
+            : {
+                label: '1',
+                value: 1,
+              },
           canvas_image_rendering: getFormData?.canvas_image_rendering
             ? chartFormsOption.canvas_image_rendering.find(
                 f => f.value === getFormData.canvas_image_rendering,
@@ -627,7 +636,19 @@ const DvtChart = () => {
                 label: t('auto'),
                 value: 'auto',
               },
-          y_axis_bounds: [null, null],
+          y_axis_bounds:
+            getFormData.viz_type === 'heatmap'
+              ? {
+                  min:
+                    getFormData?.y_axis_bounds[0] === null
+                      ? ''
+                      : getFormData?.y_axis_bounds[0],
+                  max:
+                    getFormData?.y_axis_bounds[1] === null
+                      ? ''
+                      : getFormData?.y_axis_bounds[1],
+                }
+              : {},
           y_axis_format: getFormData?.y_axis_format
             ? chartFormsOption.y_axis_format.find(
                 f => f.value === getFormData.y_axis_format,
@@ -644,7 +665,23 @@ const DvtChart = () => {
                 label: t('Adaptive formatting'),
                 value: 'smart_date',
               },
-          currency_format: {},
+          currency_format:
+            getFormData.viz_type === 'heatmap'
+              ? {
+                  symbolPosition: getFormData?.currency_format?.symbolPosition
+                    ? chartFormsOption.currency_format.symbolPosition.find(
+                        f =>
+                          f.value ===
+                          getFormData.currency_format.symbolPosition,
+                      )
+                    : '',
+                  symbol: getFormData?.currency_format?.symbol
+                    ? chartFormsOption.currency_format.symbol.find(
+                        f => f.value === getFormData.currency_format.symbol,
+                      )
+                    : '',
+                }
+              : {},
           sort_x_axis: getFormData?.sort_x_axis
             ? chartFormsOption.sort_x_axis.find(
                 f => f.value === getFormData.sort_x_axis,
@@ -666,9 +703,7 @@ const DvtChart = () => {
           show_values: getFormData?.show_values
             ? getFormData.show_values
             : false,
-          normalized: getFormData?.show_values
-            ? getFormData.show_values
-            : false,
+          normalized: getFormData?.normalized ? getFormData.normalized : false,
         });
 
         setChartStatus('loading');
@@ -826,12 +861,20 @@ const DvtChart = () => {
     }
   };
 
-  const checkObjectFormation = (value: string) => {
-    if (typeof value === 'object' && Object.keys(value).length > 0) {
-      return value;
+  const checkObjectFormation = (value: any) => {
+    const result = {};
+    const objectInArray: any = Object.entries(value);
+    for (let i = 0; i < objectInArray.length; i += 1) {
+      const element = objectInArray[i];
+      if (typeof element[1] === 'object') {
+        result[element[0]] = element[1].value;
+      }
     }
-    return undefined;
+    return result;
   };
+
+  const checkObjectOrNullArrayFormation = (value: any) =>
+    Object.entries(value).map(i => (i[1] ? Number(i[1]) : null));
 
   const formDataObj = {
     datasource: {
@@ -895,7 +938,10 @@ const DvtChart = () => {
       y_axis_format:
         active === 'heatmap' ? values.y_axis_format.value : 'SMART_NUMBER',
       truncateXAxis: true,
-      y_axis_bounds: active === 'heatmap' ? values.y_axis_bounds : [null, null],
+      y_axis_bounds:
+        active === 'heatmap'
+          ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
+          : [null, null],
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -1225,7 +1271,10 @@ const DvtChart = () => {
 
   useEffect(() => {
     if (chartFullPromise.data) {
-      setChartData(chartFullPromise.data.result);
+      const resultChartRender = onlyExploreJson.includes(active)
+        ? [chartFullPromise.data]
+        : chartFullPromise.data.result;
+      setChartData(resultChartRender);
       setChartStatus('success');
     }
     if (chartFullPromise.error) {
@@ -1549,6 +1598,53 @@ const DvtChart = () => {
                             setValues({ ...values, [fItem.name]: v })
                           }
                         />
+                      )}
+                      {fItem.status === 'two-input' && (
+                        <CreateChartCenterCollapseInGapFlexRow>
+                          {fItem.values?.map((vfItem: any, vfIndex: number) => (
+                            <DvtInput
+                              label={vfIndex === 0 ? fItem.label : ''}
+                              popoverLabel={vfIndex === 0 ? fItem.popper : ''}
+                              placeholder={vfItem.placeholder}
+                              number={vfItem.number}
+                              value={values[fItem.name][vfItem.name]}
+                              onChange={v =>
+                                setValues({
+                                  ...values,
+                                  [fItem.name]: {
+                                    ...values[fItem.name],
+                                    [vfItem.name]: v,
+                                  },
+                                })
+                              }
+                            />
+                          ))}
+                        </CreateChartCenterCollapseInGapFlexRow>
+                      )}
+                      {fItem.status === 'two-select' && (
+                        <CreateChartCenterCollapseInGapFlexRow>
+                          {fItem.values?.map((vfItem: any, vfIndex: number) => (
+                            <DvtSelect
+                              label={vfIndex === 0 ? fItem.label : ''}
+                              popoverLabel={vfIndex === 0 ? fItem.popper : ''}
+                              placeholder={vfItem.placeholder}
+                              selectedValue={values[fItem.name][vfItem.name]}
+                              setSelectedValue={v =>
+                                setValues({
+                                  ...values,
+                                  [fItem.name]: {
+                                    ...values[fItem.name],
+                                    [vfItem.name]: v,
+                                  },
+                                })
+                              }
+                              data={vfItem.options || []}
+                              typeDesign="form"
+                              maxWidth
+                              onShowClear
+                            />
+                          ))}
+                        </CreateChartCenterCollapseInGapFlexRow>
                       )}
                     </div>
                   ))}

@@ -508,6 +508,48 @@ const chartFormsOption = {
   })),
   sort_x_axis: sortAxisChoices,
   sort_y_axis: sortAxisChoices,
+  currency_format: {
+    symbolPosition: [
+      {
+        label: t('Prefix'),
+        value: 'prefix',
+      },
+      {
+        label: t('Suffix'),
+        value: 'suffix',
+      },
+    ],
+    symbol: [
+      {
+        label: '$ (USD)',
+        value: 'USD',
+      },
+      {
+        label: '€ (EUR)',
+        value: 'EUR',
+      },
+      {
+        label: '£ (GBP)',
+        value: 'GBP',
+      },
+      {
+        label: '₹ (INR)',
+        value: 'INR',
+      },
+      {
+        label: 'MX$ (MXN)',
+        value: 'MXN',
+      },
+      {
+        label: '¥ (JPY)',
+        value: 'JPY',
+      },
+      {
+        label: 'CN¥ (CNY)',
+        value: 'CNY',
+      },
+    ],
+  },
 };
 
 export { forecastSeasonality, chartFormsOption };
