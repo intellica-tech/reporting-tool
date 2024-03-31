@@ -14420,8 +14420,9 @@ msgstr "ortalama"
 
 #: superset-frontend/src/components/DvtSidebar/dvtSidebarData.ts:30
 #, fuzzy
-msgid "Connections"
-msgstr "Bağlan"
+msgid "Connection"
+msgid_plural "Connections"
+msgstr[0] "Bağlan"
 
 #: superset-frontend/src/components/DvtSidebar/dvtSidebarData.ts:50
 #: superset-frontend/src/pages/ExecutionLogList/index.tsx:166
