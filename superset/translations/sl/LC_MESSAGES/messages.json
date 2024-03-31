@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": [""],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n%100<=4 ? 2 : 3);",
@@ -927,6 +932,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["Shranjene poizvedbe"],
       "Query History": ["Zgodovina poizvedb"],
+      "User": ["Uporabnik"],
       "Tags": ["Značke"],
       "Action Log": ["Dnevnik aktivnosti"],
       "Security": ["Varnost"],
@@ -1392,7 +1398,6 @@
       "Show Log": ["Prikaži dnevnik"],
       "Add Log": ["Dodaj dnevnik"],
       "Edit Log": ["Uredi dnevnik"],
-      "User": ["Uporabnik"],
       "Action": ["Aktivnost"],
       "dttm": ["dttm"],
       "JSON": ["JSON"],
@@ -3603,24 +3608,34 @@
       "DELETE": ["IZBRIŠI"],
       "delete": ["izbriši"],
       "Type \"%s\" to confirm": ["Vnesite \"%s\" za potrditev"],
+      "Dataset": ["Podatkovni set"],
+      "No filter": ["Brez filtra"],
       "Alerts": ["Opozorila"],
       "Reports": ["Poročila"],
       "Saved": ["Shranjeno"],
       "Customize": ["Prilagodi"],
       "Welcome Page": [""],
-      "Profile": ["Profil"],
+      "Add the name of the dashboard": ["Dodajte naziv nadzorne plošče"],
+      "Draft": ["Osnutek"],
+      "Equal to (=)": [""],
+      "Less than (<)": [""],
+      "Like": [""],
+      "No temporal columns found": ["Ni najdenih časovnih stolpcev"],
+      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
+        "Dodaj izračunan časovni stolpec v podatkovni set v oknu \"Uredi podatkovni vir\""
+      ],
       "of ": [""],
+      "Profile": ["Profil"],
       "Info": ["Informacije"],
       "Logout": ["Odjava"],
       "About": ["O programu"],
-      "Dataset": ["Podatkovni set"],
       "Select or type a value": ["Izberite ali vnesite vrednost"],
       "AQE": ["AQE"],
       "Type a value": ["Vnesite vrednost"],
       "Owner": ["Lastnik"],
       "Certified": ["Certificirano"],
+      "ALGORİTHM": [""],
       "Created by": ["Ustvaril"],
-      "Draft": ["Osnutek"],
       "Status": ["Status"],
       "Favorite": ["Priljubljene"],
       "Working": ["Delam"],
@@ -3628,7 +3643,10 @@
       "Not triggered": ["Ni sproženo"],
       "On Grace": ["V mirovanju"],
       "Favorites": ["Priljubljene"],
+      "Security and Access": [""],
       "Search Metrics & Columns": ["Iskanje mer in stolpcev"],
+      "Filter Type": ["Tip filtra"],
+      "Select": ["Izberi"],
       "Click to edit": ["Kliknite za urejanje"],
       "You don't have the rights to alter this title.": [
         "Nimate pravic za spreminjanje tega naslova."
@@ -3833,7 +3851,6 @@
       "Your dashboard is too large. Please reduce its size before saving it.": [
         "Vaša nadzorna plošča je prevelika. Pred shranjevanjem jo zmanjšajte."
       ],
-      "Add the name of the dashboard": ["Dodajte naziv nadzorne plošče"],
       "Dashboard title": ["Naziv nadzorne plošče"],
       "Undo the action": ["Razveljavi dejanje"],
       "Redo the action": ["Ponovno uveljavi dejanje"],
@@ -4028,7 +4045,6 @@
       "Time column to apply time range to": [""],
       "Filter name": ["Ime filtra"],
       "Name is required": ["Zahtevano je ime"],
-      "Filter Type": ["Tip filtra"],
       "Datasets do not contain a temporal column": [
         "Podatkovni seti ne vsebujejo časovnega stolpca"
       ],
@@ -4041,7 +4057,6 @@
         ""
       ],
       "Pre-filter": ["Predfilter"],
-      "No filter": ["Brez filtra"],
       "Sort filter values": ["Razvrsti vrednosti filtra"],
       "Sort type": ["Način razvrščanja"],
       "Sort ascending": ["Razvrsti naraščajoče"],
@@ -4099,30 +4114,6 @@
       "All filters": ["Vsi filtri"],
       "Medium": ["Srednje"],
       "Tab title": ["Naslov zavihka"],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        "To je lahko bodisi IP naslov (npr. 127.0.0.1) bodisi ime domene (npr. mydatabase.com)."
-      ],
-      "SSL Mode \"require\" will be used.": [
-        "Uporabljen bo SSL način tipa \"require\"."
-      ],
-      "Connect this database with a SQLAlchemy URI string instead": [
-        "S to podatkovno bazo se raje povežite z SQLAlchemy URI nizom"
-      ],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        "Kliknite to povezavo za drugo vnosno formo, ki omogoča ročni vnos SQLAlchemy URL-ja za to podatkovno bazo."
-      ],
-      "Add Alert": ["Dodaj opozorilo"],
-      "Active": ["Aktiven"],
-      "< (Smaller than)": ["< (manjše kot)"],
-      "> (Larger than)": ["> (večje kot)"],
-      "<= (Smaller or equal)": ["<= (manjše ali enako)"],
-      ">= (Larger or equal)": [">= (večje ali enako)"],
-      "== (Is equal)": ["== (je enako)"],
-      "!= (Is not equal)": ["!= (ni enako)"],
-      "Not null": ["Ni nič (null)"],
-      "60 days": ["60 dni"],
-      "90 days": ["90 dni"],
-      "Add notification method": ["Dodajte način obveščanja"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -4231,11 +4222,27 @@
       "GMT -09:00 (Alaska Standard Time)": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Pick a name to help you identify this database.": [
-        "Izberite ime za lažjo prepoznavo podatkovne baze."
+      "< (Smaller than)": ["< (manjše kot)"],
+      "> (Larger than)": ["> (večje kot)"],
+      "<= (Smaller or equal)": ["<= (manjše ali enako)"],
+      ">= (Larger or equal)": [">= (večje ali enako)"],
+      "== (Is equal)": ["== (je enako)"],
+      "!= (Is not equal)": ["!= (ni enako)"],
+      "Not null": ["Ni nič (null)"],
+      "60 days": ["60 dni"],
+      "90 days": ["90 dni"],
+      "Send as PNG": ["Pošlji kot PNG"],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        "To je lahko bodisi IP naslov (npr. 127.0.0.1) bodisi ime domene (npr. mydatabase.com)."
       ],
-      "dialect+driver://username:password@host:port/database": [
-        "dialect+driver://username:password@host:port/database"
+      "SSL Mode \"require\" will be used.": [
+        "Uporabljen bo SSL način tipa \"require\"."
+      ],
+      "Connect this database with a SQLAlchemy URI string instead": [
+        "S to podatkovno bazo se raje povežite z SQLAlchemy URI nizom"
+      ],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        "Kliknite to povezavo za drugo vnosno formo, ki omogoča ročni vnos SQLAlchemy URL-ja za to podatkovno bazo."
       ],
       "Expose database in SQL Lab": [
         "Razkrij podatkovno bazo v SQL laboratoriju"
@@ -4291,17 +4298,61 @@
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         "Podajte verzijo podatkovne baze. Uporablja se s Presto, za potrebe ocenjevanja potratnosti poizvedbe."
       ],
+      "Add Alert": ["Dodaj opozorilo"],
+      "Active": ["Aktiven"],
+      "Trigger Alert If...": ["Sproži opozorilo v primeru ..."],
+      "Condition": ["Pogoj"],
+      "Timezone": ["Časovni pas"],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["Dodaj"],
+      "Connect a database": ["Poveži se s podatkovno bazo"],
+      "Pick a name to help you identify this database.": [
+        "Izberite ime za lažjo prepoznavo podatkovne baze."
+      ],
+      "dialect+driver://username:password@host:port/database": [
+        "dialect+driver://username:password@host:port/database"
+      ],
       "Database connected": ["Podatkovna baza povezana"],
       "Create a dataset to begin visualizing your data as a chart or go to SQL Lab to query your data.": [
         ""
       ],
+      "Filter value is required": ["Vrednost filtra je obvezna"],
+      "Select first filter value by default": [
+        "Izberi prvo vrednost kot privzeto"
+      ],
+      "Can select multiple values": ["Dovoli izbiro več vrednosti"],
+      "Dynamically search all filter values": [
+        "Dinamično poišče vse možnosti filtra"
+      ],
+      "Inverse selection": ["Invertiraj izbiro"],
+      "Degrees vs Income": [""],
       "Please confirm": ["Prosim, potrdite"],
+      "User query": ["Uporabnikova poizvedba"],
+      "Executed query": ["Zagnana poizvedba"],
+      "Add Report": ["Dodaj poročilo"],
+      "Save chart": ["Shrani grafikon"],
+      "Save (Overwrite)": ["Shrani (prepiši)"],
+      "Save as...": ["Shrani kot ..."],
+      "Chart name": ["Ime grafikona"],
+      "Add to dashboard": ["Dodaj na nadzorno ploščo"],
+      "Previous": ["Prejšnji"],
+      "last day": ["zadnji dan"],
+      "last week": ["zadnji teden"],
+      "last month": ["zadnji mesec"],
+      "last quarter": ["zadnje četrletje"],
+      "last year": ["zadnje leto"],
+      "previous calendar week": ["prejšnji koledarski teden"],
+      "previous calendar month": ["prejšnji koledarski mesec"],
+      "previous calendar year": ["prejšnje koledarsko leto"],
+      "Edit time range": ["Uredi časovno obdobje"],
+      "RANGE TYPE": ["TIP OBDOBJA"],
+      "Actual time range": ["Dejansko časovno obdobje"],
+      "APPLY": ["UPORABI"],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         "Ta seja je bila prekinjena in nekateri kontrolniki mogoče ne delujejo kot bi morali. Če ste razvijalec te aplikacije, preverite, da je žeton za gosta pravilno generiran."
       ],
-      "Equal to (=)": [""],
-      "Less than (<)": [""],
-      "Like": [""],
       "Is true": [""],
       "Time granularity": ["Granulacija časa"],
       "One or many columns to group by. High cardinality groupings should include a series limit to limit the number of fetched and rendered series.": [
@@ -4372,15 +4423,9 @@
       ],
       "Chart height": ["Višina grafikona"],
       "Chart width": ["Širina grafikona"],
-      "Save (Overwrite)": ["Shrani (prepiši)"],
-      "Save as...": ["Shrani kot ..."],
-      "Chart name": ["Ime grafikona"],
       "A reusable dataset will be saved with your chart.": [""],
-      "Add to dashboard": ["Dodaj na nadzorno ploščo"],
       "Select a dashboard": ["Izberite nadzorno ploščo"],
-      "Select": ["Izberi"],
       "Save & go to dashboard": ["Shrani in pojdi na nadzorno ploščo"],
-      "Save chart": ["Shrani grafikon"],
       "Formatted date": ["Oblikovan datum"],
       "Column Formatting": ["Oblikovanje stolpca"],
       "Collapse data panel": ["Skrij podatkovni panel"],
@@ -4602,10 +4647,6 @@
       "The dataset linked to this chart may have been deleted.": [
         "Podatkovni set, povezan s tem grafikonom, je bil izbrisan."
       ],
-      "RANGE TYPE": ["TIP OBDOBJA"],
-      "Actual time range": ["Dejansko časovno obdobje"],
-      "APPLY": ["UPORABI"],
-      "Edit time range": ["Uredi časovno obdobje"],
       "Configure Advanced Time Range ": ["Nastavi napredno časovno obdobje "],
       "START (INCLUSIVE)": ["ZAČETEK (VKLJUČEN)"],
       "Start date included in time range": [
@@ -4638,16 +4679,7 @@
         "Pridobi zadnji datum glede na časovno enoto."
       ],
       "Get the specify date for the holiday": ["Določi datum praznika"],
-      "Previous": ["Prejšnji"],
       "Custom": ["Prilagojen"],
-      "last day": ["zadnji dan"],
-      "last week": ["zadnji teden"],
-      "last month": ["zadnji mesec"],
-      "last quarter": ["zadnje četrletje"],
-      "last year": ["zadnje leto"],
-      "previous calendar week": ["prejšnji koledarski teden"],
-      "previous calendar month": ["prejšnji koledarski mesec"],
-      "previous calendar year": ["prejšnje koledarsko leto"],
       "Seconds %s": ["Sekunde %s"],
       "Minutes %s": ["Minute %s"],
       "Hours %s": ["Ure %s"],
@@ -4662,11 +4694,7 @@
       "Midnight": ["Polnoč"],
       "Saved expressions": ["Shranjeni izrazi"],
       "%s column(s)": ["Stolpci: %s"],
-      "No temporal columns found": ["Ni najdenih časovnih stolpcev"],
       "No saved expressions found": ["Shranjeni izrazi niso najdeni"],
-      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
-        "Dodaj izračunan časovni stolpec v podatkovni set v oknu \"Uredi podatkovni vir\""
-      ],
       "Add calculated columns to dataset in \"Edit datasource\" modal": [
         "Dodaj izračunan stolpec v podatkovni set v oknu \"Uredi podatkovni vir\""
       ],
@@ -4770,28 +4798,23 @@
       "Annotations and layers": ["Oznake in sloji"],
       "Annotation layers": ["Sloji z oznakami"],
       "My beautiful colors": ["Moje čudovite barve"],
+      "Add notification method": ["Dodajte način obveščanja"],
       "Add delivery method": ["Dodajte način dostave"],
-      "Add": ["Dodaj"],
       "Edit Report": ["Uredi poročilo"],
       "Edit Alert": ["Uredi opozorilo"],
-      "Add Report": ["Dodaj poročilo"],
       "Report name": ["Naslov poročila"],
       "Alert name": ["Naslov opozorila"],
       "Alert condition": ["Status opozorila"],
       "SQL Query": ["SQL poizvedba"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["Sproži opozorilo v primeru ..."],
-      "Condition": ["Pogoj"],
       "Report schedule": ["Urnik poročanja"],
       "Alert condition schedule": ["Urnik statusov opozoril"],
-      "Timezone": ["Časovni pas"],
       "Schedule settings": ["Nastavitve urnika"],
       "Log retention": ["Hranjenje dnevnikov"],
       "Working timeout": ["Pretek delovanja"],
       "Time in seconds": ["Čas v sekundah"],
       "Grace period": ["Obdobje mirovanja"],
       "Message content": ["Vsebina sporočila"],
-      "Send as PNG": ["Pošlji kot PNG"],
       "Send as CSV": ["Pošlji kot CSV"],
       "Send as text": ["Pošlji kot besedilo"],
       "Input custom width in pixels": [""],
@@ -4941,7 +4964,6 @@
         ""
       ],
       "QUERY DATA IN SQL LAB": [""],
-      "Connect a database": ["Poveži se s podatkovno bazo"],
       "Edit database": ["Uredi podatkovno bazo"],
       "Connect this database using the dynamic form instead": [
         "S podatkovno bazo se povežite z dinamičnim obrazcem"
@@ -5071,8 +5093,6 @@
       "Saved queries": ["Shranjene poizvedbe"],
       "Next": ["Naslednji"],
       "Tab name": ["Naslov zavihka"],
-      "User query": ["Uporabnikova poizvedba"],
-      "Executed query": ["Zagnana poizvedba"],
       "Query name": ["Ime poizvedbe"],
       "SQL Copied!": ["SQL kopiran!"],
       "Sorry, your browser does not support copying.": [
@@ -5130,7 +5150,6 @@
       "You are adding tags to %s %ss": [""],
       "Chosen non-numeric column": ["Izbran ne-numeričen stolpec"],
       "UI Configuration": ["UI nastavitve"],
-      "Filter value is required": ["Vrednost filtra je obvezna"],
       "User must select a value before applying the filter": [
         "Uporabnik mora izbrati vrednost pred uporabo filtra"
       ],
@@ -5141,18 +5160,10 @@
       ],
       " (excluded)": [" (ni vključeno)"],
       "Check for sorting ascending": ["Označi za naraščajoče razvrščanje"],
-      "Can select multiple values": ["Dovoli izbiro več vrednosti"],
-      "Select first filter value by default": [
-        "Izberi prvo vrednost kot privzeto"
-      ],
       "When using this option, default value can’t be set": [
         "Če uporabite to možnost, privzeta vrednost ne more biti nastavljena"
       ],
-      "Inverse selection": ["Invertiraj izbiro"],
       "Exclude selected values": ["Izloči izbrane vrednosti"],
-      "Dynamically search all filter values": [
-        "Dinamično poišče vse možnosti filtra"
-      ],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         "Privzeto vsak filter pri nalaganju začetne strani naloži največ 1000 možnosti. Označite polje, če imate več kot 1000 vrednosti filtra in želite omogočiti dinamično iskanje, ki nalaga vrednosti filtra ko uporabnik tipka (to lahko preobremeni vašo podatkovno bazo)."
       ],
@@ -5319,9 +5330,32 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "Izbranih: %s (fizični: %s, virtualni: %s)"
       ],
+      "YEARLY SEASONALITY": [""],
+      "DAILY SEASONALITY": [""],
+      "Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:": [
+        ""
+      ],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "genre [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "name [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "rank [desc]": [""],
+      "year [desc]": [""],
       "This table already has a dataset associated with it. You can only associate one dataset with a table.": [
         ""
       ],
+      "Process initiated, results loading...": [""],
+      "Copy query URL": ["Kopiraj URL poizvedbe"],
       "log": ["dnevnik"],
       "Execution ID": ["ID izvedbe"],
       "Scheduled at (UTC)": ["Izvede se ob (UTC)"],
@@ -5366,7 +5400,6 @@
         "Do težave je prišlo pri brisanju izbranih poizvedb: %s"
       ],
       "Edit query": ["Uredi poizvedbo"],
-      "Copy query URL": ["Kopiraj URL poizvedbe"],
       "Export query": ["Izvozi poizvedbe"],
       "Delete query": ["Izbriši poizvedbo"],
       "Are you sure you want to delete the selected queries?": [

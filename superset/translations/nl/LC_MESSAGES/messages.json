@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": [""],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=2; plural=(n != 1);",
@@ -834,6 +839,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["Opgeslagen Queries"],
       "Query History": ["Query Geschiedenis"],
+      "User": ["Gebruiker"],
       "Tags": [""],
       "Action Log": ["Actie Log"],
       "Security": ["Beveiliging"],
@@ -1272,7 +1278,6 @@
       "Show Log": ["Toon Log"],
       "Add Log": ["Voeg Log toe"],
       "Edit Log": ["Bewerk Log"],
-      "User": ["Gebruiker"],
       "Action": ["Actie"],
       "dttm": ["dttm"],
       "JSON": ["JSON"],
@@ -3255,25 +3260,35 @@
       "DELETE": ["VERWIJDER"],
       "delete": ["verwijder"],
       "Type \"%s\" to confirm": ["Type “%s” om te bevestigen"],
+      "Viz type": ["Viz type"],
+      "Dataset": ["Dataset"],
+      "No filter": [""],
       "Alerts": ["Waarschuwingen"],
       "Reports": ["Rapporten"],
       "Saved": ["Opgeslagen"],
       "Customize": ["Pas aan"],
       "Welcome Page": [""],
-      "Profile": ["Profiel"],
+      "Draft": ["Draft"],
+      "Equal to (=)": [""],
+      "Less than (<)": [""],
+      "Like": [""],
+      "No temporal columns found": [""],
+      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
+        ""
+      ],
       "of ": [""],
+      "Profile": ["Profiel"],
       "Info": ["Info"],
       "Logout": ["Afmelden"],
       "About": ["Over"],
-      "Dataset": ["Dataset"],
       "my folder": [""],
       "Select or type a value": [""],
       "AQE": ["AQE"],
       "Type a value": [""],
       "Owner": ["Eigenaar"],
       "Certified": [""],
+      "ALGORİTHM": [""],
       "Created by": ["Gecreëerd door"],
-      "Draft": ["Draft"],
       "Status": ["Status"],
       "Favorite": ["Favoriet"],
       "Working": [""],
@@ -3281,7 +3296,10 @@
       "Not triggered": [""],
       "On Grace": [""],
       "Favorites": ["Favorieten"],
+      "Security and Access": [""],
       "Search Metrics & Columns": ["Zoek meeteenheden & kolommen"],
+      "Filter Type": ["Filter Type"],
+      "Select": [""],
       "Click to edit": ["Klik om te bewerken"],
       "You don't have the rights to alter this title.": [
         "Je hebt niet de rechten om deze titel te veranderen."
@@ -3433,7 +3451,6 @@
         ""
       ],
       "Added": ["Toegevoegd"],
-      "Viz type": ["Viz type"],
       "Superset chart": ["Superset grafiek"],
       "Check out this chart in dashboard:": [
         "Kijk naar deze grafiek in het dashboard:"
@@ -3622,7 +3639,6 @@
       "Time column to apply time range to": [""],
       "Filter name": ["Filter naam"],
       "Name is required": ["Naam is vereist"],
-      "Filter Type": ["Filter Type"],
       "Datasets do not contain a temporal column": [""],
       "Dashboard time range filters apply to temporal columns defined in\n          the filter section of each chart. Add temporal columns to the chart\n          filters to have this dashboard filter impact those charts.": [
         ""
@@ -3633,7 +3649,6 @@
         ""
       ],
       "Pre-filter": [""],
-      "No filter": [""],
       "Sort filter values": [""],
       "Sort type": [""],
       "Sort ascending": ["Sorteer oplopend"],
@@ -3687,31 +3702,6 @@
       "All filters": ["Alle filters"],
       "Medium": [""],
       "Tab title": ["Titel tabblad"],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        ""
-      ],
-      "e.g 127.0.01": [""],
-      "e.g 5432": [""],
-      "Copy the name of the database you are trying to connect to.": [""],
-      "Pick a nickname for how the database will display in Superset.": [""],
-      "e.g param1=value1&param2=value2": [""],
-      "SSL Mode \"require\" will be used.": [""],
-      "Connect this database with a SQLAlchemy URI string instead": [""],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        ""
-      ],
-      "Add Alert": [""],
-      "Active": ["Actief"],
-      "< (Smaller than)": ["< (Kleiner dan)"],
-      "> (Larger than)": ["> (Groter dan)"],
-      "<= (Smaller or equal)": ["<= (Kleiner of gelijk)"],
-      ">= (Larger or equal)": [">= (Groter of gelijk)"],
-      "== (Is equal)": ["== (Is gelijk)"],
-      "!= (Is not equal)": ["!= (Is niet gelijk)"],
-      "Not null": ["Not null"],
-      "60 days": ["60 dagen"],
-      "90 days": ["90 dagen"],
-      "Add notification method": ["Meldingsmethode toevoegen"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -3826,13 +3816,29 @@
       "America/Anchorage": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Or choose from a list of other databases we support: ": [""],
-      "Pick a name to help you identify this database.": [
-        "Kies een naam om je te helpen deze database te identificeren."
+      "< (Smaller than)": ["< (Kleiner dan)"],
+      "> (Larger than)": ["> (Groter dan)"],
+      "<= (Smaller or equal)": ["<= (Kleiner of gelijk)"],
+      ">= (Larger or equal)": [">= (Groter of gelijk)"],
+      "== (Is equal)": ["== (Is gelijk)"],
+      "!= (Is not equal)": ["!= (Is niet gelijk)"],
+      "Not null": ["Not null"],
+      "60 days": ["60 dagen"],
+      "90 days": ["90 dagen"],
+      "Send as PNG": [""],
+      "Send as SVG": [""],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        ""
       ],
-      "Refer to the for more information on how to structure your URI.": [""],
-      "dialect+driver://username:password@host:port/database": [
-        "dialect+driver://username:password@host:port/database"
+      "e.g 127.0.01": [""],
+      "e.g 5432": [""],
+      "Copy the name of the database you are trying to connect to.": [""],
+      "Pick a nickname for how the database will display in Superset.": [""],
+      "e.g param1=value1&param2=value2": [""],
+      "SSL Mode \"require\" will be used.": [""],
+      "Connect this database with a SQLAlchemy URI string instead": [""],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        ""
       ],
       "Expose database in SQL Lab": [""],
       "Allow this database to be queried in SQL Lab": [
@@ -3882,18 +3888,63 @@
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         ""
       ],
+      "Add Alert": [""],
+      "Active": ["Actief"],
+      "Trigger Alert If...": ["Trigger waarschuwing als…"],
+      "Condition": [""],
+      "Timezone": [""],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["Voeg toe"],
+      "Connect a database": [""],
+      "Or choose from a list of other databases we support: ": [""],
+      "Pick a name to help you identify this database.": [
+        "Kies een naam om je te helpen deze database te identificeren."
+      ],
+      "Refer to the for more information on how to structure your URI.": [""],
+      "dialect+driver://username:password@host:port/database": [
+        "dialect+driver://username:password@host:port/database"
+      ],
       "Database connected": [""],
       "Create a dataset to begin visualizing your data as a chart or go to SQL Lab to query your data.": [
         ""
       ],
       "FINISH": [""],
+      "Add  filters and dividers": [""],
+      "Filter value is required": [""],
+      "Select first filter value by default": [""],
+      "Can select multiple values": [""],
+      "Dynamically search all filter values": [""],
+      "Inverse selection": [""],
+      "Degrees vs Income": [""],
+      " Changing these settings will affect all charts using this dataset, including charts owned by other people.": [
+        ""
+      ],
       "Please confirm": ["Gelieve te bevestigen"],
+      "User query": ["User query"],
+      "Executed query": ["Uitgevoerde query"],
+      "Add Report": [""],
+      "Save chart": ["Grafiek opslaan"],
+      "Save (Overwrite)": ["Opslaan (overschrijven)"],
+      "Chart name": ["Grafiek naam"],
+      "Add to dashboard": ["Toevoegen aan het dashboard"],
+      "Previous": ["Vorige"],
+      "last day": [""],
+      "last week": [""],
+      "last month": [""],
+      "last quarter": [""],
+      "last year": [""],
+      "previous calendar week": [""],
+      "previous calendar month": [""],
+      "previous calendar year": [""],
+      "Edit time range": ["Bewerk tijdspanne"],
+      "RANGE TYPE": ["BEREIK TYPE"],
+      "Actual time range": ["Reële tijdspanne"],
+      "APPLY": ["TOEPASSEN"],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         ""
       ],
-      "Equal to (=)": [""],
-      "Less than (<)": [""],
-      "Like": [""],
       "Is true": [""],
       "Is false": [""],
       "Time granularity": [""],
@@ -3966,14 +4017,9 @@
       ],
       "Generating link, please wait..": [""],
       "Chart height": [""],
-      "Save (Overwrite)": ["Opslaan (overschrijven)"],
-      "Chart name": ["Grafiek naam"],
       "A reusable dataset will be saved with your chart.": [""],
-      "Add to dashboard": ["Toevoegen aan het dashboard"],
       "Select a dashboard": [""],
-      "Select": [""],
       "Save & go to dashboard": ["Opslaan en naar dashboard gaan"],
-      "Save chart": ["Grafiek opslaan"],
       "Formatted date": [""],
       "Column Formatting": [""],
       "Expand data panel": [""],
@@ -4178,10 +4224,6 @@
       "The dataset linked to this chart may have been deleted.": [
         "De aan deze grafiek gekoppelde dataset is mogelijk verwijderd."
       ],
-      "RANGE TYPE": ["BEREIK TYPE"],
-      "Actual time range": ["Reële tijdspanne"],
-      "APPLY": ["TOEPASSEN"],
-      "Edit time range": ["Bewerk tijdspanne"],
       "Configure Advanced Time Range ": [
         "Geavanceerde tijdspanne configureren "
       ],
@@ -4218,16 +4260,7 @@
       "Get the specify date for the holiday": [
         "Zoek de specifieke datum voor de vakantie"
       ],
-      "Previous": ["Vorige"],
       "Custom": [""],
-      "last day": [""],
-      "last week": [""],
-      "last month": [""],
-      "last quarter": [""],
-      "last year": [""],
-      "previous calendar week": [""],
-      "previous calendar month": [""],
-      "previous calendar year": [""],
       "Seconds %s": [""],
       "Minutes %s": [""],
       "Hours %s": [""],
@@ -4242,11 +4275,7 @@
       "Midnight": [""],
       "Saved expressions": [""],
       "%s column(s)": ["%s kolom(men)"],
-      "No temporal columns found": [""],
       "No saved expressions found": [""],
-      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
-        ""
-      ],
       "Add calculated columns to dataset in \"Edit datasource\" modal": [""],
       " to mark a column as a time column": [""],
       "Simple": ["Eenvoudig"],
@@ -4347,28 +4376,23 @@
       "Annotations and layers": ["Aantekeningen en lagen"],
       "Annotation layers": ["Aantekeningenlagen"],
       "My beautiful colors": [""],
+      "Add notification method": ["Meldingsmethode toevoegen"],
       "Add delivery method": ["Leveringswijze toevoegen"],
-      "Add": ["Voeg toe"],
       "Edit Report": [""],
       "Edit Alert": [""],
-      "Add Report": [""],
       "Report name": ["Naam rapport"],
       "Alert name": ["Naam van de waarschuwing"],
       "Alert condition": ["Naam waarschuwingsconditie"],
       "SQL Query": ["SQL Query"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["Trigger waarschuwing als…"],
-      "Condition": [""],
       "Report schedule": ["Rapportageplanning"],
       "Alert condition schedule": ["Waarschuwing conditie planning"],
-      "Timezone": [""],
       "Schedule settings": ["Planning instellingen"],
       "Log retention": ["Log retentie"],
       "Working timeout": ["Time-out"],
       "Time in seconds": ["Tijd in seconden"],
       "Grace period": ["Grace periode"],
       "Message content": ["Inhoud van het bericht"],
-      "Send as PNG": [""],
       "Send as CSV": [""],
       "Send as text": [""],
       "Input custom width in pixels": [""],
@@ -4523,7 +4547,6 @@
         ""
       ],
       "QUERY DATA IN SQL LAB": [""],
-      "Connect a database": [""],
       "Edit database": ["Bewerk database"],
       "Connect this database using the dynamic form instead": [""],
       "Click this link to switch to an alternate form that exposes only the required fields needed to connect this database.": [
@@ -4647,8 +4670,6 @@
       "Saved queries": ["Opgeslagen queries"],
       "Next": ["Volgende"],
       "Tab name": ["Tab naam"],
-      "User query": ["User query"],
-      "Executed query": ["Uitgevoerde query"],
       "Query name": ["Query naam"],
       "SQL Copied!": ["SQL gekopieerd!"],
       "Sorry, your browser does not support copying.": [
@@ -4701,19 +4722,14 @@
       "Name of your tag": [""],
       "Chosen non-numeric column": ["Gekozen niet-numerieke kolom"],
       "UI Configuration": [""],
-      "Filter value is required": [""],
       "User must select a value before applying the filter": [""],
       "Single value": [""],
       "Use only a single value.": [""],
       "Range filter plugin using AntD": [""],
       " (excluded)": [""],
       "Check for sorting ascending": ["Controle op oplopend sorteren"],
-      "Can select multiple values": [""],
-      "Select first filter value by default": [""],
       "When using this option, default value can’t be set": [""],
-      "Inverse selection": [""],
       "Exclude selected values": [""],
-      "Dynamically search all filter values": [""],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         ""
       ],
@@ -4865,9 +4881,41 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "%s Geselecteerd (%s Fysiek, %s Virtueel)"
       ],
+      "YEARLY SEASONALITY": [""],
+      "WEEKLY SEASONALITY": [""],
+      "DAILY SEASONALITY": [""],
+      "SERVER PAGE LENGTH": [""],
+      "Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:": [
+        ""
+      ],
+      "BOTTOM MARGIN": [""],
+      "D3 time format syntax: https://github.com/d3/d3-time-format.": [""],
+      "CURRENCY FORMAT": [""],
+      "NORMALIZED": [""],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "genre [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "name [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "rank [desc]": [""],
+      "year [desc]": [""],
+      "Drop columns here or click": [""],
       "Select values in highlighted field(s) in the control panel. Then run the query by clicking on the \"Create chart\" button.": [
         ""
       ],
+      "You can create a new chart or use existinh ones from the panel on the right": [
+        ""
+      ],
+      "Layout Elements": [""],
       "Open Calendar": [""],
       "This table already has a dataset associated with it. You can only associate one dataset with a table.": [
         ""
@@ -4875,6 +4923,11 @@
       "You can create a new chart or use existing ones from the panel on the right.": [
         ""
       ],
+      "Process initiated, results loading...": [""],
+      "You can create an output table from existing table from the panel on the left.": [
+        ""
+      ],
+      "Copy query URL": ["Kopieer query URL"],
       "log": ["log"],
       "Execution ID": ["Uitvoerings ID"],
       "Scheduled at (UTC)": ["Gepland om (UTC)"],
@@ -4911,7 +4964,6 @@
         "Er was een probleem bij het verwijderen van de geselecteerde query’s: %s"
       ],
       "Edit query": ["Bewerk query"],
-      "Copy query URL": ["Kopieer query URL"],
       "Export query": ["Exporteer query"],
       "Delete query": ["Verwijder query"],
       "Are you sure you want to delete the selected queries?": [

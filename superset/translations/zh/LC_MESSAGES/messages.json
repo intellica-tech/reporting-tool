@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": [""],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=1; plural=0;",
@@ -708,6 +713,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["已保存查询"],
       "Query History": ["历史查询"],
+      "User": ["用户"],
       "Tags": ["标签"],
       "Action Log": ["操作日志"],
       "Security": ["安全"],
@@ -1097,7 +1103,6 @@
       "Show Log": ["查看日志"],
       "Add Log": ["新增日志"],
       "Edit Log": ["编辑日志"],
-      "User": ["用户"],
       "Action": ["操作"],
       "dttm": ["dttm"],
       "JSON": ["JSON"],
@@ -2963,24 +2968,33 @@
       "DELETE": ["删除"],
       "delete": ["删除"],
       "Type \"%s\" to confirm": ["键入 \"%s\" 来确认"],
+      "Viz type": ["可视化类型"],
+      "Dataset": ["数据集"],
+      "No filter": ["无筛选"],
       "Alerts": ["告警"],
       "Reports": ["报告"],
       "Saved": ["保存"],
       "Customize": ["定制化配置"],
       "Welcome Page": [""],
-      "Profile": ["用户信息"],
+      "Draft": ["草稿"],
+      "Equal to (=)": [""],
+      "Less than (<)": [""],
+      "Like": [""],
+      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
+        ""
+      ],
       "of ": [""],
+      "Profile": ["用户信息"],
       "Info": ["信息"],
       "Logout": ["退出"],
       "About": ["关于"],
-      "Dataset": ["数据集"],
       "Select or type a value": ["选择或键入一个值"],
       "AQE": ["AQE（异步执行查询）"],
       "Type a value": ["请输入值"],
       "Owner": ["所有者"],
       "Certified": ["认证"],
+      "ALGORİTHM": [""],
       "Created by": ["创建人"],
-      "Draft": ["草稿"],
       "Status": ["状态"],
       "Favorite": ["收藏"],
       "Working": ["正在执行"],
@@ -2988,7 +3002,10 @@
       "Not triggered": ["没有触发"],
       "On Grace": ["在宽限期内"],
       "Favorites": ["收藏"],
+      "Security and Access": [""],
       "Search Metrics & Columns": ["搜索指标和列"],
+      "Filter Type": ["过滤类型"],
+      "Select": ["批量选择"],
       "Click to edit": ["点击编辑"],
       "You don't have the rights to alter this title.": [
         "您没有权利修改这个标题。"
@@ -3133,7 +3150,6 @@
         ""
       ],
       "Added": ["已添加"],
-      "Viz type": ["可视化类型"],
       "Superset chart": ["选择图表"],
       "Check out this chart in dashboard:": ["在仪表盘中查看此图表"],
       "Layout elements": [""],
@@ -3292,7 +3308,6 @@
       "Time column to apply time range to": [""],
       "Filter name": ["过滤值"],
       "Name is required": ["需要名称"],
-      "Filter Type": ["过滤类型"],
       "Datasets do not contain a temporal column": ["数据集不包含时间列"],
       "Dashboard time range filters apply to temporal columns defined in\n          the filter section of each chart. Add temporal columns to the chart\n          filters to have this dashboard filter impact those charts.": [
         ""
@@ -3303,7 +3318,6 @@
         ""
       ],
       "Pre-filter": ["预过滤"],
-      "No filter": ["无筛选"],
       "Sort filter values": ["可被过滤"],
       "Sort type": ["图表类型"],
       "Sort ascending": ["升序排序"],
@@ -3355,28 +3369,6 @@
       "All filters": ["所有过滤"],
       "Medium": ["中"],
       "Tab title": ["选项卡标题"],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        "这可以是一个IP地址(例如127.0.0.1)或一个域名(例如127.0.0.1)"
-      ],
-      "SSL Mode \"require\" will be used.": ["SSL模式 \"require\" 将被使用。"],
-      "Connect this database with a SQLAlchemy URI string instead": [
-        "使用SQLAlchemy URI链接此数据库"
-      ],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        "单击此链接可切换到备用表单，该表单允许您手动输入此数据库的SQLAlChemy URL。"
-      ],
-      "Add Alert": ["添加告警"],
-      "Active": ["激活"],
-      "< (Smaller than)": ["< (小于)"],
-      "> (Larger than)": ["> (大于)"],
-      "<= (Smaller or equal)": ["<= (小于等于)"],
-      ">= (Larger or equal)": [">= (大于等于)"],
-      "== (Is equal)": ["== (等于)"],
-      "!= (Is not equal)": ["!= (不等于)"],
-      "Not null": ["非空"],
-      "60 days": ["60天"],
-      "90 days": ["90天"],
-      "Add notification method": ["添加注释层"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -3485,10 +3477,26 @@
       "GMT -09:00 (Alaska Standard Time)": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Pick a name to help you identify this database.": [
-        "选择一个名称来帮助您识别这个数据库。"
+      "< (Smaller than)": ["< (小于)"],
+      "> (Larger than)": ["> (大于)"],
+      "<= (Smaller or equal)": ["<= (小于等于)"],
+      ">= (Larger or equal)": [">= (大于等于)"],
+      "== (Is equal)": ["== (等于)"],
+      "!= (Is not equal)": ["!= (不等于)"],
+      "Not null": ["非空"],
+      "60 days": ["60天"],
+      "90 days": ["90天"],
+      "Send as PNG": ["发送PNG"],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        "这可以是一个IP地址(例如127.0.0.1)或一个域名(例如127.0.0.1)"
       ],
-      "dialect+driver://username:password@host:port/database": [""],
+      "SSL Mode \"require\" will be used.": ["SSL模式 \"require\" 将被使用。"],
+      "Connect this database with a SQLAlchemy URI string instead": [
+        "使用SQLAlchemy URI链接此数据库"
+      ],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        "单击此链接可切换到备用表单，该表单允许您手动输入此数据库的SQLAlChemy URL。"
+      ],
       "Expose database in SQL Lab": ["在SQL工具箱中展示数据库"],
       "Allow this database to be queried in SQL Lab": [
         "允许在SQL工具箱中查询此数据库"
@@ -3534,16 +3542,52 @@
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         "指定数据库版本。这应该与Presto一起使用，以便启用查询成本估算。"
       ],
+      "Add Alert": ["添加告警"],
+      "Active": ["激活"],
+      "Trigger Alert If...": ["如果 ... 则触发警报"],
+      "Condition": ["条件"],
+      "Timezone": ["时区"],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["新增"],
+      "Connect a database": ["连接数据库"],
+      "Pick a name to help you identify this database.": [
+        "选择一个名称来帮助您识别这个数据库。"
+      ],
+      "dialect+driver://username:password@host:port/database": [""],
       "Create a dataset to begin visualizing your data as a chart or go to SQL Lab to query your data.": [
         ""
       ],
+      "Add  filters and dividers": [""],
+      "Select first filter value by default": [""],
+      "Dynamically search all filter values": [""],
+      "Inverse selection": ["反选"],
+      "Degrees vs Income": [""],
       "Please confirm": ["请确认"],
+      "User query": ["用户查询"],
+      "Executed query": ["已执行查询"],
+      "Add Report": ["添加报告"],
+      "Save chart": ["图表保存"],
+      "Save (Overwrite)": ["保存（覆盖）"],
+      "Chart name": ["图表名称"],
+      "Add to dashboard": ["添加到看板"],
+      "Previous": ["之前"],
+      "last day": ["上一（昨）天"],
+      "last week": ["上一周"],
+      "last month": ["上一月"],
+      "last quarter": ["上一季度"],
+      "last year": ["上一年"],
+      "previous calendar week": ["前一周"],
+      "previous calendar month": ["前一月"],
+      "previous calendar year": ["前一年"],
+      "Edit time range": ["编辑时间范围"],
+      "RANGE TYPE": ["范围类型"],
+      "Actual time range": ["实际时间范围"],
+      "APPLY": ["应用"],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         ""
       ],
-      "Equal to (=)": [""],
-      "Less than (<)": [""],
-      "Like": [""],
       "Is true": [""],
       "Time granularity": ["时间粒度（granularity）"],
       "One or many columns to group by. High cardinality groupings should include a series limit to limit the number of fetched and rendered series.": [
@@ -3596,14 +3640,9 @@
         ""
       ],
       "Generating link, please wait..": [""],
-      "Save (Overwrite)": ["保存（覆盖）"],
-      "Chart name": ["图表名称"],
       "A reusable dataset will be saved with your chart.": [""],
-      "Add to dashboard": ["添加到看板"],
       "Select a dashboard": ["看板"],
-      "Select": ["批量选择"],
       "Save & go to dashboard": ["保存并转到看板"],
-      "Save chart": ["图表保存"],
       "Expand data panel": [""],
       "Showing %s of %s": ["显示 %s个 总计 %s个"],
       "Show less...": ["显示..."],
@@ -3784,10 +3823,6 @@
       "The dataset linked to this chart may have been deleted.": [
         "这个图表所链接的数据集可能被删除了。"
       ],
-      "RANGE TYPE": ["范围类型"],
-      "Actual time range": ["实际时间范围"],
-      "APPLY": ["应用"],
-      "Edit time range": ["编辑时间范围"],
       "Configure Advanced Time Range ": ["配置进阶时间范围"],
       "START (INCLUSIVE)": ["开始 (包含)"],
       "Start date included in time range": ["开始日期包含在时间范围内"],
@@ -3812,16 +3847,7 @@
       ],
       "Get the last date by the date unit.": ["按日期单位获取最后的日期。"],
       "Get the specify date for the holiday": ["获取指定节假日的日期"],
-      "Previous": ["之前"],
       "Custom": ["自定义"],
-      "last day": ["上一（昨）天"],
-      "last week": ["上一周"],
-      "last month": ["上一月"],
-      "last quarter": ["上一季度"],
-      "last year": ["上一年"],
-      "previous calendar week": ["前一周"],
-      "previous calendar month": ["前一月"],
-      "previous calendar year": ["前一年"],
       "Seconds %s": ["%s 秒"],
       "Minutes %s": ["%s分钟"],
       "Hours %s": ["%s小时"],
@@ -3836,9 +3862,6 @@
       "Midnight": ["凌晨（当天）"],
       "Saved expressions": ["保存表达式"],
       "%s column(s)": ["%s 列"],
-      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
-        ""
-      ],
       "Add calculated columns to dataset in \"Edit datasource\" modal": [""],
       " to mark a column as a time column": [""],
       "Simple": ["简单配置"],
@@ -3924,28 +3947,23 @@
       "Annotations and layers": ["注释与注释层"],
       "Annotation layers": ["注解层"],
       "My beautiful colors": [""],
+      "Add notification method": ["添加注释层"],
       "Add delivery method": ["添加通知方法"],
-      "Add": ["新增"],
       "Edit Report": ["编辑报表"],
       "Edit Alert": ["编辑警报"],
-      "Add Report": ["添加报告"],
       "Report name": ["报告名称"],
       "Alert name": ["告警名称"],
       "Alert condition": ["告警条件"],
       "SQL Query": ["SQL查询"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["如果 ... 则触发警报"],
-      "Condition": ["条件"],
       "Report schedule": ["报告时间表"],
       "Alert condition schedule": ["告警条件计划"],
-      "Timezone": ["时区"],
       "Schedule settings": ["计划设置"],
       "Log retention": ["日志保留"],
       "Working timeout": ["执行超时"],
       "Time in seconds": ["时间（秒）"],
       "Grace period": ["宽限期"],
       "Message content": ["消息内容"],
-      "Send as PNG": ["发送PNG"],
       "Send as CSV": ["发送为CSV"],
       "Send as text": ["发送文本"],
       "Input custom width in pixels": [""],
@@ -4078,7 +4096,6 @@
         ""
       ],
       "QUERY DATA IN SQL LAB": [""],
-      "Connect a database": ["连接数据库"],
       "Edit database": ["编辑数据库"],
       "Connect this database using the dynamic form instead": [
         "使用动态参数连接此数据库"
@@ -4204,8 +4221,6 @@
       "Saved queries": ["已保存查询"],
       "Next": ["之后"],
       "Tab name": ["选项卡名字"],
-      "User query": ["用户查询"],
-      "Executed query": ["已执行查询"],
       "Query name": ["查询名称"],
       "SQL Copied!": ["SQL复制成功！"],
       "Sorry, your browser does not support copying.": [
@@ -4258,10 +4273,7 @@
       "Range filter plugin using AntD": ["范围过滤器"],
       " (excluded)": ["(不包含)"],
       "Check for sorting ascending": ["按照升序进行排序"],
-      "Select first filter value by default": [""],
-      "Inverse selection": ["反选"],
       "Exclude selected values": ["排除选定的值"],
-      "Dynamically search all filter values": [""],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         "默认情况下，每个过滤器在初始页面加载时最多加载1000个选项。如果您有超过1000个过滤值，并且希望启用动态搜索，以便在键入时加载筛选值（可能会给数据库增加压力），请选中此框。"
       ],
@@ -4413,15 +4425,42 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "%s 个被选中 (%s 个物理, %s 个虚拟)"
       ],
+      "YEARLY SEASONALITY": [""],
+      "DAILY SEASONALITY": [""],
+      "Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:": [
+        ""
+      ],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "genre [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "name [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "rank [desc]": [""],
+      "year [desc]": [""],
       "Select values in highlighted field(s) in the control panel. Then run the query by clicking on the \"Create chart\" button.": [
         ""
       ],
+      "You can create a new chart or use existinh ones from the panel on the right": [
+        ""
+      ],
+      "Layout Elements": [""],
       "This table already has a dataset associated with it. You can only associate one dataset with a table.": [
         ""
       ],
       "You can create a new chart or use existing ones from the panel on the right.": [
         ""
       ],
+      "Process initiated, results loading...": [""],
+      "Copy query URL": ["复制查询URL"],
       "log": ["日志"],
       "Execution ID": ["任务ID"],
       "Scheduled at (UTC)": ["计划时间"],
@@ -4459,7 +4498,6 @@
         "删除所选查询时出现问题：%s"
       ],
       "Edit query": ["编辑查询"],
-      "Copy query URL": ["复制查询URL"],
       "Export query": ["导出查询"],
       "Delete query": ["删除查询"],
       "Are you sure you want to delete the selected queries?": [

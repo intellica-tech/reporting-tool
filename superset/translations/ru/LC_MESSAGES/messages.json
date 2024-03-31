@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": ["22"],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);",
@@ -907,6 +912,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["Сохраненные запросы"],
       "Query History": ["История запросов"],
+      "User": ["Пользователь"],
       "Tags": ["Теги"],
       "Action Log": ["Журнал действий"],
       "Security": ["Безопасность"],
@@ -1426,7 +1432,6 @@
       "Show Log": ["Показать запись"],
       "Add Log": ["Добавить запись"],
       "Edit Log": ["Редактировать запись"],
-      "User": ["Пользователь"],
       "Action": ["Действие"],
       "dttm": ["Дата/время"],
       "JSON": ["JSON"],
@@ -3771,26 +3776,37 @@
       "delete": ["удалить"],
       "Type \"%s\" to confirm": ["Введите \"%s\" для подтверждения"],
       "More": ["Подробнее"],
+      "Viz type": ["Тип визуализации"],
+      "Dataset": ["Датасет"],
+      "No filter": ["Без фильтрации"],
       "Alerts": ["Оповещения"],
       "Reports": ["Отчеты"],
       "Saved": ["Сохранено"],
       "Customize": ["Кастомизация"],
       "Welcome Page": [""],
-      "Profile": ["Профиль"],
+      "Add the name of the dashboard": ["Задайте имя дашборда"],
+      "Draft": ["Черновик"],
+      "Equal to (=)": [""],
+      "Less than (<)": [""],
+      "Like": [""],
+      "No temporal columns found": ["Столбцы формата дата/время не найдены"],
+      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
+        "Добавьте новые столбцы формата дата/время в датасет в настройках датасета"
+      ],
       "of ": [""],
+      "Profile": ["Профиль"],
       "Info": ["Личные данные"],
       "Logout": ["Выход из системы"],
       "About": ["О программе"],
       "Select database table": ["Выберите таблицу из базы данных"],
-      "Dataset": ["Датасет"],
       "Select or type a value": ["Выберите значение"],
       "AQE": ["Асинхронные запросы"],
       "Type a value": ["Введите значение"],
       "Owner": ["Владелец"],
       "Virtual": ["Виртуальный"],
       "Certified": ["Утверждено"],
+      "ALGORİTHM": [""],
       "Created by": ["Кем создано"],
-      "Draft": ["Черновик"],
       "Status": ["Статус"],
       "Favorite": ["Избранное"],
       "Working": ["Обрабатывается"],
@@ -3798,7 +3814,10 @@
       "Not triggered": ["Условие не выполнялось"],
       "On Grace": ["На перерыве"],
       "Favorites": ["Избранное"],
+      "Security and Access": [""],
       "Search Metrics & Columns": ["Поиск по мерам и столбцам"],
+      "Filter Type": ["Тип фильтра"],
+      "Select": ["Выбрать"],
       "Click to edit": ["Нажмите для редактирования"],
       "You don't have the rights to alter this title.": [
         "Недостаточно прав для изменения названия."
@@ -4002,7 +4021,6 @@
         ""
       ],
       "Added": ["Добавлено"],
-      "Viz type": ["Тип визуализации"],
       "Superset chart": ["График Superset"],
       "Check out this chart in dashboard:": [
         "Посмотреть этот график в дашборде:"
@@ -4023,7 +4041,6 @@
       "Your dashboard is too large. Please reduce its size before saving it.": [
         "Дашборд слишком большой. Пожалуйста, уменьшите его размер перед сохранением."
       ],
-      "Add the name of the dashboard": ["Задайте имя дашборда"],
       "Dashboard title": ["Название дашборда"],
       "Undo the action": ["Отменить действие"],
       "Redo the action": ["Повторить действие"],
@@ -4235,7 +4252,6 @@
       "Time column to apply time range to": [""],
       "Filter name": ["Имя фильтра"],
       "Name is required": ["Имя обязательно"],
-      "Filter Type": ["Тип фильтра"],
       "Datasets do not contain a temporal column": [
         "Датасет не содержит столбца формата дата/время"
       ],
@@ -4250,7 +4266,6 @@
         ""
       ],
       "Pre-filter": ["Предварительная фильтрация"],
-      "No filter": ["Без фильтрации"],
       "Sort filter values": ["Сортировать отфильтрованные значения"],
       "Sort type": ["Тип сортировки"],
       "Sort ascending": ["Сортировать по возрастанию"],
@@ -4311,36 +4326,6 @@
       ],
       "Medium": ["Средний"],
       "Tab title": ["Имя вкладки"],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        "Это может быть как IP адрес (например, 127.0.0.1), так и доменное имя (например, моябазаданных.рф)."
-      ],
-      "Copy the name of the database you are trying to connect to.": [
-        "Впишите имя базы данных, к которой вы пытаетесь подключиться"
-      ],
-      "Pick a nickname for how the database will display in Superset.": [
-        "Выберите имя для базы данных, которое будет отображаться в Суперсете."
-      ],
-      "SSL Mode \"require\" will be used.": [
-        "Будет использовано шифрование SSL"
-      ],
-      "Connect this database with a SQLAlchemy URI string instead": [
-        "Подключиться к этой базе через SQLAlchemy URI"
-      ],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        "Нажмите для переключения на альтернативную форму подключения, которая позволит вам вручную ввести SQLAlchemy URL для данной базы данных."
-      ],
-      "Add Alert": ["Добавить оповещение"],
-      "Active": ["Активен"],
-      "< (Smaller than)": ["< (меньше чем)"],
-      "> (Larger than)": ["> (больше чем)"],
-      "<= (Smaller or equal)": ["<= (меньше или равно)"],
-      ">= (Larger or equal)": [">= (больше или равно)"],
-      "== (Is equal)": ["== (равно)"],
-      "!= (Is not equal)": ["!= (не равно)"],
-      "Not null": ["Не пусто"],
-      "60 days": ["60 дней"],
-      "90 days": ["90 дней"],
-      "Add notification method": ["Добавить способ уведомления"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -4449,11 +4434,33 @@
       "GMT -09:00 (Alaska Standard Time)": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Pick a name to help you identify this database.": [
-        "Выберите имя для базы данных."
+      "< (Smaller than)": ["< (меньше чем)"],
+      "> (Larger than)": ["> (больше чем)"],
+      "<= (Smaller or equal)": ["<= (меньше или равно)"],
+      ">= (Larger or equal)": [">= (больше или равно)"],
+      "== (Is equal)": ["== (равно)"],
+      "!= (Is not equal)": ["!= (не равно)"],
+      "Not null": ["Не пусто"],
+      "60 days": ["60 дней"],
+      "90 days": ["90 дней"],
+      "Send as PNG": ["Отправить в формате PNG"],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        "Это может быть как IP адрес (например, 127.0.0.1), так и доменное имя (например, моябазаданных.рф)."
       ],
-      "dialect+driver://username:password@host:port/database": [
-        "диалект+драйвер://пользователь:пароль@хост:порт/схема"
+      "Copy the name of the database you are trying to connect to.": [
+        "Впишите имя базы данных, к которой вы пытаетесь подключиться"
+      ],
+      "Pick a nickname for how the database will display in Superset.": [
+        "Выберите имя для базы данных, которое будет отображаться в Суперсете."
+      ],
+      "SSL Mode \"require\" will be used.": [
+        "Будет использовано шифрование SSL"
+      ],
+      "Connect this database with a SQLAlchemy URI string instead": [
+        "Подключиться к этой базе через SQLAlchemy URI"
+      ],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        "Нажмите для переключения на альтернативную форму подключения, которая позволит вам вручную ввести SQLAlchemy URL для данной базы данных."
       ],
       "Expose database in SQL Lab": [
         "Предоставить доступ к базе в Лаборатории SQL"
@@ -4504,24 +4511,69 @@
       "Allow file uploads to database": [
         "Разрешить загрузку файлов в базу данных"
       ],
-      "schema1,schema2": [""],
       "A comma-separated list of schemas that files are allowed to upload to.": [
         "Разделённый запятыми список схем, в которые можно загружать файлы."
       ],
+      "schema1,schema2": [""],
       "Metadata Parameters": ["Параметры метаданных"],
       "Engine Parameters": ["Параметры драйвера"],
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         "Укажите версию базы данных. Это необходимо для Presto, чтобы включить оценку стоимости запроса"
       ],
+      "Add Alert": ["Добавить оповещение"],
+      "Active": ["Активен"],
+      "Trigger Alert If...": ["Оповестить, если..."],
+      "Condition": ["Условие"],
+      "Timezone": ["Часовой пояс"],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["Добавить"],
+      "Connect a database": ["Подключиться к базе данных"],
+      "Pick a name to help you identify this database.": [
+        "Выберите имя для базы данных."
+      ],
+      "dialect+driver://username:password@host:port/database": [
+        "диалект+драйвер://пользователь:пароль@хост:порт/схема"
+      ],
       "Database connected": ["Соединение с базой данных установлено"],
+      "Filter value is required": ["Требуется значение фильтра"],
+      "Select first filter value by default": [
+        "Сделать первое значение фильтра значением по умолчанию"
+      ],
+      "Can select multiple values": ["Можно выбрать несколько значений"],
+      "Dynamically search all filter values": [
+        "Динамически искать все значения фильтра"
+      ],
+      "Inverse selection": ["Выбрать противоположные значения"],
+      "Degrees vs Income": [""],
       "Please confirm": ["Пожалуйста, подтвердите действие"],
+      "User query": ["Пользовательский запрос"],
+      "Executed query": ["Выполненный запрос"],
+      "Add Report": ["Добавить рассылку"],
+      "Report Name": ["Имя отчета"],
+      "Save chart": ["Сохранить график"],
+      "Save (Overwrite)": ["Сохранить (Перезаписать)"],
+      "Save as...": ["Сохранить как..."],
+      "Chart name": ["Имя графика"],
+      "Add to dashboard": ["Добавить в дашборд"],
+      "Previous": ["Предыдущий"],
+      "last day": ["последний день"],
+      "last week": ["последняя неделя"],
+      "last month": ["последний месяц"],
+      "last quarter": ["последний квартал"],
+      "last year": ["последний год"],
+      "previous calendar week": ["предыдущая календарная неделя"],
+      "previous calendar month": ["предыдущий календарный месяц"],
+      "previous calendar year": ["предыдущий календарный год"],
+      "Edit time range": ["Изменить временной интервал"],
+      "RANGE TYPE": ["ТИП ИНТЕРВАЛА"],
+      "Actual time range": ["Фактический временной интервал"],
+      "APPLY": ["ПРИМЕНИТЬ"],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         ""
       ],
-      "Equal to (=)": [""],
       "Not equal to (≠)": ["Не равно (≠)"],
-      "Less than (<)": [""],
-      "Like": [""],
       "Time granularity": ["Гранулярность времени"],
       "Duration in ms (100.40008 => 100ms 400µs 80ns)": [
         "Продолжительность в мс (100.40008 => 100ms 400µs 80ns)"
@@ -4604,21 +4656,15 @@
       ],
       "Chart height": ["Высота графика"],
       "Chart width": ["Ширина графика"],
-      "Save (Overwrite)": ["Сохранить (Перезаписать)"],
-      "Save as...": ["Сохранить как..."],
-      "Chart name": ["Имя графика"],
       "Dataset Name": ["Имя датасета"],
       "A reusable dataset will be saved with your chart.": [
         "Переиспользуемый датасет будет сохранен с вашим графиком."
       ],
-      "Add to dashboard": ["Добавить в дашборд"],
       "Select a dashboard": ["Выбрать дашборд"],
-      "Select": ["Выбрать"],
       " a dashboard OR ": [" дашборд или "],
       "create": ["создать"],
       " a new one": [" новый"],
       "Save & go to dashboard": ["Сохранить и перейти к дашборду"],
-      "Save chart": ["Сохранить график"],
       "Formatted date": ["Форматированная дата"],
       "Column Formatting": ["Форматирование столбца(ов)"],
       "Collapse data panel": ["Свернуть панель управления"],
@@ -4865,10 +4911,6 @@
       "The dataset linked to this chart may have been deleted.": [
         "Датасет, связанный с этим графиком, похоже, был удален."
       ],
-      "RANGE TYPE": ["ТИП ИНТЕРВАЛА"],
-      "Actual time range": ["Фактический временной интервал"],
-      "APPLY": ["ПРИМЕНИТЬ"],
-      "Edit time range": ["Изменить временной интервал"],
       "Configure Advanced Time Range ": [
         "Установить особый временной интервал "
       ],
@@ -4903,16 +4945,7 @@
       ],
       "Get the last date by the date unit.": [""],
       "Get the specify date for the holiday": [""],
-      "Previous": ["Предыдущий"],
       "Custom": ["Пользовательский"],
-      "last day": ["последний день"],
-      "last week": ["последняя неделя"],
-      "last month": ["последний месяц"],
-      "last quarter": ["последний квартал"],
-      "last year": ["последний год"],
-      "previous calendar week": ["предыдущая календарная неделя"],
-      "previous calendar month": ["предыдущий календарный месяц"],
-      "previous calendar year": ["предыдущий календарный год"],
       "Seconds %s": ["Секунд %s"],
       "Minutes %s": ["Минут %s"],
       "Hours %s": ["Часов %s"],
@@ -4927,11 +4960,7 @@
       "Midnight": ["Полночь"],
       "Saved expressions": ["Сохраненные выражения"],
       "%s column(s)": ["Столбцов: %s"],
-      "No temporal columns found": ["Столбцы формата дата/время не найдены"],
       "No saved expressions found": ["Не найдено сохраненных выражений"],
-      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
-        "Добавьте новые столбцы формата дата/время в датасет в настройках датасета"
-      ],
       "Add calculated columns to dataset in \"Edit datasource\" modal": [
         "Добавьте новые вычисляемые столбцы в датасет в настройках датасета"
       ],
@@ -5079,21 +5108,17 @@
       "Annotations and layers": ["Аннотации и слои"],
       "Annotation layers": ["Слои аннотаций"],
       "My beautiful colors": ["Мои красивые цвета"],
+      "Add notification method": ["Добавить способ уведомления"],
       "Add delivery method": ["Добавить способ оповещения"],
-      "Add": ["Добавить"],
       "Edit Report": ["Редактировать отчет"],
       "Edit Alert": ["Редактировать оповещение"],
-      "Add Report": ["Добавить рассылку"],
       "Report name": ["Имя отчета"],
       "Alert name": ["Имя оповещения"],
       "Alert condition": ["Условие оповещения"],
       "SQL Query": ["SQL запрос"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["Оповестить, если..."],
-      "Condition": ["Условие"],
       "Report schedule": ["Расписание отчета"],
       "Alert condition schedule": ["Расписание условия оповещения"],
-      "Timezone": ["Часовой пояс"],
       "Schedule settings": ["Настройки расписания"],
       "Log retention": ["Хранение журнала"],
       "Working timeout": ["Время на рассылку"],
@@ -5101,7 +5126,6 @@
       "seconds": ["секунд"],
       "Grace period": ["Перерыв между оповещением"],
       "Message content": ["Содержимое сообщения"],
-      "Send as PNG": ["Отправить в формате PNG"],
       "Send as CSV": ["Отправить в формате CSV"],
       "Send as text": ["Отправить текстом"],
       "Input custom width in pixels": [""],
@@ -5272,7 +5296,6 @@
       ],
       "CREATE DATASET": ["СОЗДАТЬ ДАТАСЕТ"],
       "QUERY DATA IN SQL LAB": [""],
-      "Connect a database": ["Подключиться к базе данных"],
       "Edit database": ["Редактировать Базу Данных"],
       "Connect this database using the dynamic form instead": [
         "Подключиться к этой базе, используя динамичную форму"
@@ -5425,8 +5448,6 @@
       "Saved queries": ["Сохраненные запросы"],
       "Next": ["Следующий"],
       "Tab name": ["Имя вкладки"],
-      "User query": ["Пользовательский запрос"],
-      "Executed query": ["Выполненный запрос"],
       "Query name": ["Имя запроса"],
       "SQL Copied!": ["SQL запрос скопирован!"],
       "Sorry, your browser does not support copying.": [
@@ -5452,7 +5473,6 @@
       "Formatted CSV attached in email": [
         "Форматированный CSV, прикрепленный к письму"
       ],
-      "Report Name": ["Имя отчета"],
       "Include a description that will be sent with your report": [
         "Описание, которое будет отправлено вместе с вашим отчетом"
       ],
@@ -5487,7 +5507,6 @@
       "You are adding tags to %s %ss": [""],
       "Chosen non-numeric column": ["Выбран нечисловой столбец"],
       "UI Configuration": ["Конфигурация UI"],
-      "Filter value is required": ["Требуется значение фильтра"],
       "User must select a value before applying the filter": [
         "Для использования фильтра пользователь будет обязан выбрать значение"
       ],
@@ -5496,18 +5515,10 @@
       "Range filter plugin using AntD": [""],
       " (excluded)": [" (исключено)"],
       "Check for sorting ascending": ["Выберит для сортировки по возрастанию"],
-      "Can select multiple values": ["Можно выбрать несколько значений"],
-      "Select first filter value by default": [
-        "Сделать первое значение фильтра значением по умолчанию"
-      ],
       "When using this option, default value can’t be set": [
         "При включении этой опции нельзя установить значение по умолчанию"
       ],
-      "Inverse selection": ["Выбрать противоположные значения"],
       "Exclude selected values": ["Исключить выбранные значения"],
-      "Dynamically search all filter values": [
-        "Динамически искать все значения фильтра"
-      ],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         "По умолчанию, каждый фильтр загружает не больше 1000 элементов выбора при начальной загрузке страницы. Установите этот флаг, если у вас больше 1000 значений фильтра и вы хотите включить динамический поиск, который загружает значения по мере их ввода пользователем (может увеличить нагрузку на вашу базу данных)."
       ],
@@ -5681,9 +5692,30 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "%s Выбрано (%s Физические, %s Виртуальные)"
       ],
+      "Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:": [
+        ""
+      ],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "genre [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "name [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "rank [desc]": [""],
+      "year [desc]": [""],
       "This table already has a dataset associated with it. You can only associate one dataset with a table.": [
         ""
       ],
+      "Process initiated, results loading...": [""],
+      "Copy query URL": ["Скопировать ссылку на запрос"],
       "log": ["журнал"],
       "Execution ID": ["ID исполнения"],
       "Scheduled at (UTC)": ["Запланировано на (часовой пояс UTC)"],
@@ -5731,7 +5763,6 @@
         "Произошла ошибка при удалении выбранных запросов: %s"
       ],
       "Edit query": ["Редактировать запрос"],
-      "Copy query URL": ["Скопировать ссылку на запрос"],
       "Export query": ["Экспорт запроса"],
       "Delete query": ["Удалить запрос"],
       "Are you sure you want to delete the selected queries?": [
