@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": [""],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=2; plural=(n != 1);",
@@ -685,6 +690,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["Consultas Guardadas"],
       "Query History": ["Historial de la consulta"],
+      "User": ["Usuario"],
       "Action Log": ["Bitácora de acciones"],
       "Security": ["Seguridad"],
       "Alerts & Reports": ["Alertas y reportes"],
@@ -1090,7 +1096,6 @@
       "Show Log": ["Mostrar Registro"],
       "Add Log": ["Agregar Registro"],
       "Edit Log": ["Editar Registro"],
-      "User": ["Usuario"],
       "Action": ["Acción"],
       "dttm": ["dttm"],
       "JSON": [""],
@@ -2683,27 +2688,36 @@
       "DELETE": ["ELIMINAR"],
       "delete": ["eliminar"],
       "Type \"%s\" to confirm": ["Teclea \"%s\" para confirmar"],
+      "Viz type": ["Tipo"],
+      "Dataset": ["Conjunto de Datos"],
       "Alerts": ["Alertas"],
       "Reports": ["Informes"],
       "Saved": ["Guardar"],
       "Customize": ["Personalizar"],
       "Welcome Page": [""],
-      "Profile": ["Perfil"],
+      "Draft": ["Borrador"],
+      "Equal to (=)": [""],
+      "Less than (<)": [""],
+      "Like": [""],
+      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
+        ""
+      ],
       "of ": [""],
+      "Profile": ["Perfil"],
       "Info": ["Información"],
       "Logout": ["Salir"],
       "About": [""],
-      "Dataset": ["Conjunto de Datos"],
       "AQE": ["AQE"],
       "Owner": ["Propietario"],
       "Virtual": [""],
+      "ALGORİTHM": [""],
       "Created by": ["Creado por"],
-      "Draft": ["Borrador"],
       "Status": ["Estado"],
       "Favorite": ["Favoritos"],
       "Working": [""],
       "On Grace": [""],
       "Favorites": ["Favoritos"],
+      "Security and Access": [""],
       "Search Metrics & Columns": ["Buscar Métricas y Columnas"],
       "Click to edit": ["Click para editar"],
       "You don't have the rights to alter this title.": [
@@ -2828,7 +2842,6 @@
         ""
       ],
       "Added": ["Añadido"],
-      "Viz type": ["Tipo"],
       "Superset chart": ["Gráfico Superset"],
       "Check out this chart in dashboard:": [""],
       "Layout elements": [""],
@@ -3022,31 +3035,6 @@
       "All filters": ["Todos los filtros"],
       "Medium": [""],
       "Tab title": [""],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        ""
-      ],
-      "e.g 127.0.01": [""],
-      "Cannot be empty": [""],
-      "e.g 5432": [""],
-      "Copy the name of the database you are trying to connect to.": [""],
-      "Pick a nickname for how the database will display in Superset.": [""],
-      "e.g param1=value1&param2=value2": [""],
-      "SSL Mode \"require\" will be used.": [""],
-      "Connect this database with a SQLAlchemy URI string instead": [""],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        ""
-      ],
-      "Active": ["Activo"],
-      "< (Smaller than)": ["< (Menor que)"],
-      "> (Larger than)": ["> (mayor que)"],
-      "<= (Smaller or equal)": ["<= (Menor o igual)"],
-      ">= (Larger or equal)": [">= (Mayor o igual)"],
-      "== (Is equal)": ["== (Igual)"],
-      "!= (Is not equal)": ["!= (No es igual)"],
-      "Not null": ["No nulo"],
-      "60 days": ["60 días"],
-      "90 days": ["90 días"],
-      "Add notification method": ["Agregar método de notificación"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -3155,9 +3143,30 @@
       "GMT -09:00 (Alaska Standard Time)": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Or choose from a list of other databases we support: ": [""],
-      "Pick a name to help you identify this database.": [""],
-      "dialect+driver://username:password@host:port/database": [""],
+      "< (Smaller than)": ["< (Menor que)"],
+      "> (Larger than)": ["> (mayor que)"],
+      "<= (Smaller or equal)": ["<= (Menor o igual)"],
+      ">= (Larger or equal)": [">= (Mayor o igual)"],
+      "== (Is equal)": ["== (Igual)"],
+      "!= (Is not equal)": ["!= (No es igual)"],
+      "Not null": ["No nulo"],
+      "60 days": ["60 días"],
+      "90 days": ["90 días"],
+      "Send as PNG": [""],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        ""
+      ],
+      "e.g 127.0.01": [""],
+      "Cannot be empty": [""],
+      "e.g 5432": [""],
+      "Copy the name of the database you are trying to connect to.": [""],
+      "Pick a nickname for how the database will display in Superset.": [""],
+      "e.g param1=value1&param2=value2": [""],
+      "SSL Mode \"require\" will be used.": [""],
+      "Connect this database with a SQLAlchemy URI string instead": [""],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        ""
+      ],
       "Expose database in SQL Lab": [""],
       "Allow this database to be queried in SQL Lab": [""],
       "Allow creation of new tables based on queries": [""],
@@ -3177,9 +3186,6 @@
       "Duration (in seconds) of the metadata caching timeout for schemas of this database. If left unset, the cache never expires.": [
         ""
       ],
-      "Duration (in seconds) of the metadata caching timeout for tables of this database. If left unset, the cache never expires.": [
-        ""
-      ],
       "Asynchronous query execution": ["Ejecución asíncrona de consultas"],
       "Cancel query on window unload event": [""],
       "Terminate running queries when browser window closed or navigated to another page. Available for Presto, Hive, MySQL, Postgres and Snowflake databases.": [
@@ -3190,17 +3196,48 @@
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         ""
       ],
+      "Active": ["Activo"],
+      "Trigger Alert If...": ["Disparar Alerta si..."],
+      "Timezone": [""],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["Agregar"],
+      "Or choose from a list of other databases we support: ": [""],
+      "Pick a name to help you identify this database.": [""],
+      "dialect+driver://username:password@host:port/database": [""],
       "Create a dataset to begin visualizing your data as a chart or go to SQL Lab to query your data.": [
         ""
       ],
       "FINISH": [""],
+      "Add  filters and dividers": [""],
+      "Select first filter value by default": [""],
+      "Dynamically search all filter values": [""],
+      "Inverse selection": ["Selección inversa"],
+      "Degrees vs Income": [""],
+      " Changing these settings will affect all charts using this dataset, including charts owned by other people.": [
+        ""
+      ],
       "Please confirm": ["Confirme"],
+      "User query": ["Ver consulta"],
+      "Executed query": ["Consulta ejecutada"],
+      "Save chart": ["Guardar gráfico"],
+      "Save (Overwrite)": ["Guardar (Sobrescribir)"],
+      "Chart name": ["El Gráfico ha cambiado"],
+      "Add to dashboard": ["Añadir a un nuevo Dashboard"],
+      "Previous": ["Anterior"],
+      "last quarter": [""],
+      "previous calendar week": [""],
+      "previous calendar month": [""],
+      "previous calendar year": [""],
+      "Edit time range": ["Editar rango de tiempo"],
+      "RANGE TYPE": ["TIPO DE RANGO"],
+      "Actual time range": ["Rango de tiempo actual"],
+      "APPLY": ["APPLICAR"],
+      "is not a valid IP address.": [""],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         ""
       ],
-      "Equal to (=)": [""],
-      "Less than (<)": [""],
-      "Like": [""],
       "Is true": [""],
       "Time granularity": ["Granularidad de Tiempo"],
       "Duration in ms (100.40008 => 100ms 400µs 80ns)": [""],
@@ -3257,12 +3294,8 @@
         ""
       ],
       "Generating link, please wait..": [""],
-      "Save (Overwrite)": ["Guardar (Sobrescribir)"],
-      "Chart name": ["El Gráfico ha cambiado"],
       "A reusable dataset will be saved with your chart.": [""],
-      "Add to dashboard": ["Añadir a un nuevo Dashboard"],
       "Save & go to dashboard": ["Guardar e ir al Dashboard"],
-      "Save chart": ["Guardar gráfico"],
       "Expand data panel": [""],
       "No samples were returned for this dataset": [""],
       "Showing %s of %s": ["Mostrando %s de %s"],
@@ -3425,10 +3458,6 @@
       "View in SQL Lab": ["Ejecutar en Laboratiorio SQL"],
       "Query preview": ["Previsualización de Datos"],
       "The URL is missing the dataset_id or slice_id parameters.": [""],
-      "RANGE TYPE": ["TIPO DE RANGO"],
-      "Actual time range": ["Rango de tiempo actual"],
-      "APPLY": ["APPLICAR"],
-      "Edit time range": ["Editar rango de tiempo"],
       "START (INCLUSIVE)": [""],
       "Start date included in time range": [""],
       "END (EXCLUSIVE)": [""],
@@ -3453,17 +3482,9 @@
       ],
       "Get the last date by the date unit.": [""],
       "Get the specify date for the holiday": [""],
-      "Previous": ["Anterior"],
-      "last quarter": [""],
-      "previous calendar week": [""],
-      "previous calendar month": [""],
-      "previous calendar year": [""],
       "Specific Date/Time": [""],
       "Midnight": [""],
       "%s column(s)": ["%s columnas(s)"],
-      "Add calculated temporal columns to dataset in \"Edit datasource\" modal": [
-        ""
-      ],
       "Add calculated columns to dataset in \"Edit datasource\" modal": [""],
       " to mark a column as a time column": [""],
       "Simple": [""],
@@ -3549,24 +3570,21 @@
       "Annotations and layers": ["Anotaciones y capas"],
       "Annotation layers": ["Capas de Anotación"],
       "My beautiful colors": [""],
+      "Add notification method": ["Agregar método de notificación"],
       "Add delivery method": ["Agregar método de entrega"],
-      "Add": ["Agregar"],
       "Report name": ["Nombre de informe"],
       "Alert name": ["Nombre de la alerta"],
       "Alert condition": ["Probar Conexión"],
       "SQL Query": ["Consulta SQL"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["Disparar Alerta si..."],
       "Report schedule": ["Programar informe"],
       "Alert condition schedule": ["Probar Conexión"],
-      "Timezone": [""],
       "Schedule settings": ["Configuracion"],
       "Log retention": ["Retención de registros"],
       "Working timeout": ["Tiempo de espera"],
       "Time in seconds": ["Tiempo en segundos"],
       "Grace period": ["Periodo de gracia"],
       "Message content": ["Contenido del mensaje"],
-      "Send as PNG": [""],
       "Send as CSV": [""],
       "Send as text": [""],
       "Input custom width in pixels": [""],
@@ -3794,8 +3812,6 @@
       "Saved queries": ["Consultas Guardadas"],
       "Next": ["Siguiente"],
       "Tab name": ["Nombre de la pestaña"],
-      "User query": ["Ver consulta"],
-      "Executed query": ["Consulta ejecutada"],
       "Query name": ["Nombre de la consulta"],
       "SQL Copied!": ["Copiado!"],
       "Sorry, your browser does not support copying.": [
@@ -3843,10 +3859,7 @@
       "Check for sorting ascending": [
         "Selecciona para ordenar de forma ascendente"
       ],
-      "Select first filter value by default": [""],
       "When using this option, default value can’t be set": [""],
-      "Inverse selection": ["Selección inversa"],
-      "Dynamically search all filter values": [""],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         ""
       ],
@@ -3984,9 +3997,37 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "%s Seleccionados (%s Físico, %s Virtual)"
       ],
+      "YEARLY SEASONALITY": [""],
+      "DAILY SEASONALITY": [""],
+      "SERVER PAGE LENGTH": [""],
+      "Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:": [
+        ""
+      ],
+      "D3 time format syntax: https://github.com/d3/d3-time-format.": [""],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "genre [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "name [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "rank [desc]": [""],
+      "year [desc]": [""],
+      "Drop columns here or click": [""],
       "Select values in highlighted field(s) in the control panel. Then run the query by clicking on the \"Create chart\" button.": [
         ""
       ],
+      "You can create a new chart or use existinh ones from the panel on the right": [
+        ""
+      ],
+      "Layout Elements": [""],
       "Open Calendar": [""],
       "This table already has a dataset associated with it. You can only associate one dataset with a table.": [
         ""
@@ -3994,6 +4035,11 @@
       "You can create a new chart or use existing ones from the panel on the right.": [
         ""
       ],
+      "Process initiated, results loading...": [""],
+      "You can create an output table from existing table from the panel on the left.": [
+        ""
+      ],
+      "Copy query URL": ["Copiar URL de la consulta"],
       "log": ["registro"],
       "Error message": ["Mensaje de error"],
       "Thumbnails": [""],
@@ -4015,7 +4061,6 @@
         "Ocurrió un problema al eliminar las consultas seleccionadas: %s"
       ],
       "Edit query": ["ditar consulta"],
-      "Copy query URL": ["Copiar URL de la consulta"],
       "Delete query": ["Eliminar consulta"],
       "Are you sure you want to delete the selected queries?": [
         "¿Estás seguro de que quieres eliminar las consultas seleccionadas?"

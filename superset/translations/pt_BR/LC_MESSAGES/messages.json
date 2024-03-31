@@ -2,7 +2,12 @@
   "domain": "superset",
   "locale_data": {
     "superset": {
+      "10": [""],
+      "20": [""],
       "22": [""],
+      "50": [""],
+      "100": [""],
+      "200": [""],
       "": {
         "domain": "superset",
         "plural_forms": "nplurals=2; plural=(n > 1);",
@@ -961,6 +966,7 @@
       "SQL": ["SQL"],
       "Saved Queries": ["Consultas salvas"],
       "Query History": ["Histórico de consultas"],
+      "User": ["Usuário"],
       "Tags": ["Tags"],
       "Action Log": ["Log de ação"],
       "Security": ["Segurança"],
@@ -1492,7 +1498,6 @@
       "Show Log": ["Mostrar log"],
       "Add Log": ["Adicionar Log"],
       "Edit Log": ["Editar log"],
-      "User": ["Usuário"],
       "Action": ["Ação"],
       "dttm": ["dttm"],
       "JSON": ["JSON"],
@@ -3993,19 +3998,34 @@
       "delete": ["excluir"],
       "Type \"%s\" to confirm": ["Digite \"%s\" para confirmar"],
       "More": ["Mais informações"],
+      "Viz type": ["Tipo de visualização"],
+      "Dataset": ["Conjunto de dados"],
+      "No filter": ["Sem filtro"],
+      "In": ["Em"],
       "Alerts": ["Alertas"],
       "Reports": ["Relatórios"],
       "Saved": ["Salvo"],
       "Customize": ["Personalizar"],
       "Welcome Page": [""],
-      "Profile": ["Perfil"],
+      "Add the name of the dashboard": ["Adicione o nome do painel"],
+      "Draft": ["Rascunho"],
+      "Equal to (=)": ["Igual para (=)"],
+      "Less than (<)": ["Menos que (<)"],
+      "Less or equal (<=)": ["Menor ou igual (<=)"],
+      "Greater than (>)": ["Maior que (>)"],
+      "Greater or equal (>=)": ["Maior ou igual (>=)"],
+      "Not in": ["Não está em"],
+      "Like": ["Como"],
+      "Is not null": ["Não é nulo"],
+      "Is null": ["É nulo"],
+      "No temporal columns found": ["Não foram encontradas colunas temporais"],
       "of ": [""],
+      "Profile": ["Perfil"],
       "Info": ["Informações"],
       "Logout": ["Sair"],
       "About": ["Sobre"],
       "Select database table": ["Selecione a tabela do banco de dados"],
       "Search tables": ["Pesquisar tabelas"],
-      "Dataset": ["Conjunto de dados"],
       "Alert": ["Alerta"],
       "Select or type a value": ["Selecione ou digite um valor"],
       "AQE": ["AQE"],
@@ -4013,8 +4033,8 @@
       "Owner": ["Proprietário"],
       "Virtual": ["Virtual"],
       "Certified": ["Certificado"],
+      "ALGORİTHM": [""],
       "Created by": ["Criado por"],
-      "Draft": ["Rascunho"],
       "Status": ["Estado"],
       "Favorite": ["Favorito"],
       "Treemap (legacy)": ["Mapa da árvore (legado)"],
@@ -4023,8 +4043,11 @@
       "Not triggered": ["Não acionado"],
       "On Grace": ["Na Graça"],
       "Favorites": ["Favoritos"],
+      "Security and Access": [""],
       "Chart Source": ["Fonte do gráfico"],
       "Search Metrics & Columns": ["Pesquisar Métricas e Colunas"],
+      "Filter Type": ["Tipo de filtro"],
+      "Select": ["Selecione"],
       "Click to edit": ["Clique para editar"],
       "You don't have the rights to alter this title.": [
         "Você não tem o direito de alterar esse título."
@@ -4241,7 +4264,6 @@
         "Você pode optar por exibir todos os gráficos aos quais tem acesso ou apenas os que possui.\n Sua seleção de filtro será salva e permanecerá ativa até que você decida alterá-la."
       ],
       "Added": ["Adicionado"],
-      "Viz type": ["Tipo de visualização"],
       "Superset chart": ["Gráfico do Superset"],
       "Check out this chart in dashboard:": ["Veja este gráfico no painel:"],
       "Layout elements": ["Elementos de layout"],
@@ -4262,7 +4284,6 @@
       "Your dashboard is too large. Please reduce its size before saving it.": [
         "Seu painel é muito grande. Reduza o tamanho antes de salvá-lo."
       ],
-      "Add the name of the dashboard": ["Adicione o nome do painel"],
       "Dashboard title": ["Título do painel"],
       "Undo the action": ["Desfazer a ação"],
       "Redo the action": ["Refazer o ação"],
@@ -4494,7 +4515,6 @@
       ],
       "Filter name": ["Nome do filtro"],
       "Name is required": ["O nome é obrigatório"],
-      "Filter Type": ["Tipo de filtro"],
       "Datasets do not contain a temporal column": [
         "Os conjuntos de dados não contêm uma coluna temporal"
       ],
@@ -4506,7 +4526,6 @@
       "Add filter clauses to control the filter's source query,\n                    though only in the context of the autocomplete i.e., these conditions\n                    do not impact how the filter is applied to the dashboard. This is useful\n                    when you want to improve the query's performance by only scanning a subset\n                    of the underlying data or limit the available values displayed in the filter.": [
         "Adicionar cláusulas de filtro para controlar a consulta de origem do filtro, \n embora apenas no contexto do preenchimento automático, ou seja, esses condições \n não impactam como o filtro é aplicado para o painel. Isso é util \n quando você quiser melhorar o desempenho da consulta apenas analisando um subconjunto \n de dados subjacentes ou limitar os valores disponíveis apresentados no filtro."
       ],
-      "No filter": ["Sem filtro"],
       "Sort filter values": ["Valores do filtro de classificação"],
       "Sort type": ["Tipo de classificação"],
       "Sort ascending": ["Ordenação crescente"],
@@ -4568,36 +4587,6 @@
       "Medium": ["Médio"],
       "New header": ["Novo cabeçalho"],
       "Tab title": ["Título da aba"],
-      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
-        "Pode ser um endereço IP (por exemplo, 127.0.0.1) ou um nome de domínio (por exemplo, mydatabase.com)."
-      ],
-      "Copy the name of the database you are trying to connect to.": [
-        "Copiar o nome do banco de dados que você está tentando se conectar."
-      ],
-      "Pick a nickname for how the database will display in Superset.": [
-        "Escolha um apelido para a forma como o banco de dados será exibido no Superset."
-      ],
-      "SSL Mode \"require\" will be used.": [
-        "O modo SSL \"require\" será usado."
-      ],
-      "Connect this database with a SQLAlchemy URI string instead": [
-        "Em vez disso, conecte esse banco de dados com uma cadeia de URI SQLAlchemy"
-      ],
-      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
-        "Clique neste link para mudar para um formulário alternativa que permite você inserir manualmente o URL do SQLAlchemy para esse banco de dados."
-      ],
-      "Add Alert": ["Adicionar alerta"],
-      "Active": ["Ativo"],
-      "< (Smaller than)": ["< (menor que)"],
-      "> (Larger than)": ["> (Maior que)"],
-      "<= (Smaller or equal)": ["<= (menor ou equal)"],
-      ">= (Larger or equal)": [">= (Maior ou equal)"],
-      "== (Is equal)": ["== (É igual)"],
-      "!= (Is not equal)": ["!= (diferente)"],
-      "Not null": ["Não nulo"],
-      "60 days": ["60 dias"],
-      "90 days": ["90 dias"],
-      "Add notification method": ["Adicionar método de notificação"],
       "GMT +01:00 (Central European Time)": [""],
       "Europe/Andorra": [""],
       "GMT +04:00 (Asia/Dubai)": [""],
@@ -4706,11 +4695,33 @@
       "GMT -09:00 (Alaska Standard Time)": [""],
       "GMT +13:00 (Pacific/Apia)": [""],
       "Pacific/Apia": [""],
-      "Pick a name to help you identify this database.": [
-        "Escolha um nome para te ajudar identificar esse banco de dados."
+      "< (Smaller than)": ["< (menor que)"],
+      "> (Larger than)": ["> (Maior que)"],
+      "<= (Smaller or equal)": ["<= (menor ou equal)"],
+      ">= (Larger or equal)": [">= (Maior ou equal)"],
+      "== (Is equal)": ["== (É igual)"],
+      "!= (Is not equal)": ["!= (diferente)"],
+      "Not null": ["Não nulo"],
+      "60 days": ["60 dias"],
+      "90 days": ["90 dias"],
+      "Send as PNG": ["Enviar como PNG"],
+      "This can be either an IP address (e.g. 127.0.0.1) or a domain name (e.g. mydatabase.com).": [
+        "Pode ser um endereço IP (por exemplo, 127.0.0.1) ou um nome de domínio (por exemplo, mydatabase.com)."
       ],
-      "dialect+driver://username:password@host:port/database": [
-        "dialect+driver://username:password@host:port/database"
+      "Copy the name of the database you are trying to connect to.": [
+        "Copiar o nome do banco de dados que você está tentando se conectar."
+      ],
+      "Pick a nickname for how the database will display in Superset.": [
+        "Escolha um apelido para a forma como o banco de dados será exibido no Superset."
+      ],
+      "SSL Mode \"require\" will be used.": [
+        "O modo SSL \"require\" será usado."
+      ],
+      "Connect this database with a SQLAlchemy URI string instead": [
+        "Em vez disso, conecte esse banco de dados com uma cadeia de URI SQLAlchemy"
+      ],
+      "Click this link to switch to an alternate form that allows you to input the SQLAlchemy URL for this database manually.": [
+        "Clique neste link para mudar para um formulário alternativa que permite você inserir manualmente o URL do SQLAlchemy para esse banco de dados."
       ],
       "Expose database in SQL Lab": ["Expor banco de dados no SQL Lab"],
       "Allow this database to be queried in SQL Lab": [
@@ -4761,34 +4772,72 @@
       "Allow file uploads to database": [
         "Permitir uploads de arquivos para o banco de dados"
       ],
-      "schema1,schema2": [""],
       "A comma-separated list of schemas that files are allowed to upload to.": [
         "Uma lista separada por vírgulas de esquemas para os quais os arquivos têm permissão para fazer upload."
       ],
+      "schema1,schema2": [""],
       "Metadata Parameters": ["Parâmetros de metadados"],
       "Engine Parameters": ["Parâmetros do motor"],
       "Specify the database version. This should be used with Presto in order to enable query cost estimation.": [
         "Especifique a versão do banco de dados. Isto deve ser utilizado com o Presto para permitir a estimativa do custo da consulta."
       ],
+      "Add Alert": ["Adicionar alerta"],
+      "Active": ["Ativo"],
+      "Trigger Alert If...": ["Alerta de acionamento se..."],
+      "Condition": ["Condição"],
+      "Timezone": ["Fuso horário"],
+      "GMT +03:00 (Antarctica)": [""],
+      "Add": ["Adicionar"],
+      "Connect a database": ["Conectar um banco de dados"],
+      "Pick a name to help you identify this database.": [
+        "Escolha um nome para te ajudar identificar esse banco de dados."
+      ],
+      "dialect+driver://username:password@host:port/database": [
+        "dialect+driver://username:password@host:port/database"
+      ],
       "Database connected": ["Banco de dados conectado"],
+      "Filter value is required": ["O valor do filtro é obrigatório"],
+      "Select first filter value by default": [
+        "Selecione primeiro valor do filtro por padrão"
+      ],
+      "Can select multiple values": ["Pode selecionar vários valores"],
+      "Dynamically search all filter values": [
+        "Pesquisar dinamicamente todos os valores de filtro"
+      ],
+      "Inverse selection": ["Seleção inversa"],
+      "Degrees vs Income": [""],
       "Please confirm": ["Por favor confirme"],
+      "User query": ["Consulta do usuário"],
+      "Executed query": ["Consulta executada"],
+      "Add Report": ["Adicionar relatório"],
+      "Report Name": ["Nome do relatório"],
+      "Save chart": ["Salvar gráfico"],
+      "Save (Overwrite)": ["Salvar (Sobrescrever)"],
+      "Save as...": ["Salvar como..."],
+      "Chart name": ["Nome do gráfico"],
+      "Add to dashboard": ["Adicionar ao painel"],
+      "Previous": ["Anterior"],
+      "last day": ["último dia"],
+      "last week": ["semana passada"],
+      "last month": ["mês passado"],
+      "last quarter": ["último trimestre"],
+      "last year": ["ano passado"],
+      "previous calendar week": ["semana anterior do calendário"],
+      "previous calendar month": ["mês anterior do calendário"],
+      "previous calendar year": ["ano-calendário anterior"],
+      "Edit time range": ["Editar intervalo de tempo"],
+      "RANGE TYPE": ["TIPO DA FAIXA"],
+      "Actual time range": ["Intervalo de tempo real"],
+      "APPLY": ["APLICAR"],
+      "There should be no letters": [""],
+      "Port must be between 0 and 65535": [""],
       "This session has encountered an interruption, and some controls may not work as intended. If you are the developer of this app, please check that the guest token is being generated correctly.": [
         "Esta sessão sofreu uma interrupção e alguns controles podem não funcionar como pretendido. Se você for o desenvolvedor desse aplicativo, verifique se o token de convidado está sendo gerado corretamente."
       ],
-      "Equal to (=)": ["Igual para (=)"],
       "Not equal to (≠)": ["Diferente de (≠)"],
-      "Less than (<)": ["Menos que (<)"],
-      "Less or equal (<=)": ["Menor ou igual (<=)"],
-      "Greater than (>)": ["Maior que (>)"],
-      "Greater or equal (>=)": ["Maior ou igual (>=)"],
-      "In": ["Em"],
-      "Not in": ["Não está em"],
-      "Like": ["Como"],
       "Like (case insensitive)": [
         "Como (não diferencia maiúsculas de minúsculas)"
       ],
-      "Is not null": ["Não é nulo"],
-      "Is null": ["É nulo"],
       "use latest_partition template": ["usar o modelo latest_partition"],
       "Is true": ["É verdadeiro"],
       "Is false": ["É falso"],
@@ -4882,19 +4931,13 @@
       "Generating link, please wait..": ["Gerando link, por favor espere.."],
       "Chart height": ["Altura do gráfico"],
       "Chart width": ["Largura do gráfico"],
-      "Save (Overwrite)": ["Salvar (Sobrescrever)"],
-      "Save as...": ["Salvar como..."],
-      "Chart name": ["Nome do gráfico"],
       "Dataset Name": ["Nome do conjunto de dados"],
       "A reusable dataset will be saved with your chart.": [
         "Um conjunto de dados reutilizável vai ser salvo com seu gráfico."
       ],
-      "Add to dashboard": ["Adicionar ao painel"],
       "Select a dashboard": ["Selecione um painel"],
-      "Select": ["Selecione"],
       "create": ["criar"],
       "Save & go to dashboard": ["Salvar e ir ao painel"],
-      "Save chart": ["Salvar gráfico"],
       "Formatted date": ["Data formatada"],
       "Column Formatting": ["Formatação de colunas"],
       "Collapse data panel": ["Recolher painel de dados"],
@@ -5156,10 +5199,6 @@
       "The dataset linked to this chart may have been deleted.": [
         "O conjunto de dados vinculado a esse gráfico pode ter sido excluído."
       ],
-      "RANGE TYPE": ["TIPO DA FAIXA"],
-      "Actual time range": ["Intervalo de tempo real"],
-      "APPLY": ["APLICAR"],
-      "Edit time range": ["Editar intervalo de tempo"],
       "START (INCLUSIVE)": ["INÍCIO (INCLUSIVO)"],
       "Start date included in time range": [
         "Data de início incluída no intervalo de tempo"
@@ -5197,16 +5236,7 @@
       "Get the specify date for the holiday": [
         "Obter a data específica para o feriado"
       ],
-      "Previous": ["Anterior"],
       "Custom": ["Personalizado"],
-      "last day": ["último dia"],
-      "last week": ["semana passada"],
-      "last month": ["mês passado"],
-      "last quarter": ["último trimestre"],
-      "last year": ["ano passado"],
-      "previous calendar week": ["semana anterior do calendário"],
-      "previous calendar month": ["mês anterior do calendário"],
-      "previous calendar year": ["ano-calendário anterior"],
       "Seconds %s": ["Segundos %s"],
       "Minutes %s": ["Minutos %s"],
       "Hours %s": ["Horas %s"],
@@ -5221,7 +5251,6 @@
       "Midnight": ["Meia-noite"],
       "Saved expressions": ["Expressões salvas"],
       "%s column(s)": ["%s coluna(s)"],
-      "No temporal columns found": ["Não foram encontradas colunas temporais"],
       "No saved expressions found": ["Nenhuma expressão salva foi encontrada"],
       "Simple": ["Simples"],
       "Mark a column as temporal in \"Edit datasource\" modal": [
@@ -5355,21 +5384,17 @@
       "Annotations and layers": ["Anotações e camadas"],
       "Annotation layers": ["Camadas de anotação"],
       "My beautiful colors": ["As minhas lindas cores"],
+      "Add notification method": ["Adicionar método de notificação"],
       "Add delivery method": ["Adicionar método de entrega"],
-      "Add": ["Adicionar"],
       "Edit Report": ["Editar relatório"],
       "Edit Alert": ["Editar Alerta"],
-      "Add Report": ["Adicionar relatório"],
       "Report name": ["Nome do relatório"],
       "Alert name": ["Nome do alerta"],
       "Alert condition": ["Condição de alerta"],
       "SQL Query": ["Consulta SQL"],
       "The result of this query should be a numeric-esque value": [""],
-      "Trigger Alert If...": ["Alerta de acionamento se..."],
-      "Condition": ["Condição"],
       "Report schedule": ["Agendamento do relatório"],
       "Alert condition schedule": ["Programação do estado de alerta"],
-      "Timezone": ["Fuso horário"],
       "Schedule settings": ["Configurações de agendamento"],
       "Log retention": ["Retenção de log"],
       "Working timeout": ["Tempo limite de trabalho"],
@@ -5377,7 +5402,6 @@
       "seconds": ["segundos"],
       "Grace period": ["Período de inatividade"],
       "Message content": ["Conteúdo da Mensagem"],
-      "Send as PNG": ["Enviar como PNG"],
       "Send as CSV": ["Enviar como CSV"],
       "Send as text": ["Enviar como texto"],
       "Input custom width in pixels": [""],
@@ -5548,7 +5572,6 @@
       ],
       "CREATE DATASET": ["CREATE DATASET"],
       "QUERY DATA IN SQL LAB": ["CONSULTAR DADOS NO SQL LAB"],
-      "Connect a database": ["Conectar um banco de dados"],
       "Edit database": ["Editar banco de dados"],
       "Connect this database using the dynamic form instead": [
         "Em vez disso, conecte esse banco de dados utilizando o formulário dinâmico"
@@ -5747,8 +5770,6 @@
       "Saved queries": ["Consultas salvas"],
       "Next": ["Próximo"],
       "Tab name": ["Nome da aba"],
-      "User query": ["Consulta do usuário"],
-      "Executed query": ["Consulta executada"],
       "Query name": ["Nome da consulta"],
       "SQL Copied!": ["SQL copiado !"],
       "Sorry, your browser does not support copying.": [
@@ -5772,7 +5793,6 @@
       "Text embedded in email": ["Texto incorporado no e-mail"],
       "Image (PNG) embedded in email": ["Imagem (PNG) incorporada no e-mail"],
       "Formatted CSV attached in email": ["CSV formatado anexado no e-mail"],
-      "Report Name": ["Nome do relatório"],
       "Include a description that will be sent with your report": [
         "Incluir uma descrição que será enviada com o seu relatório"
       ],
@@ -5807,7 +5827,6 @@
       "You are adding tags to %s %ss": [""],
       "Chosen non-numeric column": ["Coluna não-numérica escolhida"],
       "UI Configuration": ["Configuração da interface do usuário"],
-      "Filter value is required": ["O valor do filtro é obrigatório"],
       "User must select a value before applying the filter": [
         "O usuário deve selecionar um valor antes de aplicar o filtro"
       ],
@@ -5817,18 +5836,10 @@
         "Plugin de filtro de intervalo usando AntD"
       ],
       "Check for sorting ascending": ["Verificar se a ordenação é crescente"],
-      "Can select multiple values": ["Pode selecionar vários valores"],
-      "Select first filter value by default": [
-        "Selecione primeiro valor do filtro por padrão"
-      ],
       "When using this option, default value can’t be set": [
         "Ao usar essa opção, o valor padrão não pode ser definido"
       ],
-      "Inverse selection": ["Seleção inversa"],
       "Exclude selected values": ["Excluir valores selecionados"],
-      "Dynamically search all filter values": [
-        "Pesquisar dinamicamente todos os valores de filtro"
-      ],
       "By default, each filter loads at most 1000 choices at the initial page load. Check this box if you have more than 1000 filter values and want to enable dynamically searching that loads filter values as users type (may add stress to your database).": [
         "Por padrão, cada filtro carrega, no máximo, 1000 opções no carregamento inicial da página. Marque esta caixa se tiver mais de 1000 valores de filtro e pretenda ativar a pesquisa dinâmica que carrega os valores de filtro à medida que os usuários escrevem (pode aumentar o stress da sua base de dados)."
       ],
@@ -6000,6 +6011,20 @@
       "%s Selected (%s Physical, %s Virtual)": [
         "%s selecionado (%s Físico , %s Virtual)"
       ],
+      "eu_sales [asc]": [""],
+      "eu_sales [desc]": [""],
+      "global_sales [asc]": [""],
+      "global_sales [desc]": [""],
+      "jp_sales [asc]": [""],
+      "jp_sales [desc]": [""],
+      "na_sales [asc]": [""],
+      "na_sales [desc]": [""],
+      "other_sales [asc]": [""],
+      "other_sales [desc]": [""],
+      "platform [asc]": [""],
+      "platform [desc]": [""],
+      "Process initiated, results loading...": [""],
+      "Copy query URL": ["Copiar URL da consulta"],
       "log": ["log"],
       "Execution ID": ["ID de execução"],
       "Scheduled at (UTC)": ["Programado em (UTC)"],
@@ -6044,7 +6069,6 @@
         "Houve um problema ao excluir as consultas selecionadas: %s"
       ],
       "Edit query": ["Editar consulta"],
-      "Copy query URL": ["Copiar URL da consulta"],
       "Export query": ["Exportar consulta"],
       "Delete query": ["Excluir consulta"],
       "Are you sure you want to delete the selected queries?": [
