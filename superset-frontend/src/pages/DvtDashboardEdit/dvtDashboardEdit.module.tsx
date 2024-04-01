@@ -81,9 +81,23 @@ const StyledChartFilter = styled.div`
 
 const StyledDashboardDroppedList = styled.div`
   padding: 0 20px;
+  padding-left: 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  max-height: calc(100vh - 210px);
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    border-radius: 3px;
+  }
 `;
 
 interface StyledDashboardDroppedListItemProps {
@@ -163,7 +177,7 @@ interface StyledNewAddRowProps {
 }
 
 const StyledNewAddRow = styled.div<StyledNewAddRowProps>`
-  height: 100px;
+  min-height: 80px;
   width: 100%;
   cursor: pointer;
 
