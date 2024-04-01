@@ -81,6 +81,9 @@ const StyledChartFilter = styled.div`
 
 const StyledDashboardDroppedList = styled.div`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 interface StyledDashboardDroppedListItemProps {
@@ -155,6 +158,19 @@ const StyledDashboardDroppedRowOptions = styled.div`
   gap: 15px;
 `;
 
+interface StyledNewAddRowProps {
+  hovered: boolean;
+}
+
+const StyledNewAddRow = styled.div<StyledNewAddRowProps>`
+  height: 100px;
+  width: 100%;
+  cursor: pointer;
+
+  ${({ hovered, theme }) =>
+    hovered && `border-top: 4px solid ${theme.colors.dvt.primary.base};`}
+`;
+
 export {
   StyledDashboardEdit,
   StyledDashboard,
@@ -170,4 +186,5 @@ export {
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
+  StyledNewAddRow,
 };

@@ -31,7 +31,7 @@ import {
 } from 'src/dvt-redux/dvt-dashboardEditReducer';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
-import withToasts from 'src/components/MessageToasts/withToasts';
+import withToasts, { useToasts } from 'src/components/MessageToasts/withToasts';
 import DvtCardDetailChartList from 'src/components/DvtCardDetailChartList';
 import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
@@ -53,12 +53,14 @@ import {
   StyledChartList,
   StyledChartFilter,
   StyledDashboardDroppedList,
+  StyledNewAddRow,
 } from './dvtDashboardEdit.module';
 import DvtDashboardEditChart from './components/DvtDashboardEditChart';
 import DvtDashboardEditRow from './components/DvtDashboardEditRow';
 
 function DvtDashboardList() {
   const dispatch = useDispatch();
+  const { addDangerToast } = useToasts();
   const history = useHistory<{ from: string }>();
   const location = useLocation();
   const isEditPathname = location.search === '?edit=true';
@@ -79,6 +81,7 @@ function DvtDashboardList() {
   const [chartResultApiUrl, setChartResultApiUrl] = useState<string>('');
   const [chartRenderApiUrl, setChartRenderApiUrl] = useState<string>('');
   const [chartRenderApiBody, setChartRenderApiBody] = useState<any>(null);
+  const [newAddRowHovered, setNewAddRowHovered] = useState<boolean>(false);
 
   const firstCreatePosition = {
     DASHBOARD_VERSION_KEY: 'v2',
@@ -216,9 +219,10 @@ function DvtDashboardList() {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    console.log('on drop');
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, newRow?: boolean) => {
     e.preventDefault();
 
     const droppedDataString = e.dataTransfer.getData('drag-drop');
@@ -254,17 +258,22 @@ function DvtDashboardList() {
       },
     };
 
+    const firstOrThenAddPosition = newRow ? position : firstCreatePosition;
+
     setPosition({
-      ...firstCreatePosition,
+      ...firstOrThenAddPosition,
       GRID_ID: {
-        ...firstCreatePosition.GRID_ID,
-        children: [rowUnique],
+        ...firstOrThenAddPosition.GRID_ID,
+        children: newRow
+          ? [...firstOrThenAddPosition.GRID_ID.children, rowUnique]
+          : [rowUnique],
       },
       ...rowCreate,
       ...chartCreate,
     });
+    setNewAddRowHovered(false);
 
-    if (jsonDropItem && droppedData.length < 3) {
+    if (jsonDropItem) {
       setChartResultApiUrl(`chart/${jsonDropItem.id}`);
     }
   };
@@ -295,17 +304,22 @@ function DvtDashboardList() {
       },
     };
 
-    setPosition({
-      ...position,
-      [rowObjectName]: {
-        ...position[rowObjectName],
-        children: [...position[rowObjectName].children, chartUnique],
-      },
-      ...chartCreate,
-    });
-
-    if (jsonDropItem && droppedData.length < 3) {
+    if (jsonDropItem && position[rowObjectName].children.length < 3) {
+      setPosition({
+        ...position,
+        [rowObjectName]: {
+          ...position[rowObjectName],
+          children: [...position[rowObjectName].children, chartUnique],
+        },
+        ...chartCreate,
+      });
       setChartResultApiUrl(`chart/${jsonDropItem.id}`);
+    } else {
+      addDangerToast(
+        t(
+          'There is not enough space for this component. Try decreasing its width, or increasing the destination width.',
+        ),
+      );
     }
   };
 
@@ -559,6 +573,13 @@ function DvtDashboardList() {
                 })}
               </DvtDashboardEditRow>
             ))}
+            <StyledNewAddRow
+              hovered={newAddRowHovered}
+              onDrop={e => handleDrop(e, true)}
+              onDragOver={e => e.preventDefault()}
+              onDragLeave={e => setNewAddRowHovered(false)}
+              onDragEnter={e => setNewAddRowHovered(true)}
+            />
           </StyledDashboardDroppedList>
         )}
       </StyledDashboard>
