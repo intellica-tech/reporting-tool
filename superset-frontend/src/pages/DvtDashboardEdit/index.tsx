@@ -219,7 +219,6 @@ function DvtDashboardList() {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log('on drop');
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, newRow?: boolean) => {
