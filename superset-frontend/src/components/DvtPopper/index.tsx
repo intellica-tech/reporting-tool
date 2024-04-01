@@ -17,7 +17,6 @@
  * under the License.
  */
 import React, { ReactNode, useState, useRef, useEffect } from 'react';
-import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import {
   StyledPopper,
   StyledPopperBody,
@@ -39,11 +38,19 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
   size = 'medium',
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const absoluteRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const [popperTop, setPopperTop] = useState<number>(0);
   const [popperLeft, setPopperLeft] = useState<number>(0);
   const [popperChildrenScreen, setPopperChildrenScreen] = useState<{
+    height: number;
+    width: number;
+  }>({
+    height: 0,
+    width: 0,
+  });
+  const [hoveredScreen, setHoveredScreen] = useState<{
     height: number;
     width: number;
   }>({
@@ -100,12 +107,15 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
     return fixMinWidth;
   };
 
-  const {
-    ref: chartPanelRef,
-    observerRef: resizeObserverRef,
-    width: chartPanelWidth,
-    height: chartPanelHeight,
-  } = useResizeDetectorByObserver();
+  useEffect(() => {
+    if (absoluteRef.current) {
+      const refHoveredScreen = absoluteRef.current.getBoundingClientRect();
+      setHoveredScreen({
+        height: refHoveredScreen.height,
+        width: refHoveredScreen.width,
+      });
+    }
+  }, [isHovered]);
 
   return (
     <StyledPopperGroup
@@ -115,16 +125,15 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
       <StyledPopper ref={ref}>{children}</StyledPopper>
       {isHovered && (
         <StyledPopperAbsolute
-          ref={resizeObserverRef}
+          ref={absoluteRef}
           direction={direction}
           popperChildrenScreen={popperChildrenScreen}
           top={popperTop}
           left={popperLeft}
-          childWidth={chartPanelWidth || 0}
-          childHeight={chartPanelHeight || 0}
+          childWidth={hoveredScreen.width || 0}
+          childHeight={hoveredScreen.height || 0}
         >
           <StyledPopperBody
-            ref={chartPanelRef}
             fontSize={size}
             style={{
               minWidth: setMinWidth(label.length),
