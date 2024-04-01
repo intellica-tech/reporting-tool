@@ -4,8 +4,10 @@ import { ModalProps } from 'src/dvt-modal';
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
+import DvtSpinner from 'src/components/DvtSpinner';
 import DvtModalHeader from 'src/components/DvtModalHeader';
 import {
+  SpinnerContainer,
   StyledChartEdit,
   StyledChartEditBody,
   StyledChartEditGroup,
@@ -79,11 +81,18 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledChartEdit>
-      <DvtModalHeader
-        buttonLabel={t('SAVE')}
-        onClick={() => setChartApi(`chart/${meta?.id}`)}
-        onClose={onClose}
-      />
+      {updateChartData.loading ? (
+        <SpinnerContainer>
+          <DvtSpinner type="grow" size="xlarge" />
+        </SpinnerContainer>
+      ) : (
+        <DvtModalHeader
+          buttonLabel={t('SAVE')}
+          onClick={() => setChartApi(`chart/${meta?.id}`)}
+          onClose={onClose}
+        />
+      )}
+
       <StyledChartEditBody>
         <StyledChartEditGroup>
           <StyledChartEditInput>

@@ -21,6 +21,7 @@ import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import useFormValidation from 'src/dvt-hooks/useFormValidation';
 import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
+import DvtSpinner from 'src/components/DvtSpinner';
 import {
   StyledConnectionAdd,
   StyledConnectionAddBody,
@@ -42,6 +43,7 @@ import {
   StyledConnectionAddInputGroup,
   StyledConnectionAddCheckboxGroup,
   StyledConnectionAddGroupStep3,
+  SpinnerContainer,
 } from './connection-add.module';
 
 const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
@@ -701,16 +703,22 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                 typeColour="powder"
                 size="small"
               />
-              <DvtButton
-                bold
-                label={t('FINISH')}
-                onClick={() =>
-                  meta?.isEdit
-                    ? setApiUrl(`database/${meta.id}`)
-                    : setApiUrl('database/')
-                }
-                size="small"
-              />
+              {connectionAddData.loading ? (
+                <SpinnerContainer>
+                  <DvtSpinner type="grow" size="xlarge" />
+                </SpinnerContainer>
+              ) : (
+                <DvtButton
+                  bold
+                  label={t('FINISH')}
+                  onClick={() =>
+                    meta?.isEdit
+                      ? setApiUrl(`database/${meta.id}`)
+                      : setApiUrl('database/')
+                  }
+                  size="small"
+                />
+              )}
             </StyledConnectionAddButtons>
           </>
         )}

@@ -111,6 +111,13 @@ const StyledAlertAddButtonGroup = styled.div`
   gap: 8px;
 `;
 
+const SpinnerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 38vh;
+  justify-content: center;
+`;
+
 export {
   StyledAlertAdd,
   StyledAlertAddBody,
@@ -124,4 +131,5 @@ export {
   StyledAlertAddMessageContent,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
+  SpinnerContainer,
 };
