@@ -30,6 +30,7 @@ import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import moment from 'moment';
 import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
+import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
@@ -709,7 +710,7 @@ const DvtChart = () => {
         setChartStatus('loading');
         setChartApiUrl(
           onlyExploreJson.includes(getFormData.viz_type)
-            ? 'explore_json'
+            ? 'explore_json/'
             : 'chart/data',
         );
 
@@ -1146,6 +1147,7 @@ const DvtChart = () => {
           objResult[key] = formDataObj[formKey][key];
         }
       });
+
       result = objResult;
     }
 
@@ -1184,7 +1186,9 @@ const DvtChart = () => {
         body: {
           ...formDataObj,
           form_data: onlyVizChartFindFormPayload('form_data'),
-          queries: onlyVizChartFindFormPayload('queries'),
+          queries: objectIsEmptyForArray(
+            onlyVizChartFindFormPayload('queries'),
+          ),
         },
       };
 
@@ -1205,7 +1209,9 @@ const DvtChart = () => {
             ...onlyVizChartFindFormPayload('form_data'),
             result_type: 'results',
           },
-          queries: onlyVizChartFindFormPayload('queries'),
+          queries: objectIsEmptyForArray(
+            onlyVizChartFindFormPayload('queries'),
+          ),
           result_type: 'results',
         },
       };
@@ -1662,7 +1668,7 @@ const DvtChart = () => {
               setChartStatus('loading');
               setChartApiUrl(
                 onlyExploreJson.includes(active)
-                  ? 'explore_json'
+                  ? 'explore_json/'
                   : 'chart/data',
               );
             }}

@@ -115,13 +115,15 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
 
   useEffect(() => {
     if (chartPromise.data) {
-      history.push({
-        pathname: '/explore/',
-        search: `?slice_id=${chartPromise.data.id}`,
-        state: {
-          update: true,
-        },
-      });
+      setTimeout(() => {
+        history.push({
+          pathname: '/explore/',
+          search: `?slice_id=${chartPromise.data.id}`,
+          state: {
+            update: true,
+          },
+        });
+      }, 200);
       addSuccessToast(t('Chart saved successfully'));
       onClose();
     }
@@ -134,7 +136,7 @@ const DvtSaveChartModal = ({ onClose }: ModalProps) => {
   }, [chartPromise.loading]);
 
   const handleSave = () => {
-    setChartUrl(active === 'save' ? `chart/${slice.id}` : 'chart');
+    setChartUrl(active === 'save' ? `chart/${slice.id}` : 'chart/');
   };
 
   return (
