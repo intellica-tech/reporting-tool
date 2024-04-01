@@ -18,9 +18,33 @@
  */
 import { styled } from '@superset-ui/core';
 
-const StyledTable = styled.div`
+interface TableProps {
+  $onScrollTable: boolean;
+  scrollMaxHeight: string;
+}
+
+const StyledTable = styled.div<TableProps>`
   width: 100%;
 
+  ${({ $onScrollTable, scrollMaxHeight }) =>
+    $onScrollTable
+      ? `
+        max-height: ${scrollMaxHeight};
+        overflow-x: auto;
+      `
+      : ''};
+
+  &::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+    width: 6px;
+    border-radius: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.base};
+    width: 4px;
+    border-radius: 12px;
+  }
   .ant-checkbox-indeterminate .ant-checkbox-inner::after {
     display: inline-flex;
     width: 15px;
@@ -57,7 +81,18 @@ const StyledTableTable = styled.table`
   border-spacing: 0 20px;
 `;
 
-const StyledTabletHead = styled.thead``;
+const StyledTabletHead = styled.thead<TableProps>`
+  ${({ $onScrollTable, theme }) =>
+    $onScrollTable
+      ? `
+        position: sticky;
+        top: 0;
+        background-color: ${theme.colors.grayscale.light5};
+        z-index: 1;
+
+      `
+      : ''};
+`;
 
 const StyledTableIcon = styled.div`
   display: flex;
@@ -67,8 +102,8 @@ const StyledTableTr = styled.tr`
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.grayscale.light5};
   height: 56px;
-  margin-bottom: 20px;
   cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.dvt.primary.light2};
   }
@@ -84,12 +119,13 @@ const StyledTableTh = styled.th<StyledTableThProps>`
   color: ${({ theme }) => theme.colors.grayscale.dark2};
   font-size: 16px;
   font-weight: 600;
-  padding-bottom: 28px;
-  padding-left: 3px;
+  border-radius: 12px;
+  padding: 0 3px;
+  padding-bottom: 10px;
   width: ${({ flex }) => (flex ? `${flex}%` : 'auto')};
+
   &:first-of-type {
     padding-left: 30px;
-    padding-right: 3px;
   }
 `;
 
@@ -119,6 +155,7 @@ const StyledTableTd = styled.td`
   color: ${({ theme }) => theme.colors.grayscale.dark2};
   font-size: 14px;
   font-weight: 400;
+  padding: 0 5px;
   &:first-of-type {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
