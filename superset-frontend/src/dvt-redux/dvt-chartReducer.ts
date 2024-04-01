@@ -24,6 +24,7 @@ interface DvtChartState {
   queryContext: any;
   saveDisabled: boolean;
   slice: { id: string; name: string };
+  chartEditStatus: string;
 }
 
 const initialState: DvtChartState = {
@@ -32,6 +33,7 @@ const initialState: DvtChartState = {
   queryContext: {},
   saveDisabled: true,
   slice: { id: '', name: '' },
+  chartEditStatus: '',
 };
 
 const dvtChartSlice = createSlice({
@@ -58,6 +60,10 @@ const dvtChartSlice = createSlice({
       ...state,
       slice: action.payload,
     }),
+    dvtChartEditStatus: (state, action: PayloadAction<any>) => ({
+      ...state,
+      chartEditStatus: action.payload,
+    }),
   },
 });
 
@@ -67,6 +73,7 @@ export const {
   dvtChartSetQueryContext,
   dvtChartSetSaveDisabled,
   dvtChartSetSlice,
+  dvtChartEditStatus,
 } = dvtChartSlice.actions;
 
 export default dvtChartSlice.reducer;

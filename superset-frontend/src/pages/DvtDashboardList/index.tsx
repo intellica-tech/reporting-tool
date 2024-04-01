@@ -222,6 +222,12 @@ function DvtDashboardList() {
   });
 
   useEffect(() => {
+    if (!favoritePromise.loading) {
+      setFavoriteUrl({ url: '', title: '', id: 0, isFavorite: false });
+    }
+  }, [favoritePromise.loading]);
+
+  useEffect(() => {
     if (favoritePromise.data?.result === 'OK') {
       setData(state => {
         const itemRemovedData = state.filter(

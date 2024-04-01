@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { ModalProps } from 'src/dvt-modal';
+import { useDispatch } from 'react-redux';
 import useFetch from 'src/dvt-hooks/useFetch';
+import { dvtChartEditStatus } from 'src/dvt-redux/dvt-chartReducer';
 import DvtInput from 'src/components/DvtInput';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtModalHeader from 'src/components/DvtModalHeader';
@@ -13,6 +15,7 @@ import {
 } from './chart-edit.module';
 
 const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
+  const dispatch = useDispatch();
   const [values, setValues] = useState<any>({
     title: '',
     description: '',
@@ -24,11 +27,9 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   });
   const [chartApi, setChartApi] = useState<string>('');
 
-  const chartItemApi = useFetch({ url: `chart/${meta.id}` });
-
   useEffect(() => {
-    if (chartItemApi.data) {
-      const { result } = chartItemApi.data;
+    if (meta) {
+      const { result } = meta;
       const ownersFixed = result.owners.map((item: any) => item.id);
 
       setValues({
@@ -41,13 +42,13 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
         certificationDetails: result.certification_details || '',
       });
     }
-  }, [chartItemApi.data]);
+  }, [meta]);
 
   const updateChartData = useFetch({
     url: chartApi,
     method: 'PUT',
     body: {
-      cache_timeout: values.cacheTimeout,
+      cache_timeout: values.cacheTimeout ? values.cacheTimeout : undefined,
       certification_details: values.certificationDetails,
       certified_by: values.certifiedBy,
       description: values.description,
@@ -69,6 +70,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
 
   useEffect(() => {
     if (updateChartData.data?.id) {
+      dispatch(dvtChartEditStatus('Success'));
       onClose();
     }
   }, [onClose, updateChartData.data]);
@@ -76,6 +78,12 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
   const handleOnChange = (key: string, value: any) => {
     setValues((state: any) => ({ ...state, [key]: value }));
   };
+
+  useEffect(() => {
+    if (!updateChartData.loading) {
+      setChartApi('');
+    }
+  }, [updateChartData.loading]);
 
   return (
     <StyledChartEdit>
@@ -119,6 +127,7 @@ const DvtChartEdit = ({ meta, onClose }: ModalProps) => {
               label={t('Cache Timeout')}
               onChange={v => handleOnChange('cacheTimeout', v)}
               typeDesign="form"
+              number
             />
             <DvtInputSelect
               label={t('Owners')}

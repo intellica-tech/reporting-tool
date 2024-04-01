@@ -29,6 +29,7 @@ import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { fetchQueryParamsSearch } from 'src/dvt-utils/fetch-query-params';
 import DvtPagination from 'src/components/DvtPagination';
+import { dvtChartEditStatus } from 'src/dvt-redux/dvt-chartReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import DvtButton from 'src/components/DvtButton';
@@ -46,6 +47,9 @@ function ReportList() {
   const reportsSelector = useAppSelector(state => state.dvtSidebar.reports);
   const deleteSuccessStatus = useAppSelector(
     state => state.dvtHome.deleteSuccessStatus,
+  );
+  const chartEditStatus = useAppSelector(
+    state => state.dvtChart.chartEditStatus,
   );
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -173,8 +177,11 @@ function ReportList() {
     if (deleteSuccessStatus) {
       dispatch(dvtHomeDeleteSuccessStatus(''));
     }
+    if (chartEditStatus) {
+      dispatch(dvtChartEditStatus(''));
+    }
     setReportApiUrl(searchApiUrls(page));
-  }, [deleteSuccessStatus, page, sort]);
+  }, [deleteSuccessStatus, chartEditStatus, page, sort]);
 
   useEffect(() => {
     setPage(1);
@@ -210,6 +217,12 @@ function ReportList() {
     url: favoriteUrl.url,
     method: favoriteUrl.isFavorite ? 'DELETE' : 'POST',
   });
+
+  useEffect(() => {
+    if (!favoritePromise.loading) {
+      setFavoriteUrl({ url: '', title: '', id: 0, isFavorite: false });
+    }
+  }, [favoritePromise.loading]);
 
   useEffect(() => {
     if (favoritePromise.data?.result === 'OK') {
