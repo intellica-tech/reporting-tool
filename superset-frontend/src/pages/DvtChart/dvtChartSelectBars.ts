@@ -34,6 +34,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     status: 'heatmap',
     icon: 'dvt-linear_chart',
   },
+  {
+    popoverLabel: 'Gauge Chart',
+    status: 'gauge_chart',
+    icon: 'dvt-linear_chart',
+  },
   // {
   //   popoverLabel: 'Big Number with Trendline',
   //   status: 'big_number',

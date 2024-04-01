@@ -810,6 +810,7 @@ const DvtChart = () => {
       case 'big_number_total':
       case 'pie':
       case 'funnel':
+      case 'gauge_chart':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -850,6 +851,7 @@ const DvtChart = () => {
       case 'big_number_total':
       case 'pie':
       case 'funnel':
+      case 'gauge_chart':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [
@@ -1051,6 +1053,15 @@ const DvtChart = () => {
       show_perc: values.show_perc,
       show_values: values.show_values,
       normalized: values.normalized,
+      animation: true,
+      end_angle: -45,
+      font_size: 15,
+      overlap: true,
+      show_pointer: true,
+      show_progress: true,
+      split_number: 10,
+      start_angle: 225,
+      value_formatter: '{value}',
     },
     queries: [
       {
@@ -1133,7 +1144,10 @@ const DvtChart = () => {
       result = formDataObj[formKey].map((q: any) => {
         const filteredQuery = {};
         findChartForm?.[formKey].forEach((key: any) => {
-          if (q.hasOwnProperty(key)) {
+          if (
+            q.hasOwnProperty(key) &&
+            !(!values.sort_by_metric && key === 'orderby')
+          ) {
             filteredQuery[key] = q[key];
           }
         });
@@ -1421,6 +1435,7 @@ const DvtChart = () => {
       case 'big_number_total':
       case 'pie':
       case 'funnel':
+      case 'gauge_chart':
         return !values.metric.length;
       case 'heatmap':
         return !(

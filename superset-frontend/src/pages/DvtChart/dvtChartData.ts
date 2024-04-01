@@ -781,6 +781,27 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'gauge_chart',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          formDimensions,
+          formMetric,
+          formFilters,
+          formRowLimit,
+          {
+            label: t('SORT BY METRIC'),
+            name: 'sort_by_metric',
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;
