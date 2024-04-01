@@ -102,8 +102,8 @@ const StyledTableTr = styled.tr`
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.grayscale.light5};
   height: 56px;
-  margin-bottom: 20px;
   cursor: pointer;
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.dvt.primary.light2};
   }
@@ -119,13 +119,13 @@ const StyledTableTh = styled.th<StyledTableThProps>`
   color: ${({ theme }) => theme.colors.grayscale.dark2};
   font-size: 16px;
   font-weight: 600;
-  padding: 14px 0;
   border-radius: 12px;
-  padding-left: 3px;
+  padding: 0 3px;
+  padding-bottom: 10px;
   width: ${({ flex }) => (flex ? `${flex}%` : 'auto')};
+
   &:first-of-type {
     padding-left: 30px;
-    padding-right: 3px;
   }
 `;
 
