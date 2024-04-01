@@ -404,7 +404,6 @@ const DvtInputDrop = ({
             label={popperError}
             direction={popoverDirection}
             size="small"
-            nowrap
           >
             <Icon
               fileName="warning"

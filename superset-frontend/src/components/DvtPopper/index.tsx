@@ -17,6 +17,7 @@
  * under the License.
  */
 import React, { ReactNode, useState, useRef, useEffect } from 'react';
+import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import {
   StyledPopper,
   StyledPopperBody,
@@ -29,7 +30,6 @@ export interface DvtPopperProps {
   children: ReactNode;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   size?: 'small' | 'medium';
-  nowrap?: boolean;
 }
 
 const DvtPopper: React.FC<DvtPopperProps> = ({
@@ -37,47 +37,53 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
   children,
   direction = 'bottom',
   size = 'medium',
-  nowrap = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [childWidth, setChildWidth] = useState<number>(0);
-  const [childHeight, setChildHeight] = useState<number>(0);
 
   const [popperTop, setPopperTop] = useState<number>(0);
   const [popperLeft, setPopperLeft] = useState<number>(0);
+  const [popperChildrenScreen, setPopperChildrenScreen] = useState<{
+    height: number;
+    width: number;
+  }>({
+    height: 0,
+    width: 0,
+  });
 
-  const handleMouseEnter = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
+  const handleMouseEnter = () => {
     const divRect = ref.current?.getBoundingClientRect();
     if (!divRect) return;
 
-    const mouseX = window.innerWidth;
-    const mouseY = window.innerHeight;
+    const windowScreenX = window.innerWidth;
+    const windowScreenY = window.innerHeight;
 
-    const divCenterX = mouseX - divRect.left;
-    const divCenterY = mouseY - divRect.top;
+    const divCenterX = windowScreenX - divRect?.right;
+    const divCenterY = windowScreenY - divRect?.bottom;
 
     setPopperLeft(divCenterX);
     setPopperTop(divCenterY);
+    setPopperChildrenScreen({
+      height: divRect?.height,
+      width: divRect?.width,
+    });
     setIsHovered(true);
-    console.log(popperTop);
   };
 
   useEffect(() => {
-    if (ref.current) {
-      setChildWidth(ref.current.offsetWidth / 2);
-      setChildHeight(ref.current.offsetHeight / 2);
-    }
-  }, [ref]);
+    const wheelHandler = () => {
+      setIsHovered(false);
+    };
 
-  useEffect(() => {
-    window.addEventListener('wheel', e => {
+    if (isHovered) {
+      window.addEventListener('wheel', wheelHandler);
+    }
+
+    return () => {
       if (isHovered) {
-        setIsHovered(false);
+        window.removeEventListener('wheel', wheelHandler);
       }
-    });
+    };
   }, [isHovered]);
 
   const setMinWidth = (numberic: number) => {
@@ -94,6 +100,13 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
     return fixMinWidth;
   };
 
+  const {
+    ref: chartPanelRef,
+    observerRef: resizeObserverRef,
+    width: chartPanelWidth,
+    height: chartPanelHeight,
+  } = useResizeDetectorByObserver();
+
   return (
     <StyledPopperGroup
       onMouseEnter={handleMouseEnter}
@@ -102,17 +115,20 @@ const DvtPopper: React.FC<DvtPopperProps> = ({
       <StyledPopper ref={ref}>{children}</StyledPopper>
       {isHovered && (
         <StyledPopperAbsolute
+          ref={resizeObserverRef}
           direction={direction}
+          popperChildrenScreen={popperChildrenScreen}
           top={popperTop}
           left={popperLeft}
-          childWidth={childWidth}
-          childHeight={childHeight}
+          childWidth={chartPanelWidth || 0}
+          childHeight={chartPanelHeight || 0}
         >
           <StyledPopperBody
+            ref={chartPanelRef}
             fontSize={size}
             style={{
               minWidth: setMinWidth(label.length),
-              whiteSpace: nowrap ? 'nowrap' : 'inherit',
+              maxWidth: '300px',
             }}
           >
             {label}

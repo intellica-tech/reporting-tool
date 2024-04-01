@@ -24,6 +24,10 @@ interface DvtPopperProps {
   left: number;
   childWidth: number;
   childHeight: number;
+  popperChildrenScreen: {
+    height: number;
+    width: number;
+  };
 }
 
 interface DvtPopperFontSizeProps {
@@ -67,10 +71,22 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     position: absolute;
   }
 
-  ${({ direction, childWidth, theme, left, top, childHeight }) => {
+  ${({
+    direction,
+    childWidth,
+    theme,
+    left,
+    top,
+    childHeight,
+    popperChildrenScreen,
+  }) => {
     if (direction === 'bottom') {
       return `
-      transform: translateX(calc(-50% + ${childWidth}px));
+      opacity: ${childHeight && childWidth ? 1 : 0};
+      bottom: ${top - childHeight - 13}px;
+      right: ${left - childWidth + popperChildrenScreen.width / 2}px;
+      transform: translateX(-50%);
+
         &::before {
           top: -13px;
           border-left: 8px solid transparent;
@@ -81,8 +97,10 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     }
     if (direction === 'top') {
       return `
-      bottom: calc(100% - (${top}px - ${childHeight}px - 15px));
-      left: calc(${left}px);
+      opacity: ${childHeight && childWidth ? 1 : 0};
+      bottom: ${top + popperChildrenScreen.height + 13}px;
+      right: ${left - childWidth + popperChildrenScreen.width / 2}px;
+      transform: translateX(-50%);
 
         &::before {
           bottom: -13px;
@@ -94,8 +112,10 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     }
     if (direction === 'left') {
       return `
-      top: calc(${top}px - ${childHeight}px);
-      right: calc(100% - (${left}px - ${childWidth}px - 15px));
+      opacity: ${childHeight && childWidth ? 1 : 0};
+      bottom: ${top - childHeight + popperChildrenScreen.height / 2}px;
+      right: ${left + popperChildrenScreen.width + 13}px;
+      transform: translateY(-50%);
       
         &::before {
           right: -13px;
@@ -107,8 +127,10 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
     }
     if (direction === 'right') {
       return `
-    top: calc(${top}px - ${childHeight}px);
-    left: calc(${left}px + (${childWidth}px + 15px));
+      opacity: ${childHeight && childWidth ? 1 : 0};
+      bottom: ${top - childHeight + popperChildrenScreen.height / 2}px;
+      right: ${left - childWidth - 13}px;
+      transform: translateY(-50%);
   
     &::before {
       left: -13px;

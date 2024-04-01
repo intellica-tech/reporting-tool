@@ -1185,7 +1185,6 @@ const DvtChart = () => {
             activeButton={active}
             setActiveButton={setActive}
             data={selectBars}
-            nowrap
           />
           <DvtButton
             label={t('View all charts')}
