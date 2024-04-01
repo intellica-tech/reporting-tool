@@ -6127,10 +6127,20 @@
         "Birden fazla zaman serisi grafiği (kıvılcımlar olarak) ve ilgili metrikleri hızlıca karşılaştırın."
       ],
       "We have the following keys: %s": ["Aşağıdaki anahtarlarımız var: %s"],
-      "Connections": ["Bağlan"],
+      "Connections": ["Bağlantılar"],
       "Data Analysis": ["Veri Analizi"],
       "What's new": ["Yenilikler"],
-      "Recent": ["Güncel"]
+      "Recent": ["Güncel"],
+      "Create a New Dashboard": ["Panel Oluştur"],
+      "Create a New Connection": ["Bağlantı Oluştur"],
+      "Create a New Dataset": ["Veri Seti Oluştur"],
+      "Create a New Graph/Chart": ["Grafik Oluştur"],
+      "Create a New Alert": ["Alarm Oluştur"],
+      "Create Output Table": ["Sonuç Tablosu Oluştur"],
+      "New Output Table": ["Sonuç Tablosu"],
+      "Connection": ["Bağlantı"],
+      "Create Dataset": ["Veri Seti Oluştur"],
+      "New Dataset": ["Veri Seti"]
     }
   }
 }
