@@ -109,7 +109,7 @@ function DvtUsersList() {
     <StyledUsersList>
       <StyledAddButton>
         <DvtButton
-          label="Add"
+          label={t('Add')}
           onClick={addUser}
           iconToRight
           colour="primary"

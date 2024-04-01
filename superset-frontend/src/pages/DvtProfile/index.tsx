@@ -152,7 +152,7 @@ function DvtProfile() {
       />
       {activeSideTab === 'Favorites' && (
         <StyledDvtTable>
-          <h1>Dashboards</h1>
+          <h1>{t('Dashboards')}</h1>
           <DvtTable
             data={[...dashboardFavoriteData].map(item => ({
               ...item,
@@ -160,7 +160,7 @@ function DvtProfile() {
             }))}
             header={tablesHeaderData.dashboardHeader}
           />
-          <h1>Charts</h1>
+          <h1>{t('Charts')}</h1>
           <DvtTable
             data={[...chartFavoriteData].map(item => ({
               ...item,
@@ -172,14 +172,14 @@ function DvtProfile() {
       )}
       {activeSideTab === 'Created Content' && (
         <StyledDvtTable>
-          <h1>Dashboards</h1>
+          <h1>{t('Dashboards')}</h1>
           <DvtTable
             data={[...createdContentDashboardData].map(item => ({
               ...item,
             }))}
             header={tablesHeaderData.createdContentDashboardHeader}
           />
-          <h1>Charts</h1>
+          <h1>{t('Charts')}</h1>
           <DvtTable
             data={[...createdContentChartData].map(item => ({
               ...item,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DvtButton from 'src/components/DvtButton';
 import { useHistory } from 'react-router-dom';
 import DvtAddFormFields from 'src/components/DvtAddFormFields';
+import { t } from '@superset-ui/core';
 import {
   StyledAddFormFields,
   StyledButtons,
@@ -83,12 +84,12 @@ const DvtListRolesAdd = () => {
       </StyledForms>
       <StyledButtons>
         <DvtButton
-          label="Back"
+          label={t('Back')}
           icon="dvt-arrow_forwardup"
           colour="grayscale"
           onClick={handleBack}
         />
-        <DvtButton label="Save" onClick={() => console.log(values)} />
+        <DvtButton label={t('Save')} onClick={() => console.log(values)} />
       </StyledButtons>
     </StyledAddFormFields>
   );

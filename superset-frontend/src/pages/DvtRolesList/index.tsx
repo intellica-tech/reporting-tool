@@ -89,7 +89,7 @@ function DvtListRoles() {
         }}
       >
         <DvtButton
-          label="Copy Role"
+          label={t('Copy Role')}
           onClick={() => {}}
           bold
           colour="primary"

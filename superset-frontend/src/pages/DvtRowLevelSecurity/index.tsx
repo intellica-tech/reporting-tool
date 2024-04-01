@@ -176,7 +176,7 @@ function DvtRowLevelSecurity() {
     <StyledRowLevelSecurity>
       <StyledRowLevelSecurityButton>
         <DvtButton
-          label="Delete"
+          label={t('Delete')}
           onClick={() => handleModalDelete(selectedRows)}
           colour="error"
           typeColour="basic"
@@ -186,7 +186,7 @@ function DvtRowLevelSecurity() {
         {!rowLevelSecurityData.data ||
         rowLevelSecurityData.data.length === 0 ? (
           <DvtIconDataLabel
-            label="No Records Found"
+            label={t('No Records Found')}
             buttonLabel="Add New Record"
           />
         ) : (

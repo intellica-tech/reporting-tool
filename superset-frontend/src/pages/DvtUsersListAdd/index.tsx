@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DvtButton from 'src/components/DvtButton';
 import { useHistory } from 'react-router-dom';
+import { t } from '@superset-ui/core';
 import DvtAddFormFields from 'src/components/DvtAddFormFields';
 import { StyledButtons, StyledForms } from './dvt-users-list-add.module';
 
@@ -41,51 +42,55 @@ const DvtUsersListAdd = () => {
         <DvtAddFormFields
           forms={[
             {
-              description: 'Write the user first name or names',
+              description: t('Write the user first name or names'),
               field: 'firstName',
               important: true,
-              label: 'First Name',
-              placehoder: 'First Name',
+              label: t('First Name'),
+              placehoder: t('First Name'),
               status: 'input',
             },
             {
-              description: 'Write the user first last name',
+              description: t('Write the user first last name'),
               field: 'lastName',
               important: true,
-              label: 'Last Name',
-              placehoder: 'First Name',
+              label: t('Last Name'),
+              placehoder: t('Last Name'),
               status: 'input',
             },
             {
-              description:
+              description: t(
                 'Username valid for authentication on DB or LDAP, unused for OID auth',
+              ),
               field: 'userName',
               important: true,
-              label: 'User Name',
-              placehoder: 'User Name',
+              label: t('User Name'),
+              placehoder: t('User Name'),
               status: 'input',
             },
             {
-              description:
+              description: t(
                 'Username valid for authentication on DB or LDAP, unused for OID auth',
+              ),
               field: 'isActive',
-              label: 'Is Active?',
+              label: t('Is Active?'),
               status: 'checkbox',
             },
             {
-              description:
+              description: t(
                 'The user’s email, this will also be used for OID auth',
+              ),
               field: 'email',
               important: true,
-              label: 'Email',
-              placehoder: 'Email',
+              label: t('Email'),
+              placehoder: t('Email'),
               status: 'input',
             },
             {
-              description:
+              description: t(
                 'The user role on the application, this will associate with a list of permissions',
+              ),
               field: 'role',
-              label: 'Role',
+              label: t('Role'),
               options: [
                 {
                   label: 'Regular',
@@ -96,19 +101,19 @@ const DvtUsersListAdd = () => {
                   value: 2,
                 },
               ],
-              placehoder: 'Select Value',
+              placehoder: t('Select Value'),
               status: 'select-multiple',
             },
             {
-              description: 'The user’s password for authentication',
+              description: t('The user’s password for authentication'),
               field: 'password',
-              label: 'Password',
+              label: t('Password'),
               status: 'input',
             },
             {
-              description: 'Please rewrite the user’s password to confirm',
+              description: t('Please rewrite the user’s password to confirm'),
               field: 'confirmPassword',
-              label: 'Confirm Password',
+              label: t('Confirm Password'),
               status: 'input',
             },
           ]}
@@ -118,12 +123,12 @@ const DvtUsersListAdd = () => {
       </StyledForms>
       <StyledButtons>
         <DvtButton
-          label="Back"
+          label={t('Back')}
           icon="dvt-arrow_forwardup"
           colour="grayscale"
           onClick={handleBack}
         />
-        <DvtButton label="Save" onClick={() => console.log(values)} />
+        <DvtButton label={t('Save')} onClick={() => console.log(values)} />
       </StyledButtons>
     </div>
   );
