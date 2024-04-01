@@ -573,13 +573,21 @@ function DvtDashboardList() {
                 })}
               </DvtDashboardEditRow>
             ))}
-            <StyledNewAddRow
-              hovered={newAddRowHovered}
-              onDrop={e => handleDrop(e, true)}
-              onDragOver={e => e.preventDefault()}
-              onDragLeave={e => setNewAddRowHovered(false)}
-              onDragEnter={e => setNewAddRowHovered(true)}
-            />
+            {isEditPathname && (
+              <StyledNewAddRow
+                hovered={newAddRowHovered}
+                onDrop={e => handleDrop(e, true)}
+                onDragOver={e => e.preventDefault()}
+                onDragLeave={e => {
+                  e.preventDefault();
+                  setNewAddRowHovered(false);
+                }}
+                onDragEnter={e => {
+                  e.preventDefault();
+                  setNewAddRowHovered(true);
+                }}
+              />
+            )}
           </StyledDashboardDroppedList>
         )}
       </StyledDashboard>
