@@ -407,6 +407,7 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
                         ? setApiUrl(`report/${meta.editedAlertReportData.id}`)
                         : setApiUrl('/report/')
                     }
+                    loading={alertAddData.loading}
                   />
                 </StyledAlertAddButtonGroup>
               </div>
