@@ -69,7 +69,7 @@ const StyledInputSelectInput = styled.div<StyledInputDesignProps>`
   cursor: pointer;
 `;
 
-const StyledInputSelectField = styled.div<StyledInputDesignProps>`
+const StyledInputSelectFields = styled.div<StyledInputDesignProps>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -83,6 +83,13 @@ const StyledInputSelectField = styled.div<StyledInputDesignProps>`
       : isOpen
       ? theme.colors.dvt.primary.light2
       : theme.colors.dvt.grayscale.light2};
+`;
+
+const StyledInputSelectField = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
 `;
 
 const StyledInputSelectIcon = styled.div<StyledInputSelectIconProps>`
@@ -224,6 +231,7 @@ const StyledError = styled.div`
 export {
   StyledInputSelectInput,
   StyledInputSelectField,
+  StyledInputSelectFields,
   StyledInputSelectIcon,
   StyledInputSelect,
   StyledInputSelectLabel,
