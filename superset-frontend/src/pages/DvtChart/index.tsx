@@ -35,7 +35,11 @@ import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
-import { ChartDefaultSelectBars, ChartSelectBars } from './dvtChartSelectBars';
+import {
+  ChartDefaultSelectBars,
+  ChartSelectBarProps,
+  ChartSelectBars,
+} from './dvtChartSelectBars';
 import {
   StyledChart,
   CreateChart,
@@ -62,12 +66,8 @@ const DvtChart = () => {
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
   );
-  const [selectBars, setSelectBars] = useState(
-    ChartSelectBars.filter(vf =>
-      [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
-    ),
-  );
-  const [active, setActive] = useState<string>(selectedVizType);
+  const [selectBars, setSelectBars] = useState<ChartSelectBarProps[]>([]);
+  const [active, setActive] = useState<string>('');
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
     label: 'Results',
     value: 'results',
@@ -214,6 +214,22 @@ const DvtChart = () => {
   });
 
   const onlyExploreJson = ['heatmap'];
+
+  useEffect(() => {
+    if (selectedVizType) {
+      if (
+        !ChartDefaultSelectBars.includes(selectedVizType) ||
+        !selectBars.length
+      ) {
+        setSelectBars(
+          ChartSelectBars.filter(vf =>
+            [selectedVizType, ...ChartDefaultSelectBars].includes(vf.status),
+          ),
+        );
+      }
+      setActive(selectedVizType);
+    }
+  }, [selectedVizType]);
 
   useEffect(() => {
     if (history.location.search && selectedChart?.form_data) {
@@ -1438,11 +1454,20 @@ const DvtChart = () => {
       case 'funnel':
       case 'gauge_chart':
         return !values.metric.length;
+      case 'histogram':
+        return !values.all_columns.length;
       case 'heatmap':
         return !(
           values.all_columns_x.length &&
           values.all_columns_y.length &&
           values.metric.length
+        );
+      case 'bubble_v2':
+        return !(
+          values.entity.length &&
+          values.x.length &&
+          values.y.length &&
+          values.size.length
         );
 
       default:
@@ -1632,6 +1657,7 @@ const DvtChart = () => {
                         <CreateChartCenterCollapseInGapFlexRow>
                           {fItem.values?.map((vfItem: any, vfIndex: number) => (
                             <DvtInput
+                              key={vfIndex}
                               label={vfIndex === 0 ? fItem.label : ''}
                               popoverLabel={vfIndex === 0 ? fItem.popper : ''}
                               placeholder={vfItem.placeholder}
@@ -1654,6 +1680,7 @@ const DvtChart = () => {
                         <CreateChartCenterCollapseInGapFlexRow>
                           {fItem.values?.map((vfItem: any, vfIndex: number) => (
                             <DvtSelect
+                              key={vfIndex}
                               label={vfIndex === 0 ? fItem.label : ''}
                               popoverLabel={vfIndex === 0 ? fItem.popper : ''}
                               placeholder={vfItem.placeholder}
