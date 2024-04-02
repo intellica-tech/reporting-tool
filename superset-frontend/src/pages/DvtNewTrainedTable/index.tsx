@@ -215,6 +215,10 @@ function DvtNewTainedTable() {
   }, [getTableData.data]);
 
   useEffect(() => {
+    setData([]);
+  }, [newTainedTableAddSelector.schema]);
+
+  useEffect(() => {
     if (getTableData.data) {
       keys.forEach(({ key }) => {
         if (newTainedTableAddSelector.selectDatabase) {
@@ -336,6 +340,12 @@ function DvtNewTainedTable() {
     }
   }, [postSegmentationDataset.loading]);
 
+  useEffect(() => {
+    if (!getTableData.loading) {
+      setGetTableDataApiUrl('');
+    }
+  }, [getTableData.loading]);
+
   return (
     <StyledDvtNewTainedTable>
       {data.length > 0 ? (
@@ -373,6 +383,7 @@ function DvtNewTainedTable() {
             newTainedTableAddSelector.algorithm?.value &&
             handleCreateDataset()
           }
+          loading={postDataset.loading || postSegmentationDataset.loading}
         />
       </StyledNewTainedTableButtons>
     </StyledDvtNewTainedTable>
