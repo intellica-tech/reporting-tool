@@ -156,12 +156,7 @@ const StyledConnectionAddCheckboxGroup = styled.div`
   gap: 5px;
   margin: 10px 0 5px 10px;
 `;
-const SpinnerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  height: 38vh;
-  justify-content: center;
-`;
+
 export {
   StyledConnectionAdd,
   StyledConnectionAddBody,
@@ -183,5 +178,4 @@ export {
   StyledConnectionAddInputGroup,
   StyledConnectionAddCheckboxGroup,
   StyledConnectionAddGroupStep3,
-  SpinnerContainer,
 };

@@ -14,7 +14,6 @@ import { useDispatch } from 'react-redux';
 import { dvtHomeDeleteSuccessStatus } from 'src/dvt-redux/dvt-homeReducer';
 import DvtTable, { DvtTableSortProps } from 'src/components/DvtTable';
 import DvtInputSelect from 'src/components/DvtInputSelect';
-import DvtSpinner from 'src/components/DvtSpinner';
 import {
   StyledDatasetEdit,
   ModalBreak,
@@ -33,7 +32,6 @@ import {
   ModalInfoText,
   ModalButtonContainer,
   ModalNavigationContainer,
-  SpinnerContainer,
 } from './dataset-edit.module';
 
 interface InputProps {
@@ -963,19 +961,14 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           typeColour="basic"
           size="medium"
         />
-        {editDatasetData.loading ? (
-          <SpinnerContainer>
-            <DvtSpinner type="grow" size="xlarge" />
-          </SpinnerContainer>
-        ) : (
-          <DvtButton
-            colour="primary"
-            label={t('Save')}
-            onClick={() => setApiUrl(`dataset/${meta.id}`)}
-            typeColour="powder"
-            size="medium"
-          />
-        )}
+        <DvtButton
+          colour="primary"
+          label={t('Save')}
+          onClick={() => setApiUrl(`dataset/${meta.id}`)}
+          typeColour="powder"
+          size="medium"
+          loading={editDatasetData.loading}
+        />
       </ModalButtonContainer>
     </StyledDatasetEdit>
   );

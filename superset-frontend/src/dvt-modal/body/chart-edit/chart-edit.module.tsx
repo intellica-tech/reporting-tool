@@ -46,17 +46,9 @@ const StyledChartEditGroup = styled.div`
   display: flex;
   gap: 15px;
 `;
-const SpinnerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  height: 38vh;
-  justify-content: center;
-`;
-
 export {
   StyledChartEdit,
   StyledChartEditBody,
   StyledChartEditInput,
   StyledChartEditGroup,
-  SpinnerContainer,
 };

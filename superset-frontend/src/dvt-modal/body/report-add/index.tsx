@@ -14,7 +14,6 @@ import DvtConditionSchedule from 'src/components/DvtConditionSchedule';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtModalHeader from 'src/components/DvtModalHeader';
 import DvtInputSelect from 'src/components/DvtInputSelect';
-import DvtSpinner from 'src/components/DvtSpinner';
 import { DvtTimezoneData, DvtAlertReportData } from '../../alert-reportData';
 import {
   StyledAlertAdd,
@@ -29,7 +28,6 @@ import {
   StyledAlertAddMessageContent,
   StyledAlertAddButtonGroup,
   StyledAlertAddInputFlex,
-  SpinnerContainer,
 } from './report-add-modal.module';
 
 interface InputProps {
@@ -236,202 +234,191 @@ const DvtReportAdd = ({ meta, onClose }: ModalProps) => {
         onClose={onClose}
       />
       <StyledAlertAddBody>
-        {alertAddData.loading ? (
-          <SpinnerContainer>
-            <DvtSpinner type="grow" size="xlarge" />
-          </SpinnerContainer>
-        ) : (
-          <div>
-            <StyledAlertAddLeftMenu>
-              <DvtSwitch
-                label={t('Active')}
-                checked={input.active}
-                onChange={bol => {
-                  setInput({ ...input, active: bol });
+        <div>
+          <StyledAlertAddLeftMenu>
+            <DvtSwitch
+              label={t('Active')}
+              checked={input.active}
+              onChange={bol => {
+                setInput({ ...input, active: bol });
+              }}
+            />
+            <StyledAlertAddLine />
+            <StyledAlertAddSelectGroup>
+              <DvtInput
+                label={t('Report Name')}
+                placeholder={t('Report Name')}
+                value={input.reportName}
+                onChange={selected => {
+                  setInput({ ...input, reportName: selected });
+                }}
+                typeDesign="chartsForm"
+              />
+              <DvtInputSelect
+                data={ownersOptions}
+                label={t('Owners')}
+                placeholder={t('Select...')}
+                selectedValues={input.owners}
+                setSelectedValues={selected => {
+                  setInput({ ...input, owners: selected });
+                }}
+                typeDesign="chartsForm"
+              />
+              <DvtInput
+                label={t('Description')}
+                placeholder={t('Description')}
+                value={input.description}
+                onChange={selected => {
+                  setInput({ ...input, description: selected });
+                }}
+                typeDesign="chartsForm"
+              />
+            </StyledAlertAddSelectGroup>
+          </StyledAlertAddLeftMenu>
+          <StyledAlertAddItemGroup>
+            <StyledAlertAddReportSchedule>
+              <StyledAlertAddTitle>{t('Report Schedule')}</StyledAlertAddTitle>
+              <DvtConditionSchedule
+                schedule={input.schedule}
+                setSchedule={(selected: string) => {
+                  const newValue =
+                    selected === '' ? '0 * * * *' : String(selected);
+                  setInput({ ...input, schedule: newValue });
                 }}
               />
-              <StyledAlertAddLine />
-              <StyledAlertAddSelectGroup>
-                <DvtInput
-                  label={t('Report Name')}
-                  placeholder={t('Report Name')}
-                  value={input.reportName}
-                  onChange={selected => {
-                    setInput({ ...input, reportName: selected });
-                  }}
-                  typeDesign="chartsForm"
-                />
-                <DvtInputSelect
-                  data={ownersOptions}
-                  label={t('Owners')}
-                  placeholder={t('Select...')}
-                  selectedValues={input.owners}
-                  setSelectedValues={selected => {
-                    setInput({ ...input, owners: selected });
-                  }}
-                  typeDesign="chartsForm"
-                />
-                <DvtInput
-                  label={t('Description')}
-                  placeholder={t('Description')}
-                  value={input.description}
-                  onChange={selected => {
-                    setInput({ ...input, description: selected });
-                  }}
-                  typeDesign="chartsForm"
-                />
-              </StyledAlertAddSelectGroup>
-            </StyledAlertAddLeftMenu>
-            <StyledAlertAddItemGroup>
-              <StyledAlertAddReportSchedule>
-                <StyledAlertAddTitle>
-                  {t('Report Schedule')}
-                </StyledAlertAddTitle>
-                <DvtConditionSchedule
-                  schedule={input.schedule}
-                  setSchedule={(selected: string) => {
-                    const newValue =
-                      selected === '' ? '0 * * * *' : String(selected);
-                    setInput({ ...input, schedule: newValue });
-                  }}
-                />
+              <DvtSelect
+                data={DvtTimezoneData}
+                label={t('Timezone')}
+                placeholder="GMT +03:00 (Antarctica)"
+                selectedValue={input.timezone}
+                setSelectedValue={selected => {
+                  setInput({ ...input, timezone: selected });
+                }}
+                typeDesign="form"
+              />
+            </StyledAlertAddReportSchedule>
+            <StyledAlertAddScheduleSettings>
+              <StyledAlertAddTitle>
+                {t('Schedule Settings')}
+              </StyledAlertAddTitle>
+              <div style={{ display: 'flex' }}>
                 <DvtSelect
-                  data={DvtTimezoneData}
-                  label={t('Timezone')}
-                  placeholder="GMT +03:00 (Antarctica)"
-                  selectedValue={input.timezone}
+                  data={
+                    DvtAlertReportData.find(
+                      item => item.name === 'scheduleSettings',
+                    )?.data || []
+                  }
+                  label={t('Log Retention')}
+                  placeholder={t('90 Days')}
+                  selectedValue={input.logRetention}
                   setSelectedValue={selected => {
-                    setInput({ ...input, timezone: selected });
+                    setInput({ ...input, logRetention: selected });
                   }}
                   typeDesign="form"
                 />
-              </StyledAlertAddReportSchedule>
-              <StyledAlertAddScheduleSettings>
-                <StyledAlertAddTitle>
-                  {t('Schedule Settings')}
-                </StyledAlertAddTitle>
-                <div style={{ display: 'flex' }}>
-                  <DvtSelect
+                <StyledAlertAddInputFlex>
+                  <DvtInput
+                    label={t('Working Timeout')}
+                    placeholder="3600"
+                    value={input.workingTimeout.toString()}
+                    onChange={selected => {
+                      setInput({
+                        ...input,
+                        workingTimeout: parseInt(selected, 10),
+                      });
+                    }}
+                    typeDesign="chartsForm"
+                  />
+                </StyledAlertAddInputFlex>
+              </div>
+            </StyledAlertAddScheduleSettings>
+            <StyledAlertAddMessageContent>
+              <StyledAlertAddTitle>{t('Message Content')}</StyledAlertAddTitle>
+              <div style={{ display: 'flex', gap: '40px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    gap: '10px',
+                  }}
+                >
+                  <DvtRadioList
                     data={
                       DvtAlertReportData.find(
-                        item => item.name === 'scheduleSettings',
+                        item => item.name === 'chartOrDashboard',
                       )?.data || []
                     }
-                    label={t('Log Retention')}
-                    placeholder={t('90 Days')}
-                    selectedValue={input.logRetention}
+                    active={value}
+                    setActive={setValue}
+                  />
+                  <DvtSelect
+                    data={
+                      value === 'Chart'
+                        ? chartOptions
+                        : value === 'Dashboard'
+                        ? dashboardOptions
+                        : []
+                    }
+                    selectedValue={input.messageContent}
                     setSelectedValue={selected => {
-                      setInput({ ...input, logRetention: selected });
+                      setInput({ ...input, messageContent: selected });
                     }}
                     typeDesign="form"
                   />
-                  <StyledAlertAddInputFlex>
-                    <DvtInput
-                      label={t('Working Timeout')}
-                      placeholder="3600"
-                      value={input.workingTimeout.toString()}
-                      onChange={selected => {
-                        setInput({
-                          ...input,
-                          workingTimeout: parseInt(selected, 10),
-                        });
-                      }}
-                      typeDesign="chartsForm"
-                    />
-                  </StyledAlertAddInputFlex>
-                </div>
-              </StyledAlertAddScheduleSettings>
-              <StyledAlertAddMessageContent>
-                <StyledAlertAddTitle>
-                  {t('Message Content')}
-                </StyledAlertAddTitle>
-                <div style={{ display: 'flex', gap: '40px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '100%',
-                      gap: '10px',
-                    }}
-                  >
+                  {value === 'Chart' && (
                     <DvtRadioList
                       data={
                         DvtAlertReportData.find(
-                          item => item.name === 'chartOrDashboard',
+                          item => item.name === 'pngOrSvg',
                         )?.data || []
                       }
-                      active={value}
-                      setActive={setValue}
+                      active={chartType}
+                      setActive={setChartType}
                     />
-                    <DvtSelect
-                      data={
-                        value === 'Chart'
-                          ? chartOptions
-                          : value === 'Dashboard'
-                          ? dashboardOptions
-                          : []
-                      }
-                      selectedValue={input.messageContent}
-                      setSelectedValue={selected => {
-                        setInput({ ...input, messageContent: selected });
-                      }}
-                      typeDesign="form"
-                    />
-                    {value === 'Chart' && (
-                      <DvtRadioList
-                        data={
-                          DvtAlertReportData.find(
-                            item => item.name === 'pngOrSvg',
-                          )?.data || []
-                        }
-                        active={chartType}
-                        setActive={setChartType}
-                      />
-                    )}
-                    {value === 'Dashboard' && (
-                      <DvtCheckbox
-                        label={t('Ignore cache when generating screenshot')}
-                        checked={input.ignore}
-                        onChange={selected => {
-                          setInput({ ...input, ignore: selected });
-                        }}
-                      />
-                    )}
-                    <StyledAlertAddTitle>
-                      {t('Notification Method')}
-                    </StyledAlertAddTitle>
-                    <DvtInput
-                      label="EMAIL"
-                      value={input.email}
+                  )}
+                  {value === 'Dashboard' && (
+                    <DvtCheckbox
+                      label={t('Ignore cache when generating screenshot')}
+                      checked={input.ignore}
                       onChange={selected => {
-                        setInput({ ...input, email: selected });
+                        setInput({ ...input, ignore: selected });
                       }}
-                      typeDesign="chartsForm"
-                      type="email"
                     />
-                  </div>
-                  <div>
-                    <StyledAlertAddButtonGroup>
-                      <DvtButton bold label={t('Cancel')} onClick={onClose} />
-                      <DvtButton
-                        bold
-                        colour="grayscale"
-                        label={meta?.isEdit ? t('Save') : t('Add')}
-                        onClick={() =>
-                          meta?.isEdit
-                            ? setApiUrl(
-                                `report/${meta.editedAlertReportData.id}`,
-                              )
-                            : setApiUrl('/report/')
-                        }
-                      />
-                    </StyledAlertAddButtonGroup>
-                  </div>
+                  )}
+                  <StyledAlertAddTitle>
+                    {t('Notification Method')}
+                  </StyledAlertAddTitle>
+                  <DvtInput
+                    label="EMAIL"
+                    value={input.email}
+                    onChange={selected => {
+                      setInput({ ...input, email: selected });
+                    }}
+                    typeDesign="chartsForm"
+                    type="email"
+                  />
                 </div>
-              </StyledAlertAddMessageContent>
-            </StyledAlertAddItemGroup>
-          </div>
-        )}
+                <div>
+                  <StyledAlertAddButtonGroup>
+                    <DvtButton bold label={t('Cancel')} onClick={onClose} />
+                    <DvtButton
+                      bold
+                      colour="grayscale"
+                      label={meta?.isEdit ? t('Save') : t('Add')}
+                      onClick={() =>
+                        meta?.isEdit
+                          ? setApiUrl(`report/${meta.editedAlertReportData.id}`)
+                          : setApiUrl('/report/')
+                      }
+                      loading={alertAddData.loading}
+                    />
+                  </StyledAlertAddButtonGroup>
+                </div>
+              </div>
+            </StyledAlertAddMessageContent>
+          </StyledAlertAddItemGroup>
+        </div>
       </StyledAlertAddBody>
     </StyledAlertAdd>
   );

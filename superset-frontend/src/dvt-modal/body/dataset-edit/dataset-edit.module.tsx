@@ -153,13 +153,6 @@ const SettingsBlock = styled.div`
   border-radius: 12px;
 `;
 
-const SpinnerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  height: 38vh;
-  justify-content: center;
-`;
-
 export {
   StyledDatasetEdit,
   ModalHeader,
@@ -178,5 +171,4 @@ export {
   ColumnsButtonContainer,
   SettingsBody,
   SettingsBlock,
-  SpinnerContainer,
 };

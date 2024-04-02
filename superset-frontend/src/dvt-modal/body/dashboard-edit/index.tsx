@@ -27,7 +27,6 @@ import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
 import DvtModalHeader from 'src/components/DvtModalHeader';
-import DvtSpinner from 'src/components/DvtSpinner';
 import {
   StyledCollapse,
   StyledCollapseGroup,
@@ -35,7 +34,6 @@ import {
   StyledCollapseLabel,
 } from 'src/components/DvtCollapse/dvt-collapse.module';
 import {
-  SpinnerContainer,
   StyledDashboardEdit,
   StyledDashboardEditBody,
   StyledDashboardEditGroup,
@@ -132,18 +130,11 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
 
   return (
     <StyledDashboardEdit>
-      {updateDashboardData.loading ? (
-        <SpinnerContainer>
-          <DvtSpinner type="grow" size="xlarge" />
-        </SpinnerContainer>
-      ) : (
-        <DvtModalHeader
-          buttonLabel={t('SAVE')}
-          onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
-          onClose={onClose}
-        />
-      )}
-
+      <DvtModalHeader
+        buttonLabel={t('SAVE')}
+        onClick={() => setDashboardApi(`dashboard/${meta?.id}`)}
+        onClose={onClose}
+      />
       <StyledDashboardEditBody>
         <StyledDashboardEditGroup>
           <StyledDashboardEditInput>
