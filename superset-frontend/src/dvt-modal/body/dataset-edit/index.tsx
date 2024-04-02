@@ -967,6 +967,7 @@ const DvtDatasetEdit = ({ meta, onClose }: ModalProps) => {
           onClick={() => setApiUrl(`dataset/${meta.id}`)}
           typeColour="powder"
           size="medium"
+          loading={editDatasetData.loading}
         />
       </ModalButtonContainer>
     </StyledDatasetEdit>

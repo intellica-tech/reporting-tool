@@ -710,6 +710,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                     : setApiUrl('database/')
                 }
                 size="small"
+                loading={connectionAddData.loading}
               />
             </StyledConnectionAddButtons>
           </>
