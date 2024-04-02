@@ -33,6 +33,7 @@ import {
   StyledInputSelectNumberOptions,
   StyledInputSelectNumber,
   StyledError,
+  StyledInputSelectFields,
 } from './dvt-input-select.module';
 
 interface SelectData {
@@ -113,7 +114,7 @@ const DvtInputSelect = ({
         onClick={() => setIsOpen(!isOpen)}
         selected={false}
       >
-        <StyledInputSelectField
+        <StyledInputSelectFields
           typeDesign={typeDesign}
           isOpen={isOpen}
           selected={
@@ -123,11 +124,18 @@ const DvtInputSelect = ({
           {!selectedValues.every(Number.isNaN)
             ? fixData
                 .filter(option => selectedValues.includes(option.value))
-                .map(option => option.label)
-                .join(', ')
+                .slice(0, 4)
+                .map((option, index) => (
+                  <StyledInputSelectField key={index}>
+                    {index === 3 && selectedValues.length > 4
+                      ? `, ${option.label}, +${selectedValues.length - 4} ...`
+                      : index === 0
+                      ? option.label
+                      : `, ${option.label}`}
+                  </StyledInputSelectField>
+                ))
             : placeholder}
-        </StyledInputSelectField>
-
+        </StyledInputSelectFields>
         <StyledInputSelectIcon isOpen={isOpen}>
           <Icon
             fileName="caret_right"
