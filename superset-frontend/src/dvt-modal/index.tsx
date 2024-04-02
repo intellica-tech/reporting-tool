@@ -22,6 +22,7 @@ import {
   StyledModalCardBody,
 } from './dvt-modal.module';
 import DvtSaveChartModal from './body/save-chart';
+import DvtViewAllCharts from './body/view-all-charts';
 
 export interface ModalProps {
   meta: any;
@@ -58,6 +59,8 @@ const getComponent = (cmpnt: string, meta: any, onClose: () => void) => {
       return <DvtDashoardFilterModal meta={meta} onClose={onClose} />;
     case 'save-chart':
       return <DvtSaveChartModal meta={meta} onClose={onClose} />;
+    case 'view-all-charts':
+      return <DvtViewAllCharts meta={meta} onClose={onClose} />;
     default:
       return <></>;
   }
@@ -88,6 +91,7 @@ const DvtModal = () => {
       case 'rowlevelsecurity-add-modal':
         return 'large';
       case 'dashboard-filter':
+      case 'view-all-charts':
         return 'xlarge';
       default:
         return 'small';
