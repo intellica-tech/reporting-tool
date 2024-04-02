@@ -6,6 +6,7 @@ import { useAppSelector } from 'src/dvt-hooks/useAppSelector';
 import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import useFetch from 'src/dvt-hooks/useFetch';
 import { t } from '@superset-ui/core';
+import { openModal } from 'src/dvt-redux/dvt-modalReducer';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import {
   dvtChartSetQueryContext,
@@ -1177,6 +1178,14 @@ const DvtChart = () => {
     [],
   );
 
+  const handleViewAllChart = () => {
+    dispatch(
+      openModal({
+        component: 'view-all-charts',
+      }),
+    );
+  };
+
   return (
     <StyledChart>
       <CreateChart>
@@ -1189,7 +1198,7 @@ const DvtChart = () => {
           />
           <DvtButton
             label={t('View all charts')}
-            onClick={() => {}}
+            onClick={handleViewAllChart}
             typeColour="outline"
           />
         </CreateChartTop>
