@@ -40,7 +40,7 @@ function DvtProfile() {
   );
   const userSelector = useAppSelector(state => state.user);
 
-  const recentActivityPromise = useFetch({ url: 'log/recent_activity' });
+  const recentActivityPromise = useFetch({ url: 'log/recent_activity/' });
 
   const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({

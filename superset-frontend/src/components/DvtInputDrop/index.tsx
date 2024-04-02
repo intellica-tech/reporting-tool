@@ -319,7 +319,7 @@ const DvtInputDrop = ({
       type === 'filters'
     ) {
       setOptionApiUrl(
-        `${datasourceApi}/column/${values.column?.column_name}/values`,
+        `${datasourceApi}/column/${values.column?.column_name}/values/`,
       );
     }
   }, [datasourceApi, values.column, isOpen]);

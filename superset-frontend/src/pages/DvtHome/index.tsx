@@ -114,7 +114,7 @@ function DvtWelcome() {
     url: `chart/${fetchQueryParamsSearch({ pageSize: 3 })}`,
   });
 
-  const recentsPromise = useFetch({ url: 'log/recent_activity' });
+  const recentsPromise = useFetch({ url: 'log/recent_activity/' });
 
   const dashboardFavouritePromise = useFetch({
     url: `dashboard/${fetchQueryParamsSearch({

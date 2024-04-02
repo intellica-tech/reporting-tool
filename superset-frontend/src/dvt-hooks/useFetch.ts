@@ -76,6 +76,11 @@ const useFetch = ({
 
     return () => {
       isMounted = false;
+      if (url) {
+        setData(null);
+        setError(null);
+        setLoading(false);
+      }
     };
   }, [url]);
 
