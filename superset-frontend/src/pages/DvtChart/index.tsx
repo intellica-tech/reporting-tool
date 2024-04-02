@@ -770,6 +770,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'waterfall':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -811,6 +812,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'waterfall':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [
@@ -1021,6 +1023,10 @@ const DvtChart = () => {
       split_number: 10,
       start_angle: 225,
       value_formatter: '{value}',
+      decrease_color: { r: 224, g: 67, b: 85, a: 1 },
+      increase_color: { r: 90, g: 193, b: 137, a: 1 },
+      total_color: { r: 102, g: 102, b: 102, a: 1 },
+      x_ticks_layout: 'auto',
     },
     queries: [
       {
@@ -1054,7 +1060,13 @@ const DvtChart = () => {
         applied_time_extras: {},
         columns: queriesColumnsSwitch(),
         metrics: queriesMetricsSwitch(),
-        orderby: queriesOrderBySwitch(),
+        orderby:
+          active === 'waterfall'
+            ? [
+                values.groupby && [values.groupby[0]?.label, true],
+                values.x_axis && [values.x_axis[0]?.label, true],
+              ]
+            : queriesOrderBySwitch(),
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
@@ -1105,7 +1117,11 @@ const DvtChart = () => {
         findChartForm?.[formKey].forEach((key: any) => {
           if (
             q.hasOwnProperty(key) &&
-            !(!values.sort_by_metric && key === 'orderby')
+            !(
+              !values.sort_by_metric &&
+              key === 'orderby' &&
+              active !== 'waterfall'
+            )
           ) {
             filteredQuery[key] = q[key];
           }
@@ -1411,6 +1427,8 @@ const DvtChart = () => {
           values.y.length &&
           values.size.length
         );
+      case 'waterfall':
+        return !(values.metric.length && values.x_axis.length);
 
       default:
         return false;
