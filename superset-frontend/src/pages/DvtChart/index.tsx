@@ -456,6 +456,13 @@ const DvtChart = () => {
           }
         };
 
+        const chartFormsFindOptions = (field: string, value: any) =>
+          getFormData?.[field]
+            ? chartFormsOption[field].find(
+                (f: { value: any }) => f.value === getFormData[field],
+              )
+            : value;
+
         setSelectBars(
           ChartSelectBars.filter(vf =>
             [getFormData.viz_type, ...ChartDefaultSelectBars].includes(
@@ -466,25 +473,17 @@ const DvtChart = () => {
         setActive(getFormData.viz_type);
         setValues({
           x_axis: emptyArrayOrOneFindItem(getFormData.x_axis),
-          time_grain_sqla: getFormData?.time_grain_sqla
-            ? chartFormsOption.time_grain_sqla.find(
-                f => f.value === getFormData.time_grain_sqla,
-              )
-            : {
-                label: t('Day'),
-                value: 'P1D',
-              },
+          time_grain_sqla: chartFormsFindOptions('time_grain_sqla', {
+            label: t('Day'),
+            value: 'P1D',
+          }),
           metrics: getFormData.metrics
             ? getFormData.metrics.map((v: any) => metricsOrColumnsFormation(v))
             : [],
           groupby: getFormData.groupby
             ? getFormData.groupby.map((v: any) => metricsOrColumnsFormation(v))
             : [],
-          contributionMode: getFormData?.contributionMode
-            ? chartFormsOption.contributionMode.find(
-                f => f.value === getFormData.contributionMode,
-              )
-            : '',
+          contributionMode: chartFormsFindOptions('contributionMode', ''),
           adhoc_filters: [
             ...filtersOnItem,
             ...(getFormData.adhoc_filters
@@ -514,35 +513,19 @@ const DvtChart = () => {
               },
           truncate_metric: true,
           show_empty_columns: true,
-          rolling_type: getFormData?.rolling_type
-            ? chartFormsOption.rolling_type.find(
-                f => f.value === getFormData.rolling_type,
-              )
-            : {
-                label: t('None'),
-                value: 'null',
-              },
+          rolling_type: chartFormsFindOptions('rolling_type', {
+            label: t('None'),
+            value: 'null',
+          }),
           time_compare: getFormData?.time_compare
             ? getFormData.time_compare
             : [],
-          comparison_type: getFormData?.comparison_type
-            ? chartFormsOption.comparison_type.find(
-                f => f.value === getFormData.comparison_type,
-              )
-            : {
-                label: t('Actual values'),
-                value: 'values',
-              },
-          resample_rule: getFormData?.resample_rule
-            ? chartFormsOption.resample_rule.find(
-                f => f.value === getFormData.resample_rule,
-              )
-            : '',
-          resample_method: getFormData?.resample_method
-            ? chartFormsOption.resample_method.find(
-                f => f.value === getFormData.resample_method,
-              )
-            : '',
+          comparison_type: chartFormsFindOptions('comparison_type', {
+            label: t('Actual values'),
+            value: 'values',
+          }),
+          resample_rule: chartFormsFindOptions('resample_rule', ''),
+          resample_method: chartFormsFindOptions('resample_method', ''),
           annotation_layers: [],
           forecastEnabled: getFormData?.forecastEnabled
             ? getFormData.forecastEnabled
@@ -598,62 +581,37 @@ const DvtChart = () => {
           size: emptyArrayOrOneFindItem(getFormData.size),
           all_columns_x: emptyArrayOrOneFindItem(getFormData.all_columns_x),
           all_columns_y: emptyArrayOrOneFindItem(getFormData.all_columns_y),
-          linear_color_scheme: getFormData?.linear_color_scheme
-            ? chartFormsOption.linear_color_scheme.find(
-                f => f.value === getFormData.linear_color_scheme,
-              )
-            : {
-                label: 'Superset Sequential #1',
-                value: 'superset_seq_1',
-              },
-          xscale_interval: getFormData?.xscale_interval
-            ? chartFormsOption.xscale_interval.find(
-                f => f.value === getFormData.xscale_interval,
-              )
-            : {
-                label: '1',
-                value: 1,
-              },
-          yscale_interval: getFormData?.yscale_interval
-            ? chartFormsOption.yscale_interval.find(
-                f => f.value === getFormData.yscale_interval,
-              )
-            : {
-                label: '1',
-                value: 1,
-              },
-          canvas_image_rendering: getFormData?.canvas_image_rendering
-            ? chartFormsOption.canvas_image_rendering.find(
-                f => f.value === getFormData.canvas_image_rendering,
-              )
-            : {
-                label: t('pixelated (Sharp)'),
-                value: 'pixelated',
-              },
-          normalize_across: getFormData?.normalize_across
-            ? chartFormsOption.normalize_across.find(
-                f => f.value === getFormData.normalize_across,
-              )
-            : {
-                label: t('heatmap'),
-                value: 'heatmap',
-              },
-          left_margin: getFormData?.left_margin
-            ? chartFormsOption.left_margin.find(
-                f => f.value === getFormData.left_margin,
-              )
-            : {
-                label: t('auto'),
-                value: 'auto',
-              },
-          bottom_margin: getFormData?.bottom_margin
-            ? chartFormsOption.bottom_margin.find(
-                f => f.value === getFormData.bottom_margin,
-              )
-            : {
-                label: t('auto'),
-                value: 'auto',
-              },
+          linear_color_scheme: chartFormsFindOptions('linear_color_scheme', {
+            label: 'Superset Sequential #1',
+            value: 'superset_seq_1',
+          }),
+          xscale_interval: chartFormsFindOptions('xscale_interval', {
+            label: '1',
+            value: 1,
+          }),
+          yscale_interval: chartFormsFindOptions('yscale_interval', {
+            label: '1',
+            value: 1,
+          }),
+          canvas_image_rendering: chartFormsFindOptions(
+            'canvas_image_rendering',
+            {
+              label: t('pixelated (Sharp)'),
+              value: 'pixelated',
+            },
+          ),
+          normalize_across: chartFormsFindOptions('normalize_across', {
+            label: t('heatmap'),
+            value: 'heatmap',
+          }),
+          left_margin: chartFormsFindOptions('left_margin', {
+            label: t('auto'),
+            value: 'auto',
+          }),
+          bottom_margin: chartFormsFindOptions('bottom_margin', {
+            label: t('auto'),
+            value: 'auto',
+          }),
           y_axis_bounds:
             getFormData.viz_type === 'heatmap'
               ? {
@@ -667,22 +625,14 @@ const DvtChart = () => {
                       : getFormData?.y_axis_bounds[1],
                 }
               : {},
-          y_axis_format: getFormData?.y_axis_format
-            ? chartFormsOption.y_axis_format.find(
-                f => f.value === getFormData.y_axis_format,
-              )
-            : {
-                label: t('Adaptive formatting'),
-                value: 'SMART_NUMBER',
-              },
-          time_format: getFormData?.time_format
-            ? chartFormsOption.time_format.find(
-                f => f.value === getFormData.time_format,
-              )
-            : {
-                label: t('Adaptive formatting'),
-                value: 'smart_date',
-              },
+          y_axis_format: chartFormsFindOptions('y_axis_format', {
+            label: t('Adaptive formatting'),
+            value: 'SMART_NUMBER',
+          }),
+          time_format: chartFormsFindOptions('time_format', {
+            label: t('Adaptive formatting'),
+            value: 'smart_date',
+          }),
           currency_format:
             getFormData.viz_type === 'heatmap'
               ? {
@@ -700,22 +650,14 @@ const DvtChart = () => {
                     : '',
                 }
               : {},
-          sort_x_axis: getFormData?.sort_x_axis
-            ? chartFormsOption.sort_x_axis.find(
-                f => f.value === getFormData.sort_x_axis,
-              )
-            : {
-                label: t('Axis ascending'),
-                value: 'alpha_asc',
-              },
-          sort_y_axis: getFormData?.sort_y_axis
-            ? chartFormsOption.sort_y_axis.find(
-                f => f.value === getFormData.sort_y_axis,
-              )
-            : {
-                label: t('Axis ascending'),
-                value: 'alpha_asc',
-              },
+          sort_x_axis: chartFormsFindOptions('sort_x_axis', {
+            label: t('Axis ascending'),
+            value: 'alpha_asc',
+          }),
+          sort_y_axis: chartFormsFindOptions('sort_y_axis', {
+            label: t('Axis ascending'),
+            value: 'alpha_asc',
+          }),
           show_legend: getFormData?.show_legend !== false,
           show_perc: getFormData?.show_perc !== false,
           show_values: getFormData?.show_values
@@ -1346,7 +1288,7 @@ const DvtChart = () => {
       const onlyExploreJsonResult = onlyExploreJson.includes(active)
         ? chartResultsPromise.data
         : chartResultsPromise.data.result[0];
-      const firstObjectItem = onlyExploreJsonResult.colnames;
+      const firstObjectItem = onlyExploreJsonResult?.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
         title: v,
@@ -1381,7 +1323,7 @@ const DvtChart = () => {
 
   useEffect(() => {
     if (chartSamplePromise.data) {
-      const firstObjectItem = chartSamplePromise.data.result.colnames;
+      const firstObjectItem = chartSamplePromise.data.result?.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
         title: v,
