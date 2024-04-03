@@ -110,128 +110,6 @@ function DvtDashboardList() {
 
   const position = dashboardEditSelector.position_json;
 
-  // const position = {
-  //   'CHART-1gfndpe10o': {
-  //     children: [],
-  //     id: 'CHART-1gfndpe10o',
-  //     meta: {
-  //       chartId: 250,
-  //       height: 50,
-  //       sliceName: 'a',
-  //       uuid: '4d416188-243a-492d-bfcf-6d0d31e1526c',
-  //       width: 2,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-fg29jmsttq'],
-  //     type: 'CHART',
-  //   },
-  //   DASHBOARD_VERSION_KEY: 'v2',
-  //   GRID_ID: {
-  //     children: ['ROW-fg29jmsttq', 'ROW-vvs4dre9xa', 'ROW-0nb7khqz2e'],
-  //     id: 'GRID_ID',
-  //     parents: ['ROOT_ID'],
-  //     type: 'GRID',
-  //   },
-  //   HEADER_ID: {
-  //     id: 'HEADER_ID',
-  //     meta: {
-  //       text: 'ddd',
-  //     },
-  //     type: 'HEADER',
-  //   },
-  //   ROOT_ID: {
-  //     children: ['GRID_ID'],
-  //     id: 'ROOT_ID',
-  //     type: 'ROOT',
-  //   },
-  //   'ROW-fg29jmsttq': {
-  //     children: ['CHART-1gfndpe10o', 'CHART-6ddj5c69yh', 'CHART-bg935pwqmc'],
-  //     id: 'ROW-fg29jmsttq',
-  //     meta: {
-  //       background: 'BACKGROUND_TRANSPARENT',
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID'],
-  //     type: 'ROW',
-  //   },
-  //   'ROW-vvs4dre9xa': {
-  //     children: ['CHART-txoio6r4jr', 'CHART-9ru4m2d974'],
-  //     id: 'ROW-vvs4dre9xa',
-  //     meta: {
-  //       background: 'BACKGROUND_TRANSPARENT',
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID'],
-  //     type: 'ROW',
-  //   },
-  //   'CHART-txoio6r4jr': {
-  //     children: [],
-  //     id: 'CHART-txoio6r4jr',
-  //     meta: {
-  //       chartId: 243,
-  //       height: 50,
-  //       sliceName: 'iris_base_table_report',
-  //       width: 5,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-vvs4dre9xa'],
-  //     type: 'CHART',
-  //   },
-  //   'CHART-9ru4m2d974': {
-  //     children: [],
-  //     id: 'CHART-9ru4m2d974',
-  //     meta: {
-  //       chartId: 246,
-  //       height: 50,
-  //       sliceName: 'iris_statistical_histogram_report',
-  //       width: 7,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-vvs4dre9xa'],
-  //     type: 'CHART',
-  //   },
-  //   'CHART-6ddj5c69yh': {
-  //     children: [],
-  //     id: 'CHART-6ddj5c69yh',
-  //     meta: {
-  //       chartId: 244,
-  //       height: 50,
-  //       sliceName: 'iris_statistical_mean_report',
-  //       width: 4,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-fg29jmsttq'],
-  //     type: 'CHART',
-  //   },
-  //   'CHART-bg935pwqmc': {
-  //     children: [],
-  //     id: 'CHART-bg935pwqmc',
-  //     meta: {
-  //       chartId: 245,
-  //       height: 50,
-  //       sliceName: 'iris_statistical_skewness_report',
-  //       width: 6,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-fg29jmsttq'],
-  //     type: 'CHART',
-  //   },
-  //   'ROW-0nb7khqz2e': {
-  //     children: ['CHART-ihkxgszx5w'],
-  //     id: 'ROW-0nb7khqz2e',
-  //     meta: {
-  //       background: 'BACKGROUND_TRANSPARENT',
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID'],
-  //     type: 'ROW',
-  //   },
-  //   'CHART-ihkxgszx5w': {
-  //     children: [],
-  //     id: 'CHART-ihkxgszx5w',
-  //     meta: {
-  //       chartId: 249,
-  //       height: 50,
-  //       sliceName: 'iris try',
-  //       width: 12,
-  //     },
-  //     parents: ['ROOT_ID', 'GRID_ID', 'ROW-0nb7khqz2e'],
-  //     type: 'CHART',
-  //   },
-  // };
-
   const setPosition = (positionObjectItem: any) => {
     dispatch(
       dvtChartGetDashboardEditSetValue({
@@ -705,13 +583,12 @@ function DvtDashboardList() {
                           key={rItem}
                           item={findItem}
                           chartItem={position[rItem]}
-                          totalWidth={position[gRow]?.children
-                            .map((rm: string) => position[rm].meta.width)
-                            .reduce(
-                              (prev: number, curr: number) => prev + curr,
-                              0,
-                            )}
-                          rowChildLength={position[gRow]?.children.length}
+                          // totalWidth={position[gRow]?.children
+                          //   .map((rm: string) => position[rm].meta.width)
+                          //   .reduce(
+                          //     (prev: number, curr: number) => prev + curr,
+                          //     0,
+                          //   )}
                           deleteClick={() =>
                             handleRemoveChart(gRow, rItem, findItem.id)
                           }
@@ -726,6 +603,7 @@ function DvtDashboardList() {
                                 meta: {
                                   ...position[rItem].meta,
                                   height: sizes.height,
+                                  width: sizes.width,
                                 },
                               },
                             })

@@ -34,8 +34,6 @@ interface DvtDashboardEditChartProps {
   chartItem: any;
   deleteClick: () => void;
   isEdit: boolean;
-  rowChildLength: number;
-  totalWidth?: number;
   onReSize: boolean;
   setOnReSize: (args: string) => void;
   setSize: (sizes: { height: number; width: number }) => void;
@@ -46,13 +44,15 @@ const DvtDashboardEditChart = ({
   chartItem,
   deleteClick,
   isEdit = false,
-  rowChildLength = 0,
   onReSize,
   setOnReSize,
   setSize,
 }: DvtDashboardEditChartProps) => {
   const [onHover, setOnHover] = useState<boolean>(false);
   const { meta } = chartItem;
+
+  const onlyGridItemWidthScreen = (getWidth: number) =>
+    ((window.innerWidth - (isEdit ? 574 : 94)) / 12) * getWidth;
 
   return (
     <Resizable
@@ -61,17 +61,15 @@ const DvtDashboardEditChart = ({
         if (d.height || d.width) {
           setSize({
             height: meta?.height + Number((d.height / 8).toFixed(0)),
-            // width: meta?.width + Number((d.width / 20).toFixed(0)),
-            width: 1,
+            width:
+              meta?.width +
+              Number((d.width / onlyGridItemWidthScreen(1)).toFixed(0)),
           });
         }
         setOnReSize('');
       }}
       size={{
-        width: `calc(${(100 / 12) * meta?.width}vw - ${
-          (((isEdit ? 588 : 108) + (rowChildLength - 1) * 15) / 12) *
-          meta?.width
-        }px)`,
+        width: onlyGridItemWidthScreen(meta?.width) - 15,
         height: meta?.height * 8,
       }}
       onResizeStart={() => {
@@ -86,7 +84,15 @@ const DvtDashboardEditChart = ({
         onMouseOver={() => setOnHover(true)}
       >
         <StyledDashboardDroppedListItemTitle>
-          <div>{item.slice_name}</div>
+          <div
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {item.slice_name}
+          </div>
           {isEdit && onHover && (
             <Icon
               style={{ cursor: 'pointer' }}
@@ -102,24 +108,11 @@ const DvtDashboardEditChart = ({
             <div
               style={{
                 maxHeight: meta?.height * 8 - 82,
-                width:
-                  (window.innerWidth / 12) * meta?.width -
-                  (((isEdit ? 588 : 108) +
-                    (rowChildLength - 1) * 15 +
-                    rowChildLength * 32) /
-                    12) *
-                    meta?.width,
+                width: onlyGridItemWidthScreen(meta?.width) - 15 - 32,
               }}
             >
               <ChartContainer
-                width={
-                  (window.innerWidth / 12) * meta?.width -
-                  (((isEdit ? 588 : 108) +
-                    (rowChildLength - 1) * 15 +
-                    rowChildLength * 32) /
-                    12) *
-                    meta?.width
-                }
+                width={onlyGridItemWidthScreen(meta?.width) - 15 - 32}
                 height={meta?.height * 8 - 82}
                 ownState={undefined}
                 annotationData={undefined}
