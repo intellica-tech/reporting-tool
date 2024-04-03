@@ -804,6 +804,42 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'waterfall',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('X-AXIS'),
+            name: 'x_axis',
+            popper: t('Dimension to use on x-axis.'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('BREAKDOWNS'),
+            name: 'groupby',
+            popper: t(
+              '"Breaks down the series by the category specified in this control. This can help viewers understand how each category affects the overall value.',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formMetric,
+          formFilters,
+          formRowLimit,
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;
