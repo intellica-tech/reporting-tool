@@ -33,6 +33,7 @@ const StyledDashboardEdit = styled.div`
 
 const StyledDashboard = styled.div`
   flex: 1;
+  position: relative;
 `;
 
 const StyledTab = styled.div`
@@ -79,13 +80,33 @@ const StyledChartFilter = styled.div`
   gap: 12px;
 `;
 
+const StyledDashboardDroppedListGridShow = styled.div`
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 26px;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 15px;
+  z-index: 1;
+`;
+
+const StyledDashboardDroppedListGridShowItem = styled.div`
+  background-color: ${({ theme }) => theme.colors.dvt.primary.base};
+  height: 100%;
+  width: 100%;
+  opacity: 0.15;
+`;
+
 const StyledDashboardDroppedList = styled.div`
   padding: 0 20px;
   padding-left: 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: auto;
+  overflow-y: scroll;
+  min-height: calc(100vh - 210px);
   max-height: calc(100vh - 210px);
 
   &::-webkit-scrollbar {
@@ -102,15 +123,19 @@ const StyledDashboardDroppedList = styled.div`
 
 interface StyledDashboardDroppedListItemProps {
   isEdit: boolean;
+  isOnResize: boolean;
 }
 
 const StyledDashboardDroppedListItem = styled.div<StyledDashboardDroppedListItemProps>`
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
-  /* flex: 1; */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 16px;
+  height: 100%;
+  ${({ isOnResize, theme }) =>
+    isOnResize && `outline: 1px solid ${theme.colors.primary.base}`};
 
   ${({ isEdit, theme }) =>
     isEdit &&
@@ -137,6 +162,7 @@ const StyledDashboardDroppedListItemChart = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: auto;
+  flex: 1;
 `;
 
 const StyledDashboardDroppedRow = styled.div`
@@ -192,6 +218,8 @@ export {
   StyledChartList,
   StyledChartFilter,
   StyledDashboardDroppedList,
+  StyledDashboardDroppedListGridShow,
+  StyledDashboardDroppedListGridShowItem,
   StyledDashboardDroppedListItem,
   StyledDashboardDroppedListItemTitle,
   StyledDashboardDroppedListItemChart,

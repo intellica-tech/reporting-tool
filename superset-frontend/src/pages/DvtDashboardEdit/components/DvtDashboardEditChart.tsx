@@ -19,10 +19,10 @@
  */
 
 import React, { useState } from 'react';
-import useResizeDetectorByObserver from 'src/dvt-hooks/useResizeDetectorByObserver';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import DvtSpinner from 'src/components/DvtSpinner';
 import Icon from 'src/components/Icons/Icon';
+import { Resizable } from 're-resizable';
 import {
   StyledDashboardDroppedListItem,
   StyledDashboardDroppedListItemTitle,
@@ -31,89 +31,112 @@ import {
 
 interface DvtDashboardEditChartProps {
   item: any;
-  meta: { height: number; width: number };
+  chartItem: any;
   deleteClick: () => void;
   isEdit: boolean;
   rowChildLength: number;
   totalWidth?: number;
+  onReSize: boolean;
+  setOnReSize: (args: string) => void;
+  setSize: (sizes: { height: number; width: number }) => void;
 }
 
 const DvtDashboardEditChart = ({
   item,
-  meta,
+  chartItem,
   deleteClick,
   isEdit = false,
   rowChildLength = 0,
+  onReSize,
+  setOnReSize,
+  setSize,
 }: DvtDashboardEditChartProps) => {
-  const {
-    ref: chartPanelRef,
-    observerRef: resizeObserverRef,
-    width: chartPanelWidth,
-    height: chartPanelHeight,
-  } = useResizeDetectorByObserver();
-  const [onHover, setOnHover] = useState(false);
+  const [onHover, setOnHover] = useState<boolean>(false);
+  const { meta } = chartItem;
 
   return (
-    <StyledDashboardDroppedListItem
-      key={item.id}
-      isEdit={isEdit}
-      onMouseLeave={() => setOnHover(false)}
-      onMouseOver={() => setOnHover(true)}
-      style={{
+    <Resizable
+      enable={{ right: isEdit, bottom: isEdit }}
+      onResizeStop={(e, direction, ref, d) => {
+        if (d.height || d.width) {
+          setSize({
+            height: meta?.height + Number((d.height / 8).toFixed(0)),
+            // width: meta?.width + Number((d.width / 20).toFixed(0)),
+            width: 1,
+          });
+        }
+        setOnReSize('');
+      }}
+      size={{
+        width: `calc(${(100 / 12) * meta?.width}vw - ${
+          (((isEdit ? 588 : 108) + (rowChildLength - 1) * 15) / 12) *
+          meta?.width
+        }px)`,
         height: meta?.height * 8,
       }}
+      onResizeStart={() => {
+        setOnReSize(chartItem.id);
+      }}
     >
-      <StyledDashboardDroppedListItemTitle>
-        <div>{item.slice_name}</div>
-        {isEdit && onHover && (
-          <Icon
-            style={{ cursor: 'pointer' }}
-            fileName="dvt-delete"
-            onClick={deleteClick}
-          />
-        )}
-      </StyledDashboardDroppedListItemTitle>
-      <StyledDashboardDroppedListItemChart
-        ref={resizeObserverRef}
-        style={{
-          height: `calc(${meta?.height * 8}px - 32px - 50px)`,
-          width: `calc(${(100 / 12) * meta?.width}vw - ${
-            (((isEdit ? 588 : 108) +
-              (rowChildLength - 1) * 15 +
-              rowChildLength * 32) /
-              12) *
-            meta?.width
-          }px)`,
-        }}
+      <StyledDashboardDroppedListItem
+        key={item.id}
+        isEdit={isEdit}
+        isOnResize={onReSize}
+        onMouseLeave={() => setOnHover(false)}
+        onMouseOver={() => setOnHover(true)}
       >
-        {item.chartStatus === 'loading' ? (
-          <DvtSpinner type="grow" size="xlarge" />
-        ) : (
-          <div
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-            ref={chartPanelRef}
-          >
-            <ChartContainer
-              width={chartPanelWidth}
-              height={chartPanelHeight}
-              ownState={undefined}
-              annotationData={undefined}
-              chartAlert={null}
-              chartStackTrace={null}
-              chartId={0}
-              chartStatus={item.chartStatus}
-              formData={JSON.parse(item.result.params)}
-              queriesResponse={item.render}
-              timeout={60}
-              vizType={item.viz_type}
+        <StyledDashboardDroppedListItemTitle>
+          <div>{item.slice_name}</div>
+          {isEdit && onHover && (
+            <Icon
+              style={{ cursor: 'pointer' }}
+              fileName="dvt-delete"
+              onClick={deleteClick}
             />
-          </div>
-        )}
-      </StyledDashboardDroppedListItemChart>
-    </StyledDashboardDroppedListItem>
+          )}
+        </StyledDashboardDroppedListItemTitle>
+        <StyledDashboardDroppedListItemChart>
+          {item.chartStatus === 'loading' ? (
+            <DvtSpinner type="grow" size="xlarge" />
+          ) : (
+            <div
+              style={{
+                maxHeight: meta?.height * 8 - 82,
+                width:
+                  (window.innerWidth / 12) * meta?.width -
+                  (((isEdit ? 588 : 108) +
+                    (rowChildLength - 1) * 15 +
+                    rowChildLength * 32) /
+                    12) *
+                    meta?.width,
+              }}
+            >
+              <ChartContainer
+                width={
+                  (window.innerWidth / 12) * meta?.width -
+                  (((isEdit ? 588 : 108) +
+                    (rowChildLength - 1) * 15 +
+                    rowChildLength * 32) /
+                    12) *
+                    meta?.width
+                }
+                height={meta?.height * 8 - 82}
+                ownState={undefined}
+                annotationData={undefined}
+                chartAlert={null}
+                chartStackTrace={null}
+                chartId={0}
+                chartStatus={item.chartStatus}
+                formData={JSON.parse(item.result.params)}
+                queriesResponse={item.render}
+                timeout={60}
+                vizType={item.viz_type}
+              />
+            </div>
+          )}
+        </StyledDashboardDroppedListItemChart>
+      </StyledDashboardDroppedListItem>
+    </Resizable>
   );
 };
 

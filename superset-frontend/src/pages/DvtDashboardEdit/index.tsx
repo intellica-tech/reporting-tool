@@ -53,6 +53,8 @@ import {
   StyledChartList,
   StyledChartFilter,
   StyledDashboardDroppedList,
+  StyledDashboardDroppedListGridShow,
+  StyledDashboardDroppedListGridShowItem,
   StyledNewAddRow,
 } from './dvtDashboardEdit.module';
 import DvtDashboardEditChart from './components/DvtDashboardEditChart';
@@ -82,6 +84,7 @@ function DvtDashboardList() {
   const [chartRenderApiUrl, setChartRenderApiUrl] = useState<string>('');
   const [chartRenderApiBody, setChartRenderApiBody] = useState<any>(null);
   const [newAddRowHovered, setNewAddRowHovered] = useState<boolean>(false);
+  const [onReSize, setOnReSize] = useState<string>('');
 
   const firstCreatePosition = {
     DASHBOARD_VERSION_KEY: 'v2',
@@ -675,58 +678,81 @@ function DvtDashboardList() {
             />
           </div>
         ) : (
-          <StyledDashboardDroppedList>
-            {position.GRID_ID?.children.map((gRow: string) => (
-              <DvtDashboardEditRow
-                key={gRow}
-                deleteClick={() => handleRemoveRow(gRow)}
-                onDrop={e => handleDropRow(e, gRow)}
-                isEdit={isEditPathname}
-              >
-                {position[gRow]?.children.map((rItem: string) => {
-                  const findItem = droppedData.find(
-                    dropItem => dropItem.id === position[rItem].meta.chartId,
-                  );
-
-                  return (
-                    findItem?.id && (
-                      <DvtDashboardEditChart
-                        key={rItem}
-                        item={findItem}
-                        meta={position[rItem].meta}
-                        totalWidth={position[gRow]?.children
-                          .map((rm: string) => position[rm].meta.width)
-                          .reduce(
-                            (prev: number, curr: number) => prev + curr,
-                            0,
-                          )}
-                        rowChildLength={position[gRow]?.children.length}
-                        deleteClick={() =>
-                          handleRemoveChart(gRow, rItem, findItem.id)
-                        }
-                        isEdit={isEditPathname}
-                      />
-                    )
-                  );
-                })}
-              </DvtDashboardEditRow>
-            ))}
-            {isEditPathname && (
-              <StyledNewAddRow
-                hovered={newAddRowHovered}
-                onDrop={e => handleDrop(e, true)}
-                onDragOver={e => e.preventDefault()}
-                onDragLeave={e => {
-                  e.preventDefault();
-                  setNewAddRowHovered(false);
-                }}
-                onDragEnter={e => {
-                  e.preventDefault();
-                  setNewAddRowHovered(true);
-                }}
-              />
+          <>
+            {isEditPathname && onReSize && (
+              <StyledDashboardDroppedListGridShow>
+                {Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).map(() => (
+                  <StyledDashboardDroppedListGridShowItem />
+                ))}
+              </StyledDashboardDroppedListGridShow>
             )}
-          </StyledDashboardDroppedList>
+            <StyledDashboardDroppedList>
+              {position.GRID_ID?.children.map((gRow: string) => (
+                <DvtDashboardEditRow
+                  key={gRow}
+                  deleteClick={() => handleRemoveRow(gRow)}
+                  onDrop={e => handleDropRow(e, gRow)}
+                  isEdit={isEditPathname}
+                >
+                  {position[gRow]?.children.map((rItem: string) => {
+                    const findItem = droppedData.find(
+                      dropItem => dropItem.id === position[rItem].meta.chartId,
+                    );
+
+                    return (
+                      findItem?.id && (
+                        <DvtDashboardEditChart
+                          key={rItem}
+                          item={findItem}
+                          chartItem={position[rItem]}
+                          totalWidth={position[gRow]?.children
+                            .map((rm: string) => position[rm].meta.width)
+                            .reduce(
+                              (prev: number, curr: number) => prev + curr,
+                              0,
+                            )}
+                          rowChildLength={position[gRow]?.children.length}
+                          deleteClick={() =>
+                            handleRemoveChart(gRow, rItem, findItem.id)
+                          }
+                          isEdit={isEditPathname}
+                          onReSize={onReSize === rItem}
+                          setOnReSize={setOnReSize}
+                          setSize={sizes =>
+                            setPosition({
+                              ...position,
+                              [position[rItem].id]: {
+                                ...position[rItem],
+                                meta: {
+                                  ...position[rItem].meta,
+                                  height: sizes.height,
+                                },
+                              },
+                            })
+                          }
+                        />
+                      )
+                    );
+                  })}
+                </DvtDashboardEditRow>
+              ))}
+              {isEditPathname && (
+                <StyledNewAddRow
+                  hovered={newAddRowHovered}
+                  onDrop={e => handleDrop(e, true)}
+                  onDragOver={e => e.preventDefault()}
+                  onDragLeave={e => {
+                    e.preventDefault();
+                    setNewAddRowHovered(false);
+                  }}
+                  onDragEnter={e => {
+                    e.preventDefault();
+                    setNewAddRowHovered(true);
+                  }}
+                />
+              )}
+            </StyledDashboardDroppedList>
+          </>
         )}
       </StyledDashboard>
       {isEditPathname && (
