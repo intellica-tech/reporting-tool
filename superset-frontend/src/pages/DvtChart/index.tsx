@@ -762,6 +762,8 @@ const DvtChart = () => {
         }
       : {};
 
+  const onNullOrUndefinded = [null, undefined];
+
   const queriesOrderBySwitch = () => {
     switch (active) {
       case 'table':
@@ -770,7 +772,6 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
-      case 'waterfall':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -778,6 +779,14 @@ const DvtChart = () => {
           : undefined;
       case 'histogram':
         return [];
+      case 'waterfall':
+        return [
+          !onNullOrUndefinded.includes(values.groupby[0]?.label) && [
+            values.groupby[0]?.label,
+            true,
+          ],
+          [values.x_axis[0]?.label, true],
+        ].filter(item => item !== false && item !== null);
       default:
         return [[metricsFormation('metrics')[0], false]];
     }
@@ -1060,17 +1069,7 @@ const DvtChart = () => {
         applied_time_extras: {},
         columns: queriesColumnsSwitch(),
         metrics: queriesMetricsSwitch(),
-        orderby:
-          active === 'waterfall'
-            ? [
-                values.groupby[0]?.label !== null &&
-                  values.groupby[0]?.label !== undefined && [
-                    values.groupby[0]?.label,
-                    values.groupby[0]?.label !== false,
-                  ],
-                [values.x_axis[0]?.label, true],
-              ].filter(item => item !== false && item !== null)
-            : queriesOrderBySwitch(),
+        orderby: queriesOrderBySwitch(),
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
@@ -1115,6 +1114,8 @@ const DvtChart = () => {
       fv => fv.viz_name === active,
     );
 
+    const onSortByMetric = findChartForm?.form_data.includes('sort_by_metric');
+
     if (Array.isArray(formDataObj[formKey])) {
       result = formDataObj[formKey].map((q: any) => {
         const filteredQuery = {};
@@ -1122,9 +1123,8 @@ const DvtChart = () => {
           if (
             q.hasOwnProperty(key) &&
             !(
-              !values.sort_by_metric &&
-              key === 'orderby' &&
-              active !== 'waterfall'
+              (onSortByMetric ? !values.sort_by_metric : false) &&
+              key === 'orderby'
             )
           ) {
             filteredQuery[key] = q[key];
