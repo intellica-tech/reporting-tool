@@ -1068,11 +1068,7 @@ const DvtChart = () => {
                     values.groupby[0]?.label,
                     values.groupby[0]?.label !== false,
                   ],
-                values.x_axis[0]?.label !== null &&
-                  values.x_axis[0]?.label !== undefined && [
-                    values.x_axis[0]?.label,
-                    true,
-                  ],
+                [values.x_axis[0]?.label, true],
               ].filter(item => item !== false && item !== null)
             : queriesOrderBySwitch(),
         annotation_layers: [],
