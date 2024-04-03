@@ -519,6 +519,7 @@ function DvtDashboardList() {
     url: chartRenderApiUrl,
     method: 'POST',
     body: chartRenderApiBody ? JSON.parse(chartRenderApiBody.queryContext) : {},
+    withoutErrorToast: true,
   });
 
   useEffect(() => {

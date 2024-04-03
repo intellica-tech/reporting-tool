@@ -10,6 +10,7 @@ type UseFetchProps = {
   body?: any;
   formData?: boolean;
   withoutJson?: boolean;
+  withoutErrorToast?: boolean;
 };
 
 const useFetch = ({
@@ -20,6 +21,7 @@ const useFetch = ({
   formData = false,
   headers = {},
   withoutJson = false,
+  withoutErrorToast = false,
 }: UseFetchProps) => {
   const { addDangerToast } = useToasts();
   const [data, setData] = useState<any | null>(null);
@@ -66,7 +68,9 @@ const useFetch = ({
             setLoading(false);
           }
         } catch (error) {
-          addDangerToast(error.message);
+          if (!withoutErrorToast) {
+            addDangerToast(error.message);
+          }
           setLoading(false);
         }
       };
