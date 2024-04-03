@@ -106,8 +106,7 @@ interface StyledDashboardDroppedListItemProps {
 
 const StyledDashboardDroppedListItem = styled.div<StyledDashboardDroppedListItemProps>`
   background-color: ${({ theme }) => theme.colors.grayscale.light5};
-  height: 350px;
-  flex: 1;
+  /* flex: 1; */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -137,7 +136,6 @@ const StyledDashboardDroppedListItemChart = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(350px - 32px - 50px);
   margin-top: auto;
 `;
 
@@ -156,8 +154,8 @@ interface StyledDashboardDroppedRowGridProps {
 const StyledDashboardDroppedRowGrid = styled.div<StyledDashboardDroppedRowGridProps>`
   ${({ isEdit, theme }) =>
     isEdit && `border: 1px dashed ${theme.colors.dvt.grayscale.light1}`};
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-flow: row;
   gap: 15px;
 `;
 

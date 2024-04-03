@@ -31,14 +31,19 @@ import {
 
 interface DvtDashboardEditChartProps {
   item: any;
+  meta: { height: number; width: number };
   deleteClick: () => void;
   isEdit: boolean;
+  rowChildLength: number;
+  totalWidth?: number;
 }
 
 const DvtDashboardEditChart = ({
   item,
+  meta,
   deleteClick,
   isEdit = false,
+  rowChildLength = 0,
 }: DvtDashboardEditChartProps) => {
   const {
     ref: chartPanelRef,
@@ -54,6 +59,9 @@ const DvtDashboardEditChart = ({
       isEdit={isEdit}
       onMouseLeave={() => setOnHover(false)}
       onMouseOver={() => setOnHover(true)}
+      style={{
+        height: meta?.height * 8,
+      }}
     >
       <StyledDashboardDroppedListItemTitle>
         <div>{item.slice_name}</div>
@@ -65,11 +73,29 @@ const DvtDashboardEditChart = ({
           />
         )}
       </StyledDashboardDroppedListItemTitle>
-      <StyledDashboardDroppedListItemChart ref={resizeObserverRef}>
+      <StyledDashboardDroppedListItemChart
+        ref={resizeObserverRef}
+        style={{
+          height: `calc(${meta?.height * 8}px - 32px - 50px)`,
+          width: `calc(${(100 / 12) * meta?.width}vw - ${
+            (((isEdit ? 588 : 108) +
+              (rowChildLength - 1) * 15 +
+              rowChildLength * 32) /
+              12) *
+            meta?.width
+          }px)`,
+        }}
+      >
         {item.chartStatus === 'loading' ? (
           <DvtSpinner type="grow" size="xlarge" />
         ) : (
-          <div style={{ height: '100%', width: '100%' }} ref={chartPanelRef}>
+          <div
+            style={{
+              height: '100%',
+              width: '100%',
+            }}
+            ref={chartPanelRef}
+          >
             <ChartContainer
               width={chartPanelWidth}
               height={chartPanelHeight}
