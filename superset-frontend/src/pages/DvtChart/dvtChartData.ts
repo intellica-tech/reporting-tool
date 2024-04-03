@@ -27,7 +27,9 @@ interface FormsProps {
     | 'annotation-layer'
     | 'tabs'
     | 'two-input'
-    | 'two-select';
+    | 'two-select'
+    | 'range'
+    | 'color';
   label?: string;
   name: string;
   popper?: string;
