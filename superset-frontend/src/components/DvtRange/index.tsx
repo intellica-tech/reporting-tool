@@ -26,8 +26,15 @@ const DvtRange: React.FC<DvtRangeProps> = ({
   const absoluteRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const left =
+  const normalizedValue =
     ((Math.max(min, Math.min(value || min, max)) - min) / (max - min)) * 100;
+  let left;
+
+  if (normalizedValue <= 50) {
+    left = normalizedValue + 1.5 - normalizedValue / 100;
+  } else {
+    left = normalizedValue - normalizedValue / 100;
+  }
 
   useEffect(() => {
     const wheelHandler = () => {

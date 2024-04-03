@@ -29,7 +29,13 @@ export const Default = () => {
 
   return (
     <div style={{ width: 600, padding: 50 }}>
-      <DvtRange min={10} max={120} step={1} value={range} setValue={setRange} />
+      <DvtRange
+        min={10}
+        max={1000}
+        step={1}
+        value={range}
+        setValue={setRange}
+      />
     </div>
   );
 };
