@@ -1,4 +1,7 @@
 import React, { useRef, useState, ChangeEvent, useEffect } from 'react';
+import { SupersetTheme } from '@superset-ui/core';
+import DvtPopper from '../DvtPopper';
+import Icon from '../Icons/Icon';
 import {
   StyledRangeInput,
   StyledPopper,
@@ -9,9 +12,6 @@ import {
   StyledRangeLabel,
   StyledRange,
 } from './dvt-range.module';
-import DvtPopper from '../DvtPopper';
-import Icon from '../Icons/Icon';
-import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtRangeProps {
   min: number;
