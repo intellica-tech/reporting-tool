@@ -83,7 +83,7 @@ function DvtDashboardList() {
   const [chartResultApiUrl, setChartResultApiUrl] = useState<string>('');
   const [chartRenderApiUrl, setChartRenderApiUrl] = useState<string>('');
   const [chartRenderApiBody, setChartRenderApiBody] = useState<any>(null);
-  const [newAddRowHovered, setNewAddRowHovered] = useState<boolean>(false);
+  const [newAddRowHovered, setNewAddRowHovered] = useState<string>('');
   const [onReSize, setOnReSize] = useState<string>('');
 
   const firstCreatePosition = {
@@ -224,7 +224,11 @@ function DvtDashboardList() {
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, newRow?: boolean) => {
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    newRow?: boolean,
+    rowBefore?: string,
+  ) => {
     e.preventDefault();
 
     const droppedDataString = e.dataTransfer.getData('drag-drop');
@@ -261,19 +265,25 @@ function DvtDashboardList() {
     };
 
     const firstOrThenAddPosition = newRow ? position : firstCreatePosition;
+    const gridChildren = firstOrThenAddPosition.GRID_ID.children;
+    const newIndex = gridChildren.indexOf(rowBefore);
 
     setPosition({
       ...firstOrThenAddPosition,
       GRID_ID: {
         ...firstOrThenAddPosition.GRID_ID,
         children: newRow
-          ? [...firstOrThenAddPosition.GRID_ID.children, rowUnique]
+          ? rowBefore
+            ? gridChildren
+                .slice(0, newIndex)
+                .concat(rowUnique, gridChildren.slice(newIndex))
+            : [...gridChildren, rowUnique]
           : [rowUnique],
       },
       ...rowCreate,
       ...chartCreate,
     });
-    setNewAddRowHovered(false);
+    setNewAddRowHovered('');
 
     if (jsonDropItem) {
       setChartResultApiUrl(`chart/${jsonDropItem.id}`);
@@ -566,66 +576,85 @@ function DvtDashboardList() {
             )}
             <StyledDashboardDroppedList>
               {position.GRID_ID?.children.map((gRow: string) => (
-                <DvtDashboardEditRow
-                  key={gRow}
-                  deleteClick={() => handleRemoveRow(gRow)}
-                  onDrop={e => handleDropRow(e, gRow)}
-                  isEdit={isEditPathname}
-                >
-                  {position[gRow]?.children.map((rItem: string) => {
-                    const findItem = droppedData.find(
-                      dropItem => dropItem.id === position[rItem].meta.chartId,
-                    );
+                <React.Fragment key={gRow}>
+                  {isEditPathname && (
+                    <StyledNewAddRow
+                      fixHeight={5}
+                      hovered={newAddRowHovered === gRow}
+                      onDrop={e => handleDrop(e, true, gRow)}
+                      onDragOver={e => e.preventDefault()}
+                      onDragLeave={e => {
+                        e.preventDefault();
+                        setNewAddRowHovered('');
+                      }}
+                      onDragEnter={e => {
+                        e.preventDefault();
+                        setNewAddRowHovered(gRow);
+                      }}
+                    />
+                  )}
+                  <DvtDashboardEditRow
+                    deleteClick={() => handleRemoveRow(gRow)}
+                    onDrop={e => handleDropRow(e, gRow)}
+                    isEdit={isEditPathname}
+                  >
+                    {position[gRow]?.children.map((rItem: string) => {
+                      const findItem = droppedData.find(
+                        dropItem =>
+                          dropItem.id === position[rItem].meta.chartId,
+                      );
 
-                    return (
-                      findItem?.id && (
-                        <DvtDashboardEditChart
-                          key={rItem}
-                          item={findItem}
-                          chartItem={position[rItem]}
-                          totalWidth={position[gRow]?.children
-                            .map((rm: string) => position[rm].meta.width)
-                            .reduce(
-                              (prev: number, curr: number) => prev + curr,
-                              0,
-                            )}
-                          deleteClick={() =>
-                            handleRemoveChart(gRow, rItem, findItem.id)
-                          }
-                          isEdit={isEditPathname}
-                          onReSize={onReSize === rItem}
-                          setOnReSize={setOnReSize}
-                          setSize={sizes =>
-                            setPosition({
-                              ...position,
-                              [position[rItem].id]: {
-                                ...position[rItem],
-                                meta: {
-                                  ...position[rItem].meta,
-                                  height: sizes.height,
-                                  width: sizes.width,
+                      return (
+                        findItem?.id && (
+                          <DvtDashboardEditChart
+                            key={rItem}
+                            item={findItem}
+                            chartItem={position[rItem]}
+                            totalWidth={position[gRow]?.children
+                              .map((rm: string) => position[rm].meta.width)
+                              .reduce(
+                                (prev: number, curr: number) => prev + curr,
+                                0,
+                              )}
+                            deleteClick={() =>
+                              handleRemoveChart(gRow, rItem, findItem.id)
+                            }
+                            isEdit={isEditPathname}
+                            onReSize={onReSize === rItem}
+                            setOnReSize={setOnReSize}
+                            setSize={sizes =>
+                              setPosition({
+                                ...position,
+                                [position[rItem].id]: {
+                                  ...position[rItem],
+                                  meta: {
+                                    ...position[rItem].meta,
+                                    height: sizes.height,
+                                    width: sizes.width,
+                                  },
                                 },
-                              },
-                            })
-                          }
-                        />
-                      )
-                    );
-                  })}
-                </DvtDashboardEditRow>
+                              })
+                            }
+                          />
+                        )
+                      );
+                    })}
+                  </DvtDashboardEditRow>
+                </React.Fragment>
               ))}
               {isEditPathname && (
                 <StyledNewAddRow
-                  hovered={newAddRowHovered}
+                  fixHeight={80}
+                  hovered={newAddRowHovered === 'the_bottom'}
                   onDrop={e => handleDrop(e, true)}
                   onDragOver={e => e.preventDefault()}
                   onDragLeave={e => {
                     e.preventDefault();
-                    setNewAddRowHovered(false);
+                    setNewAddRowHovered('');
                   }}
                   onDragEnter={e => {
                     e.preventDefault();
-                    setNewAddRowHovered(true);
+                    setNewAddRowHovered('the_bottom');
                   }}
                 />
               )}

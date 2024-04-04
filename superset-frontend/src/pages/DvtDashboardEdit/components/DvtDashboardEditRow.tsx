@@ -20,6 +20,7 @@
 
 import React, { ReactNode, useState } from 'react';
 import Icon from 'src/components/Icons/Icon';
+import { supersetTheme } from '@superset-ui/core';
 import {
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
@@ -48,7 +49,17 @@ const DvtDashboardEditRow = ({
     >
       {isEdit && onHover && (
         <StyledDashboardDroppedRowOptions>
-          <Icon fileName="dvt-delete" onClick={deleteClick} />
+          <Icon
+            style={{ cursor: 'move' }}
+            fileName="drag"
+            iconColor={supersetTheme.colors.dvt.grayscale.base}
+            onClick={() => {}}
+          />
+          <Icon
+            fileName="dvt-delete"
+            iconColor={supersetTheme.colors.dvt.grayscale.base}
+            onClick={deleteClick}
+          />
         </StyledDashboardDroppedRowOptions>
       )}
       <StyledDashboardDroppedRowGrid

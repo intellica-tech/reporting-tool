@@ -198,15 +198,16 @@ const StyledDashboardDroppedRowOptions = styled.div`
 
 interface StyledNewAddRowProps {
   hovered: boolean;
+  fixHeight: number;
 }
 
 const StyledNewAddRow = styled.div<StyledNewAddRowProps>`
-  min-height: 80px;
+  min-height: ${({ fixHeight }) => fixHeight}px;
   width: 100%;
   cursor: pointer;
 
   ${({ hovered, theme }) =>
-    hovered && `border-top: 4px solid ${theme.colors.dvt.primary.base};`}
+    hovered && `border-top: 5px solid ${theme.colors.dvt.primary.base};`}
 `;
 
 export {
