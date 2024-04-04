@@ -1,6 +1,5 @@
 import { t } from '@superset-ui/core';
 import { chartFormsOption } from './dvtChartDataOptions';
-import { placeholder } from 'lodash/fp';
 
 interface OptionsData {
   label: string;
@@ -54,7 +53,7 @@ interface CollapsesProps {
   tabs_actives?: ActivesProps;
 }
 
-interface DvtChartDataProps {
+interface DvtChartCustomizeProps {
   chart_name: string;
   collapses: CollapsesProps[];
 }
@@ -314,7 +313,7 @@ const lineAndBarChart: CollapsesProps[] = [
   },
 ];
 
-const DvtChartData: DvtChartDataProps[] = [
+const DvtChartCustomize: DvtChartCustomizeProps[] = [
   {
     chart_name: 'echarts_timeseries_line',
     collapses: lineAndBarChart,
@@ -1288,4 +1287,4 @@ const DvtChartData: DvtChartDataProps[] = [
   },
 ];
 
-export default DvtChartData;
+export default DvtChartCustomize;
