@@ -32,6 +32,7 @@ import {
 interface DvtDashboardEditChartProps {
   item: any;
   chartItem: any;
+  totalWidth: number;
   deleteClick: () => void;
   isEdit: boolean;
   onReSize: boolean;
@@ -42,6 +43,7 @@ interface DvtDashboardEditChartProps {
 const DvtDashboardEditChart = ({
   item,
   chartItem,
+  totalWidth = 0,
   deleteClick,
   isEdit = false,
   onReSize,
@@ -75,6 +77,11 @@ const DvtDashboardEditChart = ({
       onResizeStart={() => {
         setOnReSize(chartItem.id);
       }}
+      maxWidth={
+        totalWidth === 12
+          ? onlyGridItemWidthScreen(meta?.width) - 15
+          : onlyGridItemWidthScreen(12 - totalWidth + meta?.width) - 15
+      }
     >
       <StyledDashboardDroppedListItem
         key={item.id}

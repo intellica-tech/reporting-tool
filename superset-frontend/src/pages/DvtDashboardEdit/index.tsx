@@ -583,12 +583,12 @@ function DvtDashboardList() {
                           key={rItem}
                           item={findItem}
                           chartItem={position[rItem]}
-                          // totalWidth={position[gRow]?.children
-                          //   .map((rm: string) => position[rm].meta.width)
-                          //   .reduce(
-                          //     (prev: number, curr: number) => prev + curr,
-                          //     0,
-                          //   )}
+                          totalWidth={position[gRow]?.children
+                            .map((rm: string) => position[rm].meta.width)
+                            .reduce(
+                              (prev: number, curr: number) => prev + curr,
+                              0,
+                            )}
                           deleteClick={() =>
                             handleRemoveChart(gRow, rItem, findItem.id)
                           }
