@@ -17,6 +17,12 @@ interface ValuesProps {
   number?: boolean;
 }
 
+interface RangeConfigProps {
+  min: number;
+  max: number;
+  step: number;
+}
+
 interface FormsProps {
   status:
     | 'input'
@@ -42,6 +48,7 @@ interface FormsProps {
   options?: OptionsData[];
   number?: boolean;
   values?: ValuesProps[];
+  rangeConfig?: RangeConfigProps;
 }
 
 interface CollapsesProps {

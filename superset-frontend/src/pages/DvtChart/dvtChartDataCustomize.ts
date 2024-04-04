@@ -17,6 +17,12 @@ interface ValuesProps {
   number?: boolean;
 }
 
+interface RangeConfigProps {
+  min: number;
+  max: number;
+  step: number;
+}
+
 interface FormsProps {
   status:
     | 'input'
@@ -42,6 +48,7 @@ interface FormsProps {
   options?: OptionsData[];
   number?: boolean;
   values?: ValuesProps[];
+  rangeConfig?: RangeConfigProps;
 }
 
 interface CollapsesProps {
@@ -464,14 +471,20 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'query',
         forms: [
-          formDimensions,
-          formMetric,
-          formFilters,
-          formRowLimit,
           {
             label: t('SORT BY METRIC'),
             name: 'sort_by_metric',
             status: 'checkbox',
+          },
+          {
+            label: t('OUTER RADIUS'),
+            name: 'outerRadius',
+            status: 'range',
+            rangeConfig: {
+              min: 10,
+              max: 100,
+              step: 1,
+            },
           },
         ],
       },

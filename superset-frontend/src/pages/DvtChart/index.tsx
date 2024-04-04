@@ -27,6 +27,8 @@ import DvtButtonTabs, {
 import DvtSelect from 'src/components/DvtSelect';
 import DvtInputSelect from 'src/components/DvtInputSelect';
 import DvtInputDrop from 'src/components/DvtInputDrop';
+import DvtColorSelect from 'src/components/DvtColorSelect';
+import DvtRange from 'src/components/DvtRange';
 import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import moment from 'moment';
@@ -1634,6 +1636,29 @@ const DvtChart = () => {
                             />
                           ))}
                         </CreateChartCenterCollapseInGapFlexRow>
+                      )}
+                      {fItem.status === 'color' && (
+                        <DvtColorSelect
+                          label={fItem.label}
+                          popoverLabel={fItem.popper}
+                          value={values[fItem.name]}
+                          setValue={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                        />
+                      )}
+                      {fItem.status === 'range' && (
+                        <DvtRange
+                          label={fItem.label}
+                          popoverLabel={fItem.popper}
+                          value={values[fItem.name]}
+                          setValue={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          min={fItem.rangeConfig?.min || 0}
+                          max={fItem.rangeConfig?.max || 0}
+                          step={fItem.rangeConfig?.step || 0}
+                        />
                       )}
                     </div>
                   ))}
