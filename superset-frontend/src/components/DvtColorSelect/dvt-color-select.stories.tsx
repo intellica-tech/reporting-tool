@@ -32,6 +32,9 @@ export const Default = (args: DvtColorSelectProps) => {
       {...args}
       value={selectedValue}
       setValue={setSelectedValue}
+      label="Color"
+      important
+      popoverLabel="Range"
     />
   );
 };

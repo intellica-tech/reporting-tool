@@ -18,11 +18,30 @@
  */
 import { styled } from '@superset-ui/core';
 
-const StyledColorSelect = styled.div``;
+const StyledColorSelect = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
 
 const StyledColorSelectInput = styled.input`
   background-color: transparent;
   border: none;
 `;
 
-export { StyledColorSelect, StyledColorSelectInput };
+const StyledColorSelectPopover = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const StyledColorSelectLabel = styled.label`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+`;
+
+export {
+  StyledColorSelect,
+  StyledColorSelectInput,
+  StyledColorSelectPopover,
+  StyledColorSelectLabel,
+};
