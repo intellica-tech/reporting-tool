@@ -66,6 +66,7 @@ const DvtChart = () => {
   const selectedVizType = useAppSelector(
     state => state.dvtNavbar.chartAdd.vizType,
   );
+  const chartTabs = useAppSelector(state => state.dvtNavbar.charts.tabs);
   const [selectBars, setSelectBars] = useState<ChartSelectBarProps[]>([]);
   const [active, setActive] = useState<string>('');
   const [tabs, setTabs] = useState<ButtonTabsDataProps>({
@@ -1226,43 +1227,6 @@ const DvtChart = () => {
     ...chartResultsConfig,
   });
 
-  // const formData = new FormData();
-  // formData.append(
-  //   'form_data',
-  //   JSON.stringify(onlyVizChartFindFormPayload('form_data')),
-  // );
-
-  // formData.append('force', JSON.stringify(formDataObj.force));
-  // formData.append('form_data', JSON.stringify(formDataObj.form_data));
-  // formData.append('queries', JSON.stringify(formDataObj.queries));
-  // formData.append('result_format', JSON.stringify(formDataObj.result_format));
-  // formData.append('result_type', JSON.stringify(formDataObj.result_type));
-  // formData.append('result_type', JSON.stringify('results'));
-
-  // const exploreJsonPromise = useFetch({
-  //   url: exploreJsonUrl,
-  //   defaultParam: '/',
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Disposition': 'form-data; name="form_data"',
-  //   },
-  //   body: formData,
-  //   formData: true,
-  //   withoutJson: true,
-  // });
-
-  // const exploreJsonResultsPromise = useFetch({
-  //   url: exploreJsonResultsUrl,
-  //   defaultParam: '/',
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Disposition': 'form-data; name="form_data"',
-  //   },
-  //   body: formData,
-  //   formData: true,
-  //   withoutJson: true,
-  // });
-
   const chartSamplePromise = useFetch({
     url: sampleApiUrl,
     method: 'POST',
@@ -1457,13 +1421,6 @@ const DvtChart = () => {
     dispatch(dvtChartSetSaveDisabled(createChartDisableds(active)));
   }, [createChartDisableds(active)]);
 
-  useEffect(
-    () => () => {
-      dispatch(dvtNavbarChartAddSetVizType(''));
-    },
-    [],
-  );
-
   const handleViewAllChart = () => {
     dispatch(
       openModal({
@@ -1471,6 +1428,15 @@ const DvtChart = () => {
       }),
     );
   };
+
+  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
+
+  useEffect(
+    () => () => {
+      dispatch(dvtNavbarChartAddSetVizType(''));
+    },
+    [],
+  );
 
   return (
     <StyledChart>
@@ -1488,7 +1454,7 @@ const DvtChart = () => {
           />
         </CreateChartTop>
         <CreateChartCenter>
-          {DvtChartData.find(
+          {DataOrCustomize.find(
             cItem => cItem.chart_name === active,
           )?.collapses.map((item, index) => (
             <DvtCollapse
@@ -1592,6 +1558,7 @@ const DvtChart = () => {
                           }
                           type={fItem?.type || 'normal'}
                           savedType={fItem?.savedType || 'metric'}
+                          simpleType={fItem?.simpleType || 'normal'}
                           multiple={fItem.multiple}
                           savedData={
                             fItem?.savedType === 'expressions'
