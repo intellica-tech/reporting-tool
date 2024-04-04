@@ -96,9 +96,9 @@ interface ValuesProps {
 }
 
 export interface DvtOpenSelectMenuProps {
-  type: 'normal' | 'aggregates' | 'filters';
-  savedType: 'metric' | 'expressions';
-  simpleType: 'normal' | 'datasoruce';
+  type?: 'normal' | 'aggregates' | 'filters';
+  savedType?: 'metric' | 'expressions';
+  simpleType?: 'normal' | 'datasoruce';
   values: ValuesProps;
   setValues: (values: ValuesProps) => void;
   savedData?: MetricDataProps[];

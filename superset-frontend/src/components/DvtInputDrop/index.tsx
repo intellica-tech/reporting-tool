@@ -54,9 +54,9 @@ export interface DvtInputDropProps {
   droppedData: any[];
   setDroppedData: (newDroppedData: any[] | any) => void;
   error?: string;
-  type: 'normal' | 'aggregates' | 'filters';
-  savedType: 'metric' | 'expressions';
-  simpleType: 'normal' | 'datasoruce';
+  type?: 'normal' | 'aggregates' | 'filters';
+  savedType?: 'metric' | 'expressions';
+  simpleType?: 'normal' | 'datasoruce';
   savedData?: MetricDataProps[];
   columnData: ColumnDataProps[];
   datasourceApi: string;
