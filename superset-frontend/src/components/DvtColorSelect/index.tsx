@@ -24,12 +24,6 @@ function rgbaToHex(rgba: {
 }
 
 const DvtColorSelect: React.FC<DvtColorSelectProps> = ({ value, setValue }) => {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const hexColor = e.target.value;
-    const rgbaColor = hexToRgba(hexColor);
-    setValue(rgbaColor);
-  };
-
   const hexToRgba = (hex: string) => {
     const bigint = parseInt(hex.substring(1), 16);
     const r = (bigint >> 16) & 255;
@@ -39,7 +33,14 @@ const DvtColorSelect: React.FC<DvtColorSelectProps> = ({ value, setValue }) => {
     return { r, g, b, a };
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const hexColor = e.target.value;
+    const rgbaColor = hexToRgba(hexColor);
+    setValue(rgbaColor);
+  };
+
   const hexValue = rgbaToHex(value);
+
   return (
     <StyledColorSelect>
       <StyledColorSelectInput
