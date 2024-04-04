@@ -550,6 +550,16 @@ const chartFormsOption = {
       },
     ],
   },
+  yAxisLabelRotation: [
+    {
+      label: '0°',
+      value: 0,
+    },
+    {
+      label: '45°',
+      value: 45,
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };

@@ -37,6 +37,7 @@ interface FormsProps {
   placeholder?: string;
   type?: 'normal' | 'aggregates' | 'filters';
   savedType?: 'metric' | 'expressions';
+  simpleType?: 'normal' | 'datasoruce';
   multiple?: boolean;
   options?: OptionsData[];
   number?: boolean;
@@ -481,7 +482,6 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
     collapses: [
       {
         collapse_label: t('Chart Options'),
-        collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'chart_options',
         forms: [
           {
@@ -518,10 +518,9 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             label: t('MARGIN'),
             name: 'legendMargin',
             popper: t('Additional padding for legend'),
-            popperError: t('is expected to be an integer'),
             status: 'input',
+            number: true,
           },
-          formFilters,
           {
             label: t('MAX BUBBLE SIZE'),
             name: 'max_bubble_size',
@@ -554,42 +553,42 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             popper: t('Changing this control takes effect instantly'),
             status: 'input',
           },
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          {
-            label: t('X AXIS TITLE MARGIN'),
-            name: 'x_axis_title_margin',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          {
-            label: t('X AXIS FORMAT'),
-            name: 'xAxisFormat',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          {
-            label: t('LOGARITHMIC X-AXIS'),
-            name: 'logXAxis',
-            popper: t('Logarithmic x-axis'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
+          // {
+          //   label: t('ROTATE X AXIS LABEL'),
+          //   name: 'xAxisLabelRotation',
+          //   popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
+          //   status: 'input-drop',
+          //   multiple: false,
+          //   type: 'normal',
+          //   savedType: 'expressions',
+          // },
+          // {
+          //   label: t('X AXIS TITLE MARGIN'),
+          //   name: 'x_axis_title_margin',
+          //   popper: t('Changing this control takes effect instantly'),
+          //   status: 'input-drop',
+          //   multiple: false,
+          //   type: 'normal',
+          //   savedType: 'expressions',
+          // },
+          // {
+          //   label: t('X AXIS FORMAT'),
+          //   name: 'xAxisFormat',
+          //   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+          //   status: 'input-drop',
+          //   multiple: false,
+          //   type: 'normal',
+          //   savedType: 'expressions',
+          // },
+          // {
+          //   label: t('LOGARITHMIC X-AXIS'),
+          //   name: 'logXAxis',
+          //   popper: t('Logarithmic x-axis'),
+          //   status: 'input-drop',
+          //   multiple: false,
+          //   type: 'normal',
+          //   savedType: 'expressions',
+          // },
           {
             label: t('Y AXIS TITLE'),
             name: 'y_axis_label',
@@ -598,22 +597,20 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('ROTATE Y AXIS LABEL'),
-            name: 'y_axis_title_margin',
+            name: 'yAxisLabelRotation',
             popper: t('Changing this control takes effect instantly'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
+            status: 'select',
+            options: chartFormsOption.yAxisLabelRotation,
           },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-          },
+          // {
+          //   label: t('Y AXIS FORMAT'),
+          //   name: 'y_axis_format',
+          //   popper: t('Changing this control takes effect instantly'),
+          //   status: 'input-drop',
+          //   multiple: false,
+          //   type: 'normal',
+          //   savedType: 'expressions',
+          // },
           {
             label: t('LOGARITHMIC Y-AXIS'),
             name: 'logYAxis',
@@ -684,9 +681,6 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               },
             ],
           },
-          formSortBy,
-          sortDescending,
-          formRowLimit,
         ],
       },
     ],

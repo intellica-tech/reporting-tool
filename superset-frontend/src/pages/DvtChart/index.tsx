@@ -34,6 +34,7 @@ import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
+import DvtChartCustomize from './dvtChartDataCustomize';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import {
   ChartDefaultSelectBars,
@@ -1429,7 +1430,8 @@ const DvtChart = () => {
     );
   };
 
-  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
+  const DataOrCustomize =
+    chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
 
   useEffect(
     () => () => {
@@ -1552,7 +1554,7 @@ const DvtChart = () => {
                           popoverLabel={fItem.popper}
                           popperError={fItem.popperError}
                           anotherFormNoError={anotherFormsNoError(active)}
-                          droppedData={values[fItem.name]}
+                          droppedData={values?.[fItem.name] || []}
                           setDroppedData={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1593,7 +1595,7 @@ const DvtChart = () => {
                               popoverLabel={vfIndex === 0 ? fItem.popper : ''}
                               placeholder={vfItem.placeholder}
                               number={vfItem.number}
-                              value={values[fItem.name][vfItem.name]}
+                              value={values?.[fItem.name]?.[vfItem.name]}
                               onChange={v =>
                                 setValues({
                                   ...values,
