@@ -232,61 +232,81 @@ function DvtDashboardList() {
     e.preventDefault();
 
     const droppedDataString = e.dataTransfer.getData('drag-drop');
-    const jsonDropItem = JSON.parse(droppedDataString);
+    const jsonDropItem = droppedDataString && JSON.parse(droppedDataString);
 
-    const rowUnique = generateUniqueID('ROW');
-    const chartUnique = generateUniqueID('CHART');
-
-    const rowCreate = {
-      [rowUnique]: {
-        children: [chartUnique],
-        id: rowUnique,
-        meta: {
-          background: 'BACKGROUND_TRANSPARENT',
-        },
-        parents: ['ROOT_ID', 'GRID_ID'],
-        type: 'ROW',
-      },
-    };
-
-    const chartCreate = {
-      [chartUnique]: {
-        children: [],
-        id: chartUnique,
-        meta: {
-          chartId: jsonDropItem.id,
-          height: 50,
-          sliceName: jsonDropItem.slice_name,
-          width: 4,
-        },
-        parents: ['ROOT_ID', 'GRID_ID', rowUnique],
-        type: 'CHART',
-      },
-    };
+    const droppedRowId = e.dataTransfer.getData('drag-drop-row-id');
+    const jsonDropRowId = droppedRowId && JSON.parse(droppedRowId);
 
     const firstOrThenAddPosition = newRow ? position : firstCreatePosition;
     const gridChildren = firstOrThenAddPosition.GRID_ID.children;
-    const newIndex = gridChildren.indexOf(rowBefore);
+    const indexBefore = gridChildren.indexOf(rowBefore);
 
-    setPosition({
-      ...firstOrThenAddPosition,
-      GRID_ID: {
-        ...firstOrThenAddPosition.GRID_ID,
-        children: newRow
-          ? rowBefore
-            ? gridChildren
-                .slice(0, newIndex)
-                .concat(rowUnique, gridChildren.slice(newIndex))
-            : [...gridChildren, rowUnique]
-          : [rowUnique],
-      },
-      ...rowCreate,
-      ...chartCreate,
-    });
-    setNewAddRowHovered('');
+    if (jsonDropRowId) {
+      const rowIdRemovedGridChildren = gridChildren.filter(
+        (v: string) => v !== jsonDropRowId,
+      );
 
-    if (jsonDropItem) {
-      setChartResultApiUrl(`chart/${jsonDropItem.id}`);
+      setPosition({
+        ...firstOrThenAddPosition,
+        GRID_ID: {
+          ...firstOrThenAddPosition.GRID_ID,
+          children: rowIdRemovedGridChildren
+            .slice(0, indexBefore)
+            .concat(jsonDropRowId, rowIdRemovedGridChildren.slice(indexBefore)),
+        },
+      });
+      setNewAddRowHovered('');
+    } else if (jsonDropItem) {
+      const rowUnique = generateUniqueID('ROW');
+      const chartUnique = generateUniqueID('CHART');
+
+      const rowCreate = {
+        [rowUnique]: {
+          children: [chartUnique],
+          id: rowUnique,
+          meta: {
+            background: 'BACKGROUND_TRANSPARENT',
+          },
+          parents: ['ROOT_ID', 'GRID_ID'],
+          type: 'ROW',
+        },
+      };
+
+      const chartCreate = {
+        [chartUnique]: {
+          children: [],
+          id: chartUnique,
+          meta: {
+            chartId: jsonDropItem.id,
+            height: 50,
+            sliceName: jsonDropItem.slice_name,
+            width: 4,
+          },
+          parents: ['ROOT_ID', 'GRID_ID', rowUnique],
+          type: 'CHART',
+        },
+      };
+
+      setPosition({
+        ...firstOrThenAddPosition,
+        GRID_ID: {
+          ...firstOrThenAddPosition.GRID_ID,
+          children: newRow
+            ? rowBefore
+              ? gridChildren
+                  .slice(0, indexBefore)
+                  .concat(rowUnique, gridChildren.slice(indexBefore))
+              : [...gridChildren, rowUnique]
+            : [rowUnique],
+        },
+        ...rowCreate,
+        ...chartCreate,
+      });
+      setNewAddRowHovered('');
+
+      if (jsonDropItem) {
+        setChartResultApiUrl(`chart/${jsonDropItem.id}`);
+      }
     }
   };
 
@@ -596,6 +616,7 @@ function DvtDashboardList() {
                   <DvtDashboardEditRow
                     deleteClick={() => handleRemoveRow(gRow)}
                     onDrop={e => handleDropRow(e, gRow)}
+                    rowId={gRow}
                     isEdit={isEditPathname}
                   >
                     {position[gRow]?.children.map((rItem: string) => {

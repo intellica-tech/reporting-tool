@@ -31,6 +31,7 @@ interface DvtDashboardEditRowProps {
   children: ReactNode;
   deleteClick: () => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
+  rowId: string;
   isEdit: boolean;
 }
 
@@ -38,14 +39,22 @@ const DvtDashboardEditRow = ({
   children,
   deleteClick,
   onDrop,
+  rowId = '',
   isEdit = false,
 }: DvtDashboardEditRowProps) => {
-  const [onHover, setOnHover] = useState(false);
+  const [onHover, setOnHover] = useState<boolean>(false);
+  const [onDraggable, setOnDraggable] = useState<boolean>(false);
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    e.dataTransfer.setData('drag-drop-row-id', JSON.stringify(id));
+  };
 
   return (
     <StyledDashboardDroppedRow
       onMouseLeave={() => setOnHover(false)}
       onMouseOver={() => setOnHover(true)}
+      draggable={onDraggable}
+      onDragStart={e => handleDragStart(e, rowId)}
     >
       {isEdit && onHover && (
         <StyledDashboardDroppedRowOptions>
@@ -53,7 +62,8 @@ const DvtDashboardEditRow = ({
             style={{ cursor: 'move' }}
             fileName="drag"
             iconColor={supersetTheme.colors.dvt.grayscale.base}
-            onClick={() => {}}
+            onMouseDown={() => setOnDraggable(true)}
+            onMouseUp={() => setOnDraggable(false)}
           />
           <Icon
             fileName="dvt-delete"
