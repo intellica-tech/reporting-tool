@@ -91,6 +91,24 @@ const columnData = [
     verbose_name: null,
     warning_markdown: null,
   },
+  {
+    advanced_data_type: null,
+    certification_details: null,
+    certified_by: null,
+    column_name: 'sadasd',
+    description: null,
+    expression: 'select * from color',
+    filterable: true,
+    groupby: true,
+    id: 974,
+    is_certified: false,
+    is_dttm: true,
+    python_date_format: null,
+    type: null,
+    type_generic: 2,
+    verbose_name: null,
+    warning_markdown: null,
+  },
 ];
 
 const savedData = [

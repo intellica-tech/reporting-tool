@@ -71,7 +71,7 @@ export interface ColumnDataProps {
   is_certified: boolean;
   is_dttm: boolean;
   python_date_format: any;
-  type: string;
+  type: any;
   type_generic: any;
   verbose_name: any;
   warning_markdown: any;
@@ -98,6 +98,7 @@ interface ValuesProps {
 export interface DvtOpenSelectMenuProps {
   type: 'normal' | 'aggregates' | 'filters';
   savedType: 'metric' | 'expressions';
+  simpleType: 'normal' | 'datasoruce';
   values: ValuesProps;
   setValues: (values: ValuesProps) => void;
   savedData?: MetricDataProps[];
@@ -112,6 +113,7 @@ export interface DvtOpenSelectMenuProps {
 const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
   type = 'normal',
   savedType = 'metric',
+  simpleType = 'normal',
   values,
   setValues,
   savedData = [],
@@ -160,6 +162,18 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
 
   const filtersOptionWithoutForm = ['IS NOT NULL', 'IS NULL'];
 
+  const savedDataTypes =
+    savedType === 'expressions'
+      ? columnData.filter(f => f.expression)
+      : savedData;
+
+  const columnDataSimpleTypes =
+    simpleType === 'datasoruce'
+      ? columnData.filter(
+          f => f.python_date_format || f.type === 'TIMESTAMP WITHOUT TIME ZONE',
+        )
+      : columnData;
+
   return (
     <StyledOpenSelectMenu>
       <StyledOpenSelectMenuFilterTabsGroup>
@@ -193,21 +207,23 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                   savedType === 'expressions' ? 'EXPRESSIONS' : 'METRIC'
                 }`}
                 selectedValue={values.saved}
-                setSelectedValue={vl =>
+                setSelectedValue={vl => {
                   setValues({
                     ...values,
                     saved: vl,
                     column: '',
                     aggregate: '',
-                    sql: '',
-                  })
-                }
-                placeholder={`${savedData.length} ${
+                    sql: savedType === 'expressions' ? vl.expression : '',
+                  });
+                }}
+                placeholder={`${savedDataTypes.length} ${
                   savedType === 'expressions' ? t('column(s)') : t('metric(s)')
                 }`}
-                data={savedData}
+                data={savedDataTypes}
                 typeDesign="navbar"
-                objectName="metric_name"
+                objectName={
+                  savedType === 'expressions' ? 'column_name' : 'metric_name'
+                }
               />
             </StyledOpenSelectMenuFilterInputGroup>
           ) : (
@@ -305,8 +321,8 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
                 ...onOptionValue,
               });
             }}
-            placeholder={`${columnData.length} ${t('column(s)')}`}
-            data={columnData}
+            placeholder={`${columnDataSimpleTypes.length} ${t('column(s)')}`}
+            data={columnDataSimpleTypes}
             typeDesign="navbar"
             objectName="column_name"
           />

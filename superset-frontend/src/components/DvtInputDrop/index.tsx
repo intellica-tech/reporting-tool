@@ -56,6 +56,7 @@ export interface DvtInputDropProps {
   error?: string;
   type: 'normal' | 'aggregates' | 'filters';
   savedType: 'metric' | 'expressions';
+  simpleType: 'normal' | 'datasoruce';
   savedData?: MetricDataProps[];
   columnData: ColumnDataProps[];
   datasourceApi: string;
@@ -75,6 +76,7 @@ const DvtInputDrop = ({
   error,
   type = 'normal',
   savedType = 'metric',
+  simpleType = 'normal',
   savedData = [],
   columnData = [],
   datasourceApi = '',
@@ -158,6 +160,17 @@ const DvtInputDrop = ({
     const droppedDataString = e.dataTransfer.getData('drag-drop');
     const jsonDropData = JSON.parse(droppedDataString);
 
+    if (
+      simpleType === 'datasoruce' &&
+      !(
+        jsonDropData.type === 'TIMESTAMP WITHOUT TIME ZONE' ||
+        jsonDropData.python_date_format ||
+        jsonDropData.expression
+      )
+    ) {
+      return;
+    }
+
     const aggregateSwitch = (type: string) => {
       let aggregate = 'AVG';
       const sums = ['BIGINT', 'FLOAT64', 'DOUBLE PRECISION'];
@@ -207,6 +220,7 @@ const DvtInputDrop = ({
       ? {
           saved: jsonDropData,
           expressionType: 'SAVED',
+          sql: savedType === 'expressions' ? jsonDropData.expression : '',
         }
       : onAggregate;
 
@@ -251,7 +265,9 @@ const DvtInputDrop = ({
       label: onlyFilterNoFilter
         ? `${jsonDropData.column_name} (No filter)`
         : jsonDropData?.expression
-        ? jsonDropData.expression
+        ? savedType === 'expressions'
+          ? jsonDropData.column_name
+          : jsonDropData.expression
         : type === 'aggregates'
         ? onColumnAndAggregateAddSql
         : type === 'filters'
@@ -504,6 +520,7 @@ const DvtInputDrop = ({
           <DvtOpenSelectMenu
             type={type}
             savedType={savedType}
+            simpleType={simpleType}
             values={values}
             setValues={setValues}
             savedData={savedData}
