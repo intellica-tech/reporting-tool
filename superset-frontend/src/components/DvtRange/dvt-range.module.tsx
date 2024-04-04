@@ -24,6 +24,12 @@ interface DvtPopperProps {
   left: number;
 }
 
+const StyledRange = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
 const StyledPopper = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,10 +81,23 @@ const StyledPopperAbsolute = styled.div<DvtPopperProps>`
 `}
 `;
 
+const StyledRangePopover = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const StyledRangeLabel = styled.label`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+`;
+
 export {
   StyledPopper,
   StyledPopperBody,
   StyledPopperGroup,
   StyledPopperAbsolute,
   StyledRangeInput,
+  StyledRangePopover,
+  StyledRangeLabel,
+  StyledRange,
 };

@@ -5,7 +5,13 @@ import {
   StyledPopperBody,
   StyledPopperGroup,
   StyledPopperAbsolute,
+  StyledRangePopover,
+  StyledRangeLabel,
+  StyledRange,
 } from './dvt-range.module';
+import DvtPopper from '../DvtPopper';
+import Icon from '../Icons/Icon';
+import { SupersetTheme } from '@superset-ui/core';
 
 export interface DvtRangeProps {
   min: number;
@@ -13,6 +19,11 @@ export interface DvtRangeProps {
   step: number;
   value: number | undefined;
   setValue: (newValue: number) => void;
+  label?: string;
+  popoverLabel?: string;
+  popoverDirection?: 'top' | 'bottom' | 'left' | 'right';
+  important?: boolean;
+  importantLabel?: string;
 }
 
 const DvtRange: React.FC<DvtRangeProps> = ({
@@ -21,6 +32,11 @@ const DvtRange: React.FC<DvtRangeProps> = ({
   value,
   setValue,
   step,
+  label,
+  popoverDirection,
+  popoverLabel,
+  important,
+  importantLabel = 'Cannot be empty',
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const absoluteRef = useRef<HTMLDivElement>(null);
@@ -58,26 +74,61 @@ const DvtRange: React.FC<DvtRangeProps> = ({
   };
 
   return (
-    <StyledPopperGroup
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <StyledPopper ref={ref}>
-        <StyledRangeInput
-          type="range"
-          max={max}
-          min={min}
-          step={step}
-          value={value || min}
-          onChange={handleChange}
-        />
-      </StyledPopper>
-      {isHovered && (
-        <StyledPopperAbsolute ref={absoluteRef} left={left}>
-          <StyledPopperBody>{value || min}</StyledPopperBody>
-        </StyledPopperAbsolute>
-      )}
-    </StyledPopperGroup>
+    <StyledRange>
+      <StyledRangePopover>
+        {label && <StyledRangeLabel>{label}</StyledRangeLabel>}
+        {important && !value && (
+          <DvtPopper
+            size="small"
+            label={importantLabel}
+            direction={popoverDirection}
+          >
+            <Icon
+              fileName="warning"
+              css={(theme: SupersetTheme) => ({
+                color: theme.colors.alert.base,
+              })}
+              iconSize="l"
+            />
+          </DvtPopper>
+        )}
+        {popoverLabel && (
+          <DvtPopper
+            size="small"
+            label={popoverLabel}
+            direction={popoverDirection}
+          >
+            <Icon
+              fileName="warning"
+              css={(theme: SupersetTheme) => ({
+                color: theme.colors.dvt.primary.base,
+              })}
+              iconSize="l"
+            />
+          </DvtPopper>
+        )}
+      </StyledRangePopover>
+      <StyledPopperGroup
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <StyledPopper ref={ref}>
+          <StyledRangeInput
+            type="range"
+            max={max}
+            min={min}
+            step={step}
+            value={value || min}
+            onChange={handleChange}
+          />
+        </StyledPopper>
+        {isHovered && (
+          <StyledPopperAbsolute ref={absoluteRef} left={left}>
+            <StyledPopperBody>{value || min}</StyledPopperBody>
+          </StyledPopperAbsolute>
+        )}
+      </StyledPopperGroup>
+    </StyledRange>
   );
 };
 

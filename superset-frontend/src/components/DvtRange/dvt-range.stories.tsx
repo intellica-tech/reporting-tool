@@ -35,6 +35,10 @@ export const Default = () => {
         step={1}
         value={range}
         setValue={setRange}
+        label="Range"
+        important
+        popoverLabel="Range"
+        popoverDirection="top"
       />
     </div>
   );
