@@ -37,6 +37,7 @@ interface FormsProps {
   placeholder?: string;
   type?: 'normal' | 'aggregates' | 'filters';
   savedType?: 'metric' | 'expressions';
+  simpleType?: 'normal' | 'datasoruce';
   multiple?: boolean;
   options?: OptionsData[];
   number?: boolean;
