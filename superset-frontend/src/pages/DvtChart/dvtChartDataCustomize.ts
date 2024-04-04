@@ -1,6 +1,5 @@
 import { t } from '@superset-ui/core';
 import { chartFormsOption } from './dvtChartDataOptions';
-import { placeholder } from 'lodash/fp';
 
 interface OptionsData {
   label: string;
@@ -669,7 +668,7 @@ const DvtChartData: DvtChartDataProps[] = [
             label: t('Y AXIS BOUNDS'),
             name: 'xAxisBounds',
             popper: t(
-              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
+              "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
             ),
             status: 'two-input',
             values: [
