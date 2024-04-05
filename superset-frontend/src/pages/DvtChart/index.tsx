@@ -926,6 +926,17 @@ const DvtChart = () => {
     switch (active) {
       case 'table':
         return droppedOnlyLabels('all_columns');
+      case 'pivot_table_v2':
+        return [
+          ...droppedOnlyLabels('groupbyColumns'),
+          ...values.groupbyRows.map((c: any) => ({
+            timeGrain: 'P1D',
+            columnType: 'BASE_AXIS',
+            sqlExpression: c.label,
+            label: c.label,
+            expressionType: 'SQL',
+          })),
+        ];
       case 'bubble_v2':
         return [
           ...droppedOnlyLabels('entity'),
