@@ -196,6 +196,25 @@ const StyledDashboardDroppedRowOptions = styled.div`
   gap: 15px;
 `;
 
+const StyledDashboardDroppedRowDivider = styled.div<StyledDashboardDroppedRowGridProps>`
+  ${({ isEdit }) => isEdit && `cursor: move`};
+  min-height: 16px;
+  max-height: 16px;
+  width: 100%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    height: 1px;
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  }
+`;
+
 interface StyledNewAddRowProps {
   hovered: boolean;
   fixHeight: number;
@@ -275,6 +294,7 @@ export {
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
+  StyledDashboardDroppedRowDivider,
   StyledNewAddRow,
   StyledDashboardLayoutNew,
   StyledDashboardLayoutNewIcon,

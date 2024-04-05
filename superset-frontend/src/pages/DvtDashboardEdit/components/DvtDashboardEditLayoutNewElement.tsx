@@ -32,8 +32,107 @@ interface DvtDashboardEditLayoutNewElementProps {
 const DvtDashboardEditLayoutNewElement = ({
   type = 'divider',
 }: DvtDashboardEditLayoutNewElementProps) => {
+  const generateUniqueID = (prefix: string) => {
+    const randomString = Math.random().toString(36).substr(2, 10);
+    const uniqueID = `${prefix}-${randomString}`;
+    return uniqueID;
+  };
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData('drag-drop-row-id', JSON.stringify({}));
+    const rowUnique = generateUniqueID('ROW');
+    const columnUnique = generateUniqueID('COLUMN');
+    const headerUnique = generateUniqueID('HEADER');
+    const markdownUnique = generateUniqueID('MARKDOWN');
+    const dividerUnique = generateUniqueID('DIVIDER');
+
+    const dataObject = () => {
+      switch (type) {
+        case 'row':
+          return {
+            [rowUnique]: {
+              type: 'ROW',
+              id: rowUnique,
+              children: [],
+              parents: ['ROOT_ID', 'GRID_ID'],
+              meta: {
+                background: 'BACKGROUND_TRANSPARENT',
+              },
+            },
+          };
+        case 'column':
+          return {
+            [columnUnique]: {
+              type: 'COLUMN',
+              id: columnUnique,
+              children: [],
+              parents: ['ROOT_ID', 'GRID_ID', rowUnique],
+              meta: {
+                width: 4,
+                background: 'BACKGROUND_TRANSPARENT',
+              },
+            },
+            [rowUnique]: {
+              type: 'ROW',
+              id: rowUnique,
+              children: [columnUnique],
+              parents: ['ROOT_ID', 'GRID_ID'],
+              meta: {
+                background: 'BACKGROUND_TRANSPARENT',
+              },
+            },
+          };
+        case 'header':
+          return {
+            [headerUnique]: {
+              type: 'HEADER',
+              id: headerUnique,
+              children: [],
+              parents: ['ROOT_ID', 'GRID_ID'],
+              meta: {
+                text: 'New header',
+                headerSize: 'MEDIUM_HEADER',
+                background: 'BACKGROUND_TRANSPARENT',
+              },
+            },
+          };
+        case 'text':
+          return {
+            [markdownUnique]: {
+              type: 'MARKDOWN',
+              id: markdownUnique,
+              children: [],
+              parents: ['ROOT_ID', 'GRID_ID', rowUnique],
+              meta: {
+                width: 4,
+                height: 50,
+              },
+            },
+            [rowUnique]: {
+              type: 'ROW',
+              id: rowUnique,
+              children: [markdownUnique],
+              parents: ['ROOT_ID', 'GRID_ID'],
+              meta: {
+                background: 'BACKGROUND_TRANSPARENT',
+              },
+            },
+          };
+        case 'divider':
+          return {
+            [dividerUnique]: {
+              type: 'DIVIDER',
+              id: dividerUnique,
+              children: [],
+              parents: ['ROOT_ID', 'GRID_ID'],
+              meta: {},
+            },
+          };
+        default:
+          return {};
+      }
+    };
+
+    e.dataTransfer.setData('drag-drop-new', JSON.stringify(dataObject()));
   };
 
   const iconClassSwitch = () => {
