@@ -793,11 +793,11 @@ function DvtDashboardList() {
           )}
           {activeTab === 'layoutElements' && (
             <>
-              <DvtDashboardEditLayoutNewElement type="tabs" />
+              {/* <DvtDashboardEditLayoutNewElement type="tabs" /> */}
               <DvtDashboardEditLayoutNewElement type="row" />
-              <DvtDashboardEditLayoutNewElement type="column" />
+              {/* <DvtDashboardEditLayoutNewElement type="column" /> */}
               <DvtDashboardEditLayoutNewElement type="header" />
-              <DvtDashboardEditLayoutNewElement type="text" />
+              {/* <DvtDashboardEditLayoutNewElement type="text" /> */}
               <DvtDashboardEditLayoutNewElement type="divider" />
             </>
           )}
