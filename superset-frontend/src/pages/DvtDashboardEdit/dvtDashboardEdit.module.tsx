@@ -185,6 +185,18 @@ const StyledDashboardDroppedRowGrid = styled.div<StyledDashboardDroppedRowGridPr
   gap: 15px;
 `;
 
+const StyledDashboardDroppedRowGridEmpty = styled.div`
+  min-height: 100px;
+  max-height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.dvt.text.placeholder};
+  cursor: default;
+`;
+
 const StyledDashboardDroppedRowOptions = styled.div`
   position: absolute;
   top: 50%;
@@ -213,6 +225,16 @@ const StyledDashboardDroppedRowDivider = styled.div<StyledDashboardDroppedRowGri
     height: 1px;
     background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
   }
+`;
+
+const StyledDashboardDroppedHeaderInput = styled.input`
+  font-size: 21px;
+  font-weight: 600;
+  width: 100%;
+  height: 34px;
+  background-color: transparent;
+  outline: none;
+  border: none;
 `;
 
 interface StyledNewAddRowProps {
@@ -293,8 +315,10 @@ export {
   StyledDashboardDroppedListItemChart,
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
+  StyledDashboardDroppedRowGridEmpty,
   StyledDashboardDroppedRowOptions,
   StyledDashboardDroppedRowDivider,
+  StyledDashboardDroppedHeaderInput,
   StyledNewAddRow,
   StyledDashboardLayoutNew,
   StyledDashboardLayoutNewIcon,

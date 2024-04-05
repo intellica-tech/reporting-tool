@@ -50,11 +50,13 @@ import {
   StyledDashboardDroppedListGridShow,
   StyledDashboardDroppedListGridShowItem,
   StyledNewAddRow,
+  StyledDashboardDroppedRowGridEmpty,
 } from './dvtDashboardEdit.module';
 import DvtDashboardEditChart from './components/DvtDashboardEditChart';
 import DvtDashboardEditRow from './components/DvtDashboardEditRow';
 import DvtDashboardEditLayoutNewElement from './components/DvtDashboardEditLayoutNewElement';
 import DvtDashboardEditDivider from './components/DvtDashboardEditDivider';
+import DvtDashboardEditHeader from './components/DvtDashboardEditHeader';
 
 function DvtDashboardList() {
   const dispatch = useDispatch();
@@ -637,48 +639,74 @@ function DvtDashboardList() {
                       rowId={gRow}
                       isEdit={isEditPathname}
                     >
-                      {position[gRow]?.children.map((rItem: string) => {
-                        const findItem = droppedData.find(
-                          dropItem =>
-                            dropItem.id === position[rItem].meta.chartId,
-                        );
+                      {position[gRow]?.children.length === 0 ? (
+                        <StyledDashboardDroppedRowGridEmpty>
+                          {t('Empty row')}
+                        </StyledDashboardDroppedRowGridEmpty>
+                      ) : (
+                        position[gRow]?.children.map((rItem: string) => {
+                          const findItem = droppedData.find(
+                            dropItem =>
+                              dropItem.id === position[rItem].meta.chartId,
+                          );
 
-                        return (
-                          findItem?.id && (
-                            <DvtDashboardEditChart
-                              key={rItem}
-                              item={findItem}
-                              chartItem={position[rItem]}
-                              totalWidth={position[gRow]?.children
-                                .map((rm: string) => position[rm].meta.width)
-                                .reduce(
-                                  (prev: number, curr: number) => prev + curr,
-                                  0,
-                                )}
-                              deleteClick={() =>
-                                handleRemoveChart(gRow, rItem, findItem.id)
-                              }
-                              isEdit={isEditPathname}
-                              onReSize={onReSize === rItem}
-                              setOnReSize={setOnReSize}
-                              setSize={sizes =>
-                                setPosition({
-                                  ...position,
-                                  [position[rItem].id]: {
-                                    ...position[rItem],
-                                    meta: {
-                                      ...position[rItem].meta,
-                                      height: sizes.height,
-                                      width: sizes.width,
+                          return (
+                            findItem?.id && (
+                              <DvtDashboardEditChart
+                                key={rItem}
+                                item={findItem}
+                                chartItem={position[rItem]}
+                                totalWidth={position[gRow]?.children
+                                  .map((rm: string) => position[rm].meta.width)
+                                  .reduce(
+                                    (prev: number, curr: number) => prev + curr,
+                                    0,
+                                  )}
+                                deleteClick={() =>
+                                  handleRemoveChart(gRow, rItem, findItem.id)
+                                }
+                                isEdit={isEditPathname}
+                                onReSize={onReSize === rItem}
+                                setOnReSize={setOnReSize}
+                                setSize={sizes =>
+                                  setPosition({
+                                    ...position,
+                                    [position[rItem].id]: {
+                                      ...position[rItem],
+                                      meta: {
+                                        ...position[rItem].meta,
+                                        height: sizes.height,
+                                        width: sizes.width,
+                                      },
                                     },
-                                  },
-                                })
-                              }
-                            />
-                          )
-                        );
-                      })}
+                                  })
+                                }
+                              />
+                            )
+                          );
+                        })
+                      )}
                     </DvtDashboardEditRow>
+                  )}
+                  {gRow.split('HEADER')[1] && (
+                    <DvtDashboardEditHeader
+                      deleteClick={() => handleRemoveRow(gRow)}
+                      id={gRow}
+                      isEdit={isEditPathname}
+                      value={position[gRow].meta.text}
+                      setValue={(vl: string) =>
+                        setPosition({
+                          ...position,
+                          [position[gRow].id]: {
+                            ...position[gRow],
+                            meta: {
+                              ...position[gRow].meta,
+                              text: vl,
+                            },
+                          },
+                        })
+                      }
+                    />
                   )}
                   {gRow.split('DIVIDER')[1] && (
                     <DvtDashboardEditDivider
