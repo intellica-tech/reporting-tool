@@ -161,12 +161,13 @@ const DvtInputDrop = ({
     const jsonDropData = JSON.parse(droppedDataString);
 
     if (
-      simpleType === 'datasoruce' &&
-      !(
-        jsonDropData.type === 'TIMESTAMP WITHOUT TIME ZONE' ||
-        jsonDropData.python_date_format ||
-        jsonDropData.expression
-      )
+      (simpleType === 'datasoruce' &&
+        !(
+          jsonDropData.type === 'TIMESTAMP WITHOUT TIME ZONE' ||
+          jsonDropData.python_date_format ||
+          jsonDropData.expression
+        )) ||
+      (savedType === 'expressions' && jsonDropData.metric_name)
     ) {
       return;
     }
