@@ -560,6 +560,102 @@ const chartFormsOption = {
       value: 45,
     },
   ],
+  label_type: [
+    {
+      label: 'Value',
+      value: 'value',
+    },
+    {
+      label: 'Category Name',
+      value: 'key',
+    },
+    {
+      label: 'Percentage',
+      value: 'percent',
+    },
+    {
+      label: 'Category and Value',
+      value: 'key_value',
+    },
+    {
+      label: 'Category and Percentage',
+      value: 'key_percent',
+    },
+    {
+      label: 'Category, Value and Percentage',
+      value: 'key_value_percent',
+    },
+  ],
+  header_font_size: [
+    {
+      label: 'Tiny',
+      value: 0.2,
+    },
+    {
+      label: 'Small',
+      value: 0.3,
+    },
+    {
+      label: 'Normal',
+      value: 0.4,
+    },
+    {
+      label: 'Large',
+      value: 0.5,
+    },
+    {
+      label: 'Huge',
+      value: 0.6,
+    },
+  ],
+  subheader_font_size: [
+    {
+      label: 'Tiny',
+      value: 0.125,
+    },
+    {
+      label: 'Small',
+      value: 0.15,
+    },
+    {
+      label: 'Normal',
+      value: 0.2,
+    },
+    {
+      label: 'Large',
+      value: 0.3,
+    },
+    {
+      label: 'Huge',
+      value: 0.4,
+    },
+  ],
+  page_length: [
+    {
+      label: t('All'),
+      value: 0,
+    },
+    {
+      label: t('10'),
+      value: 10,
+    },
+    {
+      label: t('20'),
+      value: 20,
+    },
+    {
+      label: t('50'),
+      value: 50,
+    },
+    {
+      label: t('100'),
+      value: 100,
+    },
+    {
+      label: t('200'),
+      value: 200,
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
