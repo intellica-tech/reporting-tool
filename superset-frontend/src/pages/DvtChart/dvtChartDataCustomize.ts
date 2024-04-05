@@ -357,7 +357,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('SEARCH BOX'),
-            name: '', //cannot find.
+            name: '', // cannot find.
             status: 'checkbox',
           },
           {
@@ -469,7 +469,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Use date formatting even when metric value is not a timestamp',
             ),
           },
-          //need to Conditional Formatting
+          // need to Conditional Formatting
         ],
       },
     ],
@@ -955,191 +955,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
       },
     ],
   },
-  // {
-  //   chart_name: 'heatmap',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Query'),
-  //       collapse_popper_error: t('This section contains validation errors'),
-  //       collapse_active: 'query',
-  //       forms: [
-  //         {
-  //           label: t('X AXIS'),
-  //           name: 'all_columns_x',
-  //           popper: t('Columns to display'),
-  //           popperError: t('cannot be empty'),
-  //           status: 'input-drop',
-  //           multiple: false,
-  //           type: 'normal',
-  //           savedType: 'expressions',
-  //         },
-  //         {
-  //           label: t('Y AXIS'),
-  //           name: 'all_columns_y',
-  //           popper: t('Columns to display'),
-  //           popperError: t('cannot be empty'),
-  //           status: 'input-drop',
-  //           multiple: false,
-  //           type: 'normal',
-  //           savedType: 'expressions',
-  //         },
-  //         formMetric,
-  //         formFilters,
-  //         formRowLimit,
-  //         {
-  //           label: t('SORT BY METRIC'),
-  //           name: 'sort_by_metric',
-  //           status: 'checkbox',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       collapse_label: t('Heatmap Options'),
-  //       collapse_active: 'heatmap_options',
-  //       forms: [
-  //         {
-  //           label: t('LINEAR COLOR SCHEME'),
-  //           name: 'linear_color_scheme',
-  //           status: 'select',
-  //           options: chartFormsOption.linear_color_scheme,
-  //         },
-  //         {
-  //           label: t('XSCALE INTERVAL'),
-  //           name: 'xscale_interval',
-  //           status: 'select',
-  //           options: chartFormsOption.xscale_interval,
-  //         },
-  //         {
-  //           label: t('YSCALE INTERVAL'),
-  //           name: 'yscale_interval',
-  //           status: 'select',
-  //           options: chartFormsOption.yscale_interval,
-  //         },
-  //         {
-  //           label: t('RENDERING'),
-  //           name: 'canvas_image_rendering',
-  //           popper: t(
-  //             'image-rendering CSS attribute of the canvas object that defines how the browser scales up the image',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.canvas_image_rendering,
-  //         },
-  //         {
-  //           label: t('NORMALIZE ACROSS'),
-  //           name: 'normalize_across',
-  //           popper: t(
-  //             'Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.normalize_across,
-  //         },
-  //         {
-  //           label: t('LEFT MARGIN'),
-  //           name: 'left_margin',
-  //           popper: t(
-  //             'Left margin, in pixels, allowing for more room for axis labels',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.left_margin,
-  //         },
-  //         {
-  //           label: t('BOTTOM MARGIN'),
-  //           name: 'bottom_margin',
-  //           popper: t(
-  //             'Bottom margin, in pixels, allowing for more room for axis labels',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.bottom_margin,
-  //         },
-  //         {
-  //           label: t('VALUE BOUNDS'),
-  //           name: 'y_axis_bounds',
-  //           popper: t(
-  //             'Hard value bounds applied for color coding. Is only relevant and applied when the normalization is applied against the whole heatmap.',
-  //           ),
-  //           status: 'two-input',
-  //           values: [
-  //             {
-  //               name: 'min',
-  //               placeholder: t('Min'),
-  //               number: true,
-  //             },
-  //             {
-  //               name: 'max',
-  //               placeholder: t('Max'),
-  //               number: true,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('VALUE FORMAT'),
-  //           name: 'y_axis_format',
-  //           popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  //           status: 'select',
-  //           options: chartFormsOption.y_axis_format,
-  //         },
-  //         {
-  //           label: t('TIME FORMAT'),
-  //           name: 'time_format',
-  //           popper: t(
-  //             'D3 time format syntax: https://github.com/d3/d3-time-format.',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.time_format,
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('SORT X AXIS'),
-  //           name: 'sort_x_axis',
-  //           status: 'select',
-  //           options: chartFormsOption.sort_x_axis,
-  //         },
-  //         {
-  //           label: t('SORT Y AXIS'),
-  //           name: 'sort_y_axis',
-  //           status: 'select',
-  //           options: chartFormsOption.sort_y_axis,
-  //         },
-  //         {
-  //           label: t('LEGEND'),
-  //           name: 'show_legend',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('SHOW PERCENTAGE'),
-  //           name: 'show_perc',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('SHOW VALUES'),
-  //           name: 'show_values',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('NORMALIZED'),
-  //           name: 'normalized',
-  //           status: 'checkbox',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+
   {
     chart_name: 'gauge_chart',
     collapses: [
