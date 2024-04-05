@@ -220,6 +220,24 @@ const lineAndBarChart: CollapsesProps[] = [
         options: chartFormsOption.rolling_type,
       },
       {
+        label: t('PERIODS'),
+        name: 'rolling_periods',
+        popper: t(
+          'Defines the size of the rolling window function, relative to the time granularity selected',
+        ),
+        status: 'input',
+        number: true,
+      },
+      {
+        label: t('MIN PERIODS'),
+        name: 'min_periods',
+        popper: t(
+          'The minimum number of rolling periods required to show a value. For instance if you do a cumulative sum on 7 days you may want your "Min Period" to be 7, so that all data points shown are the total of 7 periods. This will hide the "ramp up" taking place over the first 7 periods',
+        ),
+        status: 'input',
+        number: true,
+      },
+      {
         label: t('TIME SHIFT'),
         name: 'time_compare',
         popper: t(

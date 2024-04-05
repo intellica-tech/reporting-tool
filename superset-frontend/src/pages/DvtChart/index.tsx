@@ -803,12 +803,12 @@ const DvtChart = () => {
     switch (vl) {
       case 'mean':
       case 'std':
-        return {
-          min_periods: 2,
-          rolling_type: vl,
-          window: 1,
-        };
       case 'sum':
+        return {
+          min_periods: values.min_periods ? Number(values.min_periods) : 0,
+          rolling_type: vl,
+          window: values.rolling_periods ? Number(values.rolling_periods) : 1,
+        };
       case 'cumsum':
         return {
           operator: 'sum',
