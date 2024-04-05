@@ -973,6 +973,10 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'echarts_timeseries_scatter',
+    collapses: lineAndBarChart,
+  },
 ];
 
 export default DvtChartData;

@@ -39,11 +39,16 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     status: 'gauge_chart',
     icon: 'dvt-linear_chart',
   },
-  // {
-  //   popoverLabel: 'Big Number with Trendline',
-  //   status: 'big_number',
-  //   icon: 'dvt-linear_chart',
-  // },
+  {
+    popoverLabel: 'Big Number with Trendline',
+    status: 'big_number',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Scatter Plot',
+    status: 'echarts_timeseries_scatter',
+    icon: 'dvt-linear_chart',
+  },
   {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',

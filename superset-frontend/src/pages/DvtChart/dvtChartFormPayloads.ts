@@ -499,6 +499,11 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'url_params',
     ],
   },
+  {
+    viz_name: 'echarts_timeseries_scatter',
+    form_data: [...lineChartPayload, 'markerSize'],
+    queries: lineChartQueries,
+  },
 ];
 
 export default DvtChartFormPayloads;
