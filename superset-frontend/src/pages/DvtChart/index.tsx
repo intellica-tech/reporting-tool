@@ -796,6 +796,7 @@ const DvtChart = () => {
     'echarts_timeseries_bar',
     'echarts_area',
     'big_number',
+    'echarts_timeseries_scatter',
   ];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
