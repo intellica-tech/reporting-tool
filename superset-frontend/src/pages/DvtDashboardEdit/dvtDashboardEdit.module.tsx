@@ -210,6 +210,54 @@ const StyledNewAddRow = styled.div<StyledNewAddRowProps>`
     hovered && `border-top: 5px solid ${theme.colors.dvt.primary.base};`}
 `;
 
+const StyledDashboardLayoutNew = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  cursor: move;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.primary.light3};
+  }
+`;
+
+const StyledDashboardLayoutNewIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: ${({ theme }) => theme.colors.dvt.primary.light2};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 28px;
+  color: ${({ theme }) => theme.colors.dvt.primary.base};
+  position: relative;
+
+  &.fa.fa-window-restore {
+    font-size: 18px;
+  }
+
+  &.divider {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 2px;
+      background-color: ${({ theme }) => theme.colors.dvt.primary.base};
+    }
+  }
+`;
+
+const StyledDashboardLayoutNewLabel = styled.div`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  text-transform: capitalize;
+`;
+
 export {
   StyledDashboardEdit,
   StyledDashboard,
@@ -228,4 +276,7 @@ export {
   StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
   StyledNewAddRow,
+  StyledDashboardLayoutNew,
+  StyledDashboardLayoutNewIcon,
+  StyledDashboardLayoutNewLabel,
 };

@@ -37,12 +37,6 @@ import DvtButton from 'src/components/DvtButton';
 import DvtInput from 'src/components/DvtInput';
 import DvtSelect from 'src/components/DvtSelect';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-// import NewTabs from 'src/dashboard/components/gridComponents/new/NewTabs';
-import NewRow from 'src/dashboard/components/gridComponents/new/NewRow';
-// import NewColumn from 'src/dashboard/components/gridComponents/new/NewColumn';
-import NewHeader from 'src/dashboard/components/gridComponents/new/NewHeader';
-import NewMarkdown from 'src/dashboard/components/gridComponents/new/NewMarkdown';
-import NewDivider from 'src/dashboard/components/gridComponents/new/NewDivider';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import {
   StyledTab,
@@ -59,6 +53,7 @@ import {
 } from './dvtDashboardEdit.module';
 import DvtDashboardEditChart from './components/DvtDashboardEditChart';
 import DvtDashboardEditRow from './components/DvtDashboardEditRow';
+import DvtDashboardEditLayoutNewElement from './components/DvtDashboardEditLayoutNewElement';
 
 function DvtDashboardList() {
   const dispatch = useDispatch();
@@ -739,12 +734,12 @@ function DvtDashboardList() {
           )}
           {activeTab === 'layoutElements' && (
             <>
-              {/* <NewTabs /> */}
-              <NewRow />
-              {/* <NewColumn /> */}
-              <NewHeader />
-              <NewMarkdown />
-              <NewDivider />
+              <DvtDashboardEditLayoutNewElement type="tabs" />
+              <DvtDashboardEditLayoutNewElement type="row" />
+              <DvtDashboardEditLayoutNewElement type="column" />
+              <DvtDashboardEditLayoutNewElement type="header" />
+              <DvtDashboardEditLayoutNewElement type="text" />
+              <DvtDashboardEditLayoutNewElement type="divider" />
             </>
           )}
         </StyledTab>
