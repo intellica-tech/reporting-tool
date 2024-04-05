@@ -32,7 +32,10 @@ import DvtRange from 'src/components/DvtRange';
 import DvtSpinner from 'src/components/DvtSpinner';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import moment from 'moment';
-import { dvtNavbarChartAddSetVizType } from 'src/dvt-redux/dvt-navbarReducer';
+import {
+  dvtNavbarChartAddSetVizType,
+  dvtNavbarChartsSetTabs,
+} from 'src/dvt-redux/dvt-navbarReducer';
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
@@ -1518,6 +1521,12 @@ const DvtChart = () => {
   useEffect(
     () => () => {
       dispatch(dvtNavbarChartAddSetVizType(''));
+      dispatch(
+        dvtNavbarChartsSetTabs({
+          label: t('Data'),
+          value: 'data',
+        }),
+      );
     },
     [],
   );
