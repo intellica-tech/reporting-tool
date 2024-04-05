@@ -194,6 +194,13 @@ const DvtChart = () => {
     show_perc: true,
     show_values: false,
     normalized: false,
+    min_periods: '',
+    rolling_periods: '',
+    compare_lag: '',
+    compare_suffix: '',
+    show_timestamp: false,
+    show_trend_line: true,
+    start_y_axis_at_zero: true,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -675,12 +682,8 @@ const DvtChart = () => {
           show_timestamp: getFormData?.show_timestamp
             ? getFormData.show_timestamp
             : false,
-          show_trend_line: getFormData?.show_trend_line
-            ? getFormData.show_trend_line
-            : false,
-          start_y_axis_at_zero: getFormData?.start_y_axis_at_zero
-            ? getFormData.start_y_axis_at_zero
-            : false,
+          show_trend_line: getFormData?.show_trend_line !== false,
+          start_y_axis_at_zero: getFormData?.start_y_axis_at_zero !== false,
           rolling_periods: getFormData?.rolling_periods
             ? getFormData.rolling_periods
             : '',
@@ -748,11 +751,16 @@ const DvtChart = () => {
   const withoutValueForNull = (vl: any) =>
     vl?.value ? (vl.value === 'null' ? null : vl.value) : undefined;
 
-  const postProcessingAggregates = (data: any[]) => {
+  const postProcessingAggregates = (
+    data: any[],
+    labelAndValueSame?: boolean,
+  ) => {
     const result = {};
 
     data.forEach(item => {
-      result[item.label] = { operator: 'mean' };
+      result[item.label] = labelAndValueSame
+        ? item.label
+        : { operator: 'mean' };
     });
 
     return result;
@@ -782,6 +790,43 @@ const DvtChart = () => {
           },
         }
       : {};
+
+  const postProcessingRollingChartActives = [
+    'echarts_timeseries_line',
+    'echarts_timeseries_bar',
+    'echarts_area',
+    'big_number',
+  ];
+
+  const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
+    switch (vl) {
+      case 'mean':
+      case 'std':
+        return {
+          min_periods: 2,
+          rolling_type: vl,
+          window: 1,
+        };
+      case 'sum':
+      case 'cumsum':
+        return {
+          operator: 'sum',
+        };
+      default:
+        return {};
+    }
+  };
+
+  const postProcessingRollingType = {
+    operation: values.rolling_type.value === 'cumsum' ? 'cum' : 'rolling',
+    options: {
+      columns: postProcessingAggregates(
+        active === 'big_number' ? values.metric : values.metrics,
+        true,
+      ),
+      ...postProcessingRollingTypeOperatorSwitch(values.rolling_type.value),
+    },
+  };
 
   const onNullOrUndefinded = [null, undefined];
 
@@ -1126,6 +1171,10 @@ const DvtChart = () => {
                 },
                 ...(Object.keys(postProcessingRename).length !== 0
                   ? [postProcessingRename]
+                  : []),
+                ...(postProcessingRollingChartActives.includes(active) &&
+                values.rolling_type.value !== 'null'
+                  ? [postProcessingRollingType]
                   : []),
                 {
                   operation: 'flatten',

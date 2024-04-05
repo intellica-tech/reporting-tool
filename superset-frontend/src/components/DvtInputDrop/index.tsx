@@ -56,7 +56,7 @@ export interface DvtInputDropProps {
   error?: string;
   type?: 'normal' | 'aggregates' | 'filters';
   savedType?: 'metric' | 'expressions';
-  simpleType?: 'normal' | 'datasoruce';
+  simpleType?: 'normal' | 'temporal';
   savedData?: MetricDataProps[];
   columnData: ColumnDataProps[];
   datasourceApi: string;
@@ -161,13 +161,11 @@ const DvtInputDrop = ({
     const jsonDropData = JSON.parse(droppedDataString);
 
     if (
-      (simpleType === 'datasoruce' &&
-        !(
-          jsonDropData.type === 'TIMESTAMP WITHOUT TIME ZONE' ||
-          jsonDropData.python_date_format ||
-          jsonDropData.expression
-        )) ||
-      (savedType === 'expressions' && jsonDropData.metric_name)
+      (simpleType === 'temporal' &&
+        (!jsonDropData.is_dttm || jsonDropData.metric_name)) ||
+      (savedType === 'expressions' && jsonDropData.metric_name) ||
+      (type === 'filters' &&
+        !(jsonDropData.filterable || jsonDropData.metric_name))
     ) {
       return;
     }

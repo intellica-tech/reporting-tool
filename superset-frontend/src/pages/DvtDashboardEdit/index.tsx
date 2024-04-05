@@ -739,9 +739,9 @@ function DvtDashboardList() {
           )}
           {activeTab === 'layoutElements' && (
             <>
-              <NewTabs />
+              {/* <NewTabs /> */}
               <NewRow />
-              <NewColumn />
+              {/* <NewColumn /> */}
               <NewHeader />
               <NewMarkdown />
               <NewDivider />

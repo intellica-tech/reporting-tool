@@ -98,7 +98,7 @@ interface ValuesProps {
 export interface DvtOpenSelectMenuProps {
   type?: 'normal' | 'aggregates' | 'filters';
   savedType?: 'metric' | 'expressions';
-  simpleType?: 'normal' | 'datasoruce';
+  simpleType?: 'normal' | 'temporal';
   values: ValuesProps;
   setValues: (values: ValuesProps) => void;
   savedData?: MetricDataProps[];
@@ -167,12 +167,15 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
       ? columnData.filter(f => f.expression)
       : savedData;
 
-  const columnDataSimpleTypes =
-    simpleType === 'datasoruce'
-      ? columnData.filter(
-          f => f.python_date_format || f.type === 'TIMESTAMP WITHOUT TIME ZONE',
-        )
-      : columnData;
+  const columnDataSimpleTypes = columnData.filter(f => {
+    if (simpleType === 'temporal') {
+      return f.is_dttm;
+    }
+    if (type === 'filters') {
+      return f.filterable;
+    }
+    return f;
+  });
 
   return (
     <StyledOpenSelectMenu>
@@ -200,7 +203,7 @@ const DvtOpenSelectMenu: React.FC<DvtOpenSelectMenuProps> = ({
       </StyledOpenSelectMenuFilterTabsGroup>
       {activeTab === 'SAVED' && (
         <>
-          {savedData.length ? (
+          {simpleType !== 'temporal' && savedData.length ? (
             <StyledOpenSelectMenuFilterInputGroup>
               <DvtSelect
                 label={`SAVED ${
