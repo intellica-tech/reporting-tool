@@ -560,6 +560,80 @@ const chartFormsOption = {
       value: 45,
     },
   ],
+  aggregateFunction: [
+    {
+      label: t('Count'),
+      value: 'Count',
+    },
+    {
+      label: t('Count Unique Values'),
+      value: 'Count Unique Values',
+    },
+    {
+      label: t('List Unique Values'),
+      value: 'List Unique Values',
+    },
+    {
+      label: t('Sum'),
+      value: 'Sum',
+    },
+    {
+      label: t('Average'),
+      value: 'Average',
+    },
+    {
+      label: t('Median'),
+      value: 'Median',
+    },
+    {
+      label: t('Sample Variance'),
+      value: 'Sample Variance',
+    },
+    {
+      label: t('Sample Standard Deviation'),
+      value: 'Sample Standard Deviation',
+    },
+    {
+      label: t('Minimum'),
+      value: 'Minimum',
+    },
+    {
+      label: t('Maximum'),
+      value: 'Maximum',
+    },
+    {
+      label: t('First'),
+      value: 'First',
+    },
+    {
+      label: t('Last'),
+      value: 'Last',
+    },
+    {
+      label: t('Sum as Fraction of Total'),
+      value: 'Sum as Fraction of Total',
+    },
+    {
+      label: t('Sum as Fraction of Rows'),
+      value: 'Sum as Fraction of Rows',
+    },
+    {
+      label: t('Sum as Fraction of Columns'),
+      value: 'Sum as Fraction of Columns',
+    },
+    {
+      label: t('Count as Fraction of Total'),
+      value: 'Count as Fraction of Total',
+    },
+    {
+      label: t('Count as Fraction of Rows'),
+      value: 'Count as Fraction of Rows',
+    },
+    {
+      label: t('Count as Fraction of Columns'),
+      value: 'Count as Fraction of Columns',
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
