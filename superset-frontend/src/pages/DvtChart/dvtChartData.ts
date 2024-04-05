@@ -848,6 +848,131 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'big_number',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('TEMPORAL X-AXIS'),
+            name: 'x_axis',
+            popper: t('Dimension to use on x-axis.'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'metric',
+            simpleType: 'datasoruce',
+          },
+          {
+            label: t('TIME GRAIN'),
+            name: 'time_grain_sqla',
+            popper: t(
+              'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.time_grain_sqla,
+          },
+          formMetric,
+          formFilters,
+        ],
+      },
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('COMPARISON PERIOD LAG'),
+            name: 'compare_lag',
+            popper: t(
+              'Based on granularity, number of time periods to compare against',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('COMPARISON SUFFIX'),
+            name: 'compare_suffix',
+            popper: t('Suffix to apply after the percentage display'),
+            status: 'input',
+          },
+          {
+            label: t('SHOW TIMESTAMP'),
+            name: 'show_timestamp',
+            status: 'checkbox',
+            popper: 'Whether to display the timestamp',
+          },
+          {
+            label: t('SHOW TREND LINE'),
+            name: 'show_trend_line',
+            status: 'checkbox',
+            popper: 'Whether to display the trend line',
+          },
+          {
+            label: t('START Y-AXIS AT 0'),
+            name: 'start_y_axis_at_zero',
+            status: 'checkbox',
+            popper:
+              'Start y-axis at zero. Uncheck to start y-axis at minimum value in the data.',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Advanced Analytics'),
+        collapse_active: 'advancedAnalytics',
+        forms: [
+          {
+            label: t('ROLLING FUNCTION'),
+            name: 'rolling_type',
+            popper: t(
+              'Defines a rolling window function to apply, works along with the [Periods] text box',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.rolling_type,
+          },
+          {
+            label: t('PERIODS'),
+            name: 'rolling_periods',
+            popper: t(
+              'Defines the size of the rolling window function, relative to the time granularity selected',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('MIN PERIODS'),
+            name: 'min_periods',
+            popper: t(
+              'The minimum number of rolling periods required to show a value. For instance if you do a cumulative sum on 7 days you may want your "Min Period" to be 7, so that all data points shown are the total of 7 periods. This will hide the "ramp up" taking place over the first 7 periods',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('RULE'),
+            name: 'resample_rule',
+            popper: t('Pandas resample rule'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_rule,
+          },
+          {
+            label: t('FILL METHOD'),
+            name: 'resample_method',
+            popper: t('Pandas resample method'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_method,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;

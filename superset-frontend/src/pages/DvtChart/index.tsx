@@ -668,6 +668,23 @@ const DvtChart = () => {
             ? getFormData.show_values
             : false,
           normalized: getFormData?.normalized ? getFormData.normalized : false,
+          compare_lag: getFormData?.compare_lag ? getFormData.compare_lag : '',
+          compare_suffix: getFormData?.compare_suffix
+            ? getFormData.compare_suffix
+            : '',
+          show_timestamp: getFormData?.show_timestamp
+            ? getFormData.show_timestamp
+            : false,
+          show_trend_line: getFormData?.show_trend_line
+            ? getFormData.show_trend_line
+            : false,
+          start_y_axis_at_zero: getFormData?.start_y_axis_at_zero
+            ? getFormData.start_y_axis_at_zero
+            : false,
+          rolling_periods: getFormData?.rolling_periods
+            ? getFormData.rolling_periods
+            : '',
+          min_periods: getFormData?.min_periods ? getFormData.min_periods : '',
         });
 
         setChartStatus('loading');
@@ -826,6 +843,7 @@ const DvtChart = () => {
       case 'funnel':
       case 'gauge_chart':
       case 'waterfall':
+      case 'big_number':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [
@@ -947,13 +965,15 @@ const DvtChart = () => {
       limit: withoutValueForNull(values.limit),
       logAxis: undefined,
       markerEnabled: undefined,
-      min_periods: undefined,
+      min_periods: values.min_periods ? values.min_periods : undefined,
       minorSplitLine: undefined,
       minorTicks: undefined,
       percentage_threshold: undefined,
       resample_method: withoutValueForNull(values.resample_method),
       resample_rule: withoutValueForNull(values.resample_rule),
-      rolling_periods: undefined,
+      rolling_periods: values.rolling_periods
+        ? values.rolling_periods
+        : undefined,
       rolling_type: withoutValueForNull(values.rolling_type),
       show_value: undefined,
       slice_id: undefined,
@@ -1040,6 +1060,12 @@ const DvtChart = () => {
       increase_color: { r: 90, g: 193, b: 137, a: 1 },
       total_color: { r: 102, g: 102, b: 102, a: 1 },
       x_ticks_layout: 'auto',
+      color_picker: { r: 0, g: 122, b: 135, a: 1 },
+      compare_lag: values.compare_lag,
+      compare_suffix: values.compare_suffix,
+      show_timestamp: values.show_timestamp,
+      show_trend_line: values.show_trend_line,
+      start_y_axis_at_zero: values.start_y_axis_at_zero,
     },
     queries: [
       {
@@ -1092,7 +1118,9 @@ const DvtChart = () => {
                   options: {
                     index: [values.x_axis[0]?.label],
                     columns: values.groupby.map((vg: any) => vg.values.sql),
-                    aggregates: postProcessingAggregates(values.metrics),
+                    aggregates: postProcessingAggregates(
+                      active === 'big_number' ? values.metric : values.metrics,
+                    ),
                     drop_missing_columns: false,
                   },
                 },
@@ -1398,6 +1426,8 @@ const DvtChart = () => {
           values.y.length &&
           values.size.length
         );
+      case 'big_number':
+        return !(values.metric.length && values.x_axis.length);
       case 'waterfall':
         return !(values.metric.length && values.x_axis.length);
 
