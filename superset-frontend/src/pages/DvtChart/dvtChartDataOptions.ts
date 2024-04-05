@@ -562,27 +562,27 @@ const chartFormsOption = {
   ],
   label_type: [
     {
-      label: 'Value',
+      label: t('Value'),
       value: 'value',
     },
     {
-      label: 'Category Name',
+      label: t('Category Name'),
       value: 'key',
     },
     {
-      label: 'Percentage',
+      label: t('Percentage'),
       value: 'percent',
     },
     {
-      label: 'Category and Value',
+      label: t('Category and Value'),
       value: 'key_value',
     },
     {
-      label: 'Category and Percentage',
+      label: t('Category and Percentage'),
       value: 'key_percent',
     },
     {
-      label: 'Category, Value and Percentage',
+      label: t('Category, Value and Percentage'),
       value: 'key_value_percent',
     },
   ],
@@ -636,23 +636,23 @@ const chartFormsOption = {
       value: 0,
     },
     {
-      label: t('10'),
+      label: '10',
       value: 10,
     },
     {
-      label: t('20'),
+      label: '20',
       value: 20,
     },
     {
-      label: t('50'),
+      label: '50',
       value: 50,
     },
     {
-      label: t('100'),
+      label: '100',
       value: 100,
     },
     {
-      label: t('200'),
+      label: '200',
       value: 200,
     },
   ],
