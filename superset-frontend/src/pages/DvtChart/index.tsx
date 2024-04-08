@@ -903,7 +903,6 @@ const DvtChart = () => {
       case 'gauge_chart':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
-      case 'pivot_table_v2':
         return values.timeseries_limit_metric.length
           ? [[metricsFormation('timeseries_limit_metric')[0], false]]
           : undefined;
@@ -1142,9 +1141,11 @@ const DvtChart = () => {
       server_page_length: values.server_page_length.value,
       show_cell_bars: true,
       table_timestamp_format: 'smart_date',
-      temporal_columns_lookup: selectedChart?.dataset?.columns
-        ?.filter((item: any) => item.is_dttm === true)
-        .map((item: any) => ({ [item.column_name]: true })),
+      temporal_columns_lookup: Object.fromEntries(
+        selectedChart?.dataset?.columns
+          ?.filter((item: any) => item.is_dttm === true)
+          .map((item: any) => [item.column_name, true]),
+      ),
       server_pagination: values.server_pagination,
       entity: droppedOnlyLabels('entity')[0],
       orderby: values.timeseries_limit_metric.length
@@ -1194,7 +1195,6 @@ const DvtChart = () => {
       colSubTotals: values.colSubTotals,
       colTotals: values.colTotals,
       combineMetric: values.combineMetric,
-      conditional_formatting: [],
       groupbyColumns: values?.groupbyColumns
         ? values.groupbyColumns.map((v: any) => v.label)
         : [],
@@ -1210,6 +1210,9 @@ const DvtChart = () => {
         : undefined,
       transposePivot: values.transposePivot,
       valueFormat: 'SMART_NUMBER',
+      series_limit: values.series_limit.value
+        ? Number(values.series_limit.value)
+        : 0,
     },
     queries: [
       {
@@ -1252,7 +1255,7 @@ const DvtChart = () => {
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
         series_limit:
-          active === 'pivot_table_v2' ? values.series_limit.value : 0,
+          active === 'pivot_table_v2' ? Number(values.series_limit.value) : 0,
         order_desc: active === 'pivot_table_v2' ? values.order_desc : true,
         url_params: selectedChart?.form_data?.url_params,
         custom_params: {},
