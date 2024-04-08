@@ -906,6 +906,10 @@ const DvtChart = () => {
         return values.timeseries_limit_metric.length
           ? [[metricsFormation('timeseries_limit_metric')[0], false]]
           : undefined;
+      case 'pivot_table_v2':
+        return values.timeseries_limit_metric.length
+          ? [[metricsFormation('timeseries_limit_metric')[0], false]]
+          : [[metricsFormation('metrics')[0], false]];
       case 'histogram':
         return [];
       case 'waterfall':
