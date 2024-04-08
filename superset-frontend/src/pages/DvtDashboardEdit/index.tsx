@@ -340,6 +340,11 @@ function DvtDashboardList() {
 
     const chartUnique = generateUniqueID('CHART');
 
+    const rowInItemsHowMuchWidth = Object.entries(position)
+      .filter((f: any) => position[rowObjectName].children.includes(f[0]))
+      .map((m: any) => m[1].meta?.width)
+      .reduce((prev, current) => prev + current, 0);
+
     const chartCreate = {
       [chartUnique]: {
         children: [],
@@ -348,17 +353,12 @@ function DvtDashboardList() {
           chartId: jsonDropItem.id,
           height: 50,
           sliceName: jsonDropItem.slice_name,
-          width: 4,
+          width: rowInItemsHowMuchWidth > 8 ? 12 - rowInItemsHowMuchWidth : 4,
         },
         parents: ['ROOT_ID', 'GRID_ID', rowObjectName],
         type: 'CHART',
       },
     };
-
-    const rowInItemsHowMuchWidth = Object.entries(position)
-      .filter((f: any) => position[rowObjectName].children.includes(f[0]))
-      .map((m: any) => m[1].meta?.width)
-      .reduce((prev, current) => prev + current, 0);
 
     if (jsonDropItem && rowInItemsHowMuchWidth < 12) {
       setPosition({
