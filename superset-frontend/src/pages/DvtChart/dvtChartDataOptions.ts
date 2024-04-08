@@ -200,7 +200,7 @@ const chartFormsOption = {
   rolling_type: [
     {
       label: t('None'),
-      value: 'null',
+      value: 'None',
     },
     {
       label: t('mean'),

@@ -102,7 +102,7 @@ const DvtChart = () => {
     show_empty_columns: true,
     rolling_type: {
       label: t('None'),
-      value: 'null',
+      value: 'None',
     },
     time_compare: [],
     comparison_type: {
@@ -486,21 +486,22 @@ const DvtChart = () => {
         );
         setActive(getFormData.viz_type);
         setValues({
+          ...values,
           x_axis: emptyArrayOrOneFindItem(getFormData.x_axis),
           time_grain_sqla: chartFormsFindOptions('time_grain_sqla', {
             label: t('Day'),
             value: 'P1D',
           }),
-          metrics: getFormData.metrics
+          metrics: getFormData?.metrics
             ? getFormData.metrics.map((v: any) => metricsOrColumnsFormation(v))
             : [],
-          groupby: getFormData.groupby
+          groupby: getFormData?.groupby
             ? getFormData.groupby.map((v: any) => metricsOrColumnsFormation(v))
             : [],
           contributionMode: chartFormsFindOptions('contributionMode', ''),
           adhoc_filters: [
             ...filtersOnItem,
-            ...(getFormData.adhoc_filters
+            ...(getFormData?.adhoc_filters
               ? getFormData.adhoc_filters.map((v: any) =>
                   adhocFiltersFormation(v),
                 )
@@ -529,7 +530,7 @@ const DvtChart = () => {
           show_empty_columns: true,
           rolling_type: chartFormsFindOptions('rolling_type', {
             label: t('None'),
-            value: 'null',
+            value: 'None',
           }),
           time_compare: getFormData?.time_compare
             ? getFormData.time_compare
@@ -587,7 +588,7 @@ const DvtChart = () => {
           sort_by_metric: getFormData?.sort_by_metric
             ? getFormData.sort_by_metric
             : false,
-          subheader: getFormData.subheader ? getFormData.subheader : '',
+          subheader: getFormData?.subheader ? getFormData.subheader : '',
           dimension: emptyArrayOrOneFindItem(getFormData.series),
           entity: emptyArrayOrOneFindItem(getFormData.entity),
           x: emptyArrayOrOneFindItem(getFormData.x),
@@ -1177,7 +1178,7 @@ const DvtChart = () => {
                   ? [postProcessingRename]
                   : []),
                 ...(postProcessingRollingChartActives.includes(active) &&
-                values.rolling_type.value !== 'null'
+                values.rolling_type.value !== 'None'
                   ? [postProcessingRollingType]
                   : []),
                 {
@@ -1589,7 +1590,9 @@ const DvtChart = () => {
                       {fItem.status === 'tabs' && (
                         <DvtButtonTabs
                           data={fItem.options?.length ? fItem.options : []}
-                          active={values[fItem.name]}
+                          active={
+                            values[fItem.name] || { label: '', value: '' }
+                          }
                           setActive={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1601,7 +1604,7 @@ const DvtChart = () => {
                           placeholder={fItem.placeholder}
                           popoverLabel={fItem.popper}
                           number={fItem.number}
-                          value={values[fItem.name]}
+                          value={values[fItem.name] || ''}
                           onChange={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1612,7 +1615,7 @@ const DvtChart = () => {
                           label={fItem.label}
                           placeholder={fItem.placeholder}
                           popoverLabel={fItem.popper}
-                          selectedValue={values[fItem.name]}
+                          selectedValue={values[fItem.name] || ''}
                           setSelectedValue={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1626,7 +1629,7 @@ const DvtChart = () => {
                           label={fItem.label}
                           placeholder={fItem.placeholder}
                           // popoverLabel={fItem.popper}
-                          selectedValues={values[fItem.name]}
+                          selectedValues={values[fItem.name] || []}
                           setSelectedValues={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1671,7 +1674,7 @@ const DvtChart = () => {
                       {fItem.status === 'checkbox' && (
                         <DvtCheckbox
                           label={fItem.label}
-                          checked={values[fItem.name]}
+                          checked={values[fItem.name] || false}
                           onChange={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1686,7 +1689,7 @@ const DvtChart = () => {
                               popoverLabel={vfIndex === 0 ? fItem.popper : ''}
                               placeholder={vfItem.placeholder}
                               number={vfItem.number}
-                              value={values?.[fItem.name]?.[vfItem.name]}
+                              value={values?.[fItem.name]?.[vfItem.name] || ''}
                               onChange={v =>
                                 setValues({
                                   ...values,
@@ -1708,7 +1711,9 @@ const DvtChart = () => {
                               label={vfIndex === 0 ? fItem.label : ''}
                               popoverLabel={vfIndex === 0 ? fItem.popper : ''}
                               placeholder={vfItem.placeholder}
-                              selectedValue={values[fItem.name][vfItem.name]}
+                              selectedValue={
+                                values?.[fItem.name]?.[vfItem.name] || ''
+                              }
                               setSelectedValue={v =>
                                 setValues({
                                   ...values,
@@ -1730,7 +1735,9 @@ const DvtChart = () => {
                         <DvtColorSelect
                           label={fItem.label}
                           popoverLabel={fItem.popper}
-                          value={values[fItem.name]}
+                          value={
+                            values[fItem.name] || { r: 0, g: 0, b: 0, a: 0 }
+                          }
                           setValue={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
@@ -1740,7 +1747,7 @@ const DvtChart = () => {
                         <DvtRange
                           label={fItem.label}
                           popoverLabel={fItem.popper}
-                          value={values[fItem.name]}
+                          value={values[fItem.name] || 0}
                           setValue={v =>
                             setValues({ ...values, [fItem.name]: v })
                           }
