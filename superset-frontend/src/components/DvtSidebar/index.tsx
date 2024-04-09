@@ -961,7 +961,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
               <StyledCollapseScroll>
                 {!!chartSelector?.dataset?.metrics?.length && (
                   <DvtCollapse
-                    label="Metrics"
+                    label={t('Metrics')}
                     isOpen={chartCollapses.includes('metrics')}
                     setIsOpen={bln =>
                       handleChartCollapseSetOpen(bln, 'metrics')
@@ -972,7 +972,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                 )}
                 {!!chartSelector?.dataset?.columns?.length && (
                   <DvtCollapse
-                    label="Columns"
+                    label={t('Columns')}
                     isOpen={chartCollapses.includes('columns')}
                     setIsOpen={bln =>
                       handleChartCollapseSetOpen(bln, 'columns')

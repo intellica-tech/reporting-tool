@@ -292,7 +292,7 @@ const INITIAL_STATE = {
   },
   chartAdd: {
     dataset: '',
-    recommended_tags: { label: 'Popular', value: 'popular' },
+    recommended_tags: { label: t('Popular'), value: 'popular' },
     category: '',
     tags: '',
   },
