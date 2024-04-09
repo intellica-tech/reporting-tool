@@ -204,6 +204,17 @@ const DvtChart = () => {
     show_timestamp: false,
     show_trend_line: true,
     start_y_axis_at_zero: true,
+    aggregateFunction: { label: t('Sum'), value: 'Sum' },
+    colSubTotals: false,
+    colTotals: false,
+    combineMetric: false,
+    groupbyColumns: [],
+    groupbyRows: [],
+    metricsLayout: { label: t('COLUMNS'), value: 'COLUMNS' },
+    rowSubTotals: false,
+    rowTotals: false,
+    series_limit: [],
+    transposePivot: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -440,10 +451,35 @@ const DvtChart = () => {
         const emptyArrayOrOneFindItem = (item: any) =>
           item ? [metricsOrColumnsFormation(item)] : [];
 
+        const groupbyRowGroupbyColumnFormat = (dataset: any, formData: any) =>
+          dataset
+            ? (dataset.columns || [])
+                .map((item: any) => ({
+                  id: item.id,
+                  label: item.column_name,
+                  values: {
+                    aggregate: '',
+                    clause: 'WHERE',
+                    column: item,
+                    comparator: '',
+                    expressionType: 'SIMPLE',
+                    operator: '',
+                    option: '',
+                    saved: '',
+                    sql: item.column_name,
+                  },
+                }))
+                .filter((item: any) =>
+                  formData?.some((dataset: any) => dataset === item.label),
+                )
+            : [];
+
         const timeseriesLimitMetricSwitch = (vizType: string) => {
           switch (vizType) {
             case 'bubble_v2':
               return emptyArrayOrOneFindItem(getFormData.orderby);
+            case 'pivot_table_v2':
+              return emptyArrayOrOneFindItem(getFormData.series_limit_metric);
 
             default:
               return emptyArrayOrOneFindItem(
@@ -692,6 +728,32 @@ const DvtChart = () => {
             ? getFormData.rolling_periods
             : '',
           min_periods: getFormData?.min_periods ? getFormData.min_periods : '',
+          aggregateFunction: {
+            label: getFormData.aggregateFunction,
+            value: getFormData.aggregateFunction,
+          },
+          colSubTotals: getFormData.colSubTotals,
+          colTotals: getFormData.colTotals,
+          combineMetric: getFormData.combineMetric,
+          groupbyColumns: groupbyRowGroupbyColumnFormat(
+            selectedChart.dataset,
+            getFormData.groupbyColumns,
+          ),
+          groupbyRows: groupbyRowGroupbyColumnFormat(
+            selectedChart.dataset,
+            getFormData.groupbyRows,
+          ),
+          metricsLayout: {
+            label: getFormData.metricsLayout,
+            value: getFormData.metricsLayout,
+          },
+          rowSubTotals: getFormData.rowSubTotals,
+          rowTotals: getFormData.rowTotals,
+          series_limit: {
+            label: getFormData.series_limit,
+            value: getFormData.series_limit,
+          },
+          transposePivot: getFormData.transposePivot,
         });
 
         setChartStatus('loading');
@@ -848,6 +910,10 @@ const DvtChart = () => {
         return values.timeseries_limit_metric.length
           ? [[metricsFormation('timeseries_limit_metric')[0], false]]
           : undefined;
+      case 'pivot_table_v2':
+        return values.timeseries_limit_metric.length
+          ? [[metricsFormation('timeseries_limit_metric')[0], false]]
+          : [[metricsFormation('metrics')[0], false]];
       case 'histogram':
         return [];
       case 'waterfall':
@@ -867,6 +933,17 @@ const DvtChart = () => {
     switch (active) {
       case 'table':
         return droppedOnlyLabels('all_columns');
+      case 'pivot_table_v2':
+        return [
+          ...droppedOnlyLabels('groupbyColumns'),
+          ...values.groupbyRows.map((c: any) => ({
+            timeGrain: 'P1D',
+            columnType: 'BASE_AXIS',
+            sqlExpression: c.label,
+            label: c.label,
+            expressionType: 'SQL',
+          })),
+        ];
       case 'bubble_v2':
         return [
           ...droppedOnlyLabels('entity'),
@@ -932,7 +1009,8 @@ const DvtChart = () => {
       viz_type: active,
       url_params: selectedChart?.form_data?.url_params,
       x_axis: values.x_axis[0]?.label,
-      time_grain_sqla: values.time_grain_sqla?.value,
+      time_grain_sqla:
+        active === 'pivot_table_v2' ? 'P1D' : values.time_grain_sqla?.value,
       x_axis_sort_asc: true,
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
@@ -1071,7 +1149,11 @@ const DvtChart = () => {
       server_page_length: values.server_page_length.value,
       show_cell_bars: true,
       table_timestamp_format: 'smart_date',
-      temporal_columns_lookup: { year: true },
+      temporal_columns_lookup: Object.fromEntries(
+        selectedChart?.dataset?.columns
+          ?.filter((item: any) => item.is_dttm === true)
+          .map((item: any) => [item.column_name, true]),
+      ),
       server_pagination: values.server_pagination,
       entity: droppedOnlyLabels('entity')[0],
       orderby: values.timeseries_limit_metric.length
@@ -1116,6 +1198,29 @@ const DvtChart = () => {
       show_timestamp: values.show_timestamp,
       show_trend_line: values.show_trend_line,
       start_y_axis_at_zero: values.start_y_axis_at_zero,
+      aggregateFunction: values.aggregateFunction.value,
+      colOrder: 'key_a_to_z',
+      colSubTotals: values.colSubTotals,
+      colTotals: values.colTotals,
+      combineMetric: values.combineMetric,
+      groupbyColumns: values?.groupbyColumns
+        ? values.groupbyColumns.map((v: any) => v.label)
+        : [],
+      groupbyRows: values?.groupbyRows
+        ? values.groupbyRows.map((v: any) => v.label)
+        : [],
+      metricsLayout: values.metricsLayout.value,
+      rowOrder: 'key_a_to_z',
+      rowSubTotals: values.rowSubTotals,
+      rowTotals: values.rowTotals,
+      series_limit_metric: values.timeseries_limit_metric.length
+        ? metricsFormation('timeseries_limit_metric')[0]
+        : undefined,
+      transposePivot: values.transposePivot,
+      valueFormat: 'SMART_NUMBER',
+      series_limit: values.series_limit.value
+        ? Number(values.series_limit.value)
+        : 0,
     },
     queries: [
       {
@@ -1128,7 +1233,11 @@ const DvtChart = () => {
           })),
         extras: {
           time_grain_sqla:
-            active === 'bubble_v2' ? undefined : values.time_grain_sqla?.value,
+            active === 'bubble_v2'
+              ? undefined
+              : active === 'pivot_table_v2'
+              ? 'P1D'
+              : values.time_grain_sqla?.value,
           having: values.adhoc_filters
             .filter(
               (v: any) =>
@@ -1153,8 +1262,9 @@ const DvtChart = () => {
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
-        series_limit: 0,
-        order_desc: true,
+        series_limit:
+          active === 'pivot_table_v2' ? Number(values.series_limit.value) : 0,
+        order_desc: active === 'pivot_table_v2' ? values.order_desc : true,
         url_params: selectedChart?.form_data?.url_params,
         custom_params: {},
         custom_form_data: {},
@@ -1192,6 +1302,7 @@ const DvtChart = () => {
     ],
     result_format: 'json',
     result_type: 'full',
+    series_limit_metric: values.timeseries_limit_metric[0]?.saved?.metric_name,
   };
 
   const onlyVizChartFindFormPayload = (formKey: string) => {
@@ -1484,7 +1595,8 @@ const DvtChart = () => {
         return !(values.metric.length && values.x_axis.length);
       case 'waterfall':
         return !(values.metric.length && values.x_axis.length);
-
+      case 'pivot_table_v2':
+        return !values.metrics.length;
       default:
         return false;
     }

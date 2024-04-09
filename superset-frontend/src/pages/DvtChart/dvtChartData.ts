@@ -995,6 +995,114 @@ const DvtChartData: DvtChartDataProps[] = [
     chart_name: 'echarts_timeseries_scatter',
     collapses: lineAndBarChart,
   },
+  {
+    chart_name: 'pivot_table_v2',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('COLUMNS'),
+            name: 'groupbyColumns',
+            popper: t('Columns to group by on the columns'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('ROWS'),
+            name: 'groupbyRows',
+            popper: t('Columns to group by on the rows'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formMetrics,
+          {
+            label: t('APPLY METRICS ON'),
+            name: 'metricsLayout',
+            status: 'tabs',
+            options: [
+              { label: t('COLUMNS'), value: 'COLUMNS' },
+              { label: t('ROWS'), value: 'ROWS' },
+            ],
+          },
+          formFilters,
+          {
+            label: t('SERIES LIMIT'),
+            name: 'series_limit',
+            popper: t(
+              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.limit,
+          },
+          {
+            label: t('CELL LIMIT'),
+            name: 'row_limit',
+            popper: t('Limits the number of cells that get retrieved.'),
+            status: 'select',
+            options: chartFormsOption.row_limit,
+          },
+          formSortBy,
+          {
+            label: t('SORT DESCENDING'),
+            name: 'order_desc',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('AGGREGATION FUNCTION'),
+            name: 'aggregateFunction',
+            popper: t(
+              'Aggregate function to apply when pivoting and computing the total rows and columns',
+            ),
+            status: 'select',
+            options: chartFormsOption.aggregateFunction,
+          },
+          {
+            label: t('SHOW ROWS TOTAL'),
+            name: 'rowTotals',
+            status: 'checkbox',
+          },
+          {
+            label: t('SHOW ROWS SUBTOTAL'),
+            name: 'rowSubTotals',
+            status: 'checkbox',
+          },
+          {
+            label: t('SHOW COLUMNS TOTAL'),
+            name: 'colTotals',
+            status: 'checkbox',
+          },
+          {
+            label: t('SHOW COLUMNS SUBTOTAL'),
+            name: 'colSubTotals',
+            status: 'checkbox',
+          },
+          {
+            label: t('TRANSPOSE PIVOT'),
+            name: 'transposePivot',
+            status: 'checkbox',
+          },
+          {
+            label: t('COMBINE METRICS'),
+            name: 'combineMetric',
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;
