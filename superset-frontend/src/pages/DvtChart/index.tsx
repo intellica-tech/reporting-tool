@@ -39,7 +39,7 @@ import {
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
-import DvtChartCustomize from './dvtChartDataCustomize';
+// import DvtChartCustomize from './dvtChartDataCustomize';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import {
   ChartDefaultSelectBars,
@@ -1448,6 +1448,7 @@ const DvtChart = () => {
   const chartSamplePromise = useFetch({
     url: sampleApiUrl,
     method: 'POST',
+    body: {},
   });
 
   useEffect(() => {
@@ -1500,7 +1501,10 @@ const DvtChart = () => {
       setResultHeader(headerFormation);
       setResultData(onlyExploreJsonResult.data);
     }
-  }, [chartResultsPromise.data]);
+    if (chartResultsPromise.error) {
+      setResultData([]);
+    }
+  }, [chartResultsPromise.data, chartResultsPromise.error]);
 
   useEffect(() => {
     if (!chartFullPromise.loading && !chartResultsPromise.loading) {
@@ -1650,8 +1654,8 @@ const DvtChart = () => {
     );
   };
 
-  const DataOrCustomize =
-    chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
+  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
+  // chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
 
   useEffect(
     () => () => {
