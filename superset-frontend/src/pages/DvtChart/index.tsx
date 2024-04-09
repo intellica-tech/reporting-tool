@@ -843,6 +843,28 @@ const DvtChart = () => {
         : ac.values.sql,
     );
 
+  const droppedOnlyLabelOrYear = (
+    dataKey: string,
+    defaultTimeGrain?: boolean,
+  ) =>
+    values[dataKey].map((ac: any) =>
+      ac.values.column?.is_dttm
+        ? {
+            timeGrain: defaultTimeGrain ? 'P1D' : values.time_grain_sqla?.value,
+            columnType: 'BASE_AXIS',
+            sqlExpression: ac.label,
+            label: ac.label,
+            expressionType: 'SQL',
+          }
+        : ac.values.expressionType === 'SQL'
+        ? {
+            expressionType: ac.values.expressionType,
+            label: ac.label,
+            sqlExpression: ac.values.sql,
+          }
+        : ac.values.sql,
+    );
+
   const postProcessingRename =
     values.metrics.length === 1 && values.groupby.length
       ? {
@@ -895,6 +917,21 @@ const DvtChart = () => {
     },
   };
 
+  const arrayOnlyOneItemFormation = (data: any[]) => {
+    const uniqueItems = new Set();
+    return data.filter((item: any) => {
+      if (item !== null) {
+        const serializedItem = JSON.stringify(item);
+        if (!uniqueItems.has(serializedItem)) {
+          uniqueItems.add(serializedItem);
+          return true;
+        }
+        return false;
+      }
+      return true;
+    });
+  };
+
   const onNullOrUndefinded = [null, undefined];
 
   const queriesOrderBySwitch = () => {
@@ -932,34 +969,22 @@ const DvtChart = () => {
   const queriesColumnsSwitch = () => {
     switch (active) {
       case 'table':
-        return droppedOnlyLabels('all_columns');
+        return arrayOnlyOneItemFormation(droppedOnlyLabels('all_columns'));
       case 'pivot_table_v2':
-        return [
-          ...droppedOnlyLabels('groupbyColumns'),
-          ...values.groupbyRows.map((c: any) => ({
-            timeGrain: 'P1D',
-            columnType: 'BASE_AXIS',
-            sqlExpression: c.label,
-            label: c.label,
-            expressionType: 'SQL',
-          })),
-        ];
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('groupbyColumns'),
+          ...droppedOnlyLabelOrYear('groupbyRows'),
+        ]);
       case 'bubble_v2':
         return [
           ...droppedOnlyLabels('entity'),
           ...droppedOnlyLabels('dimension'),
         ];
       default:
-        return [
-          ...values.x_axis.map((c: any) => ({
-            timeGrain: values.time_grain_sqla?.value,
-            columnType: 'BASE_AXIS',
-            sqlExpression: c.label,
-            label: c.label,
-            expressionType: 'SQL',
-          })),
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('x_axis'),
           ...droppedOnlyLabels('groupby'),
-        ];
+        ]);
     }
   };
 
@@ -1009,8 +1034,7 @@ const DvtChart = () => {
       viz_type: active,
       url_params: selectedChart?.form_data?.url_params,
       x_axis: values.x_axis[0]?.label,
-      time_grain_sqla:
-        active === 'pivot_table_v2' ? 'P1D' : values.time_grain_sqla?.value,
+      time_grain_sqla: values.time_grain_sqla?.value,
       x_axis_sort_asc: true,
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
@@ -1149,11 +1173,13 @@ const DvtChart = () => {
       server_page_length: values.server_page_length.value,
       show_cell_bars: true,
       table_timestamp_format: 'smart_date',
-      temporal_columns_lookup: Object.fromEntries(
-        selectedChart?.dataset?.columns
-          ?.filter((item: any) => item.is_dttm === true)
-          .map((item: any) => [item.column_name, true]),
-      ),
+      temporal_columns_lookup: selectedChart?.dataset?.columns.length
+        ? Object.fromEntries(
+            selectedChart?.dataset?.columns
+              ?.filter((item: any) => item.is_dttm === true)
+              .map((item: any) => [item.column_name, true]),
+          )
+        : {},
       server_pagination: values.server_pagination,
       entity: droppedOnlyLabels('entity')[0],
       orderby: values.timeseries_limit_metric.length
@@ -1233,11 +1259,7 @@ const DvtChart = () => {
           })),
         extras: {
           time_grain_sqla:
-            active === 'bubble_v2'
-              ? undefined
-              : active === 'pivot_table_v2'
-              ? 'P1D'
-              : values.time_grain_sqla?.value,
+            active === 'bubble_v2' ? undefined : values.time_grain_sqla?.value,
           having: values.adhoc_filters
             .filter(
               (v: any) =>

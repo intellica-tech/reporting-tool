@@ -140,6 +140,17 @@ const sortDescending: FormsProps = {
   status: 'checkbox',
 };
 
+const formTimeGrain: FormsProps = {
+  label: t('TIME GRAIN'),
+  name: 'time_grain_sqla',
+  popper: t(
+    'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
+  ),
+  placeholder: t('None'),
+  status: 'select',
+  options: chartFormsOption.time_grain_sqla,
+};
+
 const lineAndBarChart: CollapsesProps[] = [
   {
     collapse_label: t('Query'),
@@ -156,16 +167,7 @@ const lineAndBarChart: CollapsesProps[] = [
         type: 'normal',
         savedType: 'expressions',
       },
-      {
-        label: t('TIME GRAIN'),
-        name: 'time_grain_sqla',
-        popper: t(
-          'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-        ),
-        placeholder: t('None'),
-        status: 'select',
-        options: chartFormsOption.time_grain_sqla,
-      },
+      formTimeGrain,
       formMetrics,
       formDimensions,
       {
@@ -885,16 +887,7 @@ const DvtChartData: DvtChartDataProps[] = [
             savedType: 'metric',
             simpleType: 'temporal',
           },
-          {
-            label: t('TIME GRAIN'),
-            name: 'time_grain_sqla',
-            popper: t(
-              'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-            ),
-            placeholder: t('None'),
-            status: 'select',
-            options: chartFormsOption.time_grain_sqla,
-          },
+          formTimeGrain,
           formMetric,
           formFilters,
         ],
@@ -1020,6 +1013,7 @@ const DvtChartData: DvtChartDataProps[] = [
             type: 'normal',
             savedType: 'expressions',
           },
+          formTimeGrain,
           formMetrics,
           {
             label: t('APPLY METRICS ON'),
