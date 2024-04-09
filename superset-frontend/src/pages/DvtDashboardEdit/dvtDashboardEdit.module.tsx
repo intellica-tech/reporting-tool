@@ -185,6 +185,18 @@ const StyledDashboardDroppedRowGrid = styled.div<StyledDashboardDroppedRowGridPr
   gap: 15px;
 `;
 
+const StyledDashboardDroppedRowGridEmpty = styled.div`
+  min-height: 100px;
+  max-height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.dvt.text.placeholder};
+  cursor: default;
+`;
+
 const StyledDashboardDroppedRowOptions = styled.div`
   position: absolute;
   top: 50%;
@@ -194,6 +206,35 @@ const StyledDashboardDroppedRowOptions = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 15px;
+`;
+
+const StyledDashboardDroppedRowDivider = styled.div<StyledDashboardDroppedRowGridProps>`
+  ${({ isEdit }) => isEdit && `cursor: move`};
+  min-height: 16px;
+  max-height: 16px;
+  width: 100%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    height: 1px;
+    background-color: ${({ theme }) => theme.colors.dvt.grayscale.light1};
+  }
+`;
+
+const StyledDashboardDroppedHeaderInput = styled.input`
+  font-size: 21px;
+  font-weight: 600;
+  width: 100%;
+  height: 34px;
+  background-color: transparent;
+  outline: none;
+  border: none;
 `;
 
 interface StyledNewAddRowProps {
@@ -208,6 +249,54 @@ const StyledNewAddRow = styled.div<StyledNewAddRowProps>`
 
   ${({ hovered, theme }) =>
     hovered && `border-top: 5px solid ${theme.colors.dvt.primary.base};`}
+`;
+
+const StyledDashboardLayoutNew = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  cursor: move;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.dvt.primary.light3};
+  }
+`;
+
+const StyledDashboardLayoutNewIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: ${({ theme }) => theme.colors.dvt.primary.light2};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 28px;
+  color: ${({ theme }) => theme.colors.dvt.primary.base};
+  position: relative;
+
+  &.fa.fa-window-restore {
+    font-size: 18px;
+  }
+
+  &.divider {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 2px;
+      background-color: ${({ theme }) => theme.colors.dvt.primary.base};
+    }
+  }
+`;
+
+const StyledDashboardLayoutNewLabel = styled.div`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.dvt.text.label};
+  text-transform: capitalize;
 `;
 
 export {
@@ -226,6 +315,12 @@ export {
   StyledDashboardDroppedListItemChart,
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
+  StyledDashboardDroppedRowGridEmpty,
   StyledDashboardDroppedRowOptions,
+  StyledDashboardDroppedRowDivider,
+  StyledDashboardDroppedHeaderInput,
   StyledNewAddRow,
+  StyledDashboardLayoutNew,
+  StyledDashboardLayoutNewIcon,
+  StyledDashboardLayoutNewLabel,
 };

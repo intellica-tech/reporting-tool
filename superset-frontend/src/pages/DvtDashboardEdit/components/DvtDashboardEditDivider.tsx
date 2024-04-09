@@ -18,34 +18,30 @@
  * under the License.
  */
 
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import Icon from 'src/components/Icons/Icon';
 import { supersetTheme } from '@superset-ui/core';
 import {
   StyledDashboardDroppedRow,
-  StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
+  StyledDashboardDroppedRowDivider,
 } from '../dvtDashboardEdit.module';
 
-interface DvtDashboardEditRowProps {
-  children: ReactNode;
+interface DvtDashboardEditDividerProps {
   deleteClick: () => void;
-  onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
-  rowId: string;
+  id: string;
   isEdit: boolean;
 }
 
-const DvtDashboardEditRow = ({
-  children,
+const DvtDashboardEditDivider = ({
   deleteClick,
-  onDrop,
-  rowId = '',
-  isEdit = false,
-}: DvtDashboardEditRowProps) => {
+  id,
+  isEdit,
+}: DvtDashboardEditDividerProps) => {
   const [onHover, setOnHover] = useState<boolean>(false);
   const [onDraggable, setOnDraggable] = useState<boolean>(false);
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.setData('drag-drop-move-id', JSON.stringify(id));
   };
 
@@ -54,17 +50,10 @@ const DvtDashboardEditRow = ({
       onMouseLeave={() => setOnHover(false)}
       onMouseOver={() => setOnHover(true)}
       draggable={onDraggable}
-      onDragStart={e => handleDragStart(e, rowId)}
+      onDragStart={handleDragStart}
     >
       {isEdit && onHover && (
         <StyledDashboardDroppedRowOptions>
-          <Icon
-            style={{ cursor: 'move' }}
-            fileName="drag"
-            iconColor={supersetTheme.colors.dvt.grayscale.base}
-            onMouseDown={() => setOnDraggable(true)}
-            onMouseUp={() => setOnDraggable(false)}
-          />
           <Icon
             fileName="dvt-delete"
             iconColor={supersetTheme.colors.dvt.grayscale.base}
@@ -72,15 +61,14 @@ const DvtDashboardEditRow = ({
           />
         </StyledDashboardDroppedRowOptions>
       )}
-      <StyledDashboardDroppedRowGrid
+      <StyledDashboardDroppedRowDivider
         onDragOver={e => e.preventDefault()}
-        onDrop={onDrop}
         isEdit={isEdit}
-      >
-        {children}
-      </StyledDashboardDroppedRowGrid>
+        onMouseDown={() => setOnDraggable(true)}
+        onMouseUp={() => setOnDraggable(false)}
+      />
     </StyledDashboardDroppedRow>
   );
 };
 
-export default DvtDashboardEditRow;
+export default DvtDashboardEditDivider;

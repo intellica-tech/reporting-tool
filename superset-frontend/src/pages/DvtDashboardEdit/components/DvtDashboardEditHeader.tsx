@@ -18,34 +18,35 @@
  * under the License.
  */
 
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import Icon from 'src/components/Icons/Icon';
 import { supersetTheme } from '@superset-ui/core';
 import {
   StyledDashboardDroppedRow,
   StyledDashboardDroppedRowGrid,
   StyledDashboardDroppedRowOptions,
+  StyledDashboardDroppedHeaderInput,
 } from '../dvtDashboardEdit.module';
 
-interface DvtDashboardEditRowProps {
-  children: ReactNode;
+interface DvtDashboardEditHeaderProps {
+  value: string;
+  setValue: (value: string) => void;
   deleteClick: () => void;
-  onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
-  rowId: string;
+  id: string;
   isEdit: boolean;
 }
 
-const DvtDashboardEditRow = ({
-  children,
+const DvtDashboardEditHeader = ({
+  value,
+  setValue,
   deleteClick,
-  onDrop,
-  rowId = '',
+  id = '',
   isEdit = false,
-}: DvtDashboardEditRowProps) => {
+}: DvtDashboardEditHeaderProps) => {
   const [onHover, setOnHover] = useState<boolean>(false);
   const [onDraggable, setOnDraggable] = useState<boolean>(false);
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.setData('drag-drop-move-id', JSON.stringify(id));
   };
 
@@ -54,7 +55,7 @@ const DvtDashboardEditRow = ({
       onMouseLeave={() => setOnHover(false)}
       onMouseOver={() => setOnHover(true)}
       draggable={onDraggable}
-      onDragStart={e => handleDragStart(e, rowId)}
+      onDragStart={handleDragStart}
     >
       {isEdit && onHover && (
         <StyledDashboardDroppedRowOptions>
@@ -74,13 +75,17 @@ const DvtDashboardEditRow = ({
       )}
       <StyledDashboardDroppedRowGrid
         onDragOver={e => e.preventDefault()}
-        onDrop={onDrop}
         isEdit={isEdit}
+        style={{ padding: '16px 0' }}
       >
-        {children}
+        <StyledDashboardDroppedHeaderInput
+          value={value}
+          onChange={(e: any) => setValue(e.target.value)}
+          disabled={!isEdit}
+        />
       </StyledDashboardDroppedRowGrid>
     </StyledDashboardDroppedRow>
   );
 };
 
-export default DvtDashboardEditRow;
+export default DvtDashboardEditHeader;

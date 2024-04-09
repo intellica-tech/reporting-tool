@@ -338,104 +338,59 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
     chart_name: 'table',
     collapses: [
       {
-        collapse_label: t('Query'),
-        collapse_popper_error: t('This section contains validation errors'),
-        collapse_active: 'query',
-        tabs_name: 'query_mode',
-        tabs_actives: {
-          aggregate: [
-            'groupby',
-            'metrics',
-            'percent_metrics',
-            'adhoc_filters',
-            'timeseries_limit_metric',
-            'server_pagination',
-            'server_page_length',
-            'order_desc',
-            'show_totals',
-          ],
-          raw: [
-            'all_columns',
-            'adhoc_filters',
-            'order_by_cols',
-            'server_pagination',
-            'server_page_length',
-          ],
-        },
+        collapse_label: t('Options'),
+        collapse_active: 'options',
         forms: [
           {
-            label: t('QUERY MODE'),
-            name: 'query_mode',
-            status: 'tabs',
-            options: [
-              { label: t('AGGREGATE'), value: 'aggregate' },
-              { label: t('RAW RECORDS'), value: 'raw' },
-            ],
-          },
-          {
-            ...formDimensions,
-            popperError: t(
-              'Group By, Metrics or Percentage Metrics must have a value',
-            ),
-          },
-          {
-            ...formMetrics,
-            popperError: t(
-              'Group By, Metrics or Percentage Metrics must have a value',
-            ),
-          },
-          {
-            label: t('PERCENTAGE METRICS'),
-            name: 'percent_metrics',
-            popper: t(
-              'Select one or many metrics to display, that will be displayed in the percentages of total. Percentage metrics will be calculated only from data within the row limit. You can use an aggregation function on a column or write custom SQL to create a percentage metric.',
-            ),
-            popperError: t(
-              'Group By, Metrics or Percentage Metrics must have a value',
-            ),
+            label: t('TIMESTAMP FORMAT'),
+            name: 'table_timestamp_format',
             status: 'input-drop',
-            multiple: true,
-            type: 'aggregates',
-            savedType: 'metric',
+            popper: t('D3 time format for datetime columns'),
+            options: [],
           },
           {
-            label: t('COLUMNS'),
-            name: 'all_columns',
-            popper: t('Columns to display'),
-            popperError: t('must have a value'),
+            label: t('PAGE LENGTH'),
+            name: 'page_length',
             status: 'input-drop',
-            multiple: true,
-            type: 'normal',
-            savedType: 'expressions',
-          },
-          formFilters,
-          formSortBy,
-          {
-            label: t('ORDERING'),
-            name: 'order_by_cols',
-            popper: t('Order results by selected columns'),
-            placeholder: t('Select ...'),
-            status: 'multiple-select',
-            options: chartFormsOption.order_by_cols,
-          },
-          {
-            label: t('SERVER PAGINATION'),
-            name: 'server_pagination',
-            status: 'checkbox',
-          },
-          {
-            label: t('SERVER PAGE LENGTH'),
-            name: 'server_page_length',
             popper: t('Rows per page, 0 means no pagination'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.server_page_length,
+            options: chartFormsOption.page_length,
           },
-          sortDescending,
           {
-            label: t('SHOW TOTALS'),
-            name: 'show_totals',
+            label: t('SEARCH BOX'),
+            name: '', // cannot find.
             status: 'checkbox',
+          },
+          {
+            label: t('CELL BARS'),
+            name: 'show_cell_bars',
+            status: 'checkbox',
+            popper: t(
+              'Whether to display a bar chart background in table columns',
+            ),
+          },
+          {
+            label: t('ALIGN +/-'),
+            name: 'align_pn',
+            status: 'checkbox',
+            popper: t(
+              'Whether to align background charts with both positive and negative values at 0',
+            ),
+          },
+          {
+            label: t('COLOR +/-'),
+            name: 'color_pn',
+            status: 'checkbox',
+            popper: t(
+              'Whether to colorize numeric values by whether they are positive or negative',
+            ),
+          },
+          {
+            label: t('ALLOW COLUMNS TO BE REARRANGED'),
+            name: 'allow_rearrange_columns',
+            status: 'checkbox',
+            popper: t(
+              "Allow end user to drag-and-drop column headers to rearrange them. Note their changes won't persist for the next time they open the chart.",
+            ),
           },
         ],
       },
@@ -445,20 +400,76 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
     chart_name: 'big_number_total',
     collapses: [
       {
-        collapse_label: t('Query'),
-        collapse_popper_error: t('This section contains validation errors'),
-        collapse_active: 'query',
-        forms: [formMetric, formFilters],
-      },
-      {
-        collapse_label: t('Display settings'),
-        collapse_active: 'display_settings',
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
         forms: [
           {
-            name: 'subheader',
-            label: t('SUBHEADER'),
-            status: 'input',
+            label: t('BIG NUMBER FONT SIZE'),
+            name: 'header_font_size',
+            status: 'input-drop',
+            popper: t('Changing this control takes effect instantly'),
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            options: chartFormsOption.header_font_size,
           },
+          {
+            label: t('SUBHEADER FONT SIZE'),
+            name: 'subheader_font_size',
+            popper: t('Changing this control takes effect instantly'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('NUMBER FORMAT'),
+            name: 'number_format',
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popper: t(
+              'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
+            ),
+            options: [],
+          },
+          {
+            label: t('DATE FORMAT'),
+            name: 'time_format',
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            options: [],
+          },
+          {
+            label: t('CURRENCY FORMAT'),
+            name: 'currency_format',
+            status: 'two-select',
+            values: [
+              {
+                name: 'symbolPosition',
+                placeholder: t('Prefix or suffix'),
+                options: chartFormsOption.currency_format.symbolPosition,
+              },
+              {
+                name: 'symbol',
+                placeholder: t('Currency'),
+                options: chartFormsOption.currency_format.symbol,
+              },
+            ],
+          },
+          {
+            label: t('FORCE DATE FORMAT'),
+            name: 'force_timestamp_formatting',
+            status: 'checkbox',
+            popper: t(
+              'Use date formatting even when metric value is not a timestamp',
+            ),
+          },
+          // need to Conditional Formatting
         ],
       },
     ],
@@ -467,14 +478,93 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
     chart_name: 'pie',
     collapses: [
       {
-        collapse_label: t('Query'),
+        collapse_label: t('Chart Options'),
         collapse_popper_error: t('This section contains validation errors'),
-        collapse_active: 'query',
+        collapse_active: 'chart_options',
         forms: [
           {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
+            label: t('COLOR SCHEME'),
+            name: 'color_scheme',
+            status: 'color',
+            popper: t('The color scheme for rendering chart'),
+          },
+          {
+            label: t('PERCENTAGE THRESHOLD'),
+            name: 'show_labels_threshold',
+            status: 'input',
+            number: true,
+            popper: t(
+              'Minimum threshold in percentage points for showing labels.',
+            ),
+          },
+          {
+            label: t('SHOW LEGEND'),
+            name: 'show_legend',
             status: 'checkbox',
+            popper: t('Whether to display a legend for the chart'),
+          },
+          {
+            label: t('LABEL TYPE'),
+            name: 'label_type',
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.label_type,
+          },
+          {
+            label: t('NUMBER FORMAT'),
+            name: 'number_format',
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popper: t(
+              'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
+            ),
+            options: [],
+          },
+          {
+            label: t('CURRENCY FORMAT'),
+            name: 'currency_format',
+            status: 'two-select',
+            values: [
+              {
+                name: 'symbolPosition',
+                placeholder: t('Prefix or suffix'),
+                options: chartFormsOption.currency_format.symbolPosition,
+              },
+              {
+                name: 'symbol',
+                placeholder: t('Currency'),
+                options: chartFormsOption.currency_format.symbol,
+              },
+            ],
+          },
+          {
+            label: t('SHOW LABELS'),
+            name: 'show_labels',
+            status: 'checkbox',
+            popper: t('Whether to display the labels.'),
+          },
+          {
+            label: t('PUT LABELS OUTSIDE'),
+            name: 'labels_outside',
+            status: 'checkbox',
+            popper: t('Put the labels outside of the pie?'),
+          },
+          {
+            label: t('LABEL LINE'),
+            name: 'label_line',
+            status: 'checkbox',
+            popper: t('Draw line from Pie to label when labels outside?'),
+          },
+          {
+            label: t('SHOW TOTAL'),
+            name: 'show_total',
+            status: 'checkbox',
+            popper: t('Whether to display the aggregate count.'),
           },
           {
             label: t('OUTER RADIUS'),
@@ -482,6 +572,22 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             status: 'range',
             rangeConfig: {
               min: 10,
+              max: 100,
+              step: 1,
+            },
+          },
+          {
+            label: t('DONUT'),
+            name: 'donut',
+            status: 'checkbox',
+            popper: t('Do you want a donut or a pie?'),
+          },
+          {
+            label: t('INNER RADIUS'),
+            name: 'innerRadius',
+            status: 'range',
+            rangeConfig: {
+              min: 0,
               max: 100,
               step: 1,
             },
@@ -849,191 +955,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
       },
     ],
   },
-  // {
-  //   chart_name: 'heatmap',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Query'),
-  //       collapse_popper_error: t('This section contains validation errors'),
-  //       collapse_active: 'query',
-  //       forms: [
-  //         {
-  //           label: t('X AXIS'),
-  //           name: 'all_columns_x',
-  //           popper: t('Columns to display'),
-  //           popperError: t('cannot be empty'),
-  //           status: 'input-drop',
-  //           multiple: false,
-  //           type: 'normal',
-  //           savedType: 'expressions',
-  //         },
-  //         {
-  //           label: t('Y AXIS'),
-  //           name: 'all_columns_y',
-  //           popper: t('Columns to display'),
-  //           popperError: t('cannot be empty'),
-  //           status: 'input-drop',
-  //           multiple: false,
-  //           type: 'normal',
-  //           savedType: 'expressions',
-  //         },
-  //         formMetric,
-  //         formFilters,
-  //         formRowLimit,
-  //         {
-  //           label: t('SORT BY METRIC'),
-  //           name: 'sort_by_metric',
-  //           status: 'checkbox',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       collapse_label: t('Heatmap Options'),
-  //       collapse_active: 'heatmap_options',
-  //       forms: [
-  //         {
-  //           label: t('LINEAR COLOR SCHEME'),
-  //           name: 'linear_color_scheme',
-  //           status: 'select',
-  //           options: chartFormsOption.linear_color_scheme,
-  //         },
-  //         {
-  //           label: t('XSCALE INTERVAL'),
-  //           name: 'xscale_interval',
-  //           status: 'select',
-  //           options: chartFormsOption.xscale_interval,
-  //         },
-  //         {
-  //           label: t('YSCALE INTERVAL'),
-  //           name: 'yscale_interval',
-  //           status: 'select',
-  //           options: chartFormsOption.yscale_interval,
-  //         },
-  //         {
-  //           label: t('RENDERING'),
-  //           name: 'canvas_image_rendering',
-  //           popper: t(
-  //             'image-rendering CSS attribute of the canvas object that defines how the browser scales up the image',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.canvas_image_rendering,
-  //         },
-  //         {
-  //           label: t('NORMALIZE ACROSS'),
-  //           name: 'normalize_across',
-  //           popper: t(
-  //             'Color will be shaded based the normalized (0% to 100%) value of a given cell against the other cells in the selected range:',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.normalize_across,
-  //         },
-  //         {
-  //           label: t('LEFT MARGIN'),
-  //           name: 'left_margin',
-  //           popper: t(
-  //             'Left margin, in pixels, allowing for more room for axis labels',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.left_margin,
-  //         },
-  //         {
-  //           label: t('BOTTOM MARGIN'),
-  //           name: 'bottom_margin',
-  //           popper: t(
-  //             'Bottom margin, in pixels, allowing for more room for axis labels',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.bottom_margin,
-  //         },
-  //         {
-  //           label: t('VALUE BOUNDS'),
-  //           name: 'y_axis_bounds',
-  //           popper: t(
-  //             'Hard value bounds applied for color coding. Is only relevant and applied when the normalization is applied against the whole heatmap.',
-  //           ),
-  //           status: 'two-input',
-  //           values: [
-  //             {
-  //               name: 'min',
-  //               placeholder: t('Min'),
-  //               number: true,
-  //             },
-  //             {
-  //               name: 'max',
-  //               placeholder: t('Max'),
-  //               number: true,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('VALUE FORMAT'),
-  //           name: 'y_axis_format',
-  //           popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  //           status: 'select',
-  //           options: chartFormsOption.y_axis_format,
-  //         },
-  //         {
-  //           label: t('TIME FORMAT'),
-  //           name: 'time_format',
-  //           popper: t(
-  //             'D3 time format syntax: https://github.com/d3/d3-time-format.',
-  //           ),
-  //           status: 'select',
-  //           options: chartFormsOption.time_format,
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('SORT X AXIS'),
-  //           name: 'sort_x_axis',
-  //           status: 'select',
-  //           options: chartFormsOption.sort_x_axis,
-  //         },
-  //         {
-  //           label: t('SORT Y AXIS'),
-  //           name: 'sort_y_axis',
-  //           status: 'select',
-  //           options: chartFormsOption.sort_y_axis,
-  //         },
-  //         {
-  //           label: t('LEGEND'),
-  //           name: 'show_legend',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('SHOW PERCENTAGE'),
-  //           name: 'show_perc',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('SHOW VALUES'),
-  //           name: 'show_values',
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('NORMALIZED'),
-  //           name: 'normalized',
-  //           status: 'checkbox',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+
   {
     chart_name: 'gauge_chart',
     collapses: [

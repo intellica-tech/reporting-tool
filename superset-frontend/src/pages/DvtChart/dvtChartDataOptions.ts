@@ -200,7 +200,7 @@ const chartFormsOption = {
   rolling_type: [
     {
       label: t('None'),
-      value: 'null',
+      value: 'None',
     },
     {
       label: t('mean'),
@@ -632,6 +632,102 @@ const chartFormsOption = {
     {
       label: t('Count as Fraction of Columns'),
       value: 'Count as Fraction of Columns',
+    },
+  ],
+  label_type: [
+    {
+      label: t('Value'),
+      value: 'value',
+    },
+    {
+      label: t('Category Name'),
+      value: 'key',
+    },
+    {
+      label: t('Percentage'),
+      value: 'percent',
+    },
+    {
+      label: t('Category and Value'),
+      value: 'key_value',
+    },
+    {
+      label: t('Category and Percentage'),
+      value: 'key_percent',
+    },
+    {
+      label: t('Category, Value and Percentage'),
+      value: 'key_value_percent',
+    },
+  ],
+  header_font_size: [
+    {
+      label: 'Tiny',
+      value: 0.2,
+    },
+    {
+      label: 'Small',
+      value: 0.3,
+    },
+    {
+      label: 'Normal',
+      value: 0.4,
+    },
+    {
+      label: 'Large',
+      value: 0.5,
+    },
+    {
+      label: 'Huge',
+      value: 0.6,
+    },
+  ],
+  subheader_font_size: [
+    {
+      label: 'Tiny',
+      value: 0.125,
+    },
+    {
+      label: 'Small',
+      value: 0.15,
+    },
+    {
+      label: 'Normal',
+      value: 0.2,
+    },
+    {
+      label: 'Large',
+      value: 0.3,
+    },
+    {
+      label: 'Huge',
+      value: 0.4,
+    },
+  ],
+  page_length: [
+    {
+      label: t('All'),
+      value: 0,
+    },
+    {
+      label: '10',
+      value: 10,
+    },
+    {
+      label: '20',
+      value: 20,
+    },
+    {
+      label: '50',
+      value: 50,
+    },
+    {
+      label: '100',
+      value: 100,
+    },
+    {
+      label: '200',
+      value: 200,
     },
   ],
 };
