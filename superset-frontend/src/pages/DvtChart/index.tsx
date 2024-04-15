@@ -1147,7 +1147,7 @@ const DvtChart = () => {
       stack: undefined,
       time_compare: values.time_compare,
       tooltipSortByMetric: undefined,
-      truncateYAxis: undefined,
+      truncateYAxis: active === 'echarts_timeseries_scatter' ? true : undefined,
       xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: undefined,
