@@ -58,19 +58,15 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
   }, [saveDataset.data]);
 
   useEffect(() => {
-    if (!saveDataset.loading) {
-      setFormUrl('');
-      if (saveDataset.data?.id) {
+    if (!formData.loading) {
+      if (formData.data?.key) {
+        history.push(
+          `/explore/?form_data_key=${formData.data.key}_id=${saveDataset.data.id}&datasource_type=${saveDataset.data.data.type}`,
+        );
         onClose();
       }
     }
-  }, [saveDataset.loading]);
-
-  useEffect(() => {
-    if (formData.data?.key) {
-      history.push(`explore/?form_data_key=${formData.data.key}`);
-    }
-  }, [formData.data]);
+  }, [formData.loading]);
 
   return (
     <StyledSaveDataset>
