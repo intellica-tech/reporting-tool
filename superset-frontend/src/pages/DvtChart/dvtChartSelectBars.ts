@@ -55,6 +55,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
+    popoverLabel: 'World Map',
+    status: 'world_map',
+    icon: 'dvt-linear_chart',
+  },
+  {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',
     icon: 'dvt-diagram',

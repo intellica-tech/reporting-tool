@@ -216,6 +216,15 @@ const DvtChart = () => {
     series_limit: [],
     transposePivot: false,
     contribution: false,
+    country_fieldtype: {
+      label: 'code ISO 3166-1 alpha-2 (cca2)',
+      value: 'cca2',
+    },
+    show_bubbles: false,
+    secondary_metric: [],
+    max_bubble_size: { label: '25', value: '25' },
+    color_picker: { r: 0, g: 122, b: 135, a: 1 },
+    color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -239,7 +248,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const onlyExploreJson = ['heatmap', 'dist_bar'];
+  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map'];
 
   useEffect(() => {
     if (selectedVizType) {
@@ -768,6 +777,27 @@ const DvtChart = () => {
             selectedChart.dataset,
             getFormData.columns,
           ),
+          country_fieldtype: chartFormsFindOptions(
+            'country_fieldtype',
+            'country_fieldtype',
+            'value',
+          ),
+          show_bubbles: getFormData.show_bubbles,
+          secondary_metric: emptyArrayOrOneFindItem(
+            getFormData.secondary_metric,
+          ),
+          color_picker: getFormData.color_picker,
+          color_scheme: chartFormsFindOptions(
+            'country_color_scheme',
+            chartFormsOption.country_color_scheme.find(
+              f => f.id === getFormData.color_scheme,
+            ),
+            'id',
+          ),
+          max_bubble_size: {
+            label: getFormData.max_bubble_size,
+            value: getFormData.max_bubble_size,
+          },
         });
 
         setChartStatus('loading');
@@ -1083,7 +1113,9 @@ const DvtChart = () => {
       y_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
       y_axis_title_position: 'Left',
       sort_series_type: 'sum',
-      color_scheme: 'supersetColors',
+      color_scheme: values.color_scheme
+        ? values.color_scheme.id
+        : 'supersetColors',
       seriesType: 'line',
       only_total: true,
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
@@ -1092,7 +1124,9 @@ const DvtChart = () => {
       show_legend: active === 'heatmap' ? values.show_legend : true,
       legendType: 'scroll',
       legendOrientation: 'top',
-      max_bubble_size: '25',
+      max_bubble_size: values.max_bubble_size
+        ? values.max_bubble_size.value
+        : '25',
       x_axis_time_format: 'smart_date',
       rich_tooltip: true,
       tooltipTimeFormat: 'smart_date',
@@ -1195,7 +1229,12 @@ const DvtChart = () => {
           )
         : {},
       server_pagination: values.server_pagination,
-      entity: droppedOnlyLabels('entity')[0],
+      entity:
+        active === 'world_map'
+          ? values.entity[0]?.label
+            ? values.entity[0].label
+            : undefined
+          : droppedOnlyLabels('entity')[0],
       orderby: values.timeseries_limit_metric.length
         ? metricsFormation('timeseries_limit_metric')[0]
         : undefined,
@@ -1232,7 +1271,9 @@ const DvtChart = () => {
       increase_color: { r: 90, g: 193, b: 137, a: 1 },
       total_color: { r: 102, g: 102, b: 102, a: 1 },
       x_ticks_layout: 'auto',
-      color_picker: { r: 0, g: 122, b: 135, a: 1 },
+      color_picker: values.color_picker
+        ? values.color_picker
+        : { r: 0, g: 122, b: 135, a: 1 },
       compare_lag: values.compare_lag,
       compare_suffix: values.compare_suffix,
       show_timestamp: values.show_timestamp,
@@ -1266,6 +1307,9 @@ const DvtChart = () => {
         active === 'dist_bar' && values?.columns
           ? values?.columns.map((v: any) => v.label)
           : [],
+      show_bubbles: values.show_bubbles,
+      country_fieldtype: values.country_fieldtype?.value,
+      secondary_metric: metricsFormation('secondary_metric')[0],
     },
     queries: [
       {
