@@ -30,6 +30,7 @@ import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtColorSelect from 'src/components/DvtColorSelect';
 import DvtRange from 'src/components/DvtRange';
 import DvtSpinner from 'src/components/DvtSpinner';
+import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import moment from 'moment';
 import {
@@ -147,10 +148,9 @@ const DvtChart = () => {
     size: [],
     all_columns_x: [],
     all_columns_y: [],
-    linear_color_scheme: {
-      label: 'Superset Sequential #1',
-      value: 'superset_seq_1',
-    },
+    linear_color_scheme: chartFormsOption.linear_color_scheme.find(
+      f => f.id === 'superset_seq_1',
+    ),
     xscale_interval: {
       label: '1',
       value: 1,
@@ -506,10 +506,14 @@ const DvtChart = () => {
           }
         };
 
-        const chartFormsFindOptions = (field: string, value: any) =>
+        const chartFormsFindOptions = (
+          field: string,
+          value: any,
+          findNameField = 'value',
+        ) =>
           getFormData?.[field]
             ? chartFormsOption[field].find(
-                (f: { value: any }) => f.value === getFormData[field],
+                (f: any) => f[findNameField] === getFormData[field],
               )
             : value;
 
@@ -520,6 +524,7 @@ const DvtChart = () => {
             ),
           ),
         );
+
         setActive(getFormData.viz_type);
         setValues({
           ...values,
@@ -632,10 +637,13 @@ const DvtChart = () => {
           size: emptyArrayOrOneFindItem(getFormData.size),
           all_columns_x: emptyArrayOrOneFindItem(getFormData.all_columns_x),
           all_columns_y: emptyArrayOrOneFindItem(getFormData.all_columns_y),
-          linear_color_scheme: chartFormsFindOptions('linear_color_scheme', {
-            label: 'Superset Sequential #1',
-            value: 'superset_seq_1',
-          }),
+          linear_color_scheme: chartFormsFindOptions(
+            'linear_color_scheme',
+            chartFormsOption.linear_color_scheme.find(
+              f => f.id === 'superset_seq_1',
+            ),
+            'id',
+          ),
           xscale_interval: chartFormsFindOptions('xscale_interval', {
             label: '1',
             value: 1,
@@ -1193,7 +1201,7 @@ const DvtChart = () => {
       y: metricsFormation('y')[0],
       show_tooltip_labels: true,
       tooltip_label_type: 5,
-      linear_color_scheme: values.linear_color_scheme.value,
+      linear_color_scheme: values.linear_color_scheme.id,
       xscale_interval: values.xscale_interval.value,
       yscale_interval: values.yscale_interval.value,
       canvas_image_rendering: values.canvas_image_rendering.value,
@@ -1490,7 +1498,9 @@ const DvtChart = () => {
     if (chartResultsPromise.data) {
       const onlyExploreJsonResult = onlyExploreJson.includes(active)
         ? chartResultsPromise.data
-        : chartResultsPromise.data.result[0];
+        : chartResultsPromise.data.result.length
+        ? chartResultsPromise.data.result[0]
+        : { colnames: [], data: [] };
       const firstObjectItem = onlyExploreJsonResult?.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
@@ -1773,6 +1783,19 @@ const DvtChart = () => {
                           }
                           data={fItem.options}
                           typeDesign="form"
+                        />
+                      )}
+                      {fItem.status === 'color-select' && (
+                        <DvtSelectColorScheme
+                          label={fItem.label}
+                          placeholder={fItem.placeholder}
+                          popoverLabel={fItem.popper}
+                          selectedValue={values[fItem.name] || ''}
+                          setSelectedValue={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          data={fItem.optionsColor || []}
+                          maxWidth
                         />
                       )}
                       {fItem.status === 'input-drop' && (

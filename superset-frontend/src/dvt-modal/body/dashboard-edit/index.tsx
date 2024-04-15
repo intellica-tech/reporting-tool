@@ -166,6 +166,7 @@ const DvtDashboardEdit = ({ meta, onClose }: ModalProps) => {
               typeDesign="form"
             />
             <DvtSelectColorScheme
+              data={DvtSchemeColorData}
               label={t('Color Scheme')}
               selectedValue={values.colorSchema}
               setSelectedValue={v => handleOnChange('colorSchema', v)}

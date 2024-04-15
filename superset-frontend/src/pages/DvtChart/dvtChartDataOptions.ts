@@ -466,10 +466,7 @@ const chartFormsOption = {
       value: 200,
     },
   ],
-  linear_color_scheme: [...schemes, ...schemesTwo].map((item: any) => ({
-    label: item.label,
-    value: item.id,
-  })),
+  linear_color_scheme: [...schemes, ...schemesTwo],
   xscale_interval: oneBetweenFifty,
   yscale_interval: oneBetweenFifty,
   canvas_image_rendering: [

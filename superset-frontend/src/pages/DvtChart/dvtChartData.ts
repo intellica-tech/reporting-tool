@@ -6,6 +6,12 @@ interface OptionsData {
   value: any;
 }
 
+interface OptionsDataColor {
+  id: string;
+  label: any;
+  colors: string[];
+}
+
 interface ActivesProps {
   [key: string]: string[];
 }
@@ -28,6 +34,7 @@ interface FormsProps {
     | 'input'
     | 'select'
     | 'multiple-select'
+    | 'color-select'
     | 'input-drop'
     | 'checkbox'
     | 'annotation-layer'
@@ -46,6 +53,7 @@ interface FormsProps {
   simpleType?: 'normal' | 'temporal';
   multiple?: boolean;
   options?: OptionsData[];
+  optionsColor?: OptionsDataColor[];
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
@@ -671,8 +679,8 @@ const DvtChartData: DvtChartDataProps[] = [
           {
             label: t('LINEAR COLOR SCHEME'),
             name: 'linear_color_scheme',
-            status: 'select',
-            options: chartFormsOption.linear_color_scheme,
+            status: 'color-select',
+            optionsColor: chartFormsOption.linear_color_scheme,
           },
           {
             label: t('XSCALE INTERVAL'),
