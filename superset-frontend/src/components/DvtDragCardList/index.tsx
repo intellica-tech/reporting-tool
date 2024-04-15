@@ -1,4 +1,5 @@
 import React from 'react';
+import { t } from '@superset-ui/core';
 import DvtDargCard from '../DvtDragCard';
 import {
   StyledDvtDragCardList,
@@ -19,7 +20,7 @@ export interface DvtDragCardListProps {
 const DvtDargCardList = ({ data }: DvtDragCardListProps) => (
   <StyledDvtDragCardList>
     <StyledDvtDragCardListSize>
-      Showing {data.length} of {data.length}
+      {`${t('Showing')} ${data.length} ${t('of')} ${data.length}`}
     </StyledDvtDragCardListSize>
     <StyledDvtDragCard>
       {data.map((item, index) => (

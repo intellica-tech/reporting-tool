@@ -18,6 +18,7 @@
  */
 import React, { useState } from 'react';
 import DvtSelectColorScheme, { DvtSelectColorSchemeProps } from '.';
+import { DvtSchemeColorData } from './dvtSchemeColorData';
 
 export default {
   title: 'Dvt-Components/DvtSelectColorScheme',
@@ -30,6 +31,7 @@ export const Default = (args: DvtSelectColorSchemeProps) => {
   return (
     <DvtSelectColorScheme
       {...args}
+      data={DvtSchemeColorData}
       selectedValue={selectedValue}
       setSelectedValue={setSelectedValue}
     />

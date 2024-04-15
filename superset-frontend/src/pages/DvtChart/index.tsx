@@ -30,6 +30,7 @@ import DvtInputDrop from 'src/components/DvtInputDrop';
 import DvtColorSelect from 'src/components/DvtColorSelect';
 import DvtRange from 'src/components/DvtRange';
 import DvtSpinner from 'src/components/DvtSpinner';
+import DvtSelectColorScheme from 'src/components/DvtSelectColorScheme';
 import ChartContainer from 'src/components/Chart/ChartContainer';
 import moment from 'moment';
 import {
@@ -39,7 +40,7 @@ import {
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
-import DvtChartCustomize from './dvtChartDataCustomize';
+// import DvtChartCustomize from './dvtChartDataCustomize';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import {
   ChartDefaultSelectBars,
@@ -147,10 +148,9 @@ const DvtChart = () => {
     size: [],
     all_columns_x: [],
     all_columns_y: [],
-    linear_color_scheme: {
-      label: 'Superset Sequential #1',
-      value: 'superset_seq_1',
-    },
+    linear_color_scheme: chartFormsOption.linear_color_scheme.find(
+      f => f.id === 'superset_seq_1',
+    ),
     xscale_interval: {
       label: '1',
       value: 1,
@@ -215,6 +215,16 @@ const DvtChart = () => {
     rowTotals: false,
     series_limit: [],
     transposePivot: false,
+    contribution: false,
+    country_fieldtype: {
+      label: 'code ISO 3166-1 alpha-2 (cca2)',
+      value: 'cca2',
+    },
+    show_bubbles: false,
+    secondary_metric: [],
+    max_bubble_size: { label: '25', value: '25' },
+    color_picker: { r: 0, g: 122, b: 135, a: 1 },
+    color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -238,7 +248,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const onlyExploreJson = ['heatmap'];
+  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map'];
 
   useEffect(() => {
     if (selectedVizType) {
@@ -506,10 +516,14 @@ const DvtChart = () => {
           }
         };
 
-        const chartFormsFindOptions = (field: string, value: any) =>
+        const chartFormsFindOptions = (
+          field: string,
+          value: any,
+          findNameField = 'value',
+        ) =>
           getFormData?.[field]
             ? chartFormsOption[field].find(
-                (f: { value: any }) => f.value === getFormData[field],
+                (f: any) => f[findNameField] === getFormData[field],
               )
             : value;
 
@@ -520,6 +534,7 @@ const DvtChart = () => {
             ),
           ),
         );
+
         setActive(getFormData.viz_type);
         setValues({
           ...values,
@@ -632,10 +647,13 @@ const DvtChart = () => {
           size: emptyArrayOrOneFindItem(getFormData.size),
           all_columns_x: emptyArrayOrOneFindItem(getFormData.all_columns_x),
           all_columns_y: emptyArrayOrOneFindItem(getFormData.all_columns_y),
-          linear_color_scheme: chartFormsFindOptions('linear_color_scheme', {
-            label: 'Superset Sequential #1',
-            value: 'superset_seq_1',
-          }),
+          linear_color_scheme: chartFormsFindOptions(
+            'linear_color_scheme',
+            chartFormsOption.linear_color_scheme.find(
+              f => f.id === 'superset_seq_1',
+            ),
+            'id',
+          ),
           xscale_interval: chartFormsFindOptions('xscale_interval', {
             label: '1',
             value: 1,
@@ -754,6 +772,32 @@ const DvtChart = () => {
             value: getFormData.series_limit,
           },
           transposePivot: getFormData.transposePivot,
+          contribution: getFormData.contribution,
+          columns: groupbyRowGroupbyColumnFormat(
+            selectedChart.dataset,
+            getFormData.columns,
+          ),
+          country_fieldtype: chartFormsFindOptions(
+            'country_fieldtype',
+            'country_fieldtype',
+            'value',
+          ),
+          show_bubbles: getFormData.show_bubbles,
+          secondary_metric: emptyArrayOrOneFindItem(
+            getFormData.secondary_metric,
+          ),
+          color_picker: getFormData.color_picker,
+          color_scheme: chartFormsFindOptions(
+            'country_color_scheme',
+            chartFormsOption.country_color_scheme.find(
+              f => f.id === getFormData.color_scheme,
+            ),
+            'id',
+          ),
+          max_bubble_size: {
+            label: getFormData.max_bubble_size,
+            value: getFormData.max_bubble_size,
+          },
         });
 
         setChartStatus('loading');
@@ -843,6 +887,28 @@ const DvtChart = () => {
         : ac.values.sql,
     );
 
+  const droppedOnlyLabelOrYear = (
+    dataKey: string,
+    defaultTimeGrain?: boolean,
+  ) =>
+    values[dataKey].map((ac: any) =>
+      ac.values.column?.is_dttm
+        ? {
+            timeGrain: defaultTimeGrain ? 'P1D' : values.time_grain_sqla?.value,
+            columnType: 'BASE_AXIS',
+            sqlExpression: ac.label,
+            label: ac.label,
+            expressionType: 'SQL',
+          }
+        : ac.values.expressionType === 'SQL'
+        ? {
+            expressionType: ac.values.expressionType,
+            label: ac.label,
+            sqlExpression: ac.values.sql,
+          }
+        : ac.values.sql,
+    );
+
   const postProcessingRename =
     values.metrics.length === 1 && values.groupby.length
       ? {
@@ -895,6 +961,21 @@ const DvtChart = () => {
     },
   };
 
+  const arrayOnlyOneItemFormation = (data: any[]) => {
+    const uniqueItems = new Set();
+    return data.filter((item: any) => {
+      if (item !== null) {
+        const serializedItem = JSON.stringify(item);
+        if (!uniqueItems.has(serializedItem)) {
+          uniqueItems.add(serializedItem);
+          return true;
+        }
+        return false;
+      }
+      return true;
+    });
+  };
+
   const onNullOrUndefinded = [null, undefined];
 
   const queriesOrderBySwitch = () => {
@@ -932,34 +1013,22 @@ const DvtChart = () => {
   const queriesColumnsSwitch = () => {
     switch (active) {
       case 'table':
-        return droppedOnlyLabels('all_columns');
+        return arrayOnlyOneItemFormation(droppedOnlyLabels('all_columns'));
       case 'pivot_table_v2':
-        return [
-          ...droppedOnlyLabels('groupbyColumns'),
-          ...values.groupbyRows.map((c: any) => ({
-            timeGrain: 'P1D',
-            columnType: 'BASE_AXIS',
-            sqlExpression: c.label,
-            label: c.label,
-            expressionType: 'SQL',
-          })),
-        ];
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('groupbyColumns'),
+          ...droppedOnlyLabelOrYear('groupbyRows'),
+        ]);
       case 'bubble_v2':
         return [
           ...droppedOnlyLabels('entity'),
           ...droppedOnlyLabels('dimension'),
         ];
       default:
-        return [
-          ...values.x_axis.map((c: any) => ({
-            timeGrain: values.time_grain_sqla?.value,
-            columnType: 'BASE_AXIS',
-            sqlExpression: c.label,
-            label: c.label,
-            expressionType: 'SQL',
-          })),
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('x_axis'),
           ...droppedOnlyLabels('groupby'),
-        ];
+        ]);
     }
   };
 
@@ -1009,8 +1078,7 @@ const DvtChart = () => {
       viz_type: active,
       url_params: selectedChart?.form_data?.url_params,
       x_axis: values.x_axis[0]?.label,
-      time_grain_sqla:
-        active === 'pivot_table_v2' ? 'P1D' : values.time_grain_sqla?.value,
+      time_grain_sqla: values.time_grain_sqla?.value,
       x_axis_sort_asc: true,
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
@@ -1045,7 +1113,9 @@ const DvtChart = () => {
       y_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
       y_axis_title_position: 'Left',
       sort_series_type: 'sum',
-      color_scheme: 'supersetColors',
+      color_scheme: values.color_scheme
+        ? values.color_scheme.id
+        : 'supersetColors',
       seriesType: 'line',
       only_total: true,
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
@@ -1054,7 +1124,9 @@ const DvtChart = () => {
       show_legend: active === 'heatmap' ? values.show_legend : true,
       legendType: 'scroll',
       legendOrientation: 'top',
-      max_bubble_size: '25',
+      max_bubble_size: values.max_bubble_size
+        ? values.max_bubble_size.value
+        : '25',
       x_axis_time_format: 'smart_date',
       rich_tooltip: true,
       tooltipTimeFormat: 'smart_date',
@@ -1109,7 +1181,7 @@ const DvtChart = () => {
       stack: undefined,
       time_compare: values.time_compare,
       tooltipSortByMetric: undefined,
-      truncateYAxis: undefined,
+      truncateYAxis: active === 'echarts_timeseries_scatter' ? true : undefined,
       xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: undefined,
@@ -1149,13 +1221,20 @@ const DvtChart = () => {
       server_page_length: values.server_page_length.value,
       show_cell_bars: true,
       table_timestamp_format: 'smart_date',
-      temporal_columns_lookup: Object.fromEntries(
-        selectedChart?.dataset?.columns
-          ?.filter((item: any) => item.is_dttm === true)
-          .map((item: any) => [item.column_name, true]),
-      ),
+      temporal_columns_lookup: selectedChart?.dataset?.columns.length
+        ? Object.fromEntries(
+            selectedChart?.dataset?.columns
+              ?.filter((item: any) => item.is_dttm === true)
+              .map((item: any) => [item.column_name, true]),
+          )
+        : {},
       server_pagination: values.server_pagination,
-      entity: droppedOnlyLabels('entity')[0],
+      entity:
+        active === 'world_map'
+          ? values.entity[0]?.label
+            ? values.entity[0].label
+            : undefined
+          : droppedOnlyLabels('entity')[0],
       orderby: values.timeseries_limit_metric.length
         ? metricsFormation('timeseries_limit_metric')[0]
         : undefined,
@@ -1167,7 +1246,7 @@ const DvtChart = () => {
       y: metricsFormation('y')[0],
       show_tooltip_labels: true,
       tooltip_label_type: 5,
-      linear_color_scheme: values.linear_color_scheme.value,
+      linear_color_scheme: values.linear_color_scheme.id,
       xscale_interval: values.xscale_interval.value,
       yscale_interval: values.yscale_interval.value,
       canvas_image_rendering: values.canvas_image_rendering.value,
@@ -1192,7 +1271,9 @@ const DvtChart = () => {
       increase_color: { r: 90, g: 193, b: 137, a: 1 },
       total_color: { r: 102, g: 102, b: 102, a: 1 },
       x_ticks_layout: 'auto',
-      color_picker: { r: 0, g: 122, b: 135, a: 1 },
+      color_picker: values.color_picker
+        ? values.color_picker
+        : { r: 0, g: 122, b: 135, a: 1 },
       compare_lag: values.compare_lag,
       compare_suffix: values.compare_suffix,
       show_timestamp: values.show_timestamp,
@@ -1221,6 +1302,14 @@ const DvtChart = () => {
       series_limit: values.series_limit.value
         ? Number(values.series_limit.value)
         : 0,
+      contribution: values.contribution,
+      columns:
+        active === 'dist_bar' && values?.columns
+          ? values?.columns.map((v: any) => v.label)
+          : [],
+      show_bubbles: values.show_bubbles,
+      country_fieldtype: values.country_fieldtype?.value,
+      secondary_metric: metricsFormation('secondary_metric')[0],
     },
     queries: [
       {
@@ -1233,11 +1322,7 @@ const DvtChart = () => {
           })),
         extras: {
           time_grain_sqla:
-            active === 'bubble_v2'
-              ? undefined
-              : active === 'pivot_table_v2'
-              ? 'P1D'
-              : values.time_grain_sqla?.value,
+            active === 'bubble_v2' ? undefined : values.time_grain_sqla?.value,
           having: values.adhoc_filters
             .filter(
               (v: any) =>
@@ -1426,6 +1511,7 @@ const DvtChart = () => {
   const chartSamplePromise = useFetch({
     url: sampleApiUrl,
     method: 'POST',
+    body: {},
   });
 
   useEffect(() => {
@@ -1467,7 +1553,9 @@ const DvtChart = () => {
     if (chartResultsPromise.data) {
       const onlyExploreJsonResult = onlyExploreJson.includes(active)
         ? chartResultsPromise.data
-        : chartResultsPromise.data.result[0];
+        : chartResultsPromise.data.result.length
+        ? chartResultsPromise.data.result[0]
+        : { colnames: [], data: [] };
       const firstObjectItem = onlyExploreJsonResult?.colnames;
       const headerFormation = firstObjectItem.map((v: any, i: number) => ({
         id: i,
@@ -1478,7 +1566,10 @@ const DvtChart = () => {
       setResultHeader(headerFormation);
       setResultData(onlyExploreJsonResult.data);
     }
-  }, [chartResultsPromise.data]);
+    if (chartResultsPromise.error) {
+      setResultData([]);
+    }
+  }, [chartResultsPromise.data, chartResultsPromise.error]);
 
   useEffect(() => {
     if (!chartFullPromise.loading && !chartResultsPromise.loading) {
@@ -1597,6 +1688,10 @@ const DvtChart = () => {
         return !(values.metric.length && values.x_axis.length);
       case 'pivot_table_v2':
         return !values.metrics.length;
+      case 'dist_bar':
+        return !(values.metrics.length && values.groupby.length);
+      case 'world_map':
+        return !(values.entity.length && values.metric.length);
       default:
         return false;
     }
@@ -1628,8 +1723,8 @@ const DvtChart = () => {
     );
   };
 
-  const DataOrCustomize =
-    chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
+  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
+  // chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
 
   useEffect(
     () => () => {
@@ -1747,6 +1842,19 @@ const DvtChart = () => {
                           }
                           data={fItem.options}
                           typeDesign="form"
+                        />
+                      )}
+                      {fItem.status === 'color-select' && (
+                        <DvtSelectColorScheme
+                          label={fItem.label}
+                          placeholder={fItem.placeholder}
+                          popoverLabel={fItem.popper}
+                          selectedValue={values[fItem.name] || ''}
+                          setSelectedValue={v =>
+                            setValues({ ...values, [fItem.name]: v })
+                          }
+                          data={fItem.optionsColor || []}
+                          maxWidth
                         />
                       )}
                       {fItem.status === 'input-drop' && (

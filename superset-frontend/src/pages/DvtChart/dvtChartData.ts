@@ -6,6 +6,12 @@ interface OptionsData {
   value: any;
 }
 
+interface OptionsDataColor {
+  id: string;
+  label: any;
+  colors: string[];
+}
+
 interface ActivesProps {
   [key: string]: string[];
 }
@@ -28,6 +34,7 @@ interface FormsProps {
     | 'input'
     | 'select'
     | 'multiple-select'
+    | 'color-select'
     | 'input-drop'
     | 'checkbox'
     | 'annotation-layer'
@@ -46,6 +53,7 @@ interface FormsProps {
   simpleType?: 'normal' | 'temporal';
   multiple?: boolean;
   options?: OptionsData[];
+  optionsColor?: OptionsDataColor[];
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
@@ -140,6 +148,17 @@ const sortDescending: FormsProps = {
   status: 'checkbox',
 };
 
+const formTimeGrain: FormsProps = {
+  label: t('TIME GRAIN'),
+  name: 'time_grain_sqla',
+  popper: t(
+    'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
+  ),
+  placeholder: t('None'),
+  status: 'select',
+  options: chartFormsOption.time_grain_sqla,
+};
+
 const lineAndBarChart: CollapsesProps[] = [
   {
     collapse_label: t('Query'),
@@ -156,16 +175,7 @@ const lineAndBarChart: CollapsesProps[] = [
         type: 'normal',
         savedType: 'expressions',
       },
-      {
-        label: t('TIME GRAIN'),
-        name: 'time_grain_sqla',
-        popper: t(
-          'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-        ),
-        placeholder: t('None'),
-        status: 'select',
-        options: chartFormsOption.time_grain_sqla,
-      },
+      formTimeGrain,
       formMetrics,
       formDimensions,
       {
@@ -669,8 +679,8 @@ const DvtChartData: DvtChartDataProps[] = [
           {
             label: t('LINEAR COLOR SCHEME'),
             name: 'linear_color_scheme',
-            status: 'select',
-            options: chartFormsOption.linear_color_scheme,
+            status: 'color-select',
+            optionsColor: chartFormsOption.linear_color_scheme,
           },
           {
             label: t('XSCALE INTERVAL'),
@@ -885,16 +895,7 @@ const DvtChartData: DvtChartDataProps[] = [
             savedType: 'metric',
             simpleType: 'temporal',
           },
-          {
-            label: t('TIME GRAIN'),
-            name: 'time_grain_sqla',
-            popper: t(
-              'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-            ),
-            placeholder: t('None'),
-            status: 'select',
-            options: chartFormsOption.time_grain_sqla,
-          },
+          formTimeGrain,
           formMetric,
           formFilters,
         ],
@@ -1020,6 +1021,7 @@ const DvtChartData: DvtChartDataProps[] = [
             type: 'normal',
             savedType: 'expressions',
           },
+          formTimeGrain,
           formMetrics,
           {
             label: t('APPLY METRICS ON'),
@@ -1098,6 +1100,127 @@ const DvtChartData: DvtChartDataProps[] = [
             label: t('COMBINE METRICS'),
             name: 'combineMetric',
             status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'dist_bar',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        forms: [
+          formMetrics,
+          formFilters,
+          {
+            label: t('DIMENSIONS'),
+            name: 'groupby',
+            popper: t(
+              'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('BREAKDOWNS'),
+            name: 'columns',
+            popper: t('Defines how each series is broken down'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formRowLimit,
+          formSortBy,
+          {
+            label: t('SORT DESCENDING'),
+            name: 'order_desc',
+            status: 'checkbox',
+          },
+          {
+            label: t('CONTRIBUTION'),
+            name: 'contribution',
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'world_map',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('COUNTRY COLUMN'),
+            name: 'entity',
+            popper: t('3 letter code of the country'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('COUNTRY FIELD TYPE'),
+            name: 'country_fieldtype',
+            popper: t(
+              'The country code standard that Superset should expect to find in the [country] column',
+            ),
+            status: 'select',
+            options: chartFormsOption.country_fieldtype,
+          },
+          formMetric,
+          formFilters,
+          formRowLimit,
+          {
+            label: t('SORT BY METRIC'),
+            name: 'sort_by_metric',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('SHOW BUBBLES'),
+            name: 'show_bubbles',
+            status: 'checkbox',
+          },
+          {
+            label: t('BUBBLE SIZE'),
+            name: 'secondary_metric',
+            popper: t('Metric that defines the size of the bubble'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('MAX BUBBLE SIZE'),
+            name: 'max_bubble_size',
+            status: 'select',
+            options: chartFormsOption.max_bubble_size,
+          },
+          {
+            label: t('BUBBLE COLOR'),
+            name: 'color_picker',
+            status: 'color',
+          },
+          {
+            label: t('COUNTRY COLOR SCHEME'),
+            name: 'color_scheme',
+            status: 'color-select',
+            optionsColor: chartFormsOption.country_color_scheme,
           },
         ],
       },

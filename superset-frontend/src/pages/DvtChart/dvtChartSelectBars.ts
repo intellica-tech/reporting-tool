@@ -40,6 +40,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
+    popoverLabel: 'Waterfall Chart',
+    status: 'waterfall',
+    icon: 'dvt-linear_chart',
+  },
+  {
     popoverLabel: 'Big Number with Trendline',
     status: 'big_number',
     icon: 'dvt-linear_chart',
@@ -47,6 +52,21 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
   {
     popoverLabel: 'Scatter Plot',
     status: 'echarts_timeseries_scatter',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Pivot Table',
+    status: 'pivot_table_v2',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Bar Chart (legacy)',
+    status: 'dist_bar',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'World Map',
+    status: 'world_map',
     icon: 'dvt-linear_chart',
   },
   {
@@ -75,9 +95,4 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-4k',
   },
   { popoverLabel: 'Pie Chart', status: 'pie', icon: 'dvt-diagram' },
-  {
-    popoverLabel: 'Pivot Table',
-    status: 'pivot_table_v2',
-    icon: 'dvt-linear_chart',
-  },
 ];

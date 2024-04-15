@@ -21,7 +21,6 @@ import useOnClickOutside from 'src/dvt-hooks/useOnClickOutsite';
 import { SupersetTheme } from '@superset-ui/core';
 import Icon from '../Icons/Icon';
 import DvtPopper from '../DvtPopper';
-import { DvtSchemeColorData } from './dvtSchemeColorData';
 import {
   StyledSelectColorScheme,
   StyledSelectColorSchemeOption,
@@ -37,6 +36,7 @@ import {
 } from './dvt-select-color-scheme.module';
 
 export interface DvtSelectColorSchemeProps {
+  data: any[];
   label?: string;
   placeholder?: string;
   selectedValue: any;
@@ -53,6 +53,7 @@ export interface DvtSelectColorSchemeProps {
 }
 
 const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
+  data = [],
   label = '',
   placeholder = '',
   selectedValue = {},
@@ -147,10 +148,10 @@ const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
         <StyledSelectColorSchemeOptions
           isOpen={isOpen}
           label={label || ''}
-          itemLength={DvtSchemeColorData.length}
+          itemLength={data.length}
           typeDesign={typeDesign}
         >
-          {DvtSchemeColorData.map((option, index) => (
+          {data.map((option, index) => (
             <StyledSelectColorSchemeOption
               selectedValue={option[objectName] === selectedValue[objectName]}
               key={index}
@@ -161,7 +162,7 @@ const DvtSelectColorScheme: React.FC<DvtSelectColorSchemeProps> = ({
                 {option[objectName]}
               </StyledSelectColorsLabel>
               <StyledSelectColors>
-                {option.colors.map((color, colorIndex) => (
+                {option.colors.map((color: string, colorIndex: number) => (
                   <StyledSelectColor key={colorIndex} color={color} />
                 ))}
               </StyledSelectColors>

@@ -6140,7 +6140,8 @@
       "New Output Table": ["Sonuç Tablosu"],
       "Connection": ["Bağlantı"],
       "Create Dataset": ["Veri Seti Oluştur"],
-      "New Dataset": ["Veri Seti"]
+      "New Dataset": ["Veri Seti"],
+      "SQL Hub": ["SQL"]
     }
   }
 }
