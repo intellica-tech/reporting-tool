@@ -40,6 +40,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
+    popoverLabel: 'Waterfall Chart',
+    status: 'waterfall',
+    icon: 'dvt-linear_chart',
+  },
+  {
     popoverLabel: 'Big Number with Trendline',
     status: 'big_number',
     icon: 'dvt-linear_chart',

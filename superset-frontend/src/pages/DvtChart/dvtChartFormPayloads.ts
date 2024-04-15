@@ -602,7 +602,6 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'sort_by_metric',
       'url_params',
       'viz_type',
-      'where',
       'y_axis_format',
     ],
     queries: [],

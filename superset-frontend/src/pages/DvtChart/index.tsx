@@ -1690,6 +1690,8 @@ const DvtChart = () => {
         return !values.metrics.length;
       case 'dist_bar':
         return !(values.metrics.length && values.groupby.length);
+      case 'world_map':
+        return !(values.entity.length && values.metric.length);
       default:
         return false;
     }
