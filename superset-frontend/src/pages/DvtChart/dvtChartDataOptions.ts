@@ -668,45 +668,45 @@ const chartFormsOption = {
   ],
   header_font_size: [
     {
-      label: 'Tiny',
+      label: t('Tiny'),
       value: 0.2,
     },
     {
-      label: 'Small',
+      label: t('Small'),
       value: 0.3,
     },
     {
-      label: 'Normal',
+      label: t('Normal'),
       value: 0.4,
     },
     {
-      label: 'Large',
+      label: t('Large'),
       value: 0.5,
     },
     {
-      label: 'Huge',
+      label: t('Huge'),
       value: 0.6,
     },
   ],
   subheader_font_size: [
     {
-      label: 'Tiny',
+      label: t('Tiny'),
       value: 0.125,
     },
     {
-      label: 'Small',
+      label: t('Small'),
       value: 0.15,
     },
     {
-      label: 'Normal',
+      label: t('Normal'),
       value: 0.2,
     },
     {
-      label: 'Large',
+      label: t('Large'),
       value: 0.3,
     },
     {
-      label: 'Huge',
+      label: t('Huge'),
       value: 0.4,
     },
   ],
@@ -734,6 +734,202 @@ const chartFormsOption = {
     {
       label: '200',
       value: 200,
+    },
+  ],
+  x_axis_title_margin: [
+    {
+      label: '15',
+      value: 15,
+    },
+    {
+      label: '30',
+      value: 30,
+    },
+    {
+      label: '50',
+      value: 50,
+    },
+    {
+      label: '75',
+      value: 75,
+    },
+    {
+      label: '100',
+      value: 100,
+    },
+    {
+      label: '125',
+      value: 125,
+    },
+    {
+      label: '150',
+      value: 150,
+    },
+    {
+      label: '200',
+      value: 200,
+    },
+  ],
+  y_axis_title_margin: [
+    {
+      label: '15',
+      value: 15,
+    },
+    {
+      label: '30',
+      value: 30,
+    },
+    {
+      label: '50',
+      value: 50,
+    },
+    {
+      label: '75',
+      value: 75,
+    },
+    {
+      label: '100',
+      value: 100,
+    },
+    {
+      label: '125',
+      value: 125,
+    },
+    {
+      label: '150',
+      value: 150,
+    },
+    {
+      label: '200',
+      value: 200,
+    },
+  ],
+  y_axis_title_position: [
+    {
+      label: t('Left'),
+      value: 'Left',
+    },
+    {
+      label: t('Top'),
+      value: 'Top',
+    },
+  ],
+  sort_series_type: [
+    {
+      label: t('Category name'),
+      value: 'name',
+    },
+    {
+      label: t('Total value'),
+      value: 'sum',
+    },
+    {
+      label: t('Minimum value'),
+      value: 'min',
+    },
+    {
+      label: t('Max value'),
+      value: 'max',
+    },
+    {
+      label: t('Average value'),
+      value: 'avg',
+    },
+  ],
+  seriesType: [
+    {
+      label: t('Line'),
+      value: 'line',
+    },
+    {
+      label: t('Scatter'),
+      value: 'scatter',
+    },
+    {
+      label: t('Smooth Line'),
+      value: 'smooth',
+    },
+    {
+      label: t('Bar'),
+      value: 'bar',
+    },
+    {
+      label: t('Step - start'),
+      value: 'start',
+    },
+    {
+      label: t('Step - middle'),
+      value: 'middle',
+    },
+    {
+      label: t('Step - end'),
+      value: 'end',
+    },
+  ],
+  stack: [
+    {
+      label: t('Stack'),
+      value: 'stack',
+    },
+    {
+      label: t('None'),
+      value: '',
+    },
+    {
+      label: t('Stream'),
+      value: 'Stream',
+    },
+  ],
+  legendType: [
+    {
+      label: t('Scroll'),
+      value: 'scroll',
+    },
+    {
+      label: t('Plain'),
+      value: 'plain',
+    },
+  ],
+  legendOrientation: [
+    {
+      label: t('Top'),
+      value: 'top',
+    },
+    {
+      label: t('Bottom'),
+      value: 'bottom',
+    },
+    {
+      label: t('Left'),
+      value: 'left',
+    },
+    {
+      label: t('Right'),
+      value: 'right',
+    },
+  ],
+  xAxisLabelRotation: [
+    {
+      label: '0°',
+      value: 0,
+    },
+    {
+      label: '45°',
+      value: 45,
+    },
+    {
+      label: '90°',
+      value: 90,
+    },
+  ],
+  legendOrientationTopLeft: [
+    {
+      label: t('Top'),
+      value: 'top',
+    },
+    {
+      label: t('Left'),
+      value: 'left',
     },
   ],
   country_fieldtype: [
