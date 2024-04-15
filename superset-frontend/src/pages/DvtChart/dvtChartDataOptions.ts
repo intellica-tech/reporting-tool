@@ -916,6 +916,16 @@ const chartFormsOption = {
       value: 90,
     },
   ],
+  legendOrientationTopLeft: [
+    {
+      label: t('Top'),
+      value: 'top',
+    },
+    {
+      label: t('Left'),
+      value: 'left',
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
