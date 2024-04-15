@@ -7,6 +7,7 @@ import {
   dvtSidebarSetPropertyClear,
 } from 'src/dvt-redux/dvt-sidebarReducer';
 import {
+  dvtSaveDatasetSqlQuery,
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTables,
   dvtSqlhubSetSelectedTablesClear,
@@ -294,9 +295,9 @@ function DvtSqllab() {
     navigator.clipboard.writeText(text);
   };
 
-  // useEffect(() => {
-  //   dispatch(dvtSqlhubSetSqlQuery(sqlValue));
-  // }, [sqlValue]);
+  useEffect(() => {
+    dispatch(dvtSaveDatasetSqlQuery(sqlValue));
+  }, [sqlValue]);
 
   useEffect(() => {
     setSqlValue(sqlhubSelector.sqlQuery);

@@ -54,6 +54,10 @@ const dvtSqlhubSlice = createSlice({
       ...state,
       sqlQuery: action.payload,
     }),
+    dvtSaveDatasetSqlQuery: (state, action: PayloadAction<string>) => ({
+      ...state,
+      datasetQuery: action.payload,
+    }),
   },
 });
 
@@ -62,6 +66,7 @@ export const {
   dvtSqlhubSetSelectedTableRemove,
   dvtSqlhubSetSelectedTablesClear,
   dvtSqlhubSetSqlQuery,
+  dvtSaveDatasetSqlQuery,
 } = dvtSqlhubSlice.actions;
 
 export default dvtSqlhubSlice.reducer;
