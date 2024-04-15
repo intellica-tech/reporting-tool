@@ -1106,12 +1106,22 @@ const DvtChartData: DvtChartDataProps[] = [
         forms: [
           formMetrics,
           formFilters,
-          formDimensions,
+          {
+            label: t('DIMENSIONS'),
+            name: 'groupby',
+            popper: t(
+              'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
           {
             label: t('BREAKDOWNS'),
             name: 'columns',
             popper: t('Defines how each series is broken down'),
-            popperError: t('cannot be empty'),
             status: 'input-drop',
             multiple: true,
             type: 'normal',
