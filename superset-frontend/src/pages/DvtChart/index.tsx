@@ -215,6 +215,7 @@ const DvtChart = () => {
     rowTotals: false,
     series_limit: [],
     transposePivot: false,
+    contribution: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -238,7 +239,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const onlyExploreJson = ['heatmap'];
+  const onlyExploreJson = ['heatmap', 'dist_bar'];
 
   useEffect(() => {
     if (selectedVizType) {
@@ -754,6 +755,11 @@ const DvtChart = () => {
             value: getFormData.series_limit,
           },
           transposePivot: getFormData.transposePivot,
+          contribution: getFormData.contribution,
+          columns: groupbyRowGroupbyColumnFormat(
+            selectedChart.dataset,
+            getFormData.columns,
+          ),
         });
 
         setChartStatus('loading');
@@ -1247,6 +1253,11 @@ const DvtChart = () => {
       series_limit: values.series_limit.value
         ? Number(values.series_limit.value)
         : 0,
+      contribution: values.contribution,
+      columns:
+        active === 'dist_bar' && values?.columns
+          ? values?.columns.map((v: any) => v.label)
+          : [],
     },
     queries: [
       {
@@ -1623,6 +1634,8 @@ const DvtChart = () => {
         return !(values.metric.length && values.x_axis.length);
       case 'pivot_table_v2':
         return !values.metrics.length;
+      case 'dist_bar':
+        return !(values.metrics.length && values.groupby.length);
       default:
         return false;
     }

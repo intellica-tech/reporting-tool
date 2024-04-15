@@ -555,6 +555,31 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'url_params',
     ],
   },
+  {
+    viz_name: 'dist_bar',
+    form_data: [
+      'datasource',
+      'viz_type',
+      'url_params',
+      'metrics',
+      'adhoc_filters',
+      'groupby',
+      'columns',
+      'row_limit',
+      'timeseries_limit_metric',
+      'order_desc',
+      'contribution',
+      'color_scheme',
+      'show_legend',
+      'rich_tooltip',
+      'y_axis_format',
+      'y_axis_bounds',
+      'bottom_margin',
+      'x_ticks_layout',
+      'extra_form_data',
+    ],
+    queries: [],
+  },
 ];
 
 export default DvtChartFormPayloads;

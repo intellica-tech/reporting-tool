@@ -80,4 +80,9 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     status: 'pivot_table_v2',
     icon: 'dvt-linear_chart',
   },
+  {
+    popoverLabel: 'Bar Chart (legacy)',
+    status: 'dist_bar',
+    icon: 'dvt-status_up',
+  },
 ];

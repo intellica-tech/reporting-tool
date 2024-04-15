@@ -1097,6 +1097,42 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'dist_bar',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        forms: [
+          formMetrics,
+          formFilters,
+          formDimensions,
+          {
+            label: t('BREAKDOWNS'),
+            name: 'columns',
+            popper: t('Defines how each series is broken down'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formRowLimit,
+          formSortBy,
+          {
+            label: t('SORT DESCENDING'),
+            name: 'order_desc',
+            status: 'checkbox',
+          },
+          {
+            label: t('CONTRIBUTION'),
+            name: 'contribution',
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;
