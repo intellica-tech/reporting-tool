@@ -580,6 +580,33 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
     ],
     queries: [],
   },
+  {
+    viz_name: 'world_map',
+    form_data: [
+      'adhoc_filters',
+      'applied_time_extras',
+      'color_by',
+      'color_picker',
+      'color_scheme',
+      'country_fieldtype',
+      'datasource',
+      'entity',
+      'filters',
+      'having',
+      'linear_color_scheme',
+      'max_bubble_size',
+      'metric',
+      'row_limit',
+      'secondary_metric',
+      'show_bubbles',
+      'sort_by_metric',
+      'url_params',
+      'viz_type',
+      'where',
+      'y_axis_format',
+    ],
+    queries: [],
+  },
 ];
 
 export default DvtChartFormPayloads;

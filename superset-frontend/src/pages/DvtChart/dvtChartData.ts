@@ -1151,6 +1151,81 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'world_map',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        forms: [
+          {
+            label: t('COUNTRY COLUMN'),
+            name: 'entity',
+            popper: t('3 letter code of the country'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('COUNTRY FIELD TYPE'),
+            name: 'country_fieldtype',
+            popper: t(
+              'The country code standard that Superset should expect to find in the [country] column',
+            ),
+            status: 'select',
+            options: chartFormsOption.country_fieldtype,
+          },
+          formMetric,
+          formFilters,
+          formRowLimit,
+          {
+            label: t('SORT BY METRIC'),
+            name: 'sort_by_metric',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('SHOW BUBBLES'),
+            name: 'show_bubbles',
+            status: 'checkbox',
+          },
+          {
+            label: t('BUBBLE SIZE'),
+            name: 'secondary_metric',
+            popper: t('Metric that defines the size of the bubble'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('MAX BUBBLE SIZE'),
+            name: 'max_bubble_size',
+            status: 'select',
+            options: chartFormsOption.max_bubble_size,
+          },
+          {
+            label: t('BUBBLE COLOR'),
+            name: 'color_picker',
+            status: 'color',
+          },
+          {
+            label: t('COUNTRY COLOR SCHEME'),
+            name: 'color_scheme',
+            status: 'color-select',
+            optionsColor: chartFormsOption.country_color_scheme,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;

@@ -1,4 +1,13 @@
-import { t } from '@superset-ui/core';
+import {
+  CategoricalAirbnb,
+  CategoricalD3,
+  CategoricalEcharts,
+  CategoricalGoogle,
+  CategoricalLyft,
+  CategoricalPreset,
+  CategoricalSuperset,
+  t,
+} from '@superset-ui/core';
 import schemes from 'packages/superset-ui-core/src/color/colorSchemes/sequential/d3';
 import schemesTwo from 'packages/superset-ui-core/src/color/colorSchemes/sequential/common';
 import {
@@ -726,6 +735,64 @@ const chartFormsOption = {
       label: '200',
       value: 200,
     },
+  ],
+  country_fieldtype: [
+    {
+      label: t('Full name'),
+      value: 'name',
+    },
+    {
+      label: 'code International Olympic Committee (cioc)',
+      value: 'cioc',
+    },
+    {
+      label: 'code ISO 3166-1 alpha-2 (cca2)',
+      value: 'cca2',
+    },
+    {
+      label: 'code ISO 3166-1 alpha-3 (cca3)',
+      value: 'cca3',
+    },
+  ],
+  max_bubble_size: [
+    {
+      label: '5',
+      value: '5',
+    },
+    {
+      label: '10',
+      value: '10',
+    },
+    {
+      label: '15',
+      value: '15',
+    },
+    {
+      label: '25',
+      value: '25',
+    },
+    {
+      label: '50',
+      value: '50',
+    },
+    {
+      label: '75',
+      value: '75',
+    },
+    {
+      label: '100',
+      value: '100',
+    },
+  ],
+  country_color_scheme: [
+    ...CategoricalSuperset,
+    ...CategoricalAirbnb,
+    ...CategoricalD3,
+    ...CategoricalEcharts,
+    ...CategoricalGoogle,
+    ...CategoricalLyft,
+    ...CategoricalPreset,
+    ...schemes,
   ],
 };
 
