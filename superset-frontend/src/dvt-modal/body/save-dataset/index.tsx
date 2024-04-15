@@ -58,10 +58,15 @@ const DvtSaveDataset = ({ meta, onClose }: ModalProps) => {
   }, [saveDataset.data]);
 
   useEffect(() => {
-    if (formData.data?.key) {
-      history.push(`explore/?form_data_key=${formData.data.key}`);
+    if (!formData.loading) {
+      if (formData.data?.key) {
+        history.push(
+          `/explore/?form_data_key=${formData.data.key}_id=${saveDataset.data.id}&datasource_type=${saveDataset.data.data.type}`,
+        );
+        onClose();
+      }
     }
-  }, [formData.data]);
+  }, [formData.loading]);
 
   return (
     <StyledSaveDataset>

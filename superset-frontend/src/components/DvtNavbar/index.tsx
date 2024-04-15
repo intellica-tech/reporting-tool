@@ -257,7 +257,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       openModal({
         component: 'save-query',
         meta: {
-          query: sqlQuerySelector.sqlQuery,
+          query: sqlQuerySelector.datasetQuery,
           db_id: sqlLabSidebarSelector.database.value,
           schema: sqlLabSidebarSelector.schema.value,
         },
@@ -270,7 +270,7 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
       openModal({
         component: 'save-dataset',
         meta: {
-          query: sqlQuerySelector.sqlQuery,
+          query: sqlQuerySelector.datasetQuery,
           db_id: sqlLabSidebarSelector.database.value,
           schema: sqlLabSidebarSelector.schema.value,
         },
