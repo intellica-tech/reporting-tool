@@ -84,6 +84,9 @@ function DvtNewTainedTable() {
               label_column: newTainedTableAddSelector.labelColumn?.value
                 ? newTainedTableAddSelector.labelColumn?.value
                 : undefined,
+              training_data_ratio: newTainedTableAddSelector.training_data_ratio
+                ? newTainedTableAddSelector.training_data_ratio
+                : undefined,
             },
           }
         : {
@@ -154,6 +157,7 @@ function DvtNewTainedTable() {
     { key: 'featureColumn' },
     { key: 'groupColumn' },
     { key: 'labelColumn' },
+    { key: 'training_data_ratio' },
   ];
 
   useEffect(() => {

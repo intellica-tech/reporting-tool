@@ -49,6 +49,7 @@ import {
   StyledCollapseScroll,
   ChartDatasetName,
 } from './dvt-sidebar.module';
+import DvtRange from '../DvtRange';
 
 interface DvtSidebarProps {
   pathName: string;
@@ -474,6 +475,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           'featureColumn',
           'groupColumn',
           'labelColumn',
+          'training_data_ratio',
         ],
       },
       {
@@ -891,6 +893,30 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         typeDesign="chartsForm"
                       />
                     )}
+                    {data.status === 'range' &&
+                      data.active ===
+                        newTrainedTableSelector.algorithm.value && (
+                        <DvtRange
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          value={
+                            pathTitles(pathName) === 'newTrainedTable'
+                              ? newTrainedTableSelector[data.name]
+                              : undefined
+                          }
+                          setValue={value => {
+                            updateProperty(
+                              sidebarDataFindPathname.key,
+                              data.name,
+                              value,
+                            );
+                          }}
+                          label={data.label}
+                          important
+                          popoverDirection="top"
+                        />
+                      )}
                     {data.status === 'datepicker' && (
                       <DvtDatePicker
                         isOpen
