@@ -277,7 +277,6 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'datasource',
       'extra_form_data',
       'groupby',
-      'link_length',
       'row_limit',
       'link_length',
       'show_legend',
