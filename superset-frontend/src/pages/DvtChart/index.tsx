@@ -225,7 +225,7 @@ const DvtChart = () => {
     max_bubble_size: { label: '25', value: '25' },
     color_picker: { r: 0, g: 122, b: 135, a: 1 },
     color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
-    truncateYAxis: false,
+    truncateYAxis: true,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
