@@ -868,12 +868,12 @@ const chartFormsOption = {
   ],
   stack: [
     {
-      label: t('Stack'),
-      value: 'stack',
-    },
-    {
       label: t('None'),
       value: '',
+    },
+    {
+      label: t('Stack'),
+      value: 'Stack',
     },
     {
       label: t('Stream'),

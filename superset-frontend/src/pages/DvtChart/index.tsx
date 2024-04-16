@@ -40,7 +40,7 @@ import {
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
-// import DvtChartCustomize from './dvtChartDataCustomize';
+import DvtChartCustomize from './dvtChartDataCustomize';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import {
   ChartDefaultSelectBars,
@@ -225,6 +225,7 @@ const DvtChart = () => {
     max_bubble_size: { label: '25', value: '25' },
     color_picker: { r: 0, g: 122, b: 135, a: 1 },
     color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
+    truncateYAxis: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -798,6 +799,9 @@ const DvtChart = () => {
             label: getFormData.max_bubble_size,
             value: getFormData.max_bubble_size,
           },
+          truncateYAxis: getFormData?.truncateYAxis
+            ? getFormData.truncateYAxis
+            : false,
         });
 
         setChartStatus('loading');
@@ -1067,6 +1071,16 @@ const DvtChart = () => {
   const checkObjectOrNullArrayFormation = (value: any) =>
     Object.entries(value).map(i => (i[1] ? Number(i[1]) : null));
 
+  const yAxisBoundsOnValueCharts = [
+    'echarts_timeseries_line',
+    'echarts_timeseries_bar',
+    'echarts_area',
+    'echarts_timeseries_scatter',
+    'bubble_v2',
+    'heatmap',
+    'dist_bar',
+  ];
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -1133,10 +1147,10 @@ const DvtChart = () => {
       y_axis_format:
         active === 'heatmap' ? values.y_axis_format.value : 'SMART_NUMBER',
       truncateXAxis: true,
-      y_axis_bounds:
-        active === 'heatmap'
-          ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
-          : [null, null],
+      truncateYAxis: values.truncateYAxis,
+      y_axis_bounds: yAxisBoundsOnValueCharts.includes(active)
+        ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
+        : [null, null],
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -1181,7 +1195,6 @@ const DvtChart = () => {
       stack: undefined,
       time_compare: values.time_compare,
       tooltipSortByMetric: undefined,
-      truncateYAxis: active === 'echarts_timeseries_scatter' ? true : undefined,
       xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: undefined,
@@ -1723,8 +1736,8 @@ const DvtChart = () => {
     );
   };
 
-  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
-  // chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
+  const DataOrCustomize =
+    chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
 
   useEffect(
     () => () => {
