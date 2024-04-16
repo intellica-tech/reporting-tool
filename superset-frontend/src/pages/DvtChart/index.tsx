@@ -1005,6 +1005,10 @@ const DvtChart = () => {
           ],
           [values.x_axis[0]?.label, true],
         ].filter(item => item !== false && item !== null);
+      case 'mixed_timeseries':
+        return values.timeseries_limit_metric.length
+          ? [values.timeseries_limit_metric[0]?.label, false]
+          : [];
       default:
         return [[metricsFormation('metrics')[0], false]];
     }
@@ -1024,6 +1028,11 @@ const DvtChart = () => {
           ...droppedOnlyLabels('entity'),
           ...droppedOnlyLabels('dimension'),
         ];
+      case 'mixed_timeseries':
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('x_axis'),
+          ...values.groupby.map((v: any) => v.label),
+        ]);
       default:
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('x_axis'),
@@ -1083,7 +1092,10 @@ const DvtChart = () => {
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
       metrics: metricsFormation('metrics'),
-      groupby: droppedOnlyLabels('groupby'),
+      groupby:
+        active === 'mixed_timeseries' && values.groupby
+          ? values.groupby.map((v: any) => v.label)
+          : droppedOnlyLabels('groupby'),
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
         subject: v.values.column.column_name,
@@ -1117,9 +1129,12 @@ const DvtChart = () => {
         ? values.color_scheme.id
         : 'supersetColors',
       seriesType: 'line',
+      seriesTypeB: 'line',
       only_total: true,
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
+      opacityB: 0.2,
       markerSize: 6,
+      markerSizeB: 6,
       orientation: 'vertical',
       show_legend: active === 'heatmap' ? values.show_legend : true,
       legendType: 'scroll',
@@ -1310,6 +1325,8 @@ const DvtChart = () => {
       show_bubbles: values.show_bubbles,
       country_fieldtype: values.country_fieldtype?.value,
       secondary_metric: metricsFormation('secondary_metric')[0],
+      y_axis_bounds_secondary: [null, null],
+      y_axis_format_secondary: 'SMART_NUMBER',
     },
     queries: [
       {
@@ -1347,13 +1364,14 @@ const DvtChart = () => {
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
-        series_limit:
-          active === 'pivot_table_v2' ? Number(values.series_limit.value) : 0,
+        series_limit: values.series_limit?.value
+          ? Number(values.series_limit.value)
+          : 0,
         order_desc: active === 'pivot_table_v2' ? values.order_desc : true,
         url_params: selectedChart?.form_data?.url_params,
         custom_params: {},
         custom_form_data: {},
-        time_offsets: [],
+        time_offsets: values.time_compare ? values.time_compare : [],
         post_processing:
           active === 'table'
             ? []
@@ -1384,6 +1402,71 @@ const DvtChart = () => {
           ? metricsFormation('timeseries_limit_metric')[0]
           : undefined,
       },
+      active === 'mixed_timeseries'
+        ? {
+            filters: values.adhoc_filters
+              .filter((v: any) => v.values.expressionType !== 'SQL')
+              .map((v: any) => ({
+                col: v.values.column.column_name,
+                op: v.values.operator.value,
+                val: v.values.comparator,
+              })),
+            extras: {
+              time_grain_sqla: values.time_grain_sqla?.value,
+              having: values.adhoc_filters
+                .filter(
+                  (v: any) =>
+                    v.values.expressionType === 'SQL' &&
+                    v.values.clause === 'HAVING',
+                )
+                .map((v: any) => `(${v.values.sql})`)
+                .join(' AND '),
+              where: values.adhoc_filters
+                .filter(
+                  (v: any) =>
+                    v.values.expressionType === 'SQL' &&
+                    v.values.clause === 'WHERE',
+                )
+                .map((v: any) => `(${v.values.sql})`)
+                .join(' AND '),
+            },
+            applied_time_extras: {},
+            columns: queriesColumnsSwitch(),
+            metrics: queriesMetricsSwitch(),
+            orderby: queriesOrderBySwitch(),
+            annotation_layers: [],
+            row_limit: Number(values.row_limit.value),
+            series_columns: droppedOnlyLabels('groupby'),
+            series_limit: values.series_limit?.value
+              ? Number(values.series_limit.value)
+              : 0,
+            url_params: selectedChart?.form_data?.url_params,
+            custom_params: {},
+            custom_form_data: {},
+            time_offsets: values.time_compare ? values.time_compare : [],
+            post_processing: [
+              {
+                operation: 'pivot',
+                options: {
+                  index: [values.x_axis[0]?.label],
+                  columns: values.groupby.map((vg: any) => vg.values.sql),
+                  aggregates: postProcessingAggregates(values.metrics),
+                  drop_missing_columns: false,
+                },
+              },
+              ...(Object.keys(postProcessingRename).length !== 0
+                ? [postProcessingRename]
+                : []),
+              ...(postProcessingRollingChartActives.includes(active) &&
+              values.rolling_type.value !== 'None'
+                ? [postProcessingRollingType]
+                : []),
+              {
+                operation: 'flatten',
+              },
+            ],
+          }
+        : undefined,
     ],
     result_format: 'json',
     result_type: 'full',

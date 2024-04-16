@@ -1226,6 +1226,276 @@ const DvtChartData: DvtChartDataProps[] = [
       },
     ],
   },
+  {
+    chart_name: 'mixed_timeseries',
+    collapses: [
+      {
+        collapse_label: t('Shared query fields'),
+        collapse_active: 'sharedQueryFields',
+        forms: [
+          {
+            label: t('X-AXIS'),
+            name: 'x_axis',
+            popper: t('Dimension to use on x-axis.'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Query A'),
+        collapse_active: 'queryA',
+        forms: [
+          formMetrics,
+          formDimensions,
+          formFilters,
+          {
+            label: t('SERIES LIMIT'),
+            name: 'limit',
+            popper: t(
+              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.limit,
+          },
+          formSortBy,
+          sortDescending,
+          formRowLimit,
+          {
+            label: t('TRUNCATE METRIC'),
+            name: 'truncate_metric',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Advanced analytics Query A '),
+        collapse_active: 'advancedA',
+        collapse_popper_error: t(
+          'This section contains options that allow for advanced analytical post processing of query results',
+        ),
+        forms: [
+          {
+            label: t('ROLLING FUNCTION'),
+            name: 'rolling_type',
+            popper: t(
+              'Defines a rolling window function to apply, works along with the [Periods] text box',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.rolling_type,
+          },
+          {
+            label: t('PERIODS'),
+            name: 'rolling_periods',
+            popper: t(
+              'Defines the size of the rolling window function, relative to the time granularity selected',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('MIN PERIODS'),
+            name: 'min_periods',
+            popper: t(
+              'The minimum number of rolling periods required to show a value. For instance if you do a cumulative sum on 7 days you may want your "Min Period" to be 7, so that all data points shown are the total of 7 periods. This will hide the "ramp up" taking place over the first 7 periods',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('TIME SHIFT'),
+            name: 'time_compare',
+            popper: t(
+              'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'multiple-select',
+            options: chartFormsOption.time_compare,
+          },
+          {
+            label: t('CALCULATION TYPE'),
+            name: 'comparison_type',
+            popper: t(
+              'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.comparison_type,
+          },
+          {
+            label: t('RULE'),
+            name: 'resample_rule',
+            popper: t('Pandas resample rule'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_rule,
+          },
+          {
+            label: t('FILL METHOD'),
+            name: 'resample_method',
+            popper: t('Pandas resample method'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_method,
+          },
+        ],
+      },
+      {
+        collapse_label: t('Query B'),
+        collapse_active: 'queryB',
+        forms: [
+          {
+            label: t('METRICS'),
+            name: 'metricsb',
+            popper: t(
+              'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
+            ),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('DIMENSIONS'),
+            name: 'groupbyb',
+            popper: t(
+              'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
+            ),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('FILTERS'),
+            name: 'adhoc_filtersb',
+            status: 'input-drop',
+            multiple: true,
+            type: 'filters',
+          },
+          {
+            label: t('SERIES LIMIT'),
+            name: 'limitb',
+            popper: t(
+              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.limit,
+          },
+          {
+            label: t('SORT BY'),
+            name: 'timeseries_limit_metricb',
+            popper: t(
+              'This metric is used to define row selection criteria (how the rows are sorted) if a series or row limit is present. If not defined, it reverts to the first metric (where appropriate).',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'aggregates',
+            savedType: 'metric',
+          },
+          {
+            label: t('SORT DESCENDING'),
+            name: 'order_descb',
+            status: 'checkbox',
+          },
+          {
+            label: t('ROW LIMIT'),
+            name: 'row_limitb',
+            popper: t(
+              'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
+            ),
+            status: 'select',
+            options: chartFormsOption.row_limit,
+          },
+          {
+            label: t('TRUNCATE METRIC'),
+            name: 'truncate_metricb',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Advanced analytics Query B '),
+        collapse_active: 'advancedB',
+        collapse_popper_error: t(
+          'This section contains options that allow for advanced analytical post processing of query results',
+        ),
+        forms: [
+          {
+            label: t('ROLLING FUNCTION'),
+            name: 'rolling_typeb',
+            popper: t(
+              'Defines a rolling window function to apply, works along with the [Periods] text box',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.rolling_type,
+          },
+          {
+            label: t('PERIODS'),
+            name: 'rolling_periodsb',
+            popper: t(
+              'Defines the size of the rolling window function, relative to the time granularity selected',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('MIN PERIODS'),
+            name: 'min_periodsb',
+            popper: t(
+              'The minimum number of rolling periods required to show a value. For instance if you do a cumulative sum on 7 days you may want your "Min Period" to be 7, so that all data points shown are the total of 7 periods. This will hide the "ramp up" taking place over the first 7 periods',
+            ),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('TIME SHIFT'),
+            name: 'time_compareb',
+            popper: t(
+              'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'multiple-select',
+            options: chartFormsOption.time_compare,
+          },
+          {
+            label: t('CALCULATION TYPE'),
+            name: 'comparison_typeb',
+            popper: t(
+              'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.comparison_type,
+          },
+          {
+            label: t('RULE'),
+            name: 'resample_ruleb',
+            popper: t('Pandas resample rule'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_rule,
+          },
+          {
+            label: t('FILL METHOD'),
+            name: 'resample_methodb',
+            popper: t('Pandas resample method'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_method,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default DvtChartData;
