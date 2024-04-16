@@ -29,6 +29,14 @@ interface DvtDashboardEditLayoutNewElementProps {
   type: 'tabs' | 'row' | 'column' | 'header' | 'text' | 'divider';
 }
 
+const MARKDOWN_PLACE_HOLDER = `# ✨Header 1
+## ✨Header 2
+### ✨Header 3
+
+<br />
+
+Click here to learn more about [markdown formatting](https://bit.ly/1dQOfRK)`;
+
 const DvtDashboardEditLayoutNewElement = ({
   type = 'divider',
 }: DvtDashboardEditLayoutNewElementProps) => {
@@ -105,6 +113,7 @@ const DvtDashboardEditLayoutNewElement = ({
               meta: {
                 width: 4,
                 height: 50,
+                code: MARKDOWN_PLACE_HOLDER,
               },
             },
             [rowUnique]: {

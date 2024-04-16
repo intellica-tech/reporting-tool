@@ -57,6 +57,7 @@ import DvtDashboardEditRow from './components/DvtDashboardEditRow';
 import DvtDashboardEditLayoutNewElement from './components/DvtDashboardEditLayoutNewElement';
 import DvtDashboardEditDivider from './components/DvtDashboardEditDivider';
 import DvtDashboardEditHeader from './components/DvtDashboardEditHeader';
+import DvtDashboardEditMarkdown from './components/DvtDashboardEditMarkdown';
 
 function DvtDashboardList() {
   const dispatch = useDispatch();
@@ -565,7 +566,7 @@ function DvtDashboardList() {
     [],
   );
 
-  // console.log(position);
+  console.log(position);
 
   return (
     <StyledDashboardEdit>
@@ -651,38 +652,90 @@ function DvtDashboardList() {
                           );
 
                           return (
-                            findItem?.id && (
-                              <DvtDashboardEditChart
-                                key={rItem}
-                                item={findItem}
-                                chartItem={position[rItem]}
-                                totalWidth={position[gRow]?.children
-                                  .map((rm: string) => position[rm].meta.width)
-                                  .reduce(
-                                    (prev: number, curr: number) => prev + curr,
-                                    0,
-                                  )}
-                                deleteClick={() =>
-                                  handleRemoveChart(gRow, rItem, findItem.id)
-                                }
-                                isEdit={isEditPathname}
-                                onReSize={onReSize === rItem}
-                                setOnReSize={setOnReSize}
-                                setSize={sizes =>
-                                  setPosition({
-                                    ...position,
-                                    [position[rItem].id]: {
-                                      ...position[rItem],
-                                      meta: {
-                                        ...position[rItem].meta,
-                                        height: sizes.height,
-                                        width: sizes.width,
+                            <>
+                              {rItem.split('CHART')[1] && findItem?.id && (
+                                <DvtDashboardEditChart
+                                  key={rItem}
+                                  item={findItem}
+                                  chartItem={position[rItem]}
+                                  totalWidth={position[gRow]?.children
+                                    .map(
+                                      (rm: string) => position[rm].meta.width,
+                                    )
+                                    .reduce(
+                                      (prev: number, curr: number) =>
+                                        prev + curr,
+                                      0,
+                                    )}
+                                  deleteClick={() =>
+                                    handleRemoveChart(gRow, rItem, findItem.id)
+                                  }
+                                  isEdit={isEditPathname}
+                                  onReSize={onReSize === rItem}
+                                  setOnReSize={setOnReSize}
+                                  setSize={sizes =>
+                                    setPosition({
+                                      ...position,
+                                      [position[rItem].id]: {
+                                        ...position[rItem],
+                                        meta: {
+                                          ...position[rItem].meta,
+                                          height: sizes.height,
+                                          width: sizes.width,
+                                        },
                                       },
-                                    },
-                                  })
-                                }
-                              />
-                            )
+                                    })
+                                  }
+                                />
+                              )}
+                              {rItem.split('MARKDOWN')[1] && (
+                                <DvtDashboardEditMarkdown
+                                  key={rItem}
+                                  value={position[rItem].meta.code}
+                                  setValue={vl =>
+                                    setPosition({
+                                      ...position,
+                                      [position[rItem].id]: {
+                                        ...position[rItem],
+                                        meta: {
+                                          ...position[rItem].meta,
+                                          code: vl,
+                                        },
+                                      },
+                                    })
+                                  }
+                                  markdownItem={position[rItem]}
+                                  totalWidth={position[gRow]?.children
+                                    .map(
+                                      (rm: string) => position[rm].meta.width,
+                                    )
+                                    .reduce(
+                                      (prev: number, curr: number) =>
+                                        prev + curr,
+                                      0,
+                                    )}
+                                  deleteClick={() =>
+                                    handleRemoveChart(gRow, rItem, findItem.id)
+                                  }
+                                  isEdit={isEditPathname}
+                                  onReSize={onReSize === rItem}
+                                  setOnReSize={setOnReSize}
+                                  setSize={sizes =>
+                                    setPosition({
+                                      ...position,
+                                      [position[rItem].id]: {
+                                        ...position[rItem],
+                                        meta: {
+                                          ...position[rItem].meta,
+                                          height: sizes.height,
+                                          width: sizes.width,
+                                        },
+                                      },
+                                    })
+                                  }
+                                />
+                              )}
+                            </>
                           );
                         })
                       )}

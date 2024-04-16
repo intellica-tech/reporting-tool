@@ -23,11 +23,13 @@ import { StyledDvtAceEditor } from './dvt-ace-editor.module';
 
 import 'brace/mode/json';
 import 'brace/mode/sql';
+import 'brace/mode/markdown';
 import 'brace/ext/language_tools';
 import 'ace-builds/src-noconflict/theme-xcode';
+import 'ace-builds/src-noconflict/theme-textmate';
 
 export interface DvtAceEditorProps {
-  mode?: 'json' | 'sql';
+  mode?: 'json' | 'sql' | 'markdown';
   placeholder?: string;
   value: any;
   onChange: (value: any) => void;
@@ -64,7 +66,7 @@ const DvtAceEditor: React.FC<DvtAceEditorProps> = ({
     >
       <AceEditor
         mode={mode}
-        theme="xcode"
+        theme={mode === 'markdown' ? 'textmate' : 'xcode'}
         style={{
           borderRadius,
           fontFamily: `Menlo, Consolas, "Courier New", "Ubuntu Mono", source-code-pro, "Lucida Console", monospace`,
