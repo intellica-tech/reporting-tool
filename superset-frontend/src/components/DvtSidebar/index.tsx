@@ -34,6 +34,7 @@ import DvtInputSelect from '../DvtInputSelect';
 import DvtDargCardList from '../DvtDragCardList';
 import DvtCollapse from '../DvtCollapse';
 import Icon from '../Icons/Icon';
+import DvtRange from '../DvtRange';
 import {
   StyledDvtSidebar,
   StyledDvtSidebarHeader,
@@ -49,7 +50,6 @@ import {
   StyledCollapseScroll,
   ChartDatasetName,
 } from './dvt-sidebar.module';
-import DvtRange from '../DvtRange';
 
 interface DvtSidebarProps {
   pathName: string;
