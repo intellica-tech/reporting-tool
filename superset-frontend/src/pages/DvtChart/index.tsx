@@ -249,7 +249,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map'];
+  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map', 'histogram'];
 
   useEffect(() => {
     if (selectedVizType) {
@@ -1323,6 +1323,7 @@ const DvtChart = () => {
       show_bubbles: values.show_bubbles,
       country_fieldtype: values.country_fieldtype?.value,
       secondary_metric: metricsFormation('secondary_metric')[0],
+      link_length: 5,
     },
     queries: [
       {
@@ -1537,13 +1538,16 @@ const DvtChart = () => {
     }
     if (chartFullPromise.error) {
       setChartStatus('failed');
+      const errorOrMessage = onlyExploreJson.includes(active)
+        ? 'error'
+        : 'message';
       if (chartFullPromise.error?.errors) {
         setChartData(chartFullPromise.error.errors);
-      } else if (chartFullPromise.error?.message) {
+      } else if (chartFullPromise.error?.[errorOrMessage]) {
         setChartData([
           {
-            error: chartFullPromise.error.message,
-            message: chartFullPromise.error.message,
+            error: chartFullPromise.error[errorOrMessage],
+            message: chartFullPromise.error[errorOrMessage],
           },
         ]);
       }
