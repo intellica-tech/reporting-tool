@@ -89,23 +89,34 @@ const DvtChart = () => {
       value: 'P1D',
     },
     metrics: [],
+    metricsb: [],
     groupby: [],
+    groupbyb: [],
     contributionMode: '',
     adhoc_filters: [],
+    adhoc_filtersb: [],
     limit: '',
     timeseries_limit_metric: [],
+    timeseries_limit_metricb: [],
     order_desc: true,
+    order_descb: true,
     row_limit: {
       label: '10000',
       value: '10000',
     },
+    row_limitb: {
+      label: '10000',
+      value: '10000',
+    },
     truncate_metric: true,
+    truncate_metricb: true,
     show_empty_columns: true,
     rolling_type: {
       label: t('None'),
       value: 'None',
     },
     time_compare: [],
+    time_compareb: [],
     comparison_type: {
       label: t('Actual values'),
       value: 'values',
@@ -214,6 +225,7 @@ const DvtChart = () => {
     rowSubTotals: false,
     rowTotals: false,
     series_limit: [],
+    series_limitb: [],
     transposePivot: false,
     contribution: false,
     country_fieldtype: {
@@ -900,6 +912,14 @@ const DvtChart = () => {
             label: ac.label,
             expressionType: 'SQL',
           }
+        : active === 'mixed_timeseries'
+        ? {
+            timeGrain: defaultTimeGrain ? 'P1D' : values.time_grain_sqla?.value,
+            columnType: 'BASE_AXIS',
+            sqlExpression: ac.label,
+            label: ac.label,
+            expressionType: 'SQL',
+          }
         : ac.values.expressionType === 'SQL'
         ? {
             expressionType: ac.values.expressionType,
@@ -1030,7 +1050,7 @@ const DvtChart = () => {
         ];
       case 'mixed_timeseries':
         return arrayOnlyOneItemFormation([
-          ...droppedOnlyLabelOrYear('x_axis'),
+          ...droppedOnlyLabelOrYear('x_axis', true),
           ...values.groupby.map((v: any) => v.label),
         ]);
       default:
@@ -1180,7 +1200,7 @@ const DvtChart = () => {
       limit: withoutValueForNull(values.limit),
       logAxis: undefined,
       markerEnabled: undefined,
-      min_periods: values.min_periods ? values.min_periods : undefined,
+      min_periods: values.min_periods ? Number(values.min_periods) : undefined,
       minorSplitLine: undefined,
       minorTicks: undefined,
       percentage_threshold: undefined,
@@ -1404,7 +1424,7 @@ const DvtChart = () => {
       },
       active === 'mixed_timeseries'
         ? {
-            filters: values.adhoc_filters
+            filters: values.adhoc_filtersb
               .filter((v: any) => v.values.expressionType !== 'SQL')
               .map((v: any) => ({
                 col: v.values.column.column_name,
@@ -1413,7 +1433,7 @@ const DvtChart = () => {
               })),
             extras: {
               time_grain_sqla: values.time_grain_sqla?.value,
-              having: values.adhoc_filters
+              having: values.adhoc_filtersb
                 .filter(
                   (v: any) =>
                     v.values.expressionType === 'SQL' &&
@@ -1421,7 +1441,7 @@ const DvtChart = () => {
                 )
                 .map((v: any) => `(${v.values.sql})`)
                 .join(' AND '),
-              where: values.adhoc_filters
+              where: values.adhoc_filtersb
                 .filter(
                   (v: any) =>
                     v.values.expressionType === 'SQL' &&
@@ -1431,26 +1451,31 @@ const DvtChart = () => {
                 .join(' AND '),
             },
             applied_time_extras: {},
-            columns: queriesColumnsSwitch(),
-            metrics: queriesMetricsSwitch(),
-            orderby: queriesOrderBySwitch(),
+            columns: arrayOnlyOneItemFormation([
+              ...droppedOnlyLabelOrYear('x_axis'),
+              ...values.groupbyb.map((v: any) => v.label),
+            ]),
+            metrics: metricsFormation('metricsb'),
+            orderby: values.timeseries_limit_metric.length
+              ? [[metricsFormation('timeseries_limit_metric')[0], false]]
+              : undefined,
             annotation_layers: [],
-            row_limit: Number(values.row_limit.value),
-            series_columns: droppedOnlyLabels('groupby'),
-            series_limit: values.series_limit?.value
-              ? Number(values.series_limit.value)
+            row_limit: Number(values.row_limitb.value),
+            series_columns: droppedOnlyLabels('groupbyb'),
+            series_limit: values.series_limitb?.value
+              ? Number(values.series_limitb.value)
               : 0,
             url_params: selectedChart?.form_data?.url_params,
             custom_params: {},
             custom_form_data: {},
-            time_offsets: values.time_compare ? values.time_compare : [],
+            time_offsets: values.time_compareb ? values.time_compareb : [],
             post_processing: [
               {
                 operation: 'pivot',
                 options: {
                   index: [values.x_axis[0]?.label],
-                  columns: values.groupby.map((vg: any) => vg.values.sql),
-                  aggregates: postProcessingAggregates(values.metrics),
+                  columns: values.groupbyb.map((vg: any) => vg.values.sql),
+                  aggregates: postProcessingAggregates(values.metricsb),
                   drop_missing_columns: false,
                 },
               },
@@ -1775,6 +1800,12 @@ const DvtChart = () => {
         return !(values.metrics.length && values.groupby.length);
       case 'world_map':
         return !(values.entity.length && values.metric.length);
+      case 'mixed_timeseries':
+        return !(
+          values.x_axis.length &&
+          values.metric.length &&
+          values.metricb.length
+        );
       default:
         return false;
     }

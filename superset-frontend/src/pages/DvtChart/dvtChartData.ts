@@ -1254,7 +1254,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formFilters,
           {
             label: t('SERIES LIMIT'),
-            name: 'limit',
+            name: 'series_limit',
             popper: t(
               'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
             ),
@@ -1381,7 +1381,7 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('SERIES LIMIT'),
-            name: 'limitb',
+            name: 'series_limitb',
             popper: t(
               'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
             ),
