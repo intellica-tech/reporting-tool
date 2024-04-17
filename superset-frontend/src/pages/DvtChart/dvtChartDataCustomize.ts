@@ -254,6 +254,13 @@ const tooltipTimeFormat: FormsProps = {
   options: chartFormsOption.time_format,
 };
 
+const forceDateFormat: FormsProps = {
+  label: t('FORCE DATE FORMAT'),
+  name: 'force_timestamp_formatting',
+  status: 'checkbox',
+  popper: t('Use date formatting even when metric value is not a timestamp'),
+};
+
 const yAxisFormat: FormsProps = {
   label: t('Y AXIS FORMAT'),
   name: 'y_axis_format',
@@ -292,6 +299,22 @@ const minorSplitLine: FormsProps = {
   name: 'minorSplitLine',
   status: 'checkbox',
   popper: t('Draw split lines for minor y-axis ticks'),
+};
+
+const bigNumberFontSize: FormsProps = {
+  label: t('BIG NUMBER FONT SIZE'),
+  name: 'header_font_size',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.header_font_size,
+};
+
+const subheaderFontSize: FormsProps = {
+  label: t('SUBHEADER FONT SIZE'),
+  name: 'subheader_font_size',
+  popper: t('Changing this control takes effect instantly'),
+  status: 'select',
+  options: chartFormsOption.header_font_size,
 };
 
 const truncateXAxis: FormsProps = {
@@ -679,31 +702,12 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('BIG NUMBER FONT SIZE'),
-            name: 'header_font_size',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.header_font_size,
-          },
-          {
-            label: t('SUBHEADER FONT SIZE'),
-            name: 'subheader_font_size',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'select',
-            options: [],
-          },
+          bigNumberFontSize,
+          subheaderFontSize,
           numberFormat,
           currencyFormat,
           dateFormat,
-          {
-            label: t('FORCE DATE FORMAT'),
-            name: 'force_timestamp_formatting',
-            status: 'checkbox',
-            popper: t(
-              'Use date formatting even when metric value is not a timestamp',
-            ),
-          },
+          forceDateFormat,
           // need to Conditional Formatting
         ],
       },
@@ -1122,6 +1126,29 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           yAxisLabel,
           yAxisFormat,
           currencyFormat,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'big_number',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          {
+            label: t('FIXED COLOR'),
+            name: 'increase_color',
+            status: 'color',
+            popper: t('Use this to define a static color for all circles'),
+          },
+          bigNumberFontSize,
+          subheaderFontSize,
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          forceDateFormat,
         ],
       },
     ],
