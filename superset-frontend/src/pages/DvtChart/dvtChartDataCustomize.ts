@@ -278,7 +278,7 @@ const yAxisFormat: FormsProps = {
   name: 'y_axis_format',
   status: 'select',
   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  options: [],
+  options: chartFormsOption.y_axis_format,
 };
 
 const currencyFormat: FormsProps = {
@@ -391,36 +391,65 @@ const dateFormat: FormsProps = {
   options: [],
 };
 
+const showLabels: FormsProps = {
+  label: t('SHOW LABELS'),
+  name: 'show_labels',
+  status: 'checkbox',
+  popper: t('Whether to display the labels.'),
+};
+
+const xAxisLabel: FormsProps = {
+  label: t('X AXIS LABEL'),
+  name: 'x_axis_label',
+  popper: t('Changing this control takes effect instantly.'),
+  status: 'input',
+};
+
+const yAxisLabel: FormsProps = {
+  label: t('Y AXIS LABEL'),
+  name: 'y_axis_label',
+  popper: t('Changing this control takes effect instantly.'),
+  status: 'input',
+};
+
+const xAxisTitle: FormsProps = {
+  label: t('X AXIS TITLE'),
+  name: 'x_axis_title',
+  status: 'input',
+  popper: t('Changing this control takes effect instantly'),
+};
+
+const xAxisTitleMargin: FormsProps = {
+  label: t('X AXIS TITLE BOTTOM MARGIN'),
+  name: 'x_axis_title_margin',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.x_axis_title_margin,
+};
+
+const yAxisTitle: FormsProps = {
+  label: t('Y AXIS TITLE'),
+  name: 'y_axis_title',
+  status: 'input',
+  popper: t('Changing this control takes effect instantly'),
+};
+
+const yAxisTitleMargin: FormsProps = {
+  label: t('Y AXIS TITLE MARGIN'),
+  name: 'y_axis_title_margin',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.y_axis_title_margin,
+};
+
 const collapseChartTitle: CollapsesProps = {
   collapse_label: t('Chart Title'),
   collapse_active: 'chart_title',
   forms: [
-    {
-      label: t('X AXIS TITLE'),
-      name: 'x_axis_title',
-      status: 'input',
-      popper: t('Changing this control takes effect instantly'),
-    },
-    {
-      label: t('X AXIS TITLE BOTTOM MARGIN'),
-      name: 'x_axis_title_margin',
-      status: 'select',
-      popper: t('Changing this control takes effect instantly'),
-      options: chartFormsOption.x_axis_title_margin,
-    },
-    {
-      label: t('Y AXIS TITLE'),
-      name: 'y_axis_title',
-      status: 'input',
-      popper: t('Changing this control takes effect instantly'),
-    },
-    {
-      label: t('Y AXIS TITLE MARGIN'),
-      name: 'y_axis_title_margin',
-      status: 'select',
-      popper: t('Changing this control takes effect instantly'),
-      options: chartFormsOption.y_axis_title_margin,
-    },
+    xAxisTitle,
+    xAxisTitleMargin,
+    yAxisTitle,
+    yAxisTitleMargin,
     {
       label: t('Y AXIS TITLE POSITION'),
       name: 'y_axis_title_position',
@@ -431,49 +460,47 @@ const collapseChartTitle: CollapsesProps = {
   ],
 };
 
-const lineAndBarChart: CollapsesProps[] = [
-  collapseChartTitle,
-  {
-    collapse_label: t('Chart Options'),
-    collapse_active: 'chart_options',
-    forms: [
-      sortSeriesBy,
-      sortSeriesAscending,
-      colorScheme,
-      seriesStyle,
-      showValue,
-      stackedStyle,
-      areaChart,
-      areaChartOpacity,
-      marker,
-      markerSize,
-      dataZoom,
-      minorTicks,
-      showLegend,
-      type,
-      orientation,
-      margin,
-      timeFormat,
-      rotateXAxisLabel,
-      richTooltip,
-      tooltipSortByMetric,
-      tooltipTimeFormat,
-      yAxisFormat,
-      currencyFormat,
-      logarithmicYAxis,
-      minorSplitLine,
-      truncateXAxis,
-      xAxisBounds,
-      truncateYAxis,
-      yAxisBounds,
-    ],
-  },
-];
-
 const DvtChartCustomize: DvtChartCustomizeProps[] = [
   {
     chart_name: 'echarts_timeseries_line',
-    collapses: lineAndBarChart,
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          seriesStyle,
+          showValue,
+          stackedStyle,
+          areaChart,
+          areaChartOpacity,
+          marker,
+          markerSize,
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
   },
   {
     chart_name: 'echarts_timeseries_bar',
@@ -718,12 +745,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           numberFormat,
           currencyFormat,
           dateFormat,
-          {
-            label: t('SHOW LABELS'),
-            name: 'show_labels',
-            status: 'checkbox',
-            popper: t('Whether to display the labels.'),
-          },
+          showLabels,
           {
             label: t('PUT LABELS OUTSIDE'),
             name: 'labels_outside',
@@ -775,551 +797,387 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
   {
     chart_name: 'bubble_v2',
     collapses: [
-      // {
-      //   collapse_label: t('Chart Options'),
-      //   collapse_active: 'chart_options',
-      //   forms: [
-      //     {
-      //       label: t('COLOR SCHEME'),
-      //       name: 'color_scheme',
-      //       popper: t('The color scheme for rendering chart.'),
-      //       status: 'color',
-      //     },
-      //     {
-      //       label: t('SHOW LEGEND'),
-      //       name: 'show_legend',
-      //       popper: t('Whether to display a legend for the chart'),
-      //       status: 'checkbox',
-      //     },
-      //     {
-      //       label: t('TYPE'),
-      //       name: 'legendType',
-      //       popper: t('Legent type'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('ORIENTATION'),
-      //       name: 'legendOrientation',
-      //       popper: t('Legent orientation'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('MARGIN'),
-      //       name: 'legendMargin',
-      //       popper: t('Additional padding for legend'),
-      //       status: 'input',
-      //       number: true,
-      //     },
-      //     {
-      //       label: t('MAX BUBBLE SIZE'),
-      //       name: 'max_bubble_size',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('BUBBLE SIZE NUMBER FORMAT'),
-      //       name: 'max_bubble_size',
-      //       popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('BUBBLE OPACITY'),
-      //       name: 'opacity',
-      //       popper: t(
-      //         'Opacity of bubbles, 0 means completely transparent, 1 means opaque',
-      //       ),
-      //       status: 'range',
-      //     },
-      //     {
-      //       label: t('X AXIS TITLE'),
-      //       name: 'x_axis_label',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'input',
-      //     },
-      //     {
-      //       label: t('ROTATE X AXIS LABEL'),
-      //       name: 'xAxisLabelRotation',
-      //       popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('X AXIS TITLE MARGIN'),
-      //       name: 'x_axis_title_margin',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('X AXIS FORMAT'),
-      //       name: 'xAxisFormat',
-      //       popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('LOGARITHMIC X-AXIS'),
-      //       name: 'logXAxis',
-      //       popper: t('Logarithmic x-axis'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('Y AXIS TITLE'),
-      //       name: 'y_axis_label',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'input',
-      //     },
-      //     {
-      //       label: t('ROTATE Y AXIS LABEL'),
-      //       name: 'yAxisLabelRotation',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'select',
-      //       options: chartFormsOption.yAxisLabelRotation,
-      //     },
-      //     {
-      //       label: t('Y AXIS FORMAT'),
-      //       name: 'y_axis_format',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       status: 'select',
-      //     },
-      //     {
-      //       label: t('LOGARITHMIC Y-AXIS'),
-      //       name: 'logYAxis',
-      //       popper: t('Logarithmic y-axis'),
-      //       status: 'checkbox',
-      //     },
-      //     {
-      //       label: t('TRUNCATE X AXIS'),
-      //       name: 'truncateXAxis',
-      //       popper: t(
-      //         'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-      //       ),
-      //       status: 'checkbox',
-      //     },
-      //     {
-      //       label: t('TRUNCATE X AXIS'),
-      //       name: 'truncateXAxis',
-      //       popper: t(
-      //         'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-      //       ),
-      //       status: 'checkbox',
-      //     },
-      //     {
-      //       label: t('X AXIS BOUNDS'),
-      //       name: 'xAxisBounds',
-      //       popper: t(
-      //         "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-      //       ),
-      //       status: 'two-input',
-      //       values: [
-      //         {
-      //           placeholder: t('MIN'),
-      //           number: true,
-      //           name: 'min',
-      //         },
-      //         {
-      //           placeholder: t('MAX'),
-      //           number: true,
-      //           name: 'max',
-      //         },
-      //       ],
-      //     },
-      //     truncateYAxis,
-      //     yAxisBounds,
-      //   ],
-      // },
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          {
+            label: t('MAX BUBBLE SIZE'),
+            name: 'max_bubble_size',
+            popper: t('Changing this control takes effect instantly'),
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('BUBBLE SIZE NUMBER FORMAT'),
+            name: 'max_bubble_size',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('BUBBLE OPACITY'),
+            name: 'opacity',
+            popper: t(
+              'Opacity of bubbles, 0 means completely transparent, 1 means opaque',
+            ),
+            status: 'range',
+            rangeConfig: {
+              min: 0,
+              max: 1,
+              step: 0.1,
+            },
+          },
+        ],
+      },
+      {
+        collapse_label: t('X Axis'),
+        collapse_active: 'x_axis',
+        forms: [
+          xAxisTitle,
+          {
+            label: t('ROTATE X AXIS LABEL'),
+            name: 'xAxisLabelRotation',
+            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
+            status: 'select',
+            options: [],
+          },
+          { ...xAxisTitleMargin, label: t('X AXIS TITLE MARGIN') },
+          {
+            label: t('X AXIS FORMAT'),
+            name: 'xAxisFormat',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('LOGARITHMIC X-AXIS'),
+            name: 'logXAxis',
+            popper: t('Logarithmic x-axis'),
+            status: 'checkbox',
+          },
+        ],
+      },
       {
         collapse_label: t('Y Axis'),
         collapse_active: 'y_axis',
-        forms: [truncateYAxis, yAxisBounds],
+        forms: [
+          yAxisTitle,
+          {
+            label: t('ROTATE Y AXIS LABEL'),
+            name: 'yAxisLabelRotation',
+            popper: t('Changing this control takes effect instantly'),
+            status: 'select',
+            options: chartFormsOption.yAxisLabelRotation,
+          },
+          yAxisTitleMargin,
+          yAxisFormat,
+          logarithmicYAxis,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
       },
     ],
   },
-  // {
-  //   chart_name: 'histogram',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         {
-  //           label: t('COLOR SCHEME'),
-  //           name: 'color_scheme',
-  //           popper: t('The color scheme for rendering chart'),
-  //           status: 'color',
-  //         },
-  //         {
-  //           label: t('NO OF BINS'),
-  //           name: 'link_length',
-  //           popper: t('Select the number of bins for the histogram'),
-  //           status: 'select',
-  //         },
-  //         {
-  //           label: t('X AXIS LABEL'),
-  //           name: 'x_axis_label',
-  //           popper: t('Changing this control takes effect instantly.'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('Y AXIS LABEL'),
-  //           name: 'y_axis_label',
-  //           popper: t('Changing this control takes effect instantly.'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('LEGEND'),
-  //           name: 'show_legend',
-  //           popper: t('Whether to display the legend (toggles)'),
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('NORMALIZED'),
-  //           name: 'normalized',
-  //           popper: t('Whether to normalize the histogram'),
-  //           status: 'checkbox',
-  //         },
-  //         formFilters,
-  //         formRowLimit,
-  //         formDimensions,
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'funnel',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       collapse_popper_error: t('This section contains validation errors'),
-  //       forms: [
-  //         formDimensions,
-  //         formMetric,
-  //         formFilters,
-  //         formRowLimit,
-  //         {
-  //           label: t('COLOR SCHEME'),
-  //           name: 'color_scheme',
-  //           status: 'color',
-  //         },
-  //         {
-  //           label: t('SHOW LEGEND'),
-  //           name: 'show_legend',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display a legend for the chart'),
-  //         },
-  //         {
-  //           label: t('ORIENTATION'),
-  //           name: 'legendOrientation',
-  //           status: 'select',
-  //           popper: t('Legend Orientation'),
-  //         },
-  //         {
-  //           label: t('MARGIN'),
-  //           name: 'legendMargin',
-  //           status: 'input',
-  //           popper: t('Additional padding for legend.'),
-  //           popperError: t('is expected to be an integer'),
-  //         },
-  //         {
-  //           label: t('NUMBER FORMAT'),
-  //           name: 'number_format',
-  //           status: 'select',
-  //           popper: t(
-  //             'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-  //           ),
-  //         },
-  //         {
-  //           label: t('TOOLTIP CONTENTS'),
-  //           name: 'tooltip_label_type',
-  //           status: 'select',
-  //           popper: t('What should be shown as the tooltip label'),
-  //         },
-  //         {
-  //           label: t('LABEL CONTENTS'),
-  //           name: 'label_type',
-  //           status: 'select',
-  //           popper: t('What should be shown as the label'),
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('SHOW LABELS'),
-  //           name: 'show_labels',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display the labels.'),
-  //         },
-  //         {
-  //           label: t('SHOW TOOLTIP LABELS'),
-  //           name: 'show_tooltip_labels',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display the tooltip labels'),
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'gauge_chart',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         {
-  //           label: t('MIN'),
-  //           name: 'min_val',
-  //           popper: t('Minimum value on the gauge axis'),
-  //           popperError: t('is expected to be an integer'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('MAX'),
-  //           name: 'max_val',
-  //           popper: t('Minimum value on the gauge axis'),
-  //           popperError: t('is expected to be an integer'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('START ANGLE'),
-  //           name: 'start_angle',
-  //           popper: t('Angle at which to start progress axis'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('END ANGLE'),
-  //           name: 'end_angle',
-  //           popper: t('Angle at which to end progress axis'),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('COLOR SCHEME'),
-  //           name: 'color_scheme',
-  //           popper: t('The color scheme for rendering chart'),
-  //           status: 'color',
-  //         },
-  //         {
-  //           label: t('FONT SIZE'),
-  //           name: 'font_size',
-  //           popper: t(
-  //             'Font size for axis labels, detail value and other text elements',
-  //           ),
-  //           status: 'range',
-  //         },
-  //         {
-  //           label: t('NUMBER FORMAT'),
-  //           name: 'font_size',
-  //           popper: t(
-  //             'Font size for axis labels, detail value and other text elements',
-  //           ),
-  //           status: 'select',
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('VALUE FORMAT'),
-  //           name: 'value_formatter',
-  //           popper: t(
-  //             'Additional text to add before or after the value, e.g. unit',
-  //           ),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('SHOW POINTER'),
-  //           name: 'show_pointer',
-  //           status: 'checkbox',
-  //           popper: t('Whether to show the pointer'),
-  //         },
-  //         {
-  //           label: t('ANIMATION'),
-  //           name: 'animation',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Whether to animate the progress and the value or just display them',
-  //           ),
-  //         },
-  //         {
-  //           label: t('SHOW AXIS LINE TICKS'),
-  //           name: 'show_axis_tick',
-  //           status: 'checkbox',
-  //           popper: t('Whether to show minor ticks on the axis'),
-  //         },
-  //         {
-  //           label: t('SHOW SPLIT LINES'),
-  //           name: 'show_split_line',
-  //           status: 'checkbox',
-  //           popper: t('Whether to show the split lines on the axis'),
-  //         },
-  //         {
-  //           label: t('SPLIT NUMBER'),
-  //           name: 'split_number',
-  //           status: 'range',
-  //           popper: t('Number of split segments on the axis'),
-  //         },
-  //         {
-  //           label: t('SHOW PROGRESS'),
-  //           name: 'show_progress',
-  //           status: 'checkbox',
-  //           popper: t('Whether to show the progress of gauge chart'),
-  //         },
-  //         {
-  //           label: t('OVERLAP'),
-  //           name: 'overlap',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Whether the progress bar overlaps when there are multiple groups of data',
-  //           ),
-  //         },
-  //         {
-  //           label: t('ROUND CAP'),
-  //           name: 'round_cap',
-  //           status: 'checkbox',
-  //           popper: t('Style the ends of the progress bar with a round cap'),
-  //         },
-  //         {
-  //           label: t('INTERVAL BOUNDS'),
-  //           name: 'intervals',
-  //           popper: t(
-  //             'Comma-separated interval bounds, e.g. 2,4,5 for intervals 0-2, 2-4 and 4-5. Last number should match the value provided for MAX.',
-  //           ),
-  //           status: 'input',
-  //         },
-  //         {
-  //           label: t('INTERVAL COLORS'),
-  //           name: 'interval_color_indices',
-  //           popper: t(
-  //             'Comma-separated color picks for the intervals, e.g. 1,2,4. Integers denote colors from the chosen color scheme and are 1-indexed. Length must be matching that of interval bounds.',
-  //           ),
-  //           status: 'input',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'waterfall',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         {
-  //           label: t('SHOW VALUE'),
-  //           name: 'show_value',
-  //           popper: t('Show series values on the chart'),
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('SHOW LEGEND'),
-  //           name: 'show_legend',
-  //           popper: t('Whether to display a legend for the chart'),
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('INCREASE'),
-  //           name: 'increase_color',
-  //           status: 'color',
-  //           popper: t('Changing this color takes effect instantly'),
-  //         },
-  //         {
-  //           label: t('DECREASE'),
-  //           name: 'decrease_color',
-  //           status: 'color',
-  //           popper: t('Changing this color takes effect instantly'),
-  //         },
-  //         {
-  //           label: t('TOTAL'),
-  //           name: 'total_color',
-  //           status: 'color',
-  //           popper: t('Changing this color takes effect instantly'),
-  //         },
-  //         {
-  //           label: t('X AXIS LABEL'),
-  //           name: 'x_axis_label',
-  //           status: 'input',
-  //           popper: t('Changing this control takes effect instantly'),
-  //         },
-  //         {
-  //           label: t('TIME FORMAT'),
-  //           name: 'x_axis_time_format',
-  //           status: 'select',
-  //           popper: t('x_axis_time_format'),
-  //         },
-  //         {
-  //           label: t('X TICK LAYOUT'),
-  //           name: 'x_ticks_layout',
-  //           status: 'select',
-  //           popper: t('The way the ticks are laid out on the X-axis'),
-  //         },
-
-  //         {
-  //           label: t('Y AXIS LABEL'),
-  //           name: 'y_axis_label',
-  //           status: 'input',
-  //           popper: t('Changing this control takes effect instantly'),
-  //         },
-  //         {
-  //           label: t('Y AXIS FORMAT'),
-  //           name: 'y_axis_format',
-  //           status: 'select',
-  //           popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  //           options: chartFormsOption.y_axis_format,
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-
-  //         formMetric,
-  //         formFilters,
-  //         formRowLimit,
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    chart_name: 'histogram',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          {
+            label: t('NO OF BINS'),
+            name: 'link_length',
+            popper: t('Select the number of bins for the histogram'),
+            status: 'select',
+            options: [],
+          },
+          xAxisLabel,
+          yAxisLabel,
+          {
+            label: t('LEGEND'),
+            name: 'show_legend',
+            popper: t('Whether to display the legend (toggles)'),
+            status: 'checkbox',
+          },
+          {
+            label: t('NORMALIZED'),
+            name: 'normalized',
+            popper: t('Whether to normalize the histogram'),
+            status: 'checkbox',
+          },
+          {
+            label: t('CUMULATIVE'),
+            name: 'cumulative',
+            popper: t('Whether to make the histogram cumulative'),
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'funnel',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        collapse_popper_error: t('This section contains validation errors'),
+        forms: [
+          colorScheme,
+          showLegend,
+          orientation,
+          margin,
+          {
+            label: t('LABEL CONTENTS'),
+            name: 'label_type',
+            status: 'select',
+            popper: t('What should be shown as the label'),
+            options: [],
+          },
+          {
+            label: t('TOOLTIP CONTENTS'),
+            name: 'tooltip_label_type',
+            status: 'select',
+            popper: t('What should be shown as the tooltip label'),
+            options: [],
+          },
+          numberFormat,
+          currencyFormat,
+          showLabels,
+          {
+            label: t('SHOW TOOLTIP LABELS'),
+            name: 'show_tooltip_labels',
+            status: 'checkbox',
+            popper: t('Whether to display the tooltip labels'),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'gauge_chart',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          {
+            label: t('MIN'),
+            name: 'min_val',
+            popper: t('Minimum value on the gauge axis'),
+            popperError: t('is expected to be an integer'),
+            status: 'input',
+          },
+          {
+            label: t('MAX'),
+            name: 'max_val',
+            popper: t('Minimum value on the gauge axis'),
+            popperError: t('is expected to be an integer'),
+            status: 'input',
+          },
+          {
+            label: t('START ANGLE'),
+            name: 'start_angle',
+            popper: t('Angle at which to start progress axis'),
+            status: 'input',
+          },
+          {
+            label: t('END ANGLE'),
+            name: 'end_angle',
+            popper: t('Angle at which to end progress axis'),
+            status: 'input',
+          },
+          colorScheme,
+          {
+            label: t('FONT SIZE'),
+            name: 'font_size',
+            popper: t(
+              'Font size for axis labels, detail value and other text elements',
+            ),
+            status: 'range',
+            rangeConfig: {
+              min: 10,
+              max: 20,
+              step: 1,
+            },
+          },
+          numberFormat,
+          currencyFormat,
+          {
+            label: t('VALUE FORMAT'),
+            name: 'value_formatter',
+            popper: t(
+              'Additional text to add before or after the value, e.g. unit',
+            ),
+            status: 'input',
+          },
+          {
+            label: t('SHOW POINTER'),
+            name: 'show_pointer',
+            status: 'checkbox',
+            popper: t('Whether to show the pointer'),
+          },
+          {
+            label: t('ANIMATION'),
+            name: 'animation',
+            status: 'checkbox',
+            popper: t(
+              'Whether to animate the progress and the value or just display them',
+            ),
+          },
+          {
+            label: t('SHOW AXIS LINE TICKS'),
+            name: 'show_axis_tick',
+            status: 'checkbox',
+            popper: t('Whether to show minor ticks on the axis'),
+          },
+          {
+            label: t('SHOW SPLIT LINES'),
+            name: 'show_split_line',
+            status: 'checkbox',
+            popper: t('Whether to show the split lines on the axis'),
+          },
+          {
+            label: t('SPLIT NUMBER'),
+            name: 'split_number',
+            popper: t('Number of split segments on the axis'),
+            status: 'range',
+            rangeConfig: {
+              min: 3,
+              max: 30,
+              step: 1,
+            },
+          },
+          {
+            label: t('SHOW PROGRESS'),
+            name: 'show_progress',
+            status: 'checkbox',
+            popper: t('Whether to show the progress of gauge chart'),
+          },
+          {
+            label: t('OVERLAP'),
+            name: 'overlap',
+            status: 'checkbox',
+            popper: t(
+              'Whether the progress bar overlaps when there are multiple groups of data',
+            ),
+          },
+          {
+            label: t('ROUND CAP'),
+            name: 'round_cap',
+            status: 'checkbox',
+            popper: t('Style the ends of the progress bar with a round cap'),
+          },
+          {
+            label: t('INTERVAL BOUNDS'),
+            name: 'intervals',
+            popper: t(
+              'Comma-separated interval bounds, e.g. 2,4,5 for intervals 0-2, 2-4 and 4-5. Last number should match the value provided for MAX.',
+            ),
+            status: 'input',
+          },
+          {
+            label: t('INTERVAL COLORS'),
+            name: 'interval_color_indices',
+            popper: t(
+              'Comma-separated color picks for the intervals, e.g. 1,2,4. Integers denote colors from the chosen color scheme and are 1-indexed. Length must be matching that of interval bounds.',
+            ),
+            status: 'input',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'waterfall',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          showValue,
+          showLegend,
+          {
+            label: t('INCREASE'),
+            name: 'increase_color',
+            status: 'color',
+            popper: t('Changing this color takes effect instantly'),
+          },
+          {
+            label: t('DECREASE'),
+            name: 'decrease_color',
+            status: 'color',
+            popper: t('Changing this color takes effect instantly'),
+          },
+          {
+            label: t('TOTAL'),
+            name: 'total_color',
+            status: 'color',
+            popper: t('Changing this color takes effect instantly'),
+          },
+          xAxisLabel,
+          timeFormat,
+          {
+            label: t('X TICK LAYOUT'),
+            name: 'x_ticks_layout',
+            status: 'select',
+            popper: t('The way the ticks are laid out on the X-axis'),
+            options: [],
+          },
+          yAxisLabel,
+          yAxisFormat,
+          currencyFormat,
+        ],
+      },
+    ],
+  },
   {
     chart_name: 'echarts_timeseries_scatter',
-    collapses: lineAndBarChart,
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          showValue,
+          stackedStyle,
+          marker,
+          markerSize,
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
   },
 ];
 
