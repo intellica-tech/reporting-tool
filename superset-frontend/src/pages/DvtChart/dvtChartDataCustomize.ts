@@ -74,48 +74,15 @@ interface DvtChartCustomizeProps {
   collapses: CollapsesProps[];
 }
 
-const formDimensions: FormsProps = {
-  label: t('DIMENSIONS'),
-  name: 'groupby',
-  popper: t(
-    'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
-  ),
-  status: 'input-drop',
-  multiple: true,
-  type: 'normal',
-  savedType: 'expressions',
-};
-
-const formMetric: FormsProps = {
-  label: t('METRIC'),
-  name: 'metric',
-  popper: t(
-    'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-  ),
-  popperError: t('cannot be empty'),
-  status: 'input-drop',
-  multiple: false,
-  type: 'aggregates',
-  savedType: 'metric',
-};
-
-const formFilters: FormsProps = {
-  label: t('FILTERS'),
-  name: 'adhoc_filters',
-  status: 'input-drop',
-  multiple: true,
-  type: 'filters',
-};
-
-const formRowLimit: FormsProps = {
-  label: t('ROW LIMIT'),
-  name: 'row_limit',
-  popper: t(
-    'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
-  ),
-  status: 'select',
-  options: chartFormsOption.row_limit,
-};
+// const formRowLimit: FormsProps = {
+//   label: t('ROW LIMIT'),
+//   name: 'row_limit',
+//   popper: t(
+//     'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
+//   ),
+//   status: 'select',
+//   options: chartFormsOption.row_limit,
+// };
 
 const sortSeriesBy: FormsProps = {
   label: t('SORT SERIES BY'),
@@ -163,14 +130,14 @@ const stackedStyle: FormsProps = {
   options: chartFormsOption.stack,
 };
 
-const onlyTotal: FormsProps = {
-  label: t('ONLY TOTAL'),
-  name: 'only_total',
-  status: 'checkbox',
-  popper: t(
-    'Only show the total value on the stacked chart, and not show on the selected category',
-  ),
-};
+// const onlyTotal: FormsProps = {
+//   label: t('ONLY TOTAL'),
+//   name: 'only_total',
+//   status: 'checkbox',
+//   popper: t(
+//     'Only show the total value on the stacked chart, and not show on the selected category',
+//   ),
+// };
 
 const areaChart: FormsProps = {
   label: t('AREA CHART'),
@@ -406,6 +373,24 @@ const yAxisBounds: FormsProps = {
   ],
 };
 
+const numberFormat: FormsProps = {
+  label: t('NUMBER FORMAT'),
+  name: 'number_format',
+  status: 'select',
+  popper: t(
+    'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
+  ),
+  options: [],
+};
+
+const dateFormat: FormsProps = {
+  label: t('DATE FORMAT'),
+  name: 'time_format',
+  status: 'select',
+  popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+  options: [],
+};
+
 const collapseChartTitle: CollapsesProps = {
   collapse_label: t('Chart Title'),
   collapse_active: 'chart_title',
@@ -447,40 +432,38 @@ const collapseChartTitle: CollapsesProps = {
 };
 
 const lineAndBarChart: CollapsesProps[] = [
-  // collapseChartTitle,
+  collapseChartTitle,
   {
     collapse_label: t('Chart Options'),
     collapse_active: 'chart_options',
     forms: [
-      // sortSeriesBy,
-      // sortSeriesAscending,
-      // colorScheme,
-      // seriesStyle,
-      // showValue,
-      // stackedStyle,
-      // onlyTotal,
-      // areaChart,
-      // areaChartOpacity,
-      // marker,
-      // markerSize,
-      // extraControls,
-      // dataZoom,
-      // minorTicks,
-      // showLegend,
-      // type,
-      // orientation,
-      // margin,
-      // timeFormat,
-      // rotateXAxisLabel,
-      // richTooltip,
-      // tooltipSortByMetric,
-      // tooltipTimeFormat,
-      // yAxisFormat,
-      // currencyFormat,
-      // logarithmicYAxis,
-      // minorSplitLine,
-      // truncateXAxis,
-      // xAxisBounds,
+      sortSeriesBy,
+      sortSeriesAscending,
+      colorScheme,
+      seriesStyle,
+      showValue,
+      stackedStyle,
+      areaChart,
+      areaChartOpacity,
+      marker,
+      markerSize,
+      dataZoom,
+      minorTicks,
+      showLegend,
+      type,
+      orientation,
+      margin,
+      timeFormat,
+      rotateXAxisLabel,
+      richTooltip,
+      tooltipSortByMetric,
+      tooltipTimeFormat,
+      yAxisFormat,
+      currencyFormat,
+      logarithmicYAxis,
+      minorSplitLine,
+      truncateXAxis,
+      xAxisBounds,
       truncateYAxis,
       yAxisBounds,
     ],
@@ -494,795 +477,301 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
   },
   {
     chart_name: 'echarts_timeseries_bar',
-    collapses: lineAndBarChart,
-  },
-  {
-    chart_name: 'echarts_area',
     collapses: [
-      // {
-      //   collapse_label: t('CHART ORIENTATION'),
-      //   collapse_active: 'chart_orientation',
-      //   tabs_name: 'chart_orientation',
-      //   tabs_actives: {
-      //     vertical: [
-      //       'x_axis_title',
-      //       'x_axis_title_margin',
-      //       'y_axis_title',
-      //       'y_axis_title_margin',
-      //       'y_axis_title_position',
-      //     ],
-      //     horizontal: [
-      //       'y_axis_title',
-      //       'y_axis_title_margin',
-      //       'y_axis_title_position',
-      //       'x_axis_title',
-      //       'x_axis_title_margin',
-      //     ],
-      //   },
-      //   forms: [
-      //     {
-      //       label: t('BAR ORIENTATION'),
-      //       name: 'orientation',
-      //       status: 'tabs',
-      //       options: [
-      //         { label: t('VERTICAL'), value: 'vertical' },
-      //         { label: t('HORIZONTAL'), value: 'horizontal' },
-      //       ],
-      //     },
-      //     {
-      //       label: t('AXIS TITLE'),
-      //       name: 'x_axis_title',
-      //       status: 'input',
-      //     },
-      //     {
-      //       label: t('AXIS TITLE'),
-      //       name: 'y_axis_title',
-      //       status: 'input',
-      //     },
-      //     {
-      //       label: t('AXIS TITLE MARGIN'),
-      //       name: 'x_axis_title_margin',
-      //       status: 'select',
-      //       options: chartFormsOption.x_axis_title_margin,
-      //     },
-      //     {
-      //       label: t('AXIS TITLE MARGIN'),
-      //       name: 'y_axis_title_margin',
-      //       status: 'select',
-      //       options: chartFormsOption.y_axis_title_margin,
-      //     },
-      //     {
-      //       label: t('AXIS TITLE POSITION'), // for 'Vertical' Y Axis
-      //       name: 'legendOrientation',
-      //       status: 'select',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       options: chartFormsOption.legendOrientation,
-      //     },
-      //     {
-      //       label: t('AXIS TITLE POSITION'), // for 'Horizontal' X Axis
-      //       name: 'legendOrientation',
-      //       status: 'select',
-      //       popper: t('Changing this control takes effect instantly'),
-      //       options: chartFormsOption.legendOrientation,
-      //     },
-      //   ],
-      // },
+      {
+        collapse_label: t('Chart Orientation'),
+        collapse_active: 'chart_orientation',
+        // tabs_name: 'chart_orientation',
+        // tabs_actives: {
+        //   vertical: [
+        //     'x_axis_title',
+        //     'x_axis_title_margin',
+        //     'y_axis_title',
+        //     'y_axis_title_margin',
+        //     'y_axis_title_position',
+        //   ],
+        //   horizontal: [
+        //     'y_axis_title',
+        //     'y_axis_title_margin',
+        //     'y_axis_title_position',
+        //     'x_axis_title',
+        //     'x_axis_title_margin',
+        //   ],
+        // },
+        forms: [
+          {
+            label: t('BAR ORIENTATION'),
+            name: 'orientation',
+            status: 'tabs',
+            options: [
+              { label: t('VERTICAL'), value: 'vertical' },
+              { label: t('HORIZONTAL'), value: 'horizontal' },
+            ],
+          },
+        ],
+      },
+      collapseChartTitle,
       {
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          // {
-          //   label: t('SORT SERIES BY'),
-          //   name: 'sort_series_type',
-          //   status: 'select',
-          //   popper: t(
-          //     'Based on what should series be ordered on the chart and legend',
-          //   ),
-          //   options: chartFormsOption.sort_series_type,
-          // },
-          // {
-          //   label: t('SORT SERIES ASCENDING'),
-          //   name: 'sort_series_ascending',
-          //   status: 'checkbox',
-          //   popper: t('Sort series in ascending order'),
-          // },
-          // {
-          //   label: t('COLOR SCHEME'),
-          //   name: 'color_scheme',
-          //   status: 'color',
-          //   popper: t('The color scheme for rendering chart'),
-          // },
-          // {
-          //   label: t('SHOW VALUE'),
-          //   name: 'show_value',
-          //   status: 'checkbox',
-          //   popper: t('Show series values on the chart'),
-          // },
-          // {
-          //   label: t('STACKED STYLE'),
-          //   name: 'stack',
-          //   status: 'select',
-          //   popper: t('Stack series on top of each other'),
-          // },
-          // {
-          //   label: t('DATA ZOOM'),
-          //   name: 'zoomable',
-          //   status: 'checkbox',
-          //   popper: t('Enable data zooming controls'),
-          // },
-          // {
-          //   label: t('MINOR TICKS'),
-          //   name: 'minorTicks',
-          //   status: 'checkbox',
-          //   popper: t('Show minor ticks on axes.'),
-          // },
-          // {
-          //   label: t('SHOW LEGEND'),
-          //   name: 'show_legend',
-          //   status: 'checkbox',
-          //   popper: t('Whether to display a legend for the chart'),
-          // },
-          // {
-          //   label: t('TYPE'),
-          //   name: 'legendType',
-          //   status: 'select',
-          //   popper: t('Legend type'),
-          //   options: chartFormsOption.legendType,
-          // },
-          // {
-          //   label: t('ORIENTATION'),
-          //   name: 'legendOrientation',
-          //   status: 'select',
-          //   popper: t('Legend Orientation'),
-          //   options: chartFormsOption.legendOrientation,
-          // },
-          // {
-          //   label: t('MARGIN'),
-          //   name: 'legendMargin',
-          //   status: 'input',
-          //   number: true,
-          //   popper: t('Additional padding for legend.'),
-          // },
-          // {
-          //   label: t('AXIS FORMAT'),
-          //   name: 'y_axis_format',
-          //   status: 'range',
-          //   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-          // },
-          // {
-          //   label: t('LOGARITHMIC AXIS'),
-          //   name: 'logAxis',
-          //   status: 'checkbox',
-          //   popper: t('Whether to display a legend for the chart'),
-          // },
-          // {
-          //   label: t('MINOR SPLIT LINE'),
-          //   name: 'show_extra_controls',
-          //   status: 'checkbox',
-          //   popper: t(
-          //     'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
-          //   ),
-          // },
-          // {
-          //   label: t('MARKER'),
-          //   name: 'markerEnabled',
-          //   status: 'checkbox',
-          //   popper: t(
-          //     'Draw a marker on data points. Only applicable for line types.',
-          //   ),
-          // },
-          // {
-          //   label: t('MARKER SIZE'),
-          //   name: 'markerSize',
-          //   status: 'range',
-          //   popper: t('Size of marker. Also applies to forecast observations.'),
-          //   rangeConfig: {
-          //     min: 0,
-          //     max: 20,
-          //     step: 1,
-          //   },
-          // },
-          // {
-          //   label: t('TIME FORMAT'),
-          //   name: 'x_axis_time_format',
-          //   status: 'select',
-          //   popper: t(
-          //     'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
-          //   ),
-          //   options: [],
-          // },
-          // {
-          //   label: t('ROTATE X AXIS LABEL'),
-          //   name: 'xAxisLabelRotation',
-          //   status: 'select',
-          //   popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-          //   options: chartFormsOption.xAxisLabelRotation,
-          // },
-          // {
-          //   label: t('RICH TOOLTIP'),
-          //   name: 'rich_tooltip',
-          //   status: 'checkbox',
-          //   popper: t(
-          //     'Shows a list of all series available at that point in time',
-          //   ),
-          // },
-          // {
-          //   label: t('TOOLTIP SORT BY METRIC'),
-          //   name: 'tooltipSortByMetric',
-          //   status: 'checkbox',
-          //   popper: t(
-          //     'Whether to sort tooltip by the selected metric in descending order.',
-          //   ),
-          // },
-          // {
-          //   label: t('TOOLTIP TIME FORMAT'),
-          //   name: 'tooltipTimeFormat',
-          //   status: 'select',
-          //   popper: t(
-          //     'D3 time format syntax: https://github.com/d3/d3-time-format',
-          //   ),
-          //   options: [],
-          // },
-          // {
-          //   label: t('Y AXIS FORMAT'),
-          //   name: 'y_axis_format',
-          //   status: 'select',
-          //   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-          //   options: [],
-          // },
-          // {
-          //   label: t('CURRENCY FORMAT'),
-          //   name: 'currency_format',
-          //   status: 'two-select',
-          //   values: [
-          //     {
-          //       name: 'symbolPosition',
-          //       placeholder: t('Prefix or suffix'),
-          //       options: chartFormsOption.currency_format.symbolPosition,
-          //     },
-          //     {
-          //       name: 'symbol',
-          //       placeholder: t('Currency'),
-          //       options: chartFormsOption.currency_format.symbol,
-          //     },
-          //   ],
-          // },
-          // {
-          //   label: t('LOGARITHMIC Y-AXIS'),
-          //   name: 'logAxis',
-          //   status: 'checkbox',
-          //   popper: t('Logarithmic y-axis'),
-          // },
-          // {
-          //   label: t('MINOR SPLIT LINE'),
-          //   name: 'minorSplitLine',
-          //   status: 'checkbox',
-          //   popper: t('Draw split lines for minor y-axis ticks'),
-          // },
-          // {
-          //   label: t('TRUNCATE X AXIS'),
-          //   name: 'truncateXAxis',
-          //   status: 'checkbox',
-          //   popper: t(
-          //     'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-          //   ),
-          // },
-          // {
-          //   label: t('X AXIS BOUNDS'),
-          //   name: 'xAxisBounds',
-          //   status: 'two-input',
-          //   popper: t(
-          //     "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-          //   ),
-          //   values: [
-          //     {
-          //       placeholder: t('MIN'),
-          //       number: true,
-          //       name: 'min',
-          //     },
-          //     {
-          //       placeholder: t('MAX'),
-          //       number: true,
-          //       name: 'max',
-          //     },
-          //   ],
-          // },
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          showValue,
+          stackedStyle,
+          minorTicks,
+          dataZoom,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          currencyFormat,
+          truncateXAxis,
+          xAxisBounds,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
           truncateYAxis,
           yAxisBounds,
         ],
       },
     ],
   },
-  // {
-  //   chart_name: 'echarts_area',
-  //   collapses: [
-  //     // collapseChartTitle,
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         // {
-  //         //   label: t('SORT SERIES BY'),
-  //         //   name: 'sort_series_type',
-  //         //   status: 'select',
-  //         //   popper: t(
-  //         //     'Based on what should series be ordered on the chart and legend',
-  //         //   ),
-  //         //   options: chartFormsOption.sort_series_type,
-  //         // },
-  //         // {
-  //         //   label: t('SORT SERIES ASCENDING'),
-  //         //   name: 'sort_series_ascending',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Sort series in ascending order'),
-  //         // },
-  //         // {
-  //         //   label: t('COLOR SCHEME'),
-  //         //   name: 'color_scheme',
-  //         //   status: 'color',
-  //         //   popper: t('The color scheme for rendering chart'),
-  //         // },
-  //         // {
-  //         //   label: t('SERIES STYLE'),
-  //         //   name: 'seriesType',
-  //         //   status: 'select',
-  //         //   popper: t('Series chart type (line, bar etc)'),
-  //         //   options: chartFormsOption.seriesType,
-  //         // },
-  //         // {
-  //         //   label: t('AREA CHART OPACITY'),
-  //         //   name: 'opacity',
-  //         //   status: 'range',
-  //         //   popper: t(
-  //         //     'Opacity of Area Chart. Also applies to confidence band.',
-  //         //   ),
-  //         //   rangeConfig: {
-  //         //     min: 0,
-  //         //     max: 1,
-  //         //     step: 0.1,
-  //         //   },
-  //         // },
-  //         // {
-  //         //   label: t('SHOW VALUE'),
-  //         //   name: 'show_value',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Show series values on the chart'),
-  //         // },
-  //         // {
-  //         //   label: t('STACKED STYLE'),
-  //         //   name: 'stack',
-  //         //   status: 'select',
-  //         //   popper: t('Stack series on top of each other'),
-  //         // },
-  //         // {
-  //         //   label: t('ONLY TOTAL'),
-  //         //   name: 'only_total',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Only show the total value on the stacked chart, and not show on the selected category',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('EXTRA CONTROLS'),
-  //         //   name: 'show_extra_controls',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('MARKER'),
-  //         //   name: 'markerEnabled',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Draw a marker on data points. Only applicable for line types.',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('MARKER SIZE'),
-  //         //   name: 'markerSize',
-  //         //   status: 'range',
-  //         //   popper: t('Size of marker. Also applies to forecast observations.'),
-  //         //   rangeConfig: {
-  //         //     min: 0,
-  //         //     max: 20,
-  //         //     step: 1,
-  //         //   },
-  //         // },
-  //         // {
-  //         //   label: t('DATA ZOOM'),
-  //         //   name: 'zoomable',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Enable data zooming controls'),
-  //         // },
-  //         // {
-  //         //   label: t('MINOR TICKS'),
-  //         //   name: 'minorTicks',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Show minor ticks on axes.'),
-  //         // },
-  //         // {
-  //         //   label: t('SHOW LEGEND'),
-  //         //   name: 'show_legend',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Whether to display a legend for the chart'),
-  //         // },
-  //         // {
-  //         //   label: t('TYPE'),
-  //         //   name: 'legendType',
-  //         //   status: 'select',
-  //         //   popper: t('Legend type'),
-  //         //   options: chartFormsOption.legendType,
-  //         // },
-  //         // {
-  //         //   label: t('ORIENTATION'),
-  //         //   name: 'legendOrientation',
-  //         //   status: 'select',
-  //         //   popper: t('Legend Orientation'),
-  //         //   options: chartFormsOption.legendOrientation,
-  //         // },
-  //         // {
-  //         //   label: t('MARGIN'),
-  //         //   name: 'legendMargin',
-  //         //   status: 'input',
-  //         //   number: true,
-  //         //   popper: t('Additional padding for legend.'),
-  //         // },
-  //         // {
-  //         //   label: t('TIME FORMAT'),
-  //         //   name: 'x_axis_time_format',
-  //         //   status: 'select',
-  //         //   popper: t(
-  //         //     'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
-  //         //   ),
-  //         //   options: [],
-  //         // },
-  //         // {
-  //         //   label: t('ROTATE X AXIS LABEL'),
-  //         //   name: 'xAxisLabelRotation',
-  //         //   status: 'select',
-  //         //   popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-  //         //   options: chartFormsOption.xAxisLabelRotation,
-  //         // },
-  //         // {
-  //         //   label: t('RICH TOOLTIP'),
-  //         //   name: 'rich_tooltip',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Shows a list of all series available at that point in time',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('TOOLTIP SORT BY METRIC'),
-  //         //   name: 'tooltipSortByMetric',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Whether to sort tooltip by the selected metric in descending order.',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('TOOLTIP TIME FORMAT'),
-  //         //   name: 'tooltipTimeFormat',
-  //         //   status: 'select',
-  //         //   popper: t(
-  //         //     'D3 time format syntax: https://github.com/d3/d3-time-format',
-  //         //   ),
-  //         //   options: [],
-  //         // },
-  //         // {
-  //         //   label: t('Y AXIS FORMAT'),
-  //         //   name: 'y_axis_format',
-  //         //   status: 'select',
-  //         //   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  //         //   options: [],
-  //         // },
-  //         // {
-  //         //   label: t('CURRENCY FORMAT'),
-  //         //   name: 'currency_format',
-  //         //   status: 'two-select',
-  //         //   values: [
-  //         //     {
-  //         //       name: 'symbolPosition',
-  //         //       placeholder: t('Prefix or suffix'),
-  //         //       options: chartFormsOption.currency_format.symbolPosition,
-  //         //     },
-  //         //     {
-  //         //       name: 'symbol',
-  //         //       placeholder: t('Currency'),
-  //         //       options: chartFormsOption.currency_format.symbol,
-  //         //     },
-  //         //   ],
-  //         // },
-  //         // {
-  //         //   label: t('LOGARITHMIC Y-AXIS'),
-  //         //   name: 'logAxis',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Logarithmic y-axis'),
-  //         // },
-  //         // {
-  //         //   label: t('MINOR SPLIT LINE'),
-  //         //   name: 'minorSplitLine',
-  //         //   status: 'checkbox',
-  //         //   popper: t('Draw split lines for minor y-axis ticks'),
-  //         // },
-  //         // {
-  //         //   label: t('TRUNCATE X AXIS'),
-  //         //   name: 'truncateXAxis',
-  //         //   status: 'checkbox',
-  //         //   popper: t(
-  //         //     'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-  //         //   ),
-  //         // },
-  //         // {
-  //         //   label: t('X AXIS BOUNDS'),
-  //         //   name: 'xAxisBounds',
-  //         //   status: 'two-input',
-  //         //   popper: t(
-  //         //     "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-  //         //   ),
-  //         //   values: [
-  //         //     {
-  //         //       placeholder: t('MIN'),
-  //         //       number: true,
-  //         //       name: 'min',
-  //         //     },
-  //         //     {
-  //         //       placeholder: t('MAX'),
-  //         //       number: true,
-  //         //       name: 'max',
-  //         //     },
-  //         //   ],
-  //         // },
-  //         truncateYAxis,
-  //         yAxisBounds,
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'table',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Options'),
-  //       collapse_active: 'options',
-  //       forms: [
-  //         {
-  //           label: t('TIMESTAMP FORMAT'),
-  //           name: 'table_timestamp_format',
-  //           status: 'select',
-  //           popper: t('D3 time format for datetime columns'),
-  //           options: [],
-  //         },
-  //         {
-  //           label: t('PAGE LENGTH'),
-  //           name: 'page_length',
-  //           status: 'select',
-  //           popper: t('Rows per page, 0 means no pagination'),
-  //           options: chartFormsOption.page_length,
-  //         },
-  //         {
-  //           label: t('SEARCH BOX'),
-  //           name: '', // cannot find.
-  //           status: 'checkbox',
-  //         },
-  //         {
-  //           label: t('CELL BARS'),
-  //           name: 'show_cell_bars',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Whether to display a bar chart background in table columns',
-  //           ),
-  //         },
-  //         {
-  //           label: t('ALIGN +/-'),
-  //           name: 'align_pn',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Whether to align background charts with both positive and negative values at 0',
-  //           ),
-  //         },
-  //         {
-  //           label: t('COLOR +/-'),
-  //           name: 'color_pn',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Whether to colorize numeric values by whether they are positive or negative',
-  //           ),
-  //         },
-  //         {
-  //           label: t('ALLOW COLUMNS TO BE REARRANGED'),
-  //           name: 'allow_rearrange_columns',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             "Allow end user to drag-and-drop column headers to rearrange them. Note their changes won't persist for the next time they open the chart.",
-  //           ),
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'big_number_total',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         {
-  //           label: t('BIG NUMBER FONT SIZE'),
-  //           name: 'header_font_size',
-  //           status: 'select',
-  //           popper: t('Changing this control takes effect instantly'),
-  //           options: chartFormsOption.header_font_size,
-  //         },
-  //         {
-  //           label: t('SUBHEADER FONT SIZE'),
-  //           name: 'subheader_font_size',
-  //           popper: t('Changing this control takes effect instantly'),
-  //           status: 'select',
-  //         },
-  //         {
-  //           label: t('NUMBER FORMAT'),
-  //           name: 'number_format',
-  //           status: 'select',
-  //           popper: t(
-  //             'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-  //           ),
-  //           options: [],
-  //         },
-  //         {
-  //           label: t('DATE FORMAT'),
-  //           name: 'time_format',
-  //           status: 'select',
-  //           popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  //           options: [],
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('FORCE DATE FORMAT'),
-  //           name: 'force_timestamp_formatting',
-  //           status: 'checkbox',
-  //           popper: t(
-  //             'Use date formatting even when metric value is not a timestamp',
-  //           ),
-  //         },
-  //         // need to Conditional Formatting
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   chart_name: 'pie',
-  //   collapses: [
-  //     {
-  //       collapse_label: t('Chart Options'),
-  //       collapse_popper_error: t('This section contains validation errors'),
-  //       collapse_active: 'chart_options',
-  //       forms: [
-  //         {
-  //           label: t('COLOR SCHEME'),
-  //           name: 'color_scheme',
-  //           status: 'color',
-  //           popper: t('The color scheme for rendering chart'),
-  //         },
-  //         {
-  //           label: t('PERCENTAGE THRESHOLD'),
-  //           name: 'show_labels_threshold',
-  //           status: 'input',
-  //           number: true,
-  //           popper: t(
-  //             'Minimum threshold in percentage points for showing labels.',
-  //           ),
-  //         },
-  //         {
-  //           label: t('SHOW LEGEND'),
-  //           name: 'show_legend',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display a legend for the chart'),
-  //         },
-  //         {
-  //           label: t('LABEL TYPE'),
-  //           name: 'label_type',
-  //           status: 'select',
-  //           popper: t('What should be shown on the label?'),
-  //           options: chartFormsOption.label_type,
-  //         },
-  //         {
-  //           label: t('NUMBER FORMAT'),
-  //           name: 'number_format',
-  //           status: 'select',
-  //           popper: t(
-  //             'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-  //           ),
-  //           options: [],
-  //         },
-  //         {
-  //           label: t('CURRENCY FORMAT'),
-  //           name: 'currency_format',
-  //           status: 'two-select',
-  //           values: [
-  //             {
-  //               name: 'symbolPosition',
-  //               placeholder: t('Prefix or suffix'),
-  //               options: chartFormsOption.currency_format.symbolPosition,
-  //             },
-  //             {
-  //               name: 'symbol',
-  //               placeholder: t('Currency'),
-  //               options: chartFormsOption.currency_format.symbol,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           label: t('SHOW LABELS'),
-  //           name: 'show_labels',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display the labels.'),
-  //         },
-  //         {
-  //           label: t('PUT LABELS OUTSIDE'),
-  //           name: 'labels_outside',
-  //           status: 'checkbox',
-  //           popper: t('Put the labels outside of the pie?'),
-  //         },
-  //         {
-  //           label: t('LABEL LINE'),
-  //           name: 'label_line',
-  //           status: 'checkbox',
-  //           popper: t('Draw line from Pie to label when labels outside?'),
-  //         },
-  //         {
-  //           label: t('SHOW TOTAL'),
-  //           name: 'show_total',
-  //           status: 'checkbox',
-  //           popper: t('Whether to display the aggregate count.'),
-  //         },
-  //         {
-  //           label: t('OUTER RADIUS'),
-  //           name: 'outerRadius',
-  //           status: 'range',
-  //           rangeConfig: {
-  //             min: 10,
-  //             max: 100,
-  //             step: 1,
-  //           },
-  //         },
-  //         {
-  //           label: t('DONUT'),
-  //           name: 'donut',
-  //           status: 'checkbox',
-  //           popper: t('Do you want a donut or a pie?'),
-  //         },
-  //         {
-  //           label: t('INNER RADIUS'),
-  //           name: 'innerRadius',
-  //           status: 'range',
-  //           rangeConfig: {
-  //             min: 0,
-  //             max: 100,
-  //             step: 1,
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    chart_name: 'echarts_area',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          seriesStyle,
+          areaChartOpacity,
+          showValue,
+          stackedStyle,
+          extraControls,
+          marker,
+          markerSize,
+          minorTicks,
+          dataZoom,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'table',
+    collapses: [
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('TIMESTAMP FORMAT'),
+            name: 'table_timestamp_format',
+            status: 'select',
+            popper: t('D3 time format for datetime columns'),
+            options: [],
+          },
+          {
+            label: t('PAGE LENGTH'),
+            name: 'page_length',
+            status: 'select',
+            popper: t('Rows per page, 0 means no pagination'),
+            options: chartFormsOption.page_length,
+          },
+          {
+            label: t('SEARCH BOX'),
+            name: 'include_search',
+            status: 'checkbox',
+          },
+          {
+            label: t('CELL BARS'),
+            name: 'show_cell_bars',
+            status: 'checkbox',
+            popper: t(
+              'Whether to display a bar chart background in table columns',
+            ),
+          },
+          {
+            label: t('ALIGN +/-'),
+            name: 'align_pn',
+            status: 'checkbox',
+            popper: t(
+              'Whether to align background charts with both positive and negative values at 0',
+            ),
+          },
+          {
+            label: t('COLOR +/-'),
+            name: 'color_pn',
+            status: 'checkbox',
+            popper: t(
+              'Whether to colorize numeric values by whether they are positive or negative',
+            ),
+          },
+          {
+            label: t('ALLOW COLUMNS TO BE REARRANGED'),
+            name: 'allow_rearrange_columns',
+            status: 'checkbox',
+            popper: t(
+              "Allow end user to drag-and-drop column headers to rearrange them. Note their changes won't persist for the next time they open the chart.",
+            ),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'big_number_total',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          {
+            label: t('BIG NUMBER FONT SIZE'),
+            name: 'header_font_size',
+            status: 'select',
+            popper: t('Changing this control takes effect instantly'),
+            options: chartFormsOption.header_font_size,
+          },
+          {
+            label: t('SUBHEADER FONT SIZE'),
+            name: 'subheader_font_size',
+            popper: t('Changing this control takes effect instantly'),
+            status: 'select',
+            options: [],
+          },
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          {
+            label: t('FORCE DATE FORMAT'),
+            name: 'force_timestamp_formatting',
+            status: 'checkbox',
+            popper: t(
+              'Use date formatting even when metric value is not a timestamp',
+            ),
+          },
+          // need to Conditional Formatting
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'pie',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_popper_error: t('This section contains validation errors'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          {
+            label: t('PERCENTAGE THRESHOLD'),
+            name: 'show_labels_threshold',
+            status: 'input',
+            number: true,
+            popper: t(
+              'Minimum threshold in percentage points for showing labels.',
+            ),
+          },
+          showLegend,
+          type,
+          orientation,
+          margin,
+          {
+            label: t('LABEL TYPE'),
+            name: 'label_type',
+            status: 'select',
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.label_type,
+          },
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          {
+            label: t('SHOW LABELS'),
+            name: 'show_labels',
+            status: 'checkbox',
+            popper: t('Whether to display the labels.'),
+          },
+          {
+            label: t('PUT LABELS OUTSIDE'),
+            name: 'labels_outside',
+            status: 'checkbox',
+            popper: t('Put the labels outside of the pie?'),
+          },
+          {
+            label: t('LABEL LINE'),
+            name: 'label_line',
+            status: 'checkbox',
+            popper: t('Draw line from Pie to label when labels outside?'),
+          },
+          {
+            label: t('SHOW TOTAL'),
+            name: 'show_total',
+            status: 'checkbox',
+            popper: t('Whether to display the aggregate count.'),
+          },
+          {
+            label: t('OUTER RADIUS'),
+            name: 'outerRadius',
+            status: 'range',
+            rangeConfig: {
+              min: 10,
+              max: 100,
+              step: 1,
+            },
+          },
+          {
+            label: t('DONUT'),
+            name: 'donut',
+            status: 'checkbox',
+            popper: t('Do you want a donut or a pie?'),
+          },
+          {
+            label: t('INNER RADIUS'),
+            name: 'innerRadius',
+            status: 'range',
+            rangeConfig: {
+              min: 0,
+              max: 100,
+              step: 1,
+            },
+          },
+        ],
+      },
+    ],
+  },
   {
     chart_name: 'bubble_v2',
     collapses: [
