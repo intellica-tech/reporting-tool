@@ -74,16 +74,6 @@ interface DvtChartCustomizeProps {
   collapses: CollapsesProps[];
 }
 
-// const formRowLimit: FormsProps = {
-//   label: t('ROW LIMIT'),
-//   name: 'row_limit',
-//   popper: t(
-//     'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
-//   ),
-//   status: 'select',
-//   options: chartFormsOption.row_limit,
-// };
-
 const sortSeriesBy: FormsProps = {
   label: t('SORT SERIES BY'),
   name: 'sort_series_type',
@@ -129,15 +119,6 @@ const stackedStyle: FormsProps = {
   popper: t('Stack series on top of each other'),
   options: chartFormsOption.stack,
 };
-
-// const onlyTotal: FormsProps = {
-//   label: t('ONLY TOTAL'),
-//   name: 'only_total',
-//   status: 'checkbox',
-//   popper: t(
-//     'Only show the total value on the stacked chart, and not show on the selected category',
-//   ),
-// };
 
 const areaChart: FormsProps = {
   label: t('AREA CHART'),
@@ -396,6 +377,21 @@ const showLabels: FormsProps = {
   name: 'show_labels',
   status: 'checkbox',
   popper: t('Whether to display the labels.'),
+};
+
+const xTickLayout: FormsProps = {
+  label: t('X TICK LAYOUT'),
+  name: 'x_ticks_layout',
+  status: 'select',
+  popper: t('The way the ticks are laid out on the X-axis'),
+  options: [],
+};
+
+const legend: FormsProps = {
+  label: t('LEGEND'),
+  name: 'show_legend',
+  popper: t('Whether to display the legend (toggles)'),
+  status: 'checkbox',
 };
 
 const xAxisLabel: FormsProps = {
@@ -903,12 +899,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           xAxisLabel,
           yAxisLabel,
-          {
-            label: t('LEGEND'),
-            name: 'show_legend',
-            popper: t('Whether to display the legend (toggles)'),
-            status: 'checkbox',
-          },
+          legend,
           {
             label: t('NORMALIZED'),
             name: 'normalized',
@@ -1127,13 +1118,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           xAxisLabel,
           timeFormat,
-          {
-            label: t('X TICK LAYOUT'),
-            name: 'x_ticks_layout',
-            status: 'select',
-            popper: t('The way the ticks are laid out on the X-axis'),
-            options: [],
-          },
+          xTickLayout,
           yAxisLabel,
           yAxisFormat,
           currencyFormat,
@@ -1176,6 +1161,133 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           truncateYAxis,
           yAxisBounds,
         ],
+      },
+    ],
+  },
+  {
+    chart_name: 'pivot_table_v2',
+    collapses: [
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('VALUE FORMAT'),
+            name: 'valueFormat',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            status: 'select',
+            options: [],
+          },
+          currencyFormat,
+          dateFormat,
+          {
+            label: t('SORT ROWS BY'),
+            name: 'rowOrder',
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('SORT COLUMNS BY'),
+            name: 'colOrder',
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('ROWS SUBTOTAL POSITION'),
+            name: '',
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('COLUMNS SUBTOTAL POSITION'),
+            name: '',
+            status: 'select',
+            options: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'dist_bar',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          legend,
+          {
+            label: t('BAR VALUES'),
+            name: 'show_bar_value',
+            status: 'checkbox',
+            popper: t('Show the value on top of the bar'),
+          },
+          richTooltip,
+          {
+            label: t('STACKED BARS'),
+            name: 'bar_stacked',
+            status: 'checkbox',
+            popper: t('Show the value on top of the bar'),
+          },
+          {
+            label: t('SORT BARS'),
+            name: 'order_bars',
+            status: 'checkbox',
+            popper: t('Sort bars by x labels.'),
+          },
+          yAxisFormat,
+          yAxisLabel,
+          { ...extraControls, name: 'show_controls' },
+          {
+            label: t('Y BOUNDS'),
+            name: 'y_axis_showminmax',
+            status: 'checkbox',
+            popper: t(
+              'Whether to display the min and max values of the Y-axis',
+            ),
+          },
+          yAxisBounds,
+        ],
+      },
+      {
+        collapse_label: t('X Axis'),
+        collapse_active: 'x_axis',
+        forms: [
+          {
+            label: t('X AXIS LABEL'),
+            name: 'x_axis_label',
+            status: 'input',
+          },
+          {
+            label: t('BOTTOM MARGIN'),
+            name: 'bottom_margin',
+            popper: t(
+              'Bottom margin, in pixels, allowing for more room for axis labels',
+            ),
+            status: 'select',
+            options: [],
+          },
+          xTickLayout,
+          {
+            label: t('REDUCE X TICKS'),
+            name: 'reduce_x_ticks',
+            popper: t(
+              'Reduces the number of X-axis ticks to be rendered. If true, the x-axis will not overflow and labels may be missing. If false, a minimum width will be applied to columns and the width may overflow into an horizontal scroll.',
+            ),
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'world_map',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [yAxisFormat, currencyFormat],
       },
     ],
   },
