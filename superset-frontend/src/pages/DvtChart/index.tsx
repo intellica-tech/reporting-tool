@@ -1803,8 +1803,8 @@ const DvtChart = () => {
       case 'mixed_timeseries':
         return !(
           values.x_axis.length &&
-          values.metric.length &&
-          values.metricb.length
+          values.metrics.length &&
+          values.metricsb.length
         );
       default:
         return false;
