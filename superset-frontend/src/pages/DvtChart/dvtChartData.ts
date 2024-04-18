@@ -1232,6 +1232,7 @@ const DvtChartData: DvtChartDataProps[] = [
       {
         collapse_label: t('Shared query fields'),
         collapse_active: 'sharedQueryFields',
+        collapse_popper_error: t('This section contains validation errors'),
         forms: [
           {
             label: t('X-AXIS'),
@@ -1248,6 +1249,7 @@ const DvtChartData: DvtChartDataProps[] = [
       {
         collapse_label: t('Query A'),
         collapse_active: 'queryA',
+        collapse_popper_error: t('This section contains validation errors'),
         forms: [
           formMetrics,
           formDimensions,
@@ -1275,7 +1277,7 @@ const DvtChartData: DvtChartDataProps[] = [
       {
         collapse_label: t('Advanced analytics Query A '),
         collapse_active: 'advancedA',
-        collapse_popper_error: t(
+        collapse_popper: t(
           'This section contains options that allow for advanced analytical post processing of query results',
         ),
         forms: [
@@ -1348,6 +1350,7 @@ const DvtChartData: DvtChartDataProps[] = [
       {
         collapse_label: t('Query B'),
         collapse_active: 'queryB',
+        collapse_popper_error: t('This section contains validation errors'),
         forms: [
           {
             label: t('METRICS'),
@@ -1424,7 +1427,7 @@ const DvtChartData: DvtChartDataProps[] = [
       {
         collapse_label: t('Advanced analytics Query B '),
         collapse_active: 'advanced_b',
-        collapse_popper_error: t(
+        collapse_popper: t(
           'This section contains options that allow for advanced analytical post processing of query results',
         ),
         forms: [

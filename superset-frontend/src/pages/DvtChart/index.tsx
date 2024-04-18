@@ -544,10 +544,13 @@ const DvtChart = () => {
           field: string,
           value: any,
           findNameField = 'value',
+          b?: boolean,
         ) =>
           getFormData?.[field]
-            ? chartFormsOption[field].find(
-                (f: any) => f[findNameField] === getFormData[field],
+            ? chartFormsOption[field].find((f: any) =>
+                f[findNameField] === b
+                  ? `${getFormData[field]}_b`
+                  : getFormData[field],
               )
             : value;
 
@@ -639,10 +642,15 @@ const DvtChart = () => {
             label: t('None'),
             value: 'None',
           }),
-          rolling_type_b: chartFormsFindOptions('rolling_type_b', {
-            label: t('None'),
-            value: 'None',
-          }),
+          rolling_type_b: chartFormsFindOptions(
+            'rolling_type',
+            {
+              label: t('None'),
+              value: 'None',
+            },
+            'value',
+            true,
+          ),
           time_compare: getFormData?.time_compare
             ? getFormData?.time_compare
             : [],
@@ -653,14 +661,29 @@ const DvtChart = () => {
             label: t('Actual values'),
             value: 'values',
           }),
-          comparison_type_b: chartFormsFindOptions('comparison_type_b', {
-            label: t('Actual values'),
-            value: 'values',
-          }),
+          comparison_type_b: chartFormsFindOptions(
+            'comparison_type',
+            {
+              label: t('Actual values'),
+              value: 'values',
+            },
+            'value',
+            true,
+          ),
           resample_rule: chartFormsFindOptions('resample_rule', ''),
-          resample_rule_b: chartFormsFindOptions('resample_rule_b', ''),
+          resample_rule_b: chartFormsFindOptions(
+            'resample_rule',
+            '',
+            'value',
+            true,
+          ),
           resample_method: chartFormsFindOptions('resample_method', ''),
-          resample_method_b: chartFormsFindOptions('resample_method_b', ''),
+          resample_method_b: chartFormsFindOptions(
+            'resample_method',
+            '',
+            'value',
+            true,
+          ),
           annotation_layers: [],
           forecastEnabled: getFormData?.forecastEnabled
             ? getFormData.forecastEnabled
