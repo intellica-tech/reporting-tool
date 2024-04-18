@@ -70,6 +70,11 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
+    popoverLabel: 'Mixed Chart',
+    status: 'mixed_timeseries',
+    icon: 'dvt-linear_chart',
+  },
+  {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',
     icon: 'dvt-diagram',
