@@ -1900,7 +1900,7 @@ const DvtChart = () => {
     height: chartPanelHeight,
   } = useResizeDetectorByObserver();
 
-  const createChartDisableds = (vizType: string) => {
+  const createChartDisableds = (vizType: string, active?: string) => {
     switch (vizType) {
       case 'echarts_timeseries_line':
       case 'echarts_timeseries_bar':
@@ -1945,6 +1945,17 @@ const DvtChart = () => {
       case 'world_map':
         return !(values.entity.length && values.metric.length);
       case 'mixed_timeseries':
+        if (active) {
+          if (active === 'sharedQueryFields') {
+            return !values.x_axis.length;
+          }
+          if (active === 'queryA') {
+            return !values.metrics.length;
+          }
+          if (active === 'queryB') {
+            return !values.metrics_b.length;
+          }
+        }
         return !(
           values.x_axis.length &&
           values.metrics.length &&
@@ -2021,7 +2032,9 @@ const DvtChart = () => {
               label={item.collapse_label}
               popoverLabel={item.collapse_popper}
               popperError={item.collapse_popper_error}
-              popperErrorSuccess={!createChartDisableds(active)}
+              popperErrorSuccess={
+                !createChartDisableds(active, item.collapse_active)
+              }
               popoverDirection="bottom"
               isOpen={collapsesIsOpen.includes(item.collapse_active)}
               setIsOpen={bln =>
