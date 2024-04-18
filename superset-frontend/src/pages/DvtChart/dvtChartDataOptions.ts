@@ -228,71 +228,7 @@ const chartFormsOption = {
       value: 'cumsum',
     },
   ],
-  rolling_type_b: [
-    {
-      label: t('None'),
-      value: 'None',
-    },
-    {
-      label: t('mean'),
-      value: 'mean',
-    },
-    {
-      label: t('sum'),
-      value: 'sum',
-    },
-    {
-      label: t('std'),
-      value: 'std',
-    },
-    {
-      label: t('cumsum'),
-      value: 'cumsum',
-    },
-  ],
   time_compare: [
-    {
-      label: t('1 day ago'),
-      value: '1 day ago',
-    },
-    {
-      label: t('1 week ago'),
-      value: '1 week ago',
-    },
-    {
-      label: t('28 days ago'),
-      value: '28 days ago',
-    },
-    {
-      label: t('30 days ago'),
-      value: '30 days ago',
-    },
-    {
-      label: t('52 weeks ago'),
-      value: '52 weeks ago',
-    },
-    {
-      label: t('1 year ago'),
-      value: '1 year ago',
-    },
-    {
-      label: t('104 weeks ago'),
-      value: '104 weeks ago',
-    },
-    {
-      label: t('2 years ago'),
-      value: '2 years ago',
-    },
-    {
-      label: t('156 weeks ago'),
-      value: '156 weeks ago',
-    },
-    {
-      label: t('3 years ago'),
-      value: '3 years ago',
-    },
-  ],
-  time_compare_b: [
     {
       label: t('1 day ago'),
       value: '1 day ago',
@@ -352,24 +288,6 @@ const chartFormsOption = {
       value: 'ratio',
     },
   ],
-  comparison_type_b: [
-    {
-      label: t('Actual values'),
-      value: 'values',
-    },
-    {
-      label: t('Difference'),
-      value: 'difference',
-    },
-    {
-      label: t('Percentage change'),
-      value: 'percentage',
-    },
-    {
-      label: t('Ratio'),
-      value: 'ratio',
-    },
-  ],
   resample_rule: [
     {
       label: t('1 minutely frequency'),
@@ -404,75 +322,7 @@ const chartFormsOption = {
       value: '1A',
     },
   ],
-  resample_rule_b: [
-    {
-      label: t('1 minutely frequency'),
-      value: '1T',
-    },
-    {
-      label: t('1 hourly frequency'),
-      value: '1H',
-    },
-    {
-      label: t('1 calendar day frequency'),
-      value: '1D',
-    },
-    {
-      label: t('7 calendar day frequency'),
-      value: '7D',
-    },
-    {
-      label: t('1 month start frequency'),
-      value: '1MS',
-    },
-    {
-      label: t('1 month end frequency'),
-      value: '1M',
-    },
-    {
-      label: t('1 year start frequency'),
-      value: '1AS',
-    },
-    {
-      label: t('1 year end frequency'),
-      value: '1A',
-    },
-  ],
   resample_method: [
-    {
-      label: t('Null imputation'),
-      value: 'asfreq',
-    },
-    {
-      label: t('Zero imputation'),
-      value: 'zerofill',
-    },
-    {
-      label: t('Linear interpolation'),
-      value: 'linear',
-    },
-    {
-      label: t('Forward values'),
-      value: 'ffill',
-    },
-    {
-      label: t('Backward values'),
-      value: 'bfill',
-    },
-    {
-      label: t('Median values'),
-      value: 'median',
-    },
-    {
-      label: t('Mean values'),
-      value: 'mean',
-    },
-    {
-      label: t('Sum values'),
-      value: 'sum',
-    },
-  ],
-  resample_method_b: [
     {
       label: t('Null imputation'),
       value: 'asfreq',
