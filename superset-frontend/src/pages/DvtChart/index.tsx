@@ -250,6 +250,23 @@ const DvtChart = () => {
     color_picker: { r: 0, g: 122, b: 135, a: 1 },
     color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
     truncateYAxis: true,
+    x_axis_title: '',
+    x_axis_title_margin: { label: '15', value: 15 },
+    y_axis_title: '',
+    y_axis_title_margin: { label: '15', value: 15 },
+    y_axis_title_position: {
+      label: t('Left'),
+      value: 'Left',
+    },
+    sort_series_type: {
+      label: t('Total value'),
+      value: 'sum',
+    },
+    sort_series_ascending: false,
+    seriesType: {
+      label: t('Line'),
+      value: 'line',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -902,6 +919,38 @@ const DvtChart = () => {
           truncateYAxis: getFormData?.truncateYAxis
             ? getFormData.truncateYAxis
             : false,
+          x_axis_title: getFormData?.x_axis_title
+            ? getFormData.x_axis_title
+            : '',
+          x_axis_title_margin: chartFormsFindOptions('x_axis_title_margin', {
+            label: '15',
+            value: 15,
+          }),
+          y_axis_title: getFormData?.y_axis_title
+            ? getFormData.y_axis_title
+            : '',
+          y_axis_title_margin: chartFormsFindOptions('y_axis_title_margin', {
+            label: '15',
+            value: 15,
+          }),
+          y_axis_title_position: chartFormsFindOptions(
+            'y_axis_title_position',
+            {
+              label: t('Left'),
+              value: 'Left',
+            },
+          ),
+          sort_series_type: chartFormsFindOptions('sort_series_type', {
+            label: t('Total value'),
+            value: 'sum',
+          }),
+          sort_series_ascending: getFormData?.sort_series_ascending
+            ? getFormData.sort_series_ascending
+            : false,
+          seriesType: chartFormsFindOptions('seriesType', {
+            label: t('Line'),
+            value: 'line',
+          }),
         });
 
         setChartStatus('loading');
@@ -1263,14 +1312,12 @@ const DvtChart = () => {
       annotation_layers: [],
       forecastPeriods: values.forecastPeriods,
       forecastInterval: values.forecastInterval,
-      x_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
-      y_axis_title_margin: active === 'bubble_v2' ? 30 : 15,
-      y_axis_title_position: 'Left',
-      sort_series_type: 'sum',
+      sort_series_type: values.sort_series_type.value,
+      sort_series_ascending: values.sort_series_ascending ? true : undefined,
       color_scheme: values.color_scheme
         ? values.color_scheme.id
         : 'supersetColors',
-      seriesType: 'line',
+      seriesType: values.seriesType.value,
       seriesTypeB: 'line',
       only_total: true,
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
@@ -1346,7 +1393,6 @@ const DvtChart = () => {
       rolling_type_b: withoutValueForNull(values.rolling_type_b),
       show_value: undefined,
       slice_id: undefined,
-      sort_series_ascending: undefined,
       stack: undefined,
       time_compare: values.time_compare,
       time_compare_b: values.time_compare_b,
@@ -1355,8 +1401,11 @@ const DvtChart = () => {
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: undefined,
       x_axis_sort: undefined,
-      x_axis_title: undefined,
-      y_axis_title: undefined,
+      x_axis_title: values.x_axis_title ? values.x_axis_title : undefined,
+      x_axis_title_margin: values.x_axis_title_margin.value,
+      y_axis_title: values.y_axis_title ? values.y_axis_title : undefined,
+      y_axis_title_margin: values.y_axis_title_margin.value,
+      y_axis_title_position: values.y_axis_title_position.value,
       zoomable: undefined,
       header_font_size: 0.4,
       metric: metricsFormation('metric')[0],
