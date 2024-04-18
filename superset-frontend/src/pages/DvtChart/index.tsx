@@ -988,7 +988,7 @@ const DvtChart = () => {
             label: ac.label,
             sqlExpression: ac.values.sql,
           }
-        : ac.values.sql,
+        : ac.label,
     );
 
   const droppedOnlyLabelOrYear = (
@@ -1215,13 +1215,8 @@ const DvtChart = () => {
       x_axis_sort_series_ascending: true,
       metrics: metricsFormation('metrics'),
       metrics_b: metricsFormation('metrics_b'),
-      groupby:
-        active === 'mixed_timeseries' && values.groupby
-          ? values.groupby.map((v: any) => v.label)
-          : droppedOnlyLabels('groupby'),
-      groupby_b: values.groupby_b
-        ? values.groupby_b.map((v: any) => v.label)
-        : droppedOnlyLabels('groupby_b'),
+      groupby: droppedOnlyLabels('groupby'),
+      groupby_b: droppedOnlyLabels('groupby_b'),
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
         subject: v.values.column.column_name,
