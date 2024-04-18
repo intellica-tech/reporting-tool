@@ -89,29 +89,50 @@ const DvtChart = () => {
       value: 'P1D',
     },
     metrics: [],
+    metrics_b: [],
     groupby: [],
+    groupby_b: [],
     contributionMode: '',
     adhoc_filters: [],
+    adhoc_filters_b: [],
     limit: '',
     timeseries_limit_metric: [],
+    timeseries_limit_metric_b: [],
     order_desc: true,
+    order_desc_b: true,
     row_limit: {
       label: '10000',
       value: '10000',
     },
+    row_limit_b: {
+      label: '10000',
+      value: '10000',
+    },
     truncate_metric: true,
+    truncate_metric_b: true,
     show_empty_columns: true,
     rolling_type: {
       label: t('None'),
       value: 'None',
     },
+    rolling_type_b: {
+      label: t('None'),
+      value: 'None',
+    },
     time_compare: [],
+    time_compare_b: [],
     comparison_type: {
       label: t('Actual values'),
       value: 'values',
     },
+    comparison_type_b: {
+      label: t('Actual values'),
+      value: 'values',
+    },
     resample_rule: '',
+    resample_rule_b: '',
     resample_method: '',
+    resample_method_b: '',
     annotation_layers: [],
     forecastEnabled: false,
     forecastPeriods: '10',
@@ -198,7 +219,9 @@ const DvtChart = () => {
     show_values: false,
     normalized: false,
     min_periods: '',
+    min_periods_b: '',
     rolling_periods: '',
+    rolling_periods_b: '',
     compare_lag: '',
     compare_suffix: '',
     show_timestamp: false,
@@ -214,6 +237,7 @@ const DvtChart = () => {
     rowSubTotals: false,
     rowTotals: false,
     series_limit: [],
+    series_limit_b: [],
     transposePivot: false,
     contribution: false,
     country_fieldtype: {
@@ -521,9 +545,10 @@ const DvtChart = () => {
           field: string,
           value: any,
           findNameField = 'value',
+          onB?: boolean,
         ) =>
           getFormData?.[field]
-            ? chartFormsOption[field].find(
+            ? chartFormsOption[onB ? field.replace('_b', '') : field].find(
                 (f: any) => f[findNameField] === getFormData[field],
               )
             : value;
@@ -547,14 +572,32 @@ const DvtChart = () => {
           metrics: getFormData?.metrics
             ? getFormData.metrics.map((v: any) => metricsOrColumnsFormation(v))
             : [],
+          metrics_b: getFormData?.metrics_b
+            ? getFormData.metrics_b.map((v: any) =>
+                metricsOrColumnsFormation(v),
+              )
+            : [],
           groupby: getFormData?.groupby
             ? getFormData.groupby.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          groupby_b: getFormData?.groupby_b
+            ? getFormData.groupby_b.map((v: any) =>
+                metricsOrColumnsFormation(v),
+              )
             : [],
           contributionMode: chartFormsFindOptions('contributionMode', ''),
           adhoc_filters: [
             ...filtersOnItem,
             ...(getFormData?.adhoc_filters
               ? getFormData.adhoc_filters.map((v: any) =>
+                  adhocFiltersFormation(v),
+                )
+              : []),
+          ],
+          adhoc_filters_b: [
+            ...filtersOnItem,
+            ...(getFormData?.adhoc_filters_b
+              ? getFormData.adhoc_filters_b.map((v: any) =>
                   adhocFiltersFormation(v),
                 )
               : []),
@@ -568,7 +611,11 @@ const DvtChart = () => {
           timeseries_limit_metric: timeseriesLimitMetricSwitch(
             getFormData.viz_type,
           ),
+          timeseries_limit_metric_b: getFormData.timeseries_limit_metric_b
+            ? emptyArrayOrOneFindItem(getFormData.timeseries_limit_metric_b)
+            : [],
           order_desc: getFormData?.order_desc !== false,
+          order_desc_b: getFormData?.order_desc_b !== false,
           row_limit: getFormData?.row_limit
             ? {
                 label: String(getFormData.row_limit),
@@ -578,21 +625,64 @@ const DvtChart = () => {
                 label: '10000',
                 value: '10000',
               },
-          truncate_metric: true,
+          row_limit_b: getFormData?.row_limit_b
+            ? {
+                label: String(getFormData.row_limit_b),
+                value: String(getFormData.row_limit_b),
+              }
+            : {
+                label: '10000',
+                value: '10000',
+              },
+          truncate_metric: getFormData?.truncate_metric !== false,
+          truncate_metric_b: getFormData?.truncate_metric_b !== false,
           show_empty_columns: true,
           rolling_type: chartFormsFindOptions('rolling_type', {
             label: t('None'),
             value: 'None',
           }),
+          rolling_type_b: chartFormsFindOptions(
+            'rolling_type_b',
+            {
+              label: t('None'),
+              value: 'None',
+            },
+            'value',
+            true,
+          ),
           time_compare: getFormData?.time_compare
-            ? getFormData.time_compare
+            ? getFormData?.time_compare
+            : [],
+          time_compare_b: getFormData?.time_compare_b
+            ? getFormData?.time_compare_b
             : [],
           comparison_type: chartFormsFindOptions('comparison_type', {
             label: t('Actual values'),
             value: 'values',
           }),
+          comparison_type_b: chartFormsFindOptions(
+            'comparison_type_b',
+            {
+              label: t('Actual values'),
+              value: 'values',
+            },
+            'value',
+            true,
+          ),
           resample_rule: chartFormsFindOptions('resample_rule', ''),
+          resample_rule_b: chartFormsFindOptions(
+            'resample_rule_b',
+            '',
+            'value',
+            true,
+          ),
           resample_method: chartFormsFindOptions('resample_method', ''),
+          resample_method_b: chartFormsFindOptions(
+            'resample_method_b',
+            '',
+            'value',
+            true,
+          ),
           annotation_layers: [],
           forecastEnabled: getFormData?.forecastEnabled
             ? getFormData.forecastEnabled
@@ -746,7 +836,13 @@ const DvtChart = () => {
           rolling_periods: getFormData?.rolling_periods
             ? getFormData.rolling_periods
             : '',
+          rolling_periods_b: getFormData?.rolling_periods_b
+            ? getFormData.rolling_periods_b
+            : '',
           min_periods: getFormData?.min_periods ? getFormData.min_periods : '',
+          min_periods_b: getFormData?.min_periods_b
+            ? getFormData.min_periods_b
+            : '',
           aggregateFunction: {
             label: getFormData.aggregateFunction,
             value: getFormData.aggregateFunction,
@@ -771,6 +867,10 @@ const DvtChart = () => {
           series_limit: {
             label: getFormData.series_limit,
             value: getFormData.series_limit,
+          },
+          series_limit_b: {
+            label: getFormData.series_limit_b,
+            value: getFormData.series_limit_b,
           },
           transposePivot: getFormData.transposePivot,
           contribution: getFormData.contribution,
@@ -904,6 +1004,14 @@ const DvtChart = () => {
             label: ac.label,
             expressionType: 'SQL',
           }
+        : active === 'mixed_timeseries'
+        ? {
+            timeGrain: defaultTimeGrain ? 'P1D' : values.time_grain_sqla?.value,
+            columnType: 'BASE_AXIS',
+            sqlExpression: ac.label,
+            label: ac.label,
+            expressionType: 'SQL',
+          }
         : ac.values.expressionType === 'SQL'
         ? {
             expressionType: ac.values.expressionType,
@@ -1009,6 +1117,10 @@ const DvtChart = () => {
           ],
           [values.x_axis[0]?.label, true],
         ].filter(item => item !== false && item !== null);
+      case 'mixed_timeseries':
+        return values.timeseries_limit_metric.length
+          ? [values.timeseries_limit_metric[0]?.label, false]
+          : [];
       default:
         return [[metricsFormation('metrics')[0], false]];
     }
@@ -1028,6 +1140,11 @@ const DvtChart = () => {
           ...droppedOnlyLabels('entity'),
           ...droppedOnlyLabels('dimension'),
         ];
+      case 'mixed_timeseries':
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('x_axis', true),
+          ...values.groupby.map((v: any) => v.label),
+        ]);
       default:
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('x_axis'),
@@ -1097,7 +1214,14 @@ const DvtChart = () => {
       x_axis_sort_series: 'name',
       x_axis_sort_series_ascending: true,
       metrics: metricsFormation('metrics'),
-      groupby: droppedOnlyLabels('groupby'),
+      metrics_b: metricsFormation('metrics_b'),
+      groupby:
+        active === 'mixed_timeseries' && values.groupby
+          ? values.groupby.map((v: any) => v.label)
+          : droppedOnlyLabels('groupby'),
+      groupby_b: values.groupby_b
+        ? values.groupby_b.map((v: any) => v.label)
+        : droppedOnlyLabels('groupby_b'),
       adhoc_filters: values.adhoc_filters.map((v: any) => ({
         expressionType: v.values.expressionType,
         subject: v.values.column.column_name,
@@ -1115,11 +1239,32 @@ const DvtChart = () => {
           .toString(36)
           .substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`,
       })),
+      adhoc_filters_b: values.adhoc_filters_b.map((v: any) => ({
+        expressionType: v.values.expressionType,
+        subject: v.values.column.column_name,
+        operator: v.values.operator.value,
+        operatorId: v.values.column.python_date_format
+          ? undefined
+          : v.values.operator.value,
+        comparator: v.values.comparator,
+        clause: v.values.clause,
+        sqlExpression: null,
+        isExtra: false,
+        isNew: false,
+        datasourceWarning: false,
+        filterOptionName: `filter_${Math.random()
+          .toString(36)
+          .substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`,
+      })),
       order_desc: values.order_desc,
+      order_desc_b: values.order_desc_b,
       row_limit: Number(values.row_limit.value),
+      row_limit_b: Number(values.row_limit.value),
       truncate_metric: values.truncate_metric,
+      truncate_metric_b: values.truncate_metric_b,
       show_empty_columns: values.show_empty_columns,
       comparison_type: values.comparison_type.value,
+      comparison_type_b: values.comparison_type_b.value,
       annotation_layers: [],
       forecastPeriods: values.forecastPeriods,
       forecastInterval: values.forecastInterval,
@@ -1131,9 +1276,12 @@ const DvtChart = () => {
         ? values.color_scheme.id
         : 'supersetColors',
       seriesType: 'line',
+      seriesTypeB: 'line',
       only_total: true,
       opacity: active === 'bubble_v2' ? 0.6 : 0.2,
+      opacityB: 0.2,
       markerSize: 6,
+      markerSizeB: 6,
       orientation: 'vertical',
       show_legend: active === 'heatmap' ? values.show_legend : true,
       legendType: 'scroll',
@@ -1158,6 +1306,9 @@ const DvtChart = () => {
       timeseries_limit_metric: values.timeseries_limit_metric.length
         ? metricsFormation('timeseries_limit_metric')[0]
         : undefined,
+      timeseries_limit_metric_b: values.timeseries_limit_metric_b.length
+        ? metricsFormation('timeseries_limit_metric_b')[0]
+        : undefined,
       area: undefined,
       cache_timeout: undefined,
       contributionMode: withoutValueForNull(values.contributionMode),
@@ -1179,21 +1330,31 @@ const DvtChart = () => {
       limit: withoutValueForNull(values.limit),
       logAxis: undefined,
       markerEnabled: undefined,
-      min_periods: values.min_periods ? values.min_periods : undefined,
+      min_periods: values.min_periods ? Number(values.min_periods) : undefined,
+      min_periods_b: values.min_periods_b
+        ? Number(values.min_periods_b)
+        : undefined,
       minorSplitLine: undefined,
       minorTicks: undefined,
       percentage_threshold: undefined,
       resample_method: withoutValueForNull(values.resample_method),
+      resample_method_b: withoutValueForNull(values.resample_method_b),
       resample_rule: withoutValueForNull(values.resample_rule),
+      resample_rule_b: withoutValueForNull(values.resample_rule_b),
       rolling_periods: values.rolling_periods
         ? values.rolling_periods
         : undefined,
+      rolling_periods_b: values.rolling_periods_b
+        ? values.rolling_periods_b
+        : undefined,
       rolling_type: withoutValueForNull(values.rolling_type),
+      rolling_type_b: withoutValueForNull(values.rolling_type_b),
       show_value: undefined,
       slice_id: undefined,
       sort_series_ascending: undefined,
       stack: undefined,
       time_compare: values.time_compare,
+      time_compare_b: values.time_compare_b,
       tooltipSortByMetric: undefined,
       xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
@@ -1312,8 +1473,9 @@ const DvtChart = () => {
         : undefined,
       transposePivot: values.transposePivot,
       valueFormat: 'SMART_NUMBER',
-      series_limit: values.series_limit.value
-        ? Number(values.series_limit.value)
+      series_limit: values.series_limit ? Number(values.series_limit.value) : 0,
+      series_limit_b: values.series_limit_b
+        ? Number(values.series_limit_b.value)
         : 0,
       contribution: values.contribution,
       columns:
@@ -1323,6 +1485,8 @@ const DvtChart = () => {
       show_bubbles: values.show_bubbles,
       country_fieldtype: values.country_fieldtype?.value,
       secondary_metric: metricsFormation('secondary_metric')[0],
+      y_axis_bounds_secondary: [null, null],
+      y_axis_format_secondary: 'SMART_NUMBER',
       link_length: 5,
     },
     queries: [
@@ -1361,13 +1525,17 @@ const DvtChart = () => {
         annotation_layers: [],
         row_limit: Number(values.row_limit.value),
         series_columns: droppedOnlyLabels('groupby'),
-        series_limit:
-          active === 'pivot_table_v2' ? Number(values.series_limit.value) : 0,
+        series_limit: values.series_limit?.value
+          ? Number(values.series_limit.value)
+          : 0,
         order_desc: active === 'pivot_table_v2' ? values.order_desc : true,
         url_params: selectedChart?.form_data?.url_params,
         custom_params: {},
         custom_form_data: {},
-        time_offsets: [],
+        time_offsets:
+          active === 'mixed_timeseries' && values.time_compare
+            ? values.time_compare
+            : [],
         post_processing:
           active === 'table'
             ? []
@@ -1398,6 +1566,78 @@ const DvtChart = () => {
           ? metricsFormation('timeseries_limit_metric')[0]
           : undefined,
       },
+      ...(active === 'mixed_timeseries'
+        ? [
+            {
+              filters: values.adhoc_filters_b
+                .filter((v: any) => v.values.expressionType !== 'SQL')
+                .map((v: any) => ({
+                  col: v.values.column.column_name,
+                  op: v.values.operator.value,
+                  val: v.values.comparator,
+                })),
+              extras: {
+                time_grain_sqla: values.time_grain_sqla?.value,
+                having: values.adhoc_filters_b
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'HAVING',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+                where: values.adhoc_filters_b
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'WHERE',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+              },
+              applied_time_extras: {},
+              columns: arrayOnlyOneItemFormation([
+                ...droppedOnlyLabelOrYear('x_axis'),
+                ...values.groupby_b.map((v: any) => v.label),
+              ]),
+              metrics: metricsFormation('metrics_b'),
+              orderby: values.timeseries_limit_metric_b.length
+                ? [[metricsFormation('timeseries_limit_metric_b')[0], false]]
+                : undefined,
+              annotation_layers: [],
+              row_limit: Number(values.row_limit_b.value),
+              series_columns: droppedOnlyLabels('groupby_b'),
+              series_limit: values.series_limit_b?.value
+                ? Number(values.series_limit_b.value)
+                : 0,
+              url_params: selectedChart?.form_data?.url_params,
+              custom_params: {},
+              custom_form_data: {},
+              time_offsets: values.time_compare_b ? values.time_compare_b : [],
+              post_processing: [
+                {
+                  operation: 'pivot',
+                  options: {
+                    index: [values.x_axis[0]?.label],
+                    columns: values.groupby_b.map((vg: any) => vg.values.sql),
+                    aggregates: postProcessingAggregates(values.metrics_b),
+                    drop_missing_columns: false,
+                  },
+                },
+                ...(Object.keys(postProcessingRename).length !== 0
+                  ? [postProcessingRename]
+                  : []),
+                ...(postProcessingRollingChartActives.includes(active) &&
+                values.rolling_type.value !== 'None'
+                  ? [postProcessingRollingType]
+                  : []),
+                {
+                  operation: 'flatten',
+                },
+              ],
+            },
+          ]
+        : []),
     ],
     result_format: 'json',
     result_type: 'full',
@@ -1709,6 +1949,12 @@ const DvtChart = () => {
         return !(values.metrics.length && values.groupby.length);
       case 'world_map':
         return !(values.entity.length && values.metric.length);
+      case 'mixed_timeseries':
+        return !(
+          values.x_axis.length &&
+          values.metrics.length &&
+          values.metrics_b.length
+        );
       default:
         return false;
     }
