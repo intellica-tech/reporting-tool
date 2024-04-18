@@ -1552,74 +1552,78 @@ const DvtChart = () => {
           ? metricsFormation('timeseries_limit_metric')[0]
           : undefined,
       },
-      active === 'mixed_timeseries' && {
-        filters: values.adhoc_filters_b
-          .filter((v: any) => v.values.expressionType !== 'SQL')
-          .map((v: any) => ({
-            col: v.values.column.column_name,
-            op: v.values.operator.value,
-            val: v.values.comparator,
-          })),
-        extras: {
-          time_grain_sqla: values.time_grain_sqla?.value,
-          having: values.adhoc_filters_b
-            .filter(
-              (v: any) =>
-                v.values.expressionType === 'SQL' &&
-                v.values.clause === 'HAVING',
-            )
-            .map((v: any) => `(${v.values.sql})`)
-            .join(' AND '),
-          where: values.adhoc_filters_b
-            .filter(
-              (v: any) =>
-                v.values.expressionType === 'SQL' &&
-                v.values.clause === 'WHERE',
-            )
-            .map((v: any) => `(${v.values.sql})`)
-            .join(' AND '),
-        },
-        applied_time_extras: {},
-        columns: arrayOnlyOneItemFormation([
-          ...droppedOnlyLabelOrYear('x_axis'),
-          ...values.groupby_b.map((v: any) => v.label),
-        ]),
-        metrics: metricsFormation('metrics_b'),
-        orderby: values.timeseries_limit_metric_b.length
-          ? [[metricsFormation('timeseries_limit_metric_b')[0], false]]
-          : undefined,
-        annotation_layers: [],
-        row_limit: Number(values.row_limit_b.value),
-        series_columns: droppedOnlyLabels('groupby_b'),
-        series_limit: values.series_limit_b?.value
-          ? Number(values.series_limit_b.value)
-          : 0,
-        url_params: selectedChart?.form_data?.url_params,
-        custom_params: {},
-        custom_form_data: {},
-        time_offsets: values.time_compare_b ? values.time_compare_b : [],
-        post_processing: [
-          {
-            operation: 'pivot',
-            options: {
-              index: [values.x_axis[0]?.label],
-              columns: values.groupby_b.map((vg: any) => vg.values.sql),
-              aggregates: postProcessingAggregates(values.metrics_b),
-              drop_missing_columns: false,
+      ...(active === 'mixed_timeseries'
+        ? [
+            {
+              filters: values.adhoc_filters_b
+                .filter((v: any) => v.values.expressionType !== 'SQL')
+                .map((v: any) => ({
+                  col: v.values.column.column_name,
+                  op: v.values.operator.value,
+                  val: v.values.comparator,
+                })),
+              extras: {
+                time_grain_sqla: values.time_grain_sqla?.value,
+                having: values.adhoc_filters_b
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'HAVING',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+                where: values.adhoc_filters_b
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'WHERE',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+              },
+              applied_time_extras: {},
+              columns: arrayOnlyOneItemFormation([
+                ...droppedOnlyLabelOrYear('x_axis'),
+                ...values.groupby_b.map((v: any) => v.label),
+              ]),
+              metrics: metricsFormation('metrics_b'),
+              orderby: values.timeseries_limit_metric_b.length
+                ? [[metricsFormation('timeseries_limit_metric_b')[0], false]]
+                : undefined,
+              annotation_layers: [],
+              row_limit: Number(values.row_limit_b.value),
+              series_columns: droppedOnlyLabels('groupby_b'),
+              series_limit: values.series_limit_b?.value
+                ? Number(values.series_limit_b.value)
+                : 0,
+              url_params: selectedChart?.form_data?.url_params,
+              custom_params: {},
+              custom_form_data: {},
+              time_offsets: values.time_compare_b ? values.time_compare_b : [],
+              post_processing: [
+                {
+                  operation: 'pivot',
+                  options: {
+                    index: [values.x_axis[0]?.label],
+                    columns: values.groupby_b.map((vg: any) => vg.values.sql),
+                    aggregates: postProcessingAggregates(values.metrics_b),
+                    drop_missing_columns: false,
+                  },
+                },
+                ...(Object.keys(postProcessingRename).length !== 0
+                  ? [postProcessingRename]
+                  : []),
+                ...(postProcessingRollingChartActives.includes(active) &&
+                values.rolling_type.value !== 'None'
+                  ? [postProcessingRollingType]
+                  : []),
+                {
+                  operation: 'flatten',
+                },
+              ],
             },
-          },
-          ...(Object.keys(postProcessingRename).length !== 0
-            ? [postProcessingRename]
-            : []),
-          ...(postProcessingRollingChartActives.includes(active) &&
-          values.rolling_type.value !== 'None'
-            ? [postProcessingRollingType]
-            : []),
-          {
-            operation: 'flatten',
-          },
-        ],
-      },
+          ]
+        : []),
     ],
     result_format: 'json',
     result_type: 'full',
