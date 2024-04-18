@@ -544,13 +544,11 @@ const DvtChart = () => {
           field: string,
           value: any,
           findNameField = 'value',
-          b?: boolean,
+          onB?: boolean,
         ) =>
           getFormData?.[field]
-            ? chartFormsOption[field].find((f: any) =>
-                f[findNameField] === b
-                  ? `${getFormData[field]}_b`
-                  : getFormData[field],
+            ? chartFormsOption[onB ? field.replace('_b', '') : field].find(
+                (f: any) => f[findNameField] === getFormData[field],
               )
             : value;
 
@@ -643,7 +641,7 @@ const DvtChart = () => {
             value: 'None',
           }),
           rolling_type_b: chartFormsFindOptions(
-            'rolling_type',
+            'rolling_type_b',
             {
               label: t('None'),
               value: 'None',
@@ -662,7 +660,7 @@ const DvtChart = () => {
             value: 'values',
           }),
           comparison_type_b: chartFormsFindOptions(
-            'comparison_type',
+            'comparison_type_b',
             {
               label: t('Actual values'),
               value: 'values',
@@ -672,14 +670,14 @@ const DvtChart = () => {
           ),
           resample_rule: chartFormsFindOptions('resample_rule', ''),
           resample_rule_b: chartFormsFindOptions(
-            'resample_rule',
+            'resample_rule_b',
             '',
             'value',
             true,
           ),
           resample_method: chartFormsFindOptions('resample_method', ''),
           resample_method_b: chartFormsFindOptions(
-            'resample_method',
+            'resample_method_b',
             '',
             'value',
             true,
