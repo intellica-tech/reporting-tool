@@ -94,7 +94,7 @@ const colorScheme: FormsProps = {
   popper: t('The color scheme for rendering chart'),
   name: 'color_scheme',
   status: 'color-select',
-  optionsColor: chartFormsOption.linear_color_scheme,
+  optionsColor: chartFormsOption.color_scheme,
 };
 
 const seriesStyle: FormsProps = {
@@ -384,7 +384,7 @@ const numberFormat: FormsProps = {
   popper: t(
     'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
   ),
-  options: [],
+  options: chartFormsOption.y_axis_format,
 };
 
 const dateFormat: FormsProps = {
@@ -392,7 +392,7 @@ const dateFormat: FormsProps = {
   name: 'time_format',
   status: 'select',
   popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-  options: [],
+  options: chartFormsOption.time_format,
 };
 
 const showLabels: FormsProps = {
@@ -645,7 +645,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'table_timestamp_format',
             status: 'select',
             popper: t('D3 time format for datetime columns'),
-            options: [],
+            options: chartFormsOption.time_format,
           },
           {
             label: t('PAGE LENGTH'),
@@ -1203,7 +1203,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'valueFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.y_axis_format,
           },
           currencyFormat,
           dateFormat,
@@ -1211,13 +1211,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             label: t('SORT ROWS BY'),
             name: 'rowOrder',
             status: 'select',
-            options: [],
+            options: chartFormsOption.rowOrder,
           },
           {
             label: t('SORT COLUMNS BY'),
             name: 'colOrder',
             status: 'select',
-            options: [],
+            options: chartFormsOption.rowOrder,
           },
           {
             label: t('ROWS SUBTOTAL POSITION'),
