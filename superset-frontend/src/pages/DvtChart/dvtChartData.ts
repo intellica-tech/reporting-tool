@@ -1467,7 +1467,7 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             placeholder: t('Select ...'),
             status: 'multiple-select',
-            options: chartFormsOption.time_compare_b,
+            options: chartFormsOption.time_compare,
           },
           {
             label: t('CALCULATION TYPE'),
@@ -1477,7 +1477,7 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.comparison_type_b,
+            options: chartFormsOption.comparison_type,
           },
           {
             label: t('RULE'),
@@ -1485,7 +1485,7 @@ const DvtChartData: DvtChartDataProps[] = [
             popper: t('Pandas resample rule'),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.resample_rule_b,
+            options: chartFormsOption.resample_rule,
           },
           {
             label: t('FILL METHOD'),
@@ -1493,7 +1493,7 @@ const DvtChartData: DvtChartDataProps[] = [
             popper: t('Pandas resample method'),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.resample_method_b,
+            options: chartFormsOption.resample_method,
           },
         ],
       },
