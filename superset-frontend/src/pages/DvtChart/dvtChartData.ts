@@ -1351,7 +1351,7 @@ const DvtChartData: DvtChartDataProps[] = [
         forms: [
           {
             label: t('METRICS'),
-            name: 'metricsb',
+            name: 'metrics_b',
             popper: t(
               'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
             ),
@@ -1363,7 +1363,7 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('DIMENSIONS'),
-            name: 'groupbyb',
+            name: 'groupby_b',
             popper: t(
               'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
             ),
@@ -1374,14 +1374,14 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('FILTERS'),
-            name: 'adhoc_filtersb',
+            name: 'adhoc_filters_b',
             status: 'input-drop',
             multiple: true,
             type: 'filters',
           },
           {
             label: t('SERIES LIMIT'),
-            name: 'series_limitb',
+            name: 'series_limit_b',
             popper: t(
               'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
             ),
@@ -1391,7 +1391,7 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('SORT BY'),
-            name: 'timeseries_limit_metricb',
+            name: 'timeseries_limit_metric_b',
             popper: t(
               'This metric is used to define row selection criteria (how the rows are sorted) if a series or row limit is present. If not defined, it reverts to the first metric (where appropriate).',
             ),
@@ -1402,12 +1402,12 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('SORT DESCENDING'),
-            name: 'order_descb',
+            name: 'order_desc_b',
             status: 'checkbox',
           },
           {
             label: t('ROW LIMIT'),
-            name: 'row_limitb',
+            name: 'row_limit_b',
             popper: t(
               'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
             ),
@@ -1416,31 +1416,31 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('TRUNCATE METRIC'),
-            name: 'truncate_metricb',
+            name: 'truncate_metric_b',
             status: 'checkbox',
           },
         ],
       },
       {
         collapse_label: t('Advanced analytics Query B '),
-        collapse_active: 'advancedB',
+        collapse_active: 'advanced_b',
         collapse_popper_error: t(
           'This section contains options that allow for advanced analytical post processing of query results',
         ),
         forms: [
           {
             label: t('ROLLING FUNCTION'),
-            name: 'rolling_typeb',
+            name: 'rolling_type_b',
             popper: t(
               'Defines a rolling window function to apply, works along with the [Periods] text box',
             ),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.rolling_type,
+            options: chartFormsOption.rolling_type_b,
           },
           {
             label: t('PERIODS'),
-            name: 'rolling_periodsb',
+            name: 'rolling_periods_b',
             popper: t(
               'Defines the size of the rolling window function, relative to the time granularity selected',
             ),
@@ -1449,7 +1449,7 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('MIN PERIODS'),
-            name: 'min_periodsb',
+            name: 'min_periods_b',
             popper: t(
               'The minimum number of rolling periods required to show a value. For instance if you do a cumulative sum on 7 days you may want your "Min Period" to be 7, so that all data points shown are the total of 7 periods. This will hide the "ramp up" taking place over the first 7 periods',
             ),
@@ -1458,39 +1458,39 @@ const DvtChartData: DvtChartDataProps[] = [
           },
           {
             label: t('TIME SHIFT'),
-            name: 'time_compareb',
+            name: 'time_compare_b',
             popper: t(
               'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
             ),
             placeholder: t('Select ...'),
             status: 'multiple-select',
-            options: chartFormsOption.time_compare,
+            options: chartFormsOption.time_compare_b,
           },
           {
             label: t('CALCULATION TYPE'),
-            name: 'comparison_typeb',
+            name: 'comparison_type_b',
             popper: t(
               'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
             ),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.comparison_type,
+            options: chartFormsOption.comparison_type_b,
           },
           {
             label: t('RULE'),
-            name: 'resample_ruleb',
+            name: 'resample_rule_b',
             popper: t('Pandas resample rule'),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.resample_rule,
+            options: chartFormsOption.resample_rule_b,
           },
           {
             label: t('FILL METHOD'),
-            name: 'resample_methodb',
+            name: 'resample_method_b',
             popper: t('Pandas resample method'),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.resample_method,
+            options: chartFormsOption.resample_method_b,
           },
         ],
       },
