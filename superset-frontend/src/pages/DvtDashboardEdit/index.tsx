@@ -242,6 +242,7 @@ function DvtDashboardList() {
     const firstOrThenAddPosition = newRow ? position : firstCreatePosition;
     const gridChildren = firstOrThenAddPosition.GRID_ID.children;
     const indexBefore = gridChildren.indexOf(rowBefore);
+    const indexDropMove = gridChildren.indexOf(jsonDropMoveId);
 
     if (jsonDropNew) {
       setPosition({
@@ -263,15 +264,22 @@ function DvtDashboardList() {
         (v: string) => v !== jsonDropMoveId,
       );
 
+      const minusIndexBefore =
+        indexBefore === -1
+          ? gridChildren.length
+          : indexDropMove < indexBefore
+          ? indexBefore - 1
+          : indexBefore;
+
       setPosition({
         ...firstOrThenAddPosition,
         GRID_ID: {
           ...firstOrThenAddPosition.GRID_ID,
           children: rowIdRemovedGridChildren
-            .slice(0, indexBefore)
+            .slice(0, minusIndexBefore)
             .concat(
               jsonDropMoveId,
-              rowIdRemovedGridChildren.slice(indexBefore),
+              rowIdRemovedGridChildren.slice(minusIndexBefore),
             ),
         },
       });
@@ -566,7 +574,7 @@ function DvtDashboardList() {
     [],
   );
 
-  console.log(position);
+  // console.log(position);
 
   return (
     <StyledDashboardEdit>

@@ -14,6 +14,7 @@ import {
   D3_FORMAT_OPTIONS,
   D3_TIME_FORMAT_OPTIONS,
 } from 'src/explore/controls';
+import { DvtSchemeColorData } from 'src/components/DvtSelectColorScheme/dvtSchemeColorData';
 
 const forecastSeasonality = [
   {
@@ -868,12 +869,12 @@ const chartFormsOption = {
   ],
   stack: [
     {
-      label: t('Stack'),
-      value: 'stack',
-    },
-    {
       label: t('None'),
       value: '',
+    },
+    {
+      label: t('Stack'),
+      value: 'Stack',
     },
     {
       label: t('Stream'),
@@ -989,6 +990,25 @@ const chartFormsOption = {
     ...CategoricalLyft,
     ...CategoricalPreset,
     ...schemes,
+  ],
+  color_scheme: DvtSchemeColorData,
+  rowOrder: [
+    {
+      label: t('key a-z'),
+      value: 'key_a_to_z',
+    },
+    {
+      label: t('key z-a'),
+      value: 'key_z_to_a',
+    },
+    {
+      label: t('value ascending'),
+      value: 'value_a_to_z',
+    },
+    {
+      label: t('value descending'),
+      value: 'value_z_to_a',
+    },
   ],
 };
 

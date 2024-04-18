@@ -354,6 +354,13 @@ const DvtSidebarData: SidebarDataProps[] = [
         active: 'linear_regression',
       },
       {
+        placeholder: t('Training Data Ratio'),
+        name: 'training_data_ratio',
+        label: t('TRAINING DATA RATIO'),
+        active: 'linear_regression',
+        status: 'range',
+      },
+      {
         placeholder: t('EPSİLON'),
         name: 'epsilon',
         label: t('EPSİLON'),

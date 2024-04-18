@@ -6,6 +6,12 @@ interface OptionsData {
   value: any;
 }
 
+interface OptionsDataColor {
+  id: string;
+  label: any;
+  colors: string[];
+}
+
 interface ActivesProps {
   [key: string]: string[];
 }
@@ -28,6 +34,7 @@ interface FormsProps {
     | 'input'
     | 'select'
     | 'multiple-select'
+    | 'color-select'
     | 'input-drop'
     | 'checkbox'
     | 'annotation-layer'
@@ -46,6 +53,7 @@ interface FormsProps {
   simpleType?: 'normal' | 'temporal';
   multiple?: boolean;
   options?: OptionsData[];
+  optionsColor?: OptionsDataColor[];
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
@@ -66,293 +74,476 @@ interface DvtChartCustomizeProps {
   collapses: CollapsesProps[];
 }
 
-const formDimensions: FormsProps = {
-  label: t('DIMENSIONS'),
-  name: 'groupby',
-  popper: t(
-    'Dimensions contain qualitative values such as names, dates, or geographical data. Use dimensions to categorize, segment, and reveal the details in your data. Dimensions affect the level of detail in the view.',
-  ),
-  status: 'input-drop',
-  multiple: true,
-  type: 'normal',
-  savedType: 'expressions',
-};
-
-const formMetrics: FormsProps = {
-  label: t('METRICS'),
-  name: 'metrics',
-  popper: t(
-    'Select one or many metrics to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-  ),
-  popperError: t('cannot be empty'),
-  status: 'input-drop',
-  multiple: true,
-  type: 'aggregates',
-  savedType: 'metric',
-};
-
-const formMetric: FormsProps = {
-  label: t('METRIC'),
-  name: 'metric',
-  popper: t(
-    'Select a metric to display. You can use an aggregation function on a column or write custom SQL to create a metric.',
-  ),
-  popperError: t('cannot be empty'),
-  status: 'input-drop',
-  multiple: false,
-  type: 'aggregates',
-  savedType: 'metric',
-};
-
-const formFilters: FormsProps = {
-  label: t('FILTERS'),
-  name: 'adhoc_filters',
-  status: 'input-drop',
-  multiple: true,
-  type: 'filters',
-};
-
-const formSortBy: FormsProps = {
-  label: t('SORT BY'),
-  name: 'timeseries_limit_metric',
-  popper: t(
-    'This metric is used to define row selection criteria (how the rows are sorted) if a series or row limit is present. If not defined, it reverts to the first metric (where appropriate).',
-  ),
-  status: 'input-drop',
-  multiple: false,
-  type: 'aggregates',
-  savedType: 'metric',
-};
-
-const formRowLimit: FormsProps = {
-  label: t('ROW LIMIT'),
-  name: 'row_limit',
-  popper: t(
-    'Limits the number of the rows that are computed in the query that is the source of the data used for this chart.',
-  ),
+const sortSeriesBy: FormsProps = {
+  label: t('SORT SERIES BY'),
+  name: 'sort_series_type',
   status: 'select',
-  options: chartFormsOption.row_limit,
+  popper: t('Based on what should series be ordered on the chart and legend'),
+  options: chartFormsOption.sort_series_type,
 };
 
-const sortDescending: FormsProps = {
-  label: t('SORT DESCENDING'),
-  name: 'order_desc',
+const sortSeriesAscending: FormsProps = {
+  label: t('SORT SERIES ASCENDING'),
+  name: 'sort_series_ascending',
+  status: 'checkbox',
+  popper: t('Sort series in ascending order'),
+};
+
+const colorScheme: FormsProps = {
+  label: t('COLOR SCHEME'),
+  popper: t('The color scheme for rendering chart'),
+  name: 'color_scheme',
+  status: 'color-select',
+  optionsColor: chartFormsOption.color_scheme,
+};
+
+const seriesStyle: FormsProps = {
+  label: t('SERIES STYLE'),
+  name: 'seriesType',
+  status: 'select',
+  popper: t('Series chart type (line, bar etc)'),
+  options: chartFormsOption.seriesType,
+};
+
+const showValue: FormsProps = {
+  label: t('SHOW VALUE'),
+  name: 'show_value',
+  status: 'checkbox',
+  popper: t('Show series values on the chart'),
+};
+
+const stackedStyle: FormsProps = {
+  label: t('STACKED STYLE'),
+  name: 'stack',
+  status: 'select',
+  popper: t('Stack series on top of each other'),
+  options: chartFormsOption.stack,
+};
+
+const areaChart: FormsProps = {
+  label: t('AREA CHART'),
+  name: 'area',
+  status: 'checkbox',
+  popper: t('Draw area under curves. Only applicable for line types.'),
+};
+
+const areaChartOpacity: FormsProps = {
+  label: t('AREA CHART OPACITY'),
+  name: 'opacity',
+  status: 'range',
+  popper: t('Opacity of Area Chart. Also applies to confidence band.'),
+  rangeConfig: {
+    min: 0,
+    max: 1,
+    step: 0.1,
+  },
+};
+
+const marker: FormsProps = {
+  label: t('MARKER'),
+  name: 'markerEnabled',
+  status: 'checkbox',
+  popper: t('Draw a marker on data points. Only applicable for line types.'),
+};
+
+const markerSize: FormsProps = {
+  label: t('MARKER SIZE'),
+  name: 'markerSize',
+  status: 'range',
+  popper: t('Size of marker. Also applies to forecast observations.'),
+  rangeConfig: {
+    min: 0,
+    max: 20,
+    step: 1,
+  },
+};
+
+const extraControls: FormsProps = {
+  label: t('EXTRA CONTROLS'),
+  name: 'show_extra_controls',
+  status: 'checkbox',
+  popper: t(
+    'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
+  ),
+};
+
+const dataZoom: FormsProps = {
+  label: t('DATA ZOOM'),
+  name: 'zoomable',
+  status: 'checkbox',
+  popper: t('Enable data zooming controls'),
+};
+
+const minorTicks: FormsProps = {
+  label: t('MINOR TICKS'),
+  name: 'minorTicks',
+  status: 'checkbox',
+  popper: t('Show minor ticks on axes.'),
+};
+
+const showLegend: FormsProps = {
+  label: t('SHOW LEGEND'),
+  name: 'show_legend',
+  status: 'checkbox',
+  popper: t('Whether to display a legend for the chart'),
+};
+
+const type: FormsProps = {
+  label: t('TYPE'),
+  name: 'legendType',
+  status: 'select',
+  popper: t('Legend type'),
+  options: chartFormsOption.legendType,
+};
+
+const orientation: FormsProps = {
+  label: t('ORIENTATION'),
+  name: 'legendOrientation',
+  status: 'select',
+  popper: t('Legend Orientation'),
+  options: chartFormsOption.legendOrientation,
+};
+
+const margin: FormsProps = {
+  label: t('MARGIN'),
+  name: 'legendMargin',
+  status: 'input',
+  number: true,
+  popper: t('Additional padding for legend.'),
+};
+
+const timeFormat: FormsProps = {
+  label: t('TIME FORMAT'),
+  name: 'x_axis_time_format',
+  status: 'select',
+  popper: t(
+    'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
+  ),
+  options: chartFormsOption.time_format,
+};
+
+const rotateXAxisLabel: FormsProps = {
+  label: t('ROTATE X AXIS LABEL'),
+  name: 'xAxisLabelRotation',
+  status: 'select',
+  popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
+  options: chartFormsOption.xAxisLabelRotation,
+};
+
+const richTooltip: FormsProps = {
+  label: t('RICH TOOLTIP'),
+  name: 'rich_tooltip',
+  status: 'checkbox',
+  popper: t('Shows a list of all series available at that point in time'),
+};
+
+const tooltipSortByMetric: FormsProps = {
+  label: t('TOOLTIP SORT BY METRIC'),
+  name: 'tooltipSortByMetric',
+  status: 'checkbox',
+  popper: t(
+    'Whether to sort tooltip by the selected metric in descending order.',
+  ),
+};
+
+const tooltipTimeFormat: FormsProps = {
+  label: t('TOOLTIP TIME FORMAT'),
+  name: 'tooltipTimeFormat',
+  status: 'select',
+  popper: t('D3 time format syntax: https://github.com/d3/d3-time-format'),
+  options: chartFormsOption.time_format,
+};
+
+const forceDateFormat: FormsProps = {
+  label: t('FORCE DATE FORMAT'),
+  name: 'force_timestamp_formatting',
+  status: 'checkbox',
+  popper: t('Use date formatting even when metric value is not a timestamp'),
+};
+
+const yAxisFormat: FormsProps = {
+  label: t('Y AXIS FORMAT'),
+  name: 'y_axis_format',
+  status: 'select',
+  popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+  options: chartFormsOption.y_axis_format,
+};
+
+const currencyFormat: FormsProps = {
+  label: t('CURRENCY FORMAT'),
+  name: 'currency_format',
+  status: 'two-select',
+  values: [
+    {
+      name: 'symbolPosition',
+      placeholder: t('Prefix or suffix'),
+      options: chartFormsOption.currency_format.symbolPosition,
+    },
+    {
+      name: 'symbol',
+      placeholder: t('Currency'),
+      options: chartFormsOption.currency_format.symbol,
+    },
+  ],
+};
+
+const logarithmicYAxis: FormsProps = {
+  label: t('LOGARITHMIC Y-AXIS'),
+  name: 'logAxis',
+  status: 'checkbox',
+  popper: t('Logarithmic y-axis'),
+};
+
+const minorSplitLine: FormsProps = {
+  label: t('MINOR SPLIT LINE'),
+  name: 'minorSplitLine',
+  status: 'checkbox',
+  popper: t('Draw split lines for minor y-axis ticks'),
+};
+
+const bigNumberFontSize: FormsProps = {
+  label: t('BIG NUMBER FONT SIZE'),
+  name: 'header_font_size',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.header_font_size,
+};
+
+const subheaderFontSize: FormsProps = {
+  label: t('SUBHEADER FONT SIZE'),
+  name: 'subheader_font_size',
+  popper: t('Changing this control takes effect instantly'),
+  status: 'select',
+  options: chartFormsOption.header_font_size,
+};
+
+const truncateXAxis: FormsProps = {
+  label: t('TRUNCATE X AXIS'),
+  name: 'truncateXAxis',
+  status: 'checkbox',
+  popper: t(
+    'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
+  ),
+};
+
+const xAxisBounds: FormsProps = {
+  label: t('X AXIS BOUNDS'),
+  name: 'xAxisBounds',
+  status: 'two-input',
+  popper: t(
+    "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
+  ),
+  values: [
+    {
+      placeholder: t('MIN'),
+      number: true,
+      name: 'min',
+    },
+    {
+      placeholder: t('MAX'),
+      number: true,
+      name: 'max',
+    },
+  ],
+};
+
+const truncateYAxis: FormsProps = {
+  label: t('TRUNCATE Y AXIS'),
+  name: 'truncateYAxis',
+  status: 'checkbox',
+  popper: t(
+    'Truncate Y Axis. Can be overridden by specifying a min or max bound.',
+  ),
+};
+
+const yAxisBounds: FormsProps = {
+  label: t('Y AXIS BOUNDS'),
+  name: 'y_axis_bounds',
+  status: 'two-input',
+  popper: t(
+    "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
+  ),
+  values: [
+    {
+      placeholder: t('MIN'),
+      number: true,
+      name: 'min',
+    },
+    {
+      placeholder: t('MAX'),
+      number: true,
+      name: 'max',
+    },
+  ],
+};
+
+const numberFormat: FormsProps = {
+  label: t('NUMBER FORMAT'),
+  name: 'number_format',
+  status: 'select',
+  popper: t(
+    'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
+  ),
+  options: chartFormsOption.y_axis_format,
+};
+
+const dateFormat: FormsProps = {
+  label: t('DATE FORMAT'),
+  name: 'time_format',
+  status: 'select',
+  popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+  options: chartFormsOption.time_format,
+};
+
+const showLabels: FormsProps = {
+  label: t('SHOW LABELS'),
+  name: 'show_labels',
+  status: 'checkbox',
+  popper: t('Whether to display the labels.'),
+};
+
+const xTickLayout: FormsProps = {
+  label: t('X TICK LAYOUT'),
+  name: 'x_ticks_layout',
+  status: 'select',
+  popper: t('The way the ticks are laid out on the X-axis'),
+  options: [],
+};
+
+const legend: FormsProps = {
+  label: t('LEGEND'),
+  name: 'show_legend',
+  popper: t('Whether to display the legend (toggles)'),
   status: 'checkbox',
 };
 
-const lineAndBarChart: CollapsesProps[] = [
-  {
-    collapse_label: t('Chart Title'),
-    collapse_active: 'chart_title',
-    forms: [
-      {
-        label: t('X-AXIS'),
-        name: 'x_axis',
-        popper: t('Dimension to use on x-axis.'),
-        status: 'input',
-      },
-      {
-        label: t('TIME GRAIN'),
-        name: 'time_grain_sqla',
-        popper: t(
-          'Select a time grain for the visualization. The grain is the time interval represented by a single point on the chart.',
-        ),
-        placeholder: t('None'),
-        status: 'select',
-        options: chartFormsOption.time_grain_sqla,
-      },
-      formMetrics,
-      formDimensions,
-      {
-        label: t('CONTRIBUTION MODE'),
-        name: 'contributionMode',
-        popper: t('Calculate contribution per series or row'),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.contributionMode,
-      },
-      formFilters,
-      {
-        label: t('SERIES LIMIT'),
-        name: 'limit',
-        popper: t(
-          'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
-        ),
-        placeholder: t('None'),
-        status: 'select',
-        options: chartFormsOption.limit,
-      },
-      formSortBy,
-      sortDescending,
-      formRowLimit,
-      {
-        label: t('TRUNCATE METRIC'),
-        name: 'truncate_metric',
-        status: 'checkbox',
-      },
-      {
-        label: t('SHOW EMPTY COLUMNS'),
-        name: 'show_empty_columns',
-        status: 'checkbox',
-      },
-    ],
-  },
-  {
-    collapse_label: t('Advanced analytics'),
-    collapse_popper: t(
-      'This section contains options that allow for advanced analytical post processing of query results',
-    ),
-    collapse_active: 'advanced_analytics',
-    forms: [
-      {
-        label: t('ROLLING FUNCTION'),
-        name: 'rolling_type',
-        popper: t(
-          'Defines a rolling window function to apply, works along with the [Periods] text box',
-        ),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.rolling_type,
-      },
-      {
-        label: t('TIME SHIFT'),
-        name: 'time_compare',
-        popper: t(
-          'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
-        ),
-        placeholder: t('Select ...'),
-        status: 'multiple-select',
-        options: chartFormsOption.time_compare,
-      },
-      {
-        label: t('CALCULATION TYPE'),
-        name: 'comparison_type',
-        popper: t(
-          'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
-        ),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.comparison_type,
-      },
-      {
-        label: t('RULE'),
-        name: 'resample_rule',
-        popper: t('Pandas resample rule'),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.resample_rule,
-      },
-      {
-        label: t('FILL METHOD'),
-        name: 'resample_method',
-        popper: t('Pandas resample method'),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.resample_method,
-      },
-    ],
-  },
-  {
-    collapse_label: t('Annotations and Layers'),
-    collapse_active: 'annotations_and_layers',
-    forms: [
-      {
-        name: 'annotation_layers',
-        placeholder: t('Add annotation layer'),
-        status: 'annotation-layer',
-      },
-    ],
-  },
-  {
-    collapse_label: t('Predictive Analytics'),
-    collapse_active: 'predictive_analytics',
-    forms: [
-      {
-        label: t('ENABLE FORECAST'),
-        name: 'forecastEnabled',
-        status: 'checkbox',
-      },
-      {
-        label: t('FORECAST PERIODS'),
-        name: 'forecastPeriods',
-        popper: t('How many periods into the future do we want to predict'),
-        status: 'input',
-        number: true,
-      },
-      {
-        label: t('CONFIDENCE INTERVAL'),
-        name: 'forecastInterval',
-        popper: t(
-          'Width of the confidence interval. Should be between 0 and 1',
-        ),
-        status: 'input',
-      },
-      {
-        label: t('YEARLY SEASONALITY'),
-        name: 'forecastSeasonalityYearly',
-        popper: t(
-          'Should yearly seasonality be applied. An integer value will specify Fourier order of seasonality.',
-        ),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.forecastSeasonalityYearly,
-      },
-      {
-        label: t('WEEKLY SEASONALITY'),
-        name: 'forecastSeasonalityWeekly',
-        popper: t(
-          'Should weekly seasonality be applied. An integer value will specify Fourier order of seasonality.',
-        ),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.forecastSeasonalityWeekly,
-      },
-      {
-        label: t('DAILY SEASONALITY'),
-        name: 'forecastSeasonalityDaily',
-        popper: t(
-          'Should daily seasonality be applied. An integer value will specify Fourier order of seasonality.',
-        ),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.forecastSeasonalityDaily,
-      },
-    ],
-  },
-];
+const xAxisLabel: FormsProps = {
+  label: t('X AXIS LABEL'),
+  name: 'x_axis_label',
+  popper: t('Changing this control takes effect instantly.'),
+  status: 'input',
+};
+
+const yAxisLabel: FormsProps = {
+  label: t('Y AXIS LABEL'),
+  name: 'y_axis_label',
+  popper: t('Changing this control takes effect instantly.'),
+  status: 'input',
+};
+
+const xAxisTitle: FormsProps = {
+  label: t('X AXIS TITLE'),
+  name: 'x_axis_title',
+  status: 'input',
+  popper: t('Changing this control takes effect instantly'),
+};
+
+const xAxisTitleMargin: FormsProps = {
+  label: t('X AXIS TITLE BOTTOM MARGIN'),
+  name: 'x_axis_title_margin',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.x_axis_title_margin,
+};
+
+const yAxisTitle: FormsProps = {
+  label: t('Y AXIS TITLE'),
+  name: 'y_axis_title',
+  status: 'input',
+  popper: t('Changing this control takes effect instantly'),
+};
+
+const yAxisTitleMargin: FormsProps = {
+  label: t('Y AXIS TITLE MARGIN'),
+  name: 'y_axis_title_margin',
+  status: 'select',
+  popper: t('Changing this control takes effect instantly'),
+  options: chartFormsOption.y_axis_title_margin,
+};
+
+const collapseChartTitle: CollapsesProps = {
+  collapse_label: t('Chart Title'),
+  collapse_active: 'chart_title',
+  forms: [
+    xAxisTitle,
+    xAxisTitleMargin,
+    yAxisTitle,
+    yAxisTitleMargin,
+    {
+      label: t('Y AXIS TITLE POSITION'),
+      name: 'y_axis_title_position',
+      status: 'select',
+      popper: t('Changing this control takes effect instantly'),
+      options: chartFormsOption.y_axis_title_position,
+    },
+  ],
+};
 
 const DvtChartCustomize: DvtChartCustomizeProps[] = [
-  // {
-  //   chart_name: 'echarts_timeseries_line',
-  //   collapses: lineAndBarChart,
-  // },
   {
-    chart_name: 'echarts_timeseries_bar',
-    collapses: lineAndBarChart,
+    chart_name: 'echarts_timeseries_line',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          seriesStyle,
+          showValue,
+          stackedStyle,
+          areaChart,
+          areaChartOpacity,
+          marker,
+          markerSize,
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
   },
   {
-    chart_name: 'echarts_area',
+    chart_name: 'echarts_timeseries_bar',
     collapses: [
       {
-        collapse_label: t('CHART ORIENTATION'),
+        collapse_label: t('Chart Orientation'),
         collapse_active: 'chart_orientation',
-        tabs_name: 'chart_orientation',
-        tabs_actives: {
-          vertical: [
-            'x_axis_title',
-            'x_axis_title_margin',
-            'y_axis_title',
-            'y_axis_title_margin',
-            'y_axis_title_position',
-          ],
-          horizontal: [
-            'y_axis_title',
-            'y_axis_title_margin',
-            'y_axis_title_position',
-            'x_axis_title',
-            'x_axis_title_margin',
-          ],
-        },
+        // tabs_name: 'chart_orientation',
+        // tabs_actives: {
+        //   vertical: [
+        //     'x_axis_title',
+        //     'x_axis_title_margin',
+        //     'y_axis_title',
+        //     'y_axis_title_margin',
+        //     'y_axis_title_position',
+        //   ],
+        //   horizontal: [
+        //     'y_axis_title',
+        //     'y_axis_title_margin',
+        //     'y_axis_title_position',
+        //     'x_axis_title',
+        //     'x_axis_title_margin',
+        //   ],
+        // },
         forms: [
           {
             label: t('BAR ORIENTATION'),
@@ -363,292 +554,40 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               { label: t('HORIZONTAL'), value: 'horizontal' },
             ],
           },
-          {
-            label: t('AXIS TITLE'),
-            name: 'x_axis_title',
-            status: 'input',
-          },
-          {
-            label: t('AXIS TITLE'),
-            name: 'y_axis_title',
-            status: 'input',
-          },
-          {
-            label: t('AXIS TITLE MARGIN'),
-            name: 'x_axis_title_margin',
-            status: 'select',
-            options: chartFormsOption.x_axis_title_margin,
-          },
-          {
-            label: t('AXIS TITLE MARGIN'),
-            name: 'y_axis_title_margin',
-            status: 'select',
-            options: chartFormsOption.y_axis_title_margin,
-          },
-          {
-            label: t('AXIS TITLE POSITION'), // for 'Vertical' Y Axis
-            name: 'legendOrientation',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.legendOrientation,
-          },
-          {
-            label: t('AXIS TITLE POSITION'), // for 'Horizontal' X Axis
-            name: 'legendOrientation',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.legendOrientation,
-          },
         ],
       },
+      collapseChartTitle,
       {
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('SORT SERIES BY'),
-            name: 'sort_series_type',
-            status: 'select',
-            popper: t(
-              'Based on what should series be ordered on the chart and legend',
-            ),
-            options: chartFormsOption.sort_series_type,
-          },
-          {
-            label: t('SORT SERIES ASCENDING'),
-            name: 'sort_series_ascending',
-            status: 'checkbox',
-            popper: t('Sort series in ascending order'),
-          },
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            status: 'color',
-            popper: t('The color scheme for rendering chart'),
-          },
-          {
-            label: t('SHOW VALUE'),
-            name: 'show_value',
-            status: 'checkbox',
-            popper: t('Show series values on the chart'),
-          },
-          {
-            label: t('STACKED STYLE'),
-            name: 'stack',
-            status: 'select',
-            popper: t('Stack series on top of each other'),
-          },
-          {
-            label: t('DATA ZOOM'),
-            name: 'zoomable',
-            status: 'checkbox',
-            popper: t('Enable data zooming controls'),
-          },
-          {
-            label: t('MINOR TICKS'),
-            name: 'minorTicks',
-            status: 'checkbox',
-            popper: t('Show minor ticks on axes.'),
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
-          {
-            label: t('TYPE'),
-            name: 'legendType',
-            status: 'select',
-            popper: t('Legend type'),
-            options: chartFormsOption.legendType,
-          },
-          {
-            label: t('ORIENTATION'),
-            name: 'legendOrientation',
-            status: 'select',
-            popper: t('Legend Orientation'),
-            options: chartFormsOption.legendOrientation,
-          },
-          {
-            label: t('MARGIN'),
-            name: 'legendMargin',
-            status: 'input',
-            number: true,
-            popper: t('Additional padding for legend.'),
-          },
-          {
-            label: t('AXIS FORMAT'),
-            name: 'y_axis_format',
-            status: 'range',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-          },
-          {
-            label: t('LOGARITHMIC AXIS'),
-            name: 'logAxis',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
-          {
-            label: t('MINOR SPLIT LINE'),
-            name: 'show_extra_controls',
-            status: 'checkbox',
-            popper: t(
-              'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
-            ),
-          },
-          {
-            label: t('MARKER'),
-            name: 'markerEnabled',
-            status: 'checkbox',
-            popper: t(
-              'Draw a marker on data points. Only applicable for line types.',
-            ),
-          },
-          {
-            label: t('MARKER SIZE'),
-            name: 'markerSize',
-            status: 'range',
-            popper: t('Size of marker. Also applies to forecast observations.'),
-            rangeConfig: {
-              min: 0,
-              max: 20,
-              step: 1,
-            },
-          },
-          {
-            label: t('TIME FORMAT'),
-            name: 'x_axis_time_format',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
-            ),
-            options: [],
-          },
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            status: 'select',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            options: chartFormsOption.xAxisLabelRotation,
-          },
-          {
-            label: t('RICH TOOLTIP'),
-            name: 'rich_tooltip',
-            status: 'checkbox',
-            popper: t(
-              'Shows a list of all series available at that point in time',
-            ),
-          },
-          {
-            label: t('TOOLTIP SORT BY METRIC'),
-            name: 'tooltipSortByMetric',
-            status: 'checkbox',
-            popper: t(
-              'Whether to sort tooltip by the selected metric in descending order.',
-            ),
-          },
-          {
-            label: t('TOOLTIP TIME FORMAT'),
-            name: 'tooltipTimeFormat',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format',
-            ),
-            options: [],
-          },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            status: 'select',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            options: [],
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('LOGARITHMIC Y-AXIS'),
-            name: 'logAxis',
-            status: 'checkbox',
-            popper: t('Logarithmic y-axis'),
-          },
-          {
-            label: t('MINOR SPLIT LINE'),
-            name: 'minorSplitLine',
-            status: 'checkbox',
-            popper: t('Draw split lines for minor y-axis ticks'),
-          },
-          {
-            label: t('TRUNCATE X AXIS'),
-            name: 'truncateXAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-            ),
-          },
-          {
-            label: t('X AXIS BOUNDS'),
-            name: 'xAxisBounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
-          {
-            label: t('TRUNCATE Y AXIS'),
-            name: 'truncateYAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate Y Axis. Can be overridden by specifying a min or max bound.',
-            ),
-          },
-          {
-            label: t('Y AXIS BOUNDS'),
-            name: 'y_axis_bounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          showValue,
+          stackedStyle,
+          minorTicks,
+          dataZoom,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          currencyFormat,
+          truncateXAxis,
+          xAxisBounds,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
         ],
       },
     ],
@@ -656,309 +595,40 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
   {
     chart_name: 'echarts_area',
     collapses: [
-      {
-        collapse_label: t('Chart Title'),
-        collapse_active: 'chart_title',
-        forms: [
-          {
-            label: t('X AXIS TITLE'),
-            name: 'x_axis_title',
-            status: 'input',
-            popper: t('Changing this control takes effect instantly'),
-          },
-          {
-            label: t('X AXIS TITLE BOTTOM MARGIN'),
-            name: 'x_axis_title_margin',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.x_axis_title_margin,
-          },
-          {
-            label: t('Y AXIS TITLE'),
-            name: 'y_axis_title',
-            status: 'input',
-            popper: t('Changing this control takes effect instantly'),
-          },
-          {
-            label: t('Y AXIS TITLE MARGIN'),
-            name: 'y_axis_title_margin',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.y_axis_title_margin,
-          },
-          {
-            label: t('Y AXIS TITLE POSITION'),
-            name: 'y_axis_title_position',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.y_axis_title_position,
-          },
-        ],
-      },
+      collapseChartTitle,
       {
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('SORT SERIES BY'),
-            name: 'sort_series_type',
-            status: 'select',
-            popper: t(
-              'Based on what should series be ordered on the chart and legend',
-            ),
-            options: chartFormsOption.sort_series_type,
-          },
-          {
-            label: t('SORT SERIES ASCENDING'),
-            name: 'sort_series_ascending',
-            status: 'checkbox',
-            popper: t('Sort series in ascending order'),
-          },
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            status: 'color',
-            popper: t('The color scheme for rendering chart'),
-          },
-          {
-            label: t('SERIES STYLE'),
-            name: 'seriesType',
-            status: 'select',
-            popper: t('Series chart type (line, bar etc)'),
-            options: chartFormsOption.seriesType,
-          },
-          {
-            label: t('AREA CHART OPACITY'),
-            name: 'opacity',
-            status: 'range',
-            popper: t(
-              'Opacity of Area Chart. Also applies to confidence band.',
-            ),
-            rangeConfig: {
-              min: 0,
-              max: 1,
-              step: 0.1,
-            },
-          },
-          {
-            label: t('SHOW VALUE'),
-            name: 'show_value',
-            status: 'checkbox',
-            popper: t('Show series values on the chart'),
-          },
-          {
-            label: t('STACKED STYLE'),
-            name: 'stack',
-            status: 'select',
-            popper: t('Stack series on top of each other'),
-          },
-          {
-            label: t('ONLY TOTAL'),
-            name: 'only_total',
-            status: 'checkbox',
-            popper: t(
-              'Only show the total value on the stacked chart, and not show on the selected category',
-            ),
-          },
-          {
-            label: t('EXTRA CONTROLS'),
-            name: 'show_extra_controls',
-            status: 'checkbox',
-            popper: t(
-              'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
-            ),
-          },
-          {
-            label: t('MARKER'),
-            name: 'markerEnabled',
-            status: 'checkbox',
-            popper: t(
-              'Draw a marker on data points. Only applicable for line types.',
-            ),
-          },
-          {
-            label: t('MARKER SIZE'),
-            name: 'markerSize',
-            status: 'range',
-            popper: t('Size of marker. Also applies to forecast observations.'),
-            rangeConfig: {
-              min: 0,
-              max: 20,
-              step: 1,
-            },
-          },
-          {
-            label: t('DATA ZOOM'),
-            name: 'zoomable',
-            status: 'checkbox',
-            popper: t('Enable data zooming controls'),
-          },
-          {
-            label: t('MINOR TICKS'),
-            name: 'minorTicks',
-            status: 'checkbox',
-            popper: t('Show minor ticks on axes.'),
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
-          {
-            label: t('TYPE'),
-            name: 'legendType',
-            status: 'select',
-            popper: t('Legend type'),
-            options: chartFormsOption.legendType,
-          },
-          {
-            label: t('ORIENTATION'),
-            name: 'legendOrientation',
-            status: 'select',
-            popper: t('Legend Orientation'),
-            options: chartFormsOption.legendOrientation,
-          },
-          {
-            label: t('MARGIN'),
-            name: 'legendMargin',
-            status: 'input',
-            number: true,
-            popper: t('Additional padding for legend.'),
-          },
-          {
-            label: t('TIME FORMAT'),
-            name: 'x_axis_time_format',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
-            ),
-            options: [],
-          },
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            status: 'select',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            options: chartFormsOption.xAxisLabelRotation,
-          },
-          {
-            label: t('RICH TOOLTIP'),
-            name: 'rich_tooltip',
-            status: 'checkbox',
-            popper: t(
-              'Shows a list of all series available at that point in time',
-            ),
-          },
-          {
-            label: t('TOOLTIP SORT BY METRIC'),
-            name: 'tooltipSortByMetric',
-            status: 'checkbox',
-            popper: t(
-              'Whether to sort tooltip by the selected metric in descending order.',
-            ),
-          },
-          {
-            label: t('TOOLTIP TIME FORMAT'),
-            name: 'tooltipTimeFormat',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format',
-            ),
-            options: [],
-          },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            status: 'select',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            options: [],
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('LOGARITHMIC Y-AXIS'),
-            name: 'logAxis',
-            status: 'checkbox',
-            popper: t('Logarithmic y-axis'),
-          },
-          {
-            label: t('MINOR SPLIT LINE'),
-            name: 'minorSplitLine',
-            status: 'checkbox',
-            popper: t('Draw split lines for minor y-axis ticks'),
-          },
-          {
-            label: t('TRUNCATE X AXIS'),
-            name: 'truncateXAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-            ),
-          },
-          {
-            label: t('X AXIS BOUNDS'),
-            name: 'xAxisBounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
-          {
-            label: t('TRUNCATE Y AXIS'),
-            name: 'truncateYAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate Y Axis. Can be overridden by specifying a min or max bound.',
-            ),
-          },
-          {
-            label: t('Y AXIS BOUNDS'),
-            name: 'y_axis_bounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          seriesStyle,
+          areaChartOpacity,
+          showValue,
+          stackedStyle,
+          extraControls,
+          marker,
+          markerSize,
+          minorTicks,
+          dataZoom,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
         ],
       },
     ],
@@ -975,7 +645,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'table_timestamp_format',
             status: 'select',
             popper: t('D3 time format for datetime columns'),
-            options: [],
+            options: chartFormsOption.time_format,
           },
           {
             label: t('PAGE LENGTH'),
@@ -986,7 +656,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('SEARCH BOX'),
-            name: '', // cannot find.
+            name: 'include_search',
             status: 'checkbox',
           },
           {
@@ -1025,310 +695,6 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
       },
     ],
   },
-
-  {
-    chart_name: 'echarts_timeseries_line',
-    collapses: [
-      {
-        collapse_label: t('Chart Title'),
-        collapse_active: 'chart_title',
-        forms: [
-          {
-            label: t('X AXIS TITLE'),
-            name: 'x_axis_title',
-            status: 'input',
-            popper: t('Changing this control takes effect instantly'),
-          },
-          {
-            label: t('X AXIS TITLE BOTTOM MARGIN'),
-            name: 'x_axis_title_margin',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.x_axis_title_margin,
-          },
-          {
-            label: t('Y AXIS TITLE'),
-            name: 'y_axis_title',
-            status: 'input',
-            popper: t('Changing this control takes effect instantly'),
-          },
-          {
-            label: t('Y AXIS TITLE MARGIN'),
-            name: 'y_axis_title_margin',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.y_axis_title_margin,
-          },
-          {
-            label: t('Y AXIS TITLE POSITION'),
-            name: 'y_axis_title_position',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.y_axis_title_position,
-          },
-        ],
-      },
-      {
-        collapse_label: t('Chart Options'),
-        collapse_active: 'chart_options',
-        forms: [
-          {
-            label: t('SORT SERIES BY'),
-            name: 'sort_series_type',
-            status: 'select',
-            popper: t(
-              'Based on what should series be ordered on the chart and legend',
-            ),
-            options: chartFormsOption.sort_series_type,
-          },
-          {
-            label: t('SORT SERIES ASCENDING'),
-            name: 'sort_series_ascending',
-            status: 'checkbox',
-            popper: t('Sort series in ascending order'),
-          },
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            status: 'color',
-            popper: t('The color scheme for rendering chart'),
-          },
-          {
-            label: t('SERIES STYLE'),
-            name: 'seriesType',
-            status: 'select',
-            popper: t('Series chart type (line, bar etc)'),
-            options: chartFormsOption.seriesType,
-          },
-          {
-            label: t('SHOW VALUE'),
-            name: 'show_value',
-            status: 'checkbox',
-            popper: t('Show series values on the chart'),
-          },
-          {
-            label: t('SERIES STYLE'),
-            name: 'seriesType',
-            status: 'select',
-            popper: t('Series chart type (line, bar etc)'),
-            options: chartFormsOption.seriesType,
-          },
-          {
-            label: t('AREA CHART'),
-            name: 'area',
-            status: 'checkbox',
-            popper: t(
-              'Draw area under curves. Only applicable for line types.',
-            ),
-          },
-          {
-            label: t('AREA CHART OPACITY'),
-            name: 'opacity',
-            status: 'range',
-            popper: t(
-              'Opacity of Area Chart. Also applies to confidence band.',
-            ),
-            rangeConfig: {
-              min: 0,
-              max: 1,
-              step: 0.1,
-            },
-          },
-          {
-            label: t('MARKER'),
-            name: 'markerEnabled',
-            status: 'checkbox',
-            popper: t(
-              'Draw a marker on data points. Only applicable for line types.',
-            ),
-          },
-          {
-            label: t('MARKER SIZE'),
-            name: 'markerSize',
-            status: 'range',
-            popper: t('Size of marker. Also applies to forecast observations.'),
-            rangeConfig: {
-              min: 0,
-              max: 20,
-              step: 1,
-            },
-          },
-          {
-            label: t('DATA ZOOM'),
-            name: 'zoomable',
-            status: 'checkbox',
-            popper: t('Enable data zooming controls'),
-          },
-          {
-            label: t('MINOR TICKS'),
-            name: 'minorTicks',
-            status: 'checkbox',
-            popper: t('Show minor ticks on axes.'),
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
-          {
-            label: t('TYPE'),
-            name: 'legendType',
-            status: 'select',
-            popper: t('Legend type'),
-            options: chartFormsOption.legendType,
-          },
-          {
-            label: t('ORIENTATION'),
-            name: 'legendOrientation',
-            status: 'select',
-            popper: t('Legend Orientation'),
-            options: chartFormsOption.legendOrientation,
-          },
-          {
-            label: t('MARGIN'),
-            name: 'legendMargin',
-            status: 'input',
-            number: true,
-            popper: t('Additional padding for legend.'),
-          },
-          {
-            label: t('TIME FORMAT'),
-            name: 'x_axis_time_format',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format. When using other than adaptive formatting, labels may overlap',
-            ),
-            options: [],
-          },
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            status: 'select',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            options: chartFormsOption.xAxisLabelRotation,
-          },
-          {
-            label: t('RICH TOOLTIP'),
-            name: 'rich_tooltip',
-            status: 'checkbox',
-            popper: t(
-              'Shows a list of all series available at that point in time',
-            ),
-          },
-          {
-            label: t('TOOLTIP SORT BY METRIC'),
-            name: 'tooltipSortByMetric',
-            status: 'checkbox',
-            popper: t(
-              'Whether to sort tooltip by the selected metric in descending order.',
-            ),
-          },
-          {
-            label: t('TOOLTIP TIME FORMAT'),
-            name: 'tooltipTimeFormat',
-            status: 'select',
-            popper: t(
-              'D3 time format syntax: https://github.com/d3/d3-time-format',
-            ),
-            options: [],
-          },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            status: 'select',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            options: [],
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('LOGARITHMIC Y-AXIS'),
-            name: 'logAxis',
-            status: 'checkbox',
-            popper: t('Logarithmic y-axis'),
-          },
-          {
-            label: t('MINOR SPLIT LINE'),
-            name: 'minorSplitLine',
-            status: 'checkbox',
-            popper: t('Draw split lines for minor y-axis ticks'),
-          },
-          {
-            label: t('TRUNCATE X AXIS'),
-            name: 'truncateXAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-            ),
-          },
-          {
-            label: t('X AXIS BOUNDS'),
-            name: 'xAxisBounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
-          {
-            label: t('TRUNCATE Y AXIS'),
-            name: 'truncateYAxis',
-            status: 'checkbox',
-            popper: t(
-              'Truncate Y Axis. Can be overridden by specifying a min or max bound.',
-            ),
-          },
-          {
-            label: t('Y AXIS BOUNDS'),
-            name: 'y_axis_bounds',
-            status: 'two-input',
-            popper: t(
-              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
   {
     chart_name: 'big_number_total',
     collapses: [
@@ -1336,60 +702,12 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('BIG NUMBER FONT SIZE'),
-            name: 'header_font_size',
-            status: 'select',
-            popper: t('Changing this control takes effect instantly'),
-            options: chartFormsOption.header_font_size,
-          },
-          {
-            label: t('SUBHEADER FONT SIZE'),
-            name: 'subheader_font_size',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'select',
-          },
-          {
-            label: t('NUMBER FORMAT'),
-            name: 'number_format',
-            status: 'select',
-            popper: t(
-              'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-            ),
-            options: [],
-          },
-          {
-            label: t('DATE FORMAT'),
-            name: 'time_format',
-            status: 'select',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            options: [],
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('FORCE DATE FORMAT'),
-            name: 'force_timestamp_formatting',
-            status: 'checkbox',
-            popper: t(
-              'Use date formatting even when metric value is not a timestamp',
-            ),
-          },
+          bigNumberFontSize,
+          subheaderFontSize,
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          forceDateFormat,
           // need to Conditional Formatting
         ],
       },
@@ -1403,12 +721,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_popper_error: t('This section contains validation errors'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            status: 'color',
-            popper: t('The color scheme for rendering chart'),
-          },
+          colorScheme,
           {
             label: t('PERCENTAGE THRESHOLD'),
             name: 'show_labels_threshold',
@@ -1418,12 +731,10 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Minimum threshold in percentage points for showing labels.',
             ),
           },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
+          showLegend,
+          type,
+          orientation,
+          margin,
           {
             label: t('LABEL TYPE'),
             name: 'label_type',
@@ -1431,38 +742,10 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             popper: t('What should be shown on the label?'),
             options: chartFormsOption.label_type,
           },
-          {
-            label: t('NUMBER FORMAT'),
-            name: 'number_format',
-            status: 'select',
-            popper: t(
-              'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-            ),
-            options: [],
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('SHOW LABELS'),
-            name: 'show_labels',
-            status: 'checkbox',
-            popper: t('Whether to display the labels.'),
-          },
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          showLabels,
           {
             label: t('PUT LABELS OUTSIDE'),
             name: 'labels_outside',
@@ -1518,48 +801,24 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            popper: t('The color scheme for rendering chart.'),
-            status: 'color',
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            popper: t('Whether to display a legend for the chart'),
-            status: 'checkbox',
-          },
-          {
-            label: t('TYPE'),
-            name: 'legendType',
-            popper: t('Legent type'),
-            status: 'select',
-          },
-          {
-            label: t('ORIENTATION'),
-            name: 'legendOrientation',
-            popper: t('Legent orientation'),
-            status: 'select',
-          },
-          {
-            label: t('MARGIN'),
-            name: 'legendMargin',
-            popper: t('Additional padding for legend'),
-            status: 'input',
-            number: true,
-          },
+          colorScheme,
+          showLegend,
+          type,
+          orientation,
+          margin,
           {
             label: t('MAX BUBBLE SIZE'),
             name: 'max_bubble_size',
             popper: t('Changing this control takes effect instantly'),
             status: 'select',
+            options: [],
           },
           {
             label: t('BUBBLE SIZE NUMBER FORMAT'),
             name: 'max_bubble_size',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
+            options: [],
           },
           {
             label: t('BUBBLE OPACITY'),
@@ -1568,43 +827,47 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Opacity of bubbles, 0 means completely transparent, 1 means opaque',
             ),
             status: 'range',
+            rangeConfig: {
+              min: 0,
+              max: 1,
+              step: 0.1,
+            },
           },
-          {
-            label: t('X AXIS TITLE'),
-            name: 'x_axis_label',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'input',
-          },
+        ],
+      },
+      {
+        collapse_label: t('X Axis'),
+        collapse_active: 'x_axis',
+        forms: [
+          xAxisTitle,
           {
             label: t('ROTATE X AXIS LABEL'),
             name: 'xAxisLabelRotation',
             popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
             status: 'select',
+            options: [],
           },
-          {
-            label: t('X AXIS TITLE MARGIN'),
-            name: 'x_axis_title_margin',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'select',
-          },
+          { ...xAxisTitleMargin, label: t('X AXIS TITLE MARGIN') },
           {
             label: t('X AXIS FORMAT'),
             name: 'xAxisFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
+            options: [],
           },
           {
             label: t('LOGARITHMIC X-AXIS'),
             name: 'logXAxis',
             popper: t('Logarithmic x-axis'),
-            status: 'select',
+            status: 'checkbox',
           },
-          {
-            label: t('Y AXIS TITLE'),
-            name: 'y_axis_label',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'input',
-          },
+        ],
+      },
+      {
+        collapse_label: t('Y Axis'),
+        collapse_active: 'y_axis',
+        forms: [
+          yAxisTitle,
           {
             label: t('ROTATE Y AXIS LABEL'),
             name: 'yAxisLabelRotation',
@@ -1612,82 +875,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             status: 'select',
             options: chartFormsOption.yAxisLabelRotation,
           },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            popper: t('Changing this control takes effect instantly'),
-            status: 'select',
-          },
-          {
-            label: t('LOGARITHMIC Y-AXIS'),
-            name: 'logYAxis',
-            popper: t('Logarithmic y-axis'),
-            status: 'checkbox',
-          },
-          {
-            label: t('TRUNCATE X AXIS'),
-            name: 'truncateXAxis',
-            popper: t(
-              'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-            ),
-            status: 'checkbox',
-          },
-          {
-            label: t('TRUNCATE X AXIS'),
-            name: 'truncateXAxis',
-            popper: t(
-              'Truncate X Axis. Can be overridden by specifying a min or max bound. Only applicable for numercal X axis.',
-            ),
-            status: 'checkbox',
-          },
-          {
-            label: t('X AXIS BOUNDS'),
-            name: 'xAxisBounds',
-            popper: t(
-              "Bounds for numerical X axis. Not applicable for temporal or categorical axes. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            status: 'two-input',
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
-          {
-            label: t('TRUNCATE Y AXIS'),
-            name: 'truncateYAxis',
-            popper: t(
-              'Truncate Y Axis. Can be overridden by specifying a min or max bound.',
-            ),
-            status: 'checkbox',
-          },
-          {
-            label: t('Y AXIS BOUNDS'),
-            name: 'xAxisBounds',
-            popper: t(
-              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
-            ),
-            status: 'two-input',
-            values: [
-              {
-                placeholder: t('MIN'),
-                number: true,
-                name: 'min',
-              },
-              {
-                placeholder: t('MAX'),
-                number: true,
-                name: 'max',
-              },
-            ],
-          },
+          yAxisTitleMargin,
+          yAxisFormat,
+          logarithmicYAxis,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
         ],
       },
     ],
@@ -1699,45 +893,29 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            popper: t('The color scheme for rendering chart'),
-            status: 'color',
-          },
+          colorScheme,
           {
             label: t('NO OF BINS'),
             name: 'link_length',
             popper: t('Select the number of bins for the histogram'),
             status: 'select',
+            options: [],
           },
-          {
-            label: t('X AXIS LABEL'),
-            name: 'x_axis_label',
-            popper: t('Changing this control takes effect instantly.'),
-            status: 'input',
-          },
-          {
-            label: t('Y AXIS LABEL'),
-            name: 'y_axis_label',
-            popper: t('Changing this control takes effect instantly.'),
-            status: 'input',
-          },
-          {
-            label: t('LEGEND'),
-            name: 'show_legend',
-            popper: t('Whether to display the legend (toggles)'),
-            status: 'checkbox',
-          },
+          xAxisLabel,
+          yAxisLabel,
+          legend,
           {
             label: t('NORMALIZED'),
             name: 'normalized',
             popper: t('Whether to normalize the histogram'),
             status: 'checkbox',
           },
-          formFilters,
-          formRowLimit,
-          formDimensions,
+          {
+            label: t('CUMULATIVE'),
+            name: 'cumulative',
+            popper: t('Whether to make the histogram cumulative'),
+            status: 'checkbox',
+          },
         ],
       },
     ],
@@ -1750,77 +928,27 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_active: 'chart_options',
         collapse_popper_error: t('This section contains validation errors'),
         forms: [
-          formDimensions,
-          formMetric,
-          formFilters,
-          formRowLimit,
+          colorScheme,
+          showLegend,
+          orientation,
+          margin,
           {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            status: 'color',
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            status: 'checkbox',
-            popper: t('Whether to display a legend for the chart'),
-          },
-          {
-            label: t('ORIENTATION'),
-            name: 'legendOrientation',
+            label: t('LABEL CONTENTS'),
+            name: 'label_type',
             status: 'select',
-            popper: t('Legend Orientation'),
-          },
-          {
-            label: t('MARGIN'),
-            name: 'legendMargin',
-            status: 'input',
-            popper: t('Additional padding for legend.'),
-            popperError: t('is expected to be an integer'),
-          },
-          {
-            label: t('NUMBER FORMAT'),
-            name: 'number_format',
-            status: 'select',
-            popper: t(
-              'D3 format syntax: https://github.com/d3/d3-format Only applies when "Label Type" is set to show values.',
-            ),
+            popper: t('What should be shown as the label'),
+            options: [],
           },
           {
             label: t('TOOLTIP CONTENTS'),
             name: 'tooltip_label_type',
             status: 'select',
             popper: t('What should be shown as the tooltip label'),
+            options: [],
           },
-          {
-            label: t('LABEL CONTENTS'),
-            name: 'label_type',
-            status: 'select',
-            popper: t('What should be shown as the label'),
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-          {
-            label: t('SHOW LABELS'),
-            name: 'show_labels',
-            status: 'checkbox',
-            popper: t('Whether to display the labels.'),
-          },
+          numberFormat,
+          currencyFormat,
+          showLabels,
           {
             label: t('SHOW TOOLTIP LABELS'),
             name: 'show_tooltip_labels',
@@ -1831,7 +959,6 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
       },
     ],
   },
-
   {
     chart_name: 'gauge_chart',
     collapses: [
@@ -1865,12 +992,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             popper: t('Angle at which to end progress axis'),
             status: 'input',
           },
-          {
-            label: t('COLOR SCHEME'),
-            name: 'color_scheme',
-            popper: t('The color scheme for rendering chart'),
-            status: 'color',
-          },
+          colorScheme,
           {
             label: t('FONT SIZE'),
             name: 'font_size',
@@ -1878,32 +1000,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Font size for axis labels, detail value and other text elements',
             ),
             status: 'range',
+            rangeConfig: {
+              min: 10,
+              max: 20,
+              step: 1,
+            },
           },
-          {
-            label: t('NUMBER FORMAT'),
-            name: 'font_size',
-            popper: t(
-              'Font size for axis labels, detail value and other text elements',
-            ),
-            status: 'select',
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
+          numberFormat,
+          currencyFormat,
           {
             label: t('VALUE FORMAT'),
             name: 'value_formatter',
@@ -1941,8 +1045,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           {
             label: t('SPLIT NUMBER'),
             name: 'split_number',
-            status: 'range',
             popper: t('Number of split segments on the axis'),
+            status: 'range',
+            rangeConfig: {
+              min: 3,
+              max: 30,
+              step: 1,
+            },
           },
           {
             label: t('SHOW PROGRESS'),
@@ -1991,18 +1100,8 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          {
-            label: t('SHOW VALUE'),
-            name: 'show_value',
-            popper: t('Show series values on the chart'),
-            status: 'checkbox',
-          },
-          {
-            label: t('SHOW LEGEND'),
-            name: 'show_legend',
-            popper: t('Whether to display a legend for the chart'),
-            status: 'checkbox',
-          },
+          showValue,
+          showLegend,
           {
             label: t('INCREASE'),
             name: 'increase_color',
@@ -2021,60 +1120,201 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             status: 'color',
             popper: t('Changing this color takes effect instantly'),
           },
+          xAxisLabel,
+          timeFormat,
+          xTickLayout,
+          yAxisLabel,
+          yAxisFormat,
+          currencyFormat,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'big_number',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          {
+            label: t('FIXED COLOR'),
+            name: 'increase_color',
+            status: 'color',
+            popper: t('Use this to define a static color for all circles'),
+          },
+          bigNumberFontSize,
+          subheaderFontSize,
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+          forceDateFormat,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'echarts_timeseries_scatter',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          showValue,
+          stackedStyle,
+          marker,
+          markerSize,
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'pivot_table_v2',
+    collapses: [
+      {
+        collapse_label: t('Options'),
+        collapse_active: 'options',
+        forms: [
+          {
+            label: t('VALUE FORMAT'),
+            name: 'valueFormat',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            status: 'select',
+            options: chartFormsOption.y_axis_format,
+          },
+          currencyFormat,
+          dateFormat,
+          {
+            label: t('SORT ROWS BY'),
+            name: 'rowOrder',
+            status: 'select',
+            options: chartFormsOption.rowOrder,
+          },
+          {
+            label: t('SORT COLUMNS BY'),
+            name: 'colOrder',
+            status: 'select',
+            options: chartFormsOption.rowOrder,
+          },
+          {
+            label: t('ROWS SUBTOTAL POSITION'),
+            name: '',
+            status: 'select',
+            options: [],
+          },
+          {
+            label: t('COLUMNS SUBTOTAL POSITION'),
+            name: '',
+            status: 'select',
+            options: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'dist_bar',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          legend,
+          {
+            label: t('BAR VALUES'),
+            name: 'show_bar_value',
+            status: 'checkbox',
+            popper: t('Show the value on top of the bar'),
+          },
+          richTooltip,
+          {
+            label: t('STACKED BARS'),
+            name: 'bar_stacked',
+            status: 'checkbox',
+            popper: t('Show the value on top of the bar'),
+          },
+          {
+            label: t('SORT BARS'),
+            name: 'order_bars',
+            status: 'checkbox',
+            popper: t('Sort bars by x labels.'),
+          },
+          yAxisFormat,
+          yAxisLabel,
+          { ...extraControls, name: 'show_controls' },
+          {
+            label: t('Y BOUNDS'),
+            name: 'y_axis_showminmax',
+            status: 'checkbox',
+            popper: t(
+              'Whether to display the min and max values of the Y-axis',
+            ),
+          },
+          yAxisBounds,
+        ],
+      },
+      {
+        collapse_label: t('X Axis'),
+        collapse_active: 'x_axis',
+        forms: [
           {
             label: t('X AXIS LABEL'),
             name: 'x_axis_label',
             status: 'input',
-            popper: t('Changing this control takes effect instantly'),
           },
           {
-            label: t('TIME FORMAT'),
-            name: 'x_axis_time_format',
+            label: t('BOTTOM MARGIN'),
+            name: 'bottom_margin',
+            popper: t(
+              'Bottom margin, in pixels, allowing for more room for axis labels',
+            ),
             status: 'select',
-            popper: t('x_axis_time_format'),
+            options: [],
           },
+          xTickLayout,
           {
-            label: t('X TICK LAYOUT'),
-            name: 'x_ticks_layout',
-            status: 'select',
-            popper: t('The way the ticks are laid out on the X-axis'),
+            label: t('REDUCE X TICKS'),
+            name: 'reduce_x_ticks',
+            popper: t(
+              'Reduces the number of X-axis ticks to be rendered. If true, the x-axis will not overflow and labels may be missing. If false, a minimum width will be applied to columns and the width may overflow into an horizontal scroll.',
+            ),
+            status: 'checkbox',
           },
-
-          {
-            label: t('Y AXIS LABEL'),
-            name: 'y_axis_label',
-            status: 'input',
-            popper: t('Changing this control takes effect instantly'),
-          },
-          {
-            label: t('Y AXIS FORMAT'),
-            name: 'y_axis_format',
-            status: 'select',
-            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
-            options: chartFormsOption.y_axis_format,
-          },
-          {
-            label: t('CURRENCY FORMAT'),
-            name: 'currency_format',
-            status: 'two-select',
-            values: [
-              {
-                name: 'symbolPosition',
-                placeholder: t('Prefix or suffix'),
-                options: chartFormsOption.currency_format.symbolPosition,
-              },
-              {
-                name: 'symbol',
-                placeholder: t('Currency'),
-                options: chartFormsOption.currency_format.symbol,
-              },
-            ],
-          },
-
-          formMetric,
-          formFilters,
-          formRowLimit,
         ],
+      },
+    ],
+  },
+  {
+    chart_name: 'world_map',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [yAxisFormat, currencyFormat],
       },
     ],
   },

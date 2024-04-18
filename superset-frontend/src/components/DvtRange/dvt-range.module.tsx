@@ -28,6 +28,7 @@ const StyledRange = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 0 10px;
 `;
 
 const StyledPopper = styled.div`
@@ -88,7 +89,7 @@ const StyledRangePopover = styled.div`
 
 const StyledRangeLabel = styled.label`
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.dvt.text.label};
+  color: ${({ theme }) => theme.colors.grayscale.dark2};
 `;
 
 export {

@@ -40,7 +40,7 @@ import {
 import { objectIsEmptyForArray } from 'src/dvt-utils/object-is-empty-for-array';
 import openSelectMenuData from 'src/components/DvtOpenSelectMenu/dvtOpenSelectMenuData';
 import DvtChartData from './dvtChartData';
-// import DvtChartCustomize from './dvtChartDataCustomize';
+import DvtChartCustomize from './dvtChartDataCustomize';
 import DvtChartFormPayloads from './dvtChartFormPayloads';
 import {
   ChartDefaultSelectBars,
@@ -249,6 +249,7 @@ const DvtChart = () => {
     max_bubble_size: { label: '25', value: '25' },
     color_picker: { r: 0, g: 122, b: 135, a: 1 },
     color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
+    truncateYAxis: true,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -272,7 +273,7 @@ const DvtChart = () => {
     direction: 'desc',
   });
 
-  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map'];
+  const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map', 'histogram'];
 
   useEffect(() => {
     if (selectedVizType) {
@@ -898,6 +899,9 @@ const DvtChart = () => {
             label: getFormData.max_bubble_size,
             value: getFormData.max_bubble_size,
           },
+          truncateYAxis: getFormData?.truncateYAxis
+            ? getFormData.truncateYAxis
+            : false,
         });
 
         setChartStatus('loading');
@@ -1184,6 +1188,16 @@ const DvtChart = () => {
   const checkObjectOrNullArrayFormation = (value: any) =>
     Object.entries(value).map(i => (i[1] ? Number(i[1]) : null));
 
+  const yAxisBoundsOnValueCharts = [
+    'echarts_timeseries_line',
+    'echarts_timeseries_bar',
+    'echarts_area',
+    'echarts_timeseries_scatter',
+    'bubble_v2',
+    'heatmap',
+    'dist_bar',
+  ];
+
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -1281,10 +1295,10 @@ const DvtChart = () => {
       y_axis_format:
         active === 'heatmap' ? values.y_axis_format.value : 'SMART_NUMBER',
       truncateXAxis: true,
-      y_axis_bounds:
-        active === 'heatmap'
-          ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
-          : [null, null],
+      truncateYAxis: values.truncateYAxis,
+      y_axis_bounds: yAxisBoundsOnValueCharts.includes(active)
+        ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
+        : [null, null],
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -1342,7 +1356,6 @@ const DvtChart = () => {
       time_compare: values.time_compare,
       time_compare_b: values.time_compare_b,
       tooltipSortByMetric: undefined,
-      truncateYAxis: active === 'echarts_timeseries_scatter' ? true : undefined,
       xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: undefined,
@@ -1474,6 +1487,7 @@ const DvtChart = () => {
       secondary_metric: metricsFormation('secondary_metric')[0],
       y_axis_bounds_secondary: [null, null],
       y_axis_format_secondary: 'SMART_NUMBER',
+      link_length: 5,
     },
     queries: [
       {
@@ -1764,13 +1778,16 @@ const DvtChart = () => {
     }
     if (chartFullPromise.error) {
       setChartStatus('failed');
+      const errorOrMessage = onlyExploreJson.includes(active)
+        ? 'error'
+        : 'message';
       if (chartFullPromise.error?.errors) {
         setChartData(chartFullPromise.error.errors);
-      } else if (chartFullPromise.error?.message) {
+      } else if (chartFullPromise.error?.[errorOrMessage]) {
         setChartData([
           {
-            error: chartFullPromise.error.message,
-            message: chartFullPromise.error.message,
+            error: chartFullPromise.error[errorOrMessage],
+            message: chartFullPromise.error[errorOrMessage],
           },
         ]);
       }
@@ -1969,8 +1986,8 @@ const DvtChart = () => {
     );
   };
 
-  const DataOrCustomize = chartTabs.value === 'customize' ? [] : DvtChartData;
-  // chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
+  const DataOrCustomize =
+    chartTabs.value === 'customize' ? DvtChartCustomize : DvtChartData;
 
   useEffect(
     () => () => {
