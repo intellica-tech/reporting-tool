@@ -1439,7 +1439,7 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             placeholder: t('Select ...'),
             status: 'select',
-            options: chartFormsOption.rolling_type_b,
+            options: chartFormsOption.rolling_type,
           },
           {
             label: t('PERIODS'),
