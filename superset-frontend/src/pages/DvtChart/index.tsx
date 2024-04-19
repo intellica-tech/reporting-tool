@@ -196,7 +196,14 @@ const DvtChart = () => {
       label: t('auto'),
       value: 'auto',
     },
-    y_axis_bounds: {},
+    xAxisBounds: {
+      min: '',
+      max: '',
+    },
+    y_axis_bounds: {
+      min: '',
+      max: '',
+    },
     y_axis_format: {
       label: t('Adaptive formatting'),
       value: 'SMART_NUMBER',
@@ -249,6 +256,7 @@ const DvtChart = () => {
     max_bubble_size: { label: '25', value: '25' },
     color_picker: { r: 0, g: 122, b: 135, a: 1 },
     color_scheme: { label: 'Superset Colors', id: 'supersetColors' },
+    truncateXAxis: true,
     truncateYAxis: true,
     x_axis_title: '',
     x_axis_title_margin: { label: '15', value: 15 },
@@ -293,6 +301,18 @@ const DvtChart = () => {
       label: t('Adaptive formatting'),
       value: 'smart_date',
     },
+    xAxisLabelRotation: {
+      label: '0°',
+      value: 0,
+    },
+    rich_tooltip: true,
+    tooltipSortByMetric: false,
+    tooltipTimeFormat: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    logAxis: false,
+    minorSplitLine: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -815,19 +835,30 @@ const DvtChart = () => {
             label: t('auto'),
             value: 'auto',
           }),
-          y_axis_bounds:
-            getFormData.viz_type === 'heatmap'
-              ? {
-                  min:
-                    getFormData?.y_axis_bounds[0] === null
-                      ? ''
-                      : getFormData?.y_axis_bounds[0],
-                  max:
-                    getFormData?.y_axis_bounds[1] === null
-                      ? ''
-                      : getFormData?.y_axis_bounds[1],
-                }
-              : {},
+          xAxisBounds: getFormData?.xAxisBounds
+            ? {
+                min:
+                  getFormData?.xAxisBounds[0] === null
+                    ? ''
+                    : getFormData?.xAxisBounds[0],
+                max:
+                  getFormData?.xAxisBounds[1] === null
+                    ? ''
+                    : getFormData?.xAxisBounds[1],
+              }
+            : { min: '', max: '' },
+          y_axis_bounds: getFormData?.y_axis_bounds
+            ? {
+                min:
+                  getFormData?.y_axis_bounds[0] === null
+                    ? ''
+                    : getFormData?.y_axis_bounds[0],
+                max:
+                  getFormData?.y_axis_bounds[1] === null
+                    ? ''
+                    : getFormData?.y_axis_bounds[1],
+              }
+            : { min: '', max: '' },
           y_axis_format: chartFormsFindOptions('y_axis_format', {
             label: t('Adaptive formatting'),
             value: 'SMART_NUMBER',
@@ -836,23 +867,21 @@ const DvtChart = () => {
             label: t('Adaptive formatting'),
             value: 'smart_date',
           }),
-          currency_format:
-            getFormData.viz_type === 'heatmap'
-              ? {
-                  symbolPosition: getFormData?.currency_format?.symbolPosition
-                    ? chartFormsOption.currency_format.symbolPosition.find(
-                        f =>
-                          f.value ===
-                          getFormData.currency_format.symbolPosition,
-                      )
-                    : '',
-                  symbol: getFormData?.currency_format?.symbol
-                    ? chartFormsOption.currency_format.symbol.find(
-                        f => f.value === getFormData.currency_format.symbol,
-                      )
-                    : '',
-                }
-              : {},
+          currency_format: getFormData?.currency_format
+            ? {
+                symbolPosition: getFormData?.currency_format?.symbolPosition
+                  ? chartFormsOption.currency_format.symbolPosition.find(
+                      f =>
+                        f.value === getFormData.currency_format.symbolPosition,
+                    )
+                  : '',
+                symbol: getFormData?.currency_format?.symbol
+                  ? chartFormsOption.currency_format.symbol.find(
+                      f => f.value === getFormData.currency_format.symbol,
+                    )
+                  : '',
+              }
+            : {},
           sort_x_axis: chartFormsFindOptions('sort_x_axis', {
             label: t('Axis ascending'),
             value: 'alpha_asc',
@@ -942,6 +971,9 @@ const DvtChart = () => {
             label: getFormData.max_bubble_size,
             value: getFormData.max_bubble_size,
           },
+          truncateXAxis: getFormData?.truncateXAxis
+            ? getFormData.truncateXAxis
+            : false,
           truncateYAxis: getFormData?.truncateYAxis
             ? getFormData.truncateYAxis
             : false,
@@ -1016,6 +1048,27 @@ const DvtChart = () => {
             'value',
             'time_format',
           ),
+          xAxisLabelRotation: chartFormsFindOptions('xAxisLabelRotation', {
+            label: '0°',
+            value: 0,
+          }),
+          rich_tooltip: getFormData?.rich_tooltip !== false,
+          tooltipSortByMetric: getFormData?.tooltipSortByMetric
+            ? getFormData.tooltipSortByMetric
+            : false,
+          tooltipTimeFormat: chartFormsFindOptions(
+            'tooltipTimeFormat',
+            {
+              label: t('Adaptive formatting'),
+              value: 'smart_date',
+            },
+            'value',
+            'time_format',
+          ),
+          logAxis: getFormData?.logAxis ? getFormData.logAxis : false,
+          minorSplitLine: getFormData?.minorSplitLine
+            ? getFormData.minorSplitLine
+            : false,
         });
 
         setChartStatus('loading');
@@ -1302,16 +1355,6 @@ const DvtChart = () => {
   const checkObjectOrNullArrayFormation = (value: any) =>
     Object.entries(value).map(i => (i[1] ? Number(i[1]) : null));
 
-  const yAxisBoundsOnValueCharts = [
-    'echarts_timeseries_line',
-    'echarts_timeseries_bar',
-    'echarts_area',
-    'echarts_timeseries_scatter',
-    'bubble_v2',
-    'heatmap',
-    'dist_bar',
-  ];
-
   const formDataObj = {
     datasource: {
       id: selectedChart?.form_data?.url_params?.datasource_id,
@@ -1406,15 +1449,21 @@ const DvtChart = () => {
         ? values.max_bubble_size.value
         : '25',
       x_axis_time_format: values.x_axis_time_format.value,
-      rich_tooltip: true,
-      tooltipTimeFormat: 'smart_date',
-      y_axis_format:
-        active === 'heatmap' ? values.y_axis_format.value : 'SMART_NUMBER',
-      truncateXAxis: true,
+      rich_tooltip: values.rich_tooltip,
+      tooltipSortByMetric: values.rich_tooltip
+        ? values.tooltipSortByMetric
+        : false,
+      tooltipTimeFormat: values.tooltipTimeFormat.value,
+      y_axis_format: values.y_axis_format.value,
+      truncateXAxis: values.truncateXAxis,
       truncateYAxis: values.truncateYAxis,
-      y_axis_bounds: yAxisBoundsOnValueCharts.includes(active)
-        ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
-        : [null, null],
+      xAxisBounds: checkObjectOrNullArrayFormation(values.xAxisBounds),
+      y_axis_bounds:
+        active === 'heatmap'
+          ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
+          : values.truncateYAxis
+          ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
+          : [null, null],
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -1427,10 +1476,7 @@ const DvtChart = () => {
         : undefined,
       cache_timeout: undefined,
       contributionMode: withoutValueForNull(values.contributionMode),
-      currency_format:
-        active === 'heatmap'
-          ? checkObjectFormation(values.currency_format)
-          : undefined,
+      currency_format: checkObjectFormation(values.currency_format),
       forecastEnabled: values.forecastEnabled,
       forecastSeasonalityDaily: withoutValueForNull(
         values.forecastSeasonalityDaily,
@@ -1442,12 +1488,12 @@ const DvtChart = () => {
         values.forecastSeasonalityYearly,
       ),
       limit: withoutValueForNull(values.limit),
-      logAxis: undefined,
+      logAxis: values.logAxis,
       min_periods: values.min_periods ? Number(values.min_periods) : undefined,
       min_periods_b: values.min_periods_b
         ? Number(values.min_periods_b)
         : undefined,
-      minorSplitLine: undefined,
+      minorSplitLine: values.minorSplitLine ? values.minorSplitLine : undefined,
       minorTicks: values.minorTicks ? values.minorTicks : undefined,
       percentage_threshold:
         values.show_value && !values.only_total
@@ -1470,10 +1516,8 @@ const DvtChart = () => {
       stack: values.stack.value === 'null' ? undefined : values.stack.value,
       time_compare: values.time_compare,
       time_compare_b: values.time_compare_b,
-      tooltipSortByMetric: undefined,
-      xAxisBounds: undefined,
       xAxisForceCategorical: undefined,
-      xAxisLabelRotation: undefined,
+      xAxisLabelRotation: values.xAxisLabelRotation.value,
       x_axis_sort: undefined,
       x_axis_title: values.x_axis_title ? values.x_axis_title : undefined,
       x_axis_title_margin: values.x_axis_title_margin.value,
