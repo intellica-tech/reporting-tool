@@ -478,6 +478,23 @@ const yAxisTitleMargin: FormsProps = {
   options: chartFormsOption.y_axis_title_margin,
 };
 
+const roam: FormsProps = {
+  label: t('ENABLE GRAPH ROAMING'),
+  name: 'roam',
+  popper: t('Whether to enable changing graph position and scaling.'),
+  placeholder: t('Select ...'),
+  status: 'select',
+  options: chartFormsOption.roam,
+};
+
+const labelType: FormsProps = {
+  label: t('LABEL TYPE'),
+  name: 'label_type',
+  status: 'select',
+  popper: t('What should be shown on the label?'),
+  options: chartFormsOption.label_types2,
+};
+
 const collapseChartTitle: CollapsesProps = {
   collapse_label: t('Chart Title'),
   collapse_active: 'chart_title',
@@ -1351,6 +1368,355 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [yAxisFormat, currencyFormat],
+      },
+    ],
+  },
+  {
+    chart_name: 'treemap_v2',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          showLabels,
+          {
+            label: t('LABEL TYPE'),
+            name: 'label_type',
+            status: 'select',
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.label_types,
+          },
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'box_plot',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [colorScheme, xTickLayout, numberFormat, dateFormat],
+      },
+    ],
+  },
+  {
+    chart_name: 'graph_chart',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          {
+            label: t('GRAPH LAYOUT'),
+            name: 'force',
+            status: 'tabs',
+            options: [
+              { label: t('FORCE'), value: 'FORCE' },
+              { label: t('CIRCULAR'), value: 'CIRCULAR' },
+            ],
+          },
+          {
+            label: t('EDGE SYMBOLS'),
+            name: 'edgeSymbol',
+            popper: t('Symbol of two ends of edge line'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.edgeSymbol,
+          },
+          {
+            label: t('ENABLE NODE DRAGGING'),
+            name: 'draggable',
+            popper: t('Whether to enable node dragging in force layout mode.'),
+            status: 'checkbox',
+          },
+          roam,
+          {
+            label: t('NODE SELECT MODE'),
+            name: 'selectedMode',
+            popper: t('Allow node selections'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.selectedMode,
+          },
+          {
+            label: t('LABEL THRESHOLD'),
+            name: 'showSymbolThreshold',
+            status: 'input',
+            popper: t('Minimum value for label to be displayed on graph.'),
+            number: true,
+          },
+          {
+            label: t('NODE SIZE'),
+            name: 'baseNodeSize',
+            status: 'input',
+            popper: t(
+              'Median node size, the largest node will be 4 times larger than the smallest',
+            ),
+            number: true,
+          },
+          {
+            label: t('EDGE WIDTH'),
+            name: 'baseEdgeWidth',
+            status: 'input',
+            popper: t(
+              'Median edge width, the thickest edge will be 4 times thicker than the thinnest.',
+            ),
+            number: true,
+          },
+          {
+            label: t('EDGE LENGTH'),
+            name: 'edgeLength',
+            status: 'range',
+            popper: t('Edge length between nodes'),
+            rangeConfig: {
+              min: 100,
+              max: 1000,
+              step: 50,
+            },
+          },
+          {
+            label: t('GRAVITY'),
+            name: 'gravity',
+            status: 'range',
+            popper: t('Strength to pull the graph toward center'),
+            rangeConfig: {
+              min: 0.1,
+              max: 1,
+              step: 0.1,
+            },
+          },
+          {
+            label: t('REPULSION'),
+            name: 'repulsion',
+            status: 'range',
+            popper: t('Repulsion strength between nodes'),
+            rangeConfig: {
+              min: 100,
+              max: 3000,
+              step: 50,
+            },
+          },
+          {
+            label: t('FRICTION'),
+            name: 'friction',
+            status: 'range',
+            popper: t('Friction between nodes'),
+            rangeConfig: {
+              min: 0.1,
+              max: 1,
+              step: 0.1,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'radar',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          showLabels,
+          labelType,
+          {
+            label: t('LABEL POSITION'),
+            name: 'label_position',
+            status: 'select',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            options: chartFormsOption.label_position,
+          },
+          numberFormat,
+          dateFormat,
+          {
+            label: t('CIRCLE RADAR SHAPE'),
+            name: 'draggable',
+            popper: t(`Radar render type, whether to display 'circle' shape.`),
+            status: 'checkbox',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'echarts_timeseries_step',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          sortSeriesBy,
+          sortSeriesAscending,
+          colorScheme,
+          {
+            label: t('STEP TYPE'),
+            name: 'label_type',
+            status: 'select',
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.seriesType2,
+          },
+          showValue,
+          stackedStyle,
+          areaChart,
+          areaChartOpacity,
+          marker,
+          markerSize,
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'tree_chart',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          {
+            label: t('TREE LAYOUT '),
+            name: 'layout',
+            status: 'tabs',
+            popper: 'Layout type of tree',
+            options: [
+              { label: t('Orthogonal'), value: 'orthogonal' },
+              { label: t('Radial'), value: 'radial' },
+            ],
+          },
+          {
+            label: t('TREE ORIENTATION'),
+            name: 'orient',
+            status: 'tabs',
+            popper: 'Orientation of tree',
+            options: [
+              { label: t('Left to Right'), value: 'LR' },
+              { label: t('Right to Left'), value: 'RL' },
+              { label: t('Top to Bottom'), value: 'TB' },
+              { label: t('Bottom to Top'), value: 'BT' },
+            ],
+          },
+          {
+            label: t('Node label position'),
+            name: 'nodeLabelPosition',
+            status: 'tabs',
+            popper: 'Position of intermediate node label on tree',
+            options: [
+              { label: t('left'), value: 'left' },
+              { label: t('top'), value: 'top' },
+              { label: t('right'), value: 'right' },
+              { label: t('bottom'), value: 'bottom' },
+            ],
+          },
+          {
+            label: t('Child label position'),
+            name: 'childLabelPosition',
+            status: 'tabs',
+            popper: 'Position of child node label on tree',
+            options: [
+              { label: t('left'), value: 'left' },
+              { label: t('top'), value: 'top' },
+              { label: t('right'), value: 'right' },
+              { label: t('bottom'), value: 'bottom' },
+            ],
+          },
+          {
+            label: t('Emphasis'),
+            name: 'emphasis',
+            status: 'tabs',
+            popper: 'Which relatives to highlight on hover',
+            options: [
+              { label: t('ancestor'), value: 'ancestor' },
+              { label: t('descendant'), value: 'descendant' },
+            ],
+          },
+          {
+            label: t('Symbol'),
+            name: 'symbol',
+            status: 'select',
+            popper: t('Layout type of tree'),
+            options: chartFormsOption.symbol,
+          },
+          {
+            label: t('Symbol size'),
+            name: 'symbolSize',
+            status: 'range',
+            popper: t('Size of edge symbols'),
+            rangeConfig: {
+              min: 5,
+              max: 30,
+              step: 2,
+            },
+          },
+          roam,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'sunburst_v2',
+    collapses: [
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          showLabels,
+          {
+            label: t('PERCENTAGE THRESHOLD'),
+            name: 'show_labels_threshold',
+            status: 'input',
+            popper: t(
+              'Minimum threshold in percentage points for showing labels.',
+            ),
+            number: true,
+          },
+          {
+            label: t('SHOW TOTAL'),
+            name: 'show_total',
+            popper: t(`Whether to display the aggregate count`),
+            status: 'checkbox',
+          },
+          labelType,
+          numberFormat,
+          currencyFormat,
+          dateFormat,
+        ],
       },
     ],
   },

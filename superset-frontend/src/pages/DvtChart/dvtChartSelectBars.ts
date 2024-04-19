@@ -75,6 +75,41 @@ export const ChartSelectBars: ChartSelectBarProps[] = [
     icon: 'dvt-linear_chart',
   },
   {
+    popoverLabel: 'Threemap',
+    status: 'treemap_v2',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Box Plot',
+    status: 'box_plot',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Graph Chart',
+    status: 'graph_chart',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Radar Chart',
+    status: 'radar',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Stepped Line',
+    status: 'echarts_timeseries_step',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Tree Chart',
+    status: 'tree_chart',
+    icon: 'dvt-linear_chart',
+  },
+  {
+    popoverLabel: 'Sunburst Chart v2',
+    status: 'sunburst_v2',
+    icon: 'dvt-linear_chart',
+  },
+  {
     popoverLabel: 'Line Chart',
     status: 'echarts_timeseries_line',
     icon: 'dvt-diagram',

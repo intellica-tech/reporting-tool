@@ -1010,6 +1010,200 @@ const chartFormsOption = {
       value: 'value_z_to_a',
     },
   ],
+  whiskerOptions: [
+    {
+      label: t('Tukey'),
+      value: 'Tukey',
+    },
+    {
+      label: t('Min/max (no outliers)'),
+      value: 'Min/max (no outliers)',
+    },
+    {
+      label: t('2/98 percentiles'),
+      value: '2/98 percentiles',
+    },
+    {
+      label: t('9/91 percentiles'),
+      value: '9/91 percentiles',
+    },
+  ],
+  label_types: [
+    {
+      label: t('Value'),
+      value: 'value',
+    },
+    {
+      label: t('Category Name'),
+      value: 'key',
+    },
+    {
+      label: t('Category and Value'),
+      value: 'key_value',
+    },
+  ],
+  label_types2: [
+    {
+      label: t('Value'),
+      value: 'value',
+    },
+    {
+      label: t('Category and Value'),
+      value: 'key_value',
+    },
+  ],
+  edgeSymbol: [
+    {
+      label: t('None -> None'),
+      value: 'none,none',
+    },
+    {
+      label: t('None -> Arrow'),
+      value: 'none,arrow',
+    },
+    {
+      label: t('Circle -> Arrow'),
+      value: 'circle,arrow',
+    },
+    {
+      label: t('Circle -> Circle'),
+      value: 'circle,circle',
+    },
+  ],
+  roam: [
+    {
+      label: t('Disabled'),
+      value: false,
+    },
+    {
+      label: t('Scale only'),
+      value: 'scale',
+    },
+    {
+      label: t('Move only'),
+      value: 'move',
+    },
+    {
+      label: t('Scale and Move'),
+      value: true,
+    },
+  ],
+  selectedMode: [
+    {
+      label: t('Disabled'),
+      value: false,
+    },
+    {
+      label: t('Single'),
+      value: 'single',
+    },
+    {
+      label: t('Multiple'),
+      value: 'multiple',
+    },
+  ],
+  label_position: [
+    {
+      label: t('Top'),
+      value: 'top',
+    },
+    {
+      label: t('Left'),
+      value: 'left',
+    },
+    {
+      label: t('Right'),
+      value: 'right',
+    },
+    {
+      label: t('Bottom'),
+      value: 'bottom',
+    },
+    {
+      label: t('Inside'),
+      value: 'inside',
+    },
+    {
+      label: t('Inside left'),
+      value: 'insideLeft',
+    },
+    {
+      label: t('Inside right'),
+      value: 'insideRight',
+    },
+    {
+      label: t('Inside top'),
+      value: 'insideTop',
+    },
+    {
+      label: t('Inside bottom'),
+      value: 'insideBottom',
+    },
+    {
+      label: t('Inside top left'),
+      value: 'insideTopLeft',
+    },
+    {
+      label: t('Inside bottom left'),
+      value: 'insideBottomLeft',
+    },
+    {
+      label: t('Inside top right'),
+      value: 'insideTopRight',
+    },
+    {
+      label: t('Inside bottom right'),
+      value: 'insideBottomRight',
+    },
+  ],
+  seriesType2: [
+    {
+      label: t('Start'),
+      value: 'start',
+    },
+    {
+      label: t('Middle'),
+      value: 'middle',
+    },
+    {
+      label: t('End'),
+      value: 'end',
+    },
+  ],
+  symbol: [
+    {
+      label: t('Empty circle'),
+      value: 'emptyCircle',
+    },
+    {
+      label: t('Circle'),
+      value: 'circle',
+    },
+    {
+      label: t('Rectangle'),
+      value: 'rect',
+    },
+    {
+      label: t('Triangle'),
+      value: 'triangle',
+    },
+    {
+      label: t('Diamond'),
+      value: 'diamond',
+    },
+    {
+      label: t('Pin'),
+      value: 'pin',
+    },
+    {
+      label: t('Arrow'),
+      value: 'arrow',
+    },
+    {
+      label: t('None'),
+      value: 'none',
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
