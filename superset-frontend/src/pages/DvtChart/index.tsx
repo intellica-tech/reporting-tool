@@ -267,6 +267,19 @@ const DvtChart = () => {
       label: t('Line'),
       value: 'line',
     },
+    show_value: false,
+    stack: {
+      label: t('None'),
+      value: 'null',
+    },
+    only_total: true,
+    percentage_threshold: '0',
+    area: false,
+    opacity: selectedVizType === 'bubble_v2' ? 0.6 : 0.2,
+    markerEnabled: false,
+    markerSize: 6,
+    zoomable: false,
+    minorTicks: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -951,6 +964,25 @@ const DvtChart = () => {
             label: t('Line'),
             value: 'line',
           }),
+          show_value: getFormData?.show_value ? getFormData.show_value : false,
+          stack: chartFormsFindOptions('stack', {
+            label: t('None'),
+            value: 'null',
+          }),
+          only_total: getFormData?.only_total !== false,
+          percentage_threshold: getFormData?.percentage_threshold,
+          area: getFormData?.area ? getFormData.area : false,
+          opacity: getFormData?.opacity
+            ? getFormData.opacity
+            : active === 'bubble_v2'
+            ? 0.6
+            : 0.2,
+          markerEnabled: getFormData?.markerEnabled
+            ? getFormData.markerEnabled
+            : false,
+          markerSize: getFormData?.markerSize ? getFormData.markerSize : 6,
+          zoomable: getFormData?.zoomable ? getFormData.zoomable : false,
+          minorTicks: getFormData?.minorTicks ? getFormData.minorTicks : false,
         });
 
         setChartStatus('loading');
@@ -1319,13 +1351,15 @@ const DvtChart = () => {
         : 'supersetColors',
       seriesType: values.seriesType.value,
       seriesTypeB: 'line',
-      only_total: true,
-      opacity: active === 'bubble_v2' ? 0.6 : 0.2,
+      only_total: values.only_total,
+      area: values.area,
+      opacity: values.opacity,
       opacityB: 0.2,
-      markerSize: 6,
+      markerEnabled: values.markerEnabled,
+      markerSize: values.markerEnabled ? values.markerSize : 6,
       markerSizeB: 6,
       orientation: 'vertical',
-      show_legend: active === 'heatmap' ? values.show_legend : true,
+      show_legend: values.show_legend,
       legendType: 'scroll',
       legendOrientation: 'top',
       max_bubble_size: values.max_bubble_size
@@ -1351,7 +1385,6 @@ const DvtChart = () => {
       timeseries_limit_metric_b: values.timeseries_limit_metric_b.length
         ? metricsFormation('timeseries_limit_metric_b')[0]
         : undefined,
-      area: undefined,
       cache_timeout: undefined,
       contributionMode: withoutValueForNull(values.contributionMode),
       currency_format:
@@ -1371,14 +1404,16 @@ const DvtChart = () => {
       legendMargin: undefined,
       limit: withoutValueForNull(values.limit),
       logAxis: undefined,
-      markerEnabled: undefined,
       min_periods: values.min_periods ? Number(values.min_periods) : undefined,
       min_periods_b: values.min_periods_b
         ? Number(values.min_periods_b)
         : undefined,
       minorSplitLine: undefined,
-      minorTicks: undefined,
-      percentage_threshold: undefined,
+      minorTicks: values.minorTicks ? values.minorTicks : undefined,
+      percentage_threshold:
+        values.show_value && !values.only_total
+          ? Number(values.percentage_threshold)
+          : undefined,
       resample_method: withoutValueForNull(values.resample_method),
       resample_method_b: withoutValueForNull(values.resample_method_b),
       resample_rule: withoutValueForNull(values.resample_rule),
@@ -1391,9 +1426,9 @@ const DvtChart = () => {
         : undefined,
       rolling_type: withoutValueForNull(values.rolling_type),
       rolling_type_b: withoutValueForNull(values.rolling_type_b),
-      show_value: undefined,
+      show_value: values.show_value,
       slice_id: undefined,
-      stack: undefined,
+      stack: values.stack.value === 'null' ? undefined : values.stack.value,
       time_compare: values.time_compare,
       time_compare_b: values.time_compare_b,
       tooltipSortByMetric: undefined,
@@ -1406,7 +1441,7 @@ const DvtChart = () => {
       y_axis_title: values.y_axis_title ? values.y_axis_title : undefined,
       y_axis_title_margin: values.y_axis_title_margin.value,
       y_axis_title_position: values.y_axis_title_position.value,
-      zoomable: undefined,
+      zoomable: values.zoomable ? values.zoomable : undefined,
       header_font_size: 0.4,
       metric: metricsFormation('metric')[0],
       date_format: 'smart_date',

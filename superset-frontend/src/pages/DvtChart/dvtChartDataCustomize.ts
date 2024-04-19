@@ -120,6 +120,23 @@ const stackedStyle: FormsProps = {
   options: chartFormsOption.stack,
 };
 
+const onlyTotal: FormsProps = {
+  label: t('ONLY TOTAL'),
+  name: 'only_total',
+  status: 'checkbox',
+  popper: t(
+    'Only show the total value on the stacked chart, and not show on the selected category',
+  ),
+};
+
+const percentageThreshold: FormsProps = {
+  label: t('PERCENTAGE THRESHOLD'),
+  name: 'percentage_threshold',
+  status: 'input',
+  popper: t('Minimum threshold in percentage points for showing labels.'),
+  number: true,
+};
+
 const areaChart: FormsProps = {
   label: t('AREA CHART'),
   name: 'area',
@@ -494,6 +511,8 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           seriesStyle,
           showValue,
           stackedStyle,
+          onlyTotal,
+          percentageThreshold,
           areaChart,
           areaChartOpacity,
           marker,

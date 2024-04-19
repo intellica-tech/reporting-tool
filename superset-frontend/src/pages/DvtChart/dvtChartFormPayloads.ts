@@ -25,8 +25,10 @@ const lineChartPayload = [
   'limit',
   'metrics',
   'min_periods',
+  'minorTicks',
   'only_total',
   'order_desc',
+  'percentage_threshold',
   'resample_method',
   'resample_rule',
   'result_format',
@@ -37,8 +39,10 @@ const lineChartPayload = [
   'row_limit',
   'show_empty_columns',
   'show_legend',
-  'sort_series_type',
+  'show_value',
   'sort_series_ascending',
+  'sort_series_type',
+  'stack',
   'time_compare',
   'time_grain_sqla',
   'timeseries_limit_metric',
@@ -60,6 +64,7 @@ const lineChartPayload = [
   'y_axis_title',
   'y_axis_title_margin',
   'y_axis_title_position',
+  'zoomable',
 ];
 
 const lineChartQueries = [
@@ -85,7 +90,14 @@ const lineChartQueries = [
 const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
   {
     viz_name: 'echarts_timeseries_line',
-    form_data: [...lineChartPayload, 'opacity', 'markerSize', 'seriesType'],
+    form_data: [
+      ...lineChartPayload,
+      'area',
+      'opacity',
+      'markerEnabled',
+      'markerSize',
+      'seriesType',
+    ],
     queries: lineChartQueries,
   },
   {
@@ -95,7 +107,14 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
   },
   {
     viz_name: 'echarts_area',
-    form_data: [...lineChartPayload, 'opacity', 'markerSize', 'seriesType'],
+    form_data: [
+      ...lineChartPayload,
+      'area',
+      'opacity',
+      'markerEnabled',
+      'markerSize',
+      'seriesType',
+    ],
     queries: lineChartQueries,
   },
   {

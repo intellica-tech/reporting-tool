@@ -870,7 +870,7 @@ const chartFormsOption = {
   stack: [
     {
       label: t('None'),
-      value: '',
+      value: 'null',
     },
     {
       label: t('Stack'),

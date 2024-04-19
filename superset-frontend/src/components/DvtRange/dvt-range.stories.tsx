@@ -25,7 +25,7 @@ export default {
 };
 
 export const Default = () => {
-  const [range, setRange] = useState<number>();
+  const [range, setRange] = useState<number>(30);
 
   return (
     <div style={{ width: 600, padding: 50 }}>
