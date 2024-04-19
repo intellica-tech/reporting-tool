@@ -260,6 +260,10 @@ const DvtChart = () => {
     truncateYAxis: true,
     x_axis_title: '',
     x_axis_title_margin: { label: '15', value: 15 },
+    x_axis_title_position: {
+      label: t('Left'),
+      value: 'Left',
+    },
     y_axis_title: '',
     y_axis_title_margin: { label: '15', value: 15 },
     y_axis_title_position: {
@@ -313,6 +317,7 @@ const DvtChart = () => {
     },
     logAxis: false,
     minorSplitLine: false,
+    orientation: { label: t('VERTICAL'), value: 'vertical' },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -984,6 +989,17 @@ const DvtChart = () => {
             label: '15',
             value: 15,
           }),
+          x_axis_title_position:
+            getFormData.viz_type === 'echarts_timeseries_bar' &&
+            getFormData?.orientation === 'horizontal'
+              ? chartFormsFindOptions('y_axis_title_position', {
+                  label: t('Left'),
+                  value: 'Left',
+                })
+              : {
+                  label: t('Left'),
+                  value: 'Left',
+                },
           y_axis_title: getFormData?.y_axis_title
             ? getFormData.y_axis_title
             : '',
@@ -991,13 +1007,17 @@ const DvtChart = () => {
             label: '15',
             value: 15,
           }),
-          y_axis_title_position: chartFormsFindOptions(
-            'y_axis_title_position',
-            {
-              label: t('Left'),
-              value: 'Left',
-            },
-          ),
+          y_axis_title_position:
+            getFormData.viz_type === 'echarts_timeseries_bar' &&
+            getFormData?.orientation === 'horizontal'
+              ? {
+                  label: t('Left'),
+                  value: 'Left',
+                }
+              : chartFormsFindOptions('y_axis_title_position', {
+                  label: t('Left'),
+                  value: 'Left',
+                }),
           sort_series_type: chartFormsFindOptions('sort_series_type', {
             label: t('Total value'),
             value: 'sum',
@@ -1069,6 +1089,10 @@ const DvtChart = () => {
           minorSplitLine: getFormData?.minorSplitLine
             ? getFormData.minorSplitLine
             : false,
+          orientation:
+            getFormData?.orientation === 'horizontal'
+              ? { label: t('HORIZONTAL'), value: 'horizontal' }
+              : { label: t('VERTICAL'), value: 'vertical' },
         });
 
         setChartStatus('loading');
@@ -1434,7 +1458,7 @@ const DvtChart = () => {
       markerEnabled: values.markerEnabled,
       markerSize: values.markerEnabled ? values.markerSize : 6,
       markerSizeB: 6,
-      orientation: 'vertical',
+      orientation: values.orientation.value,
       show_legend: values.show_legend,
       legendMargin: values.show_legend
         ? values.legendMargin
@@ -1523,7 +1547,11 @@ const DvtChart = () => {
       x_axis_title_margin: values.x_axis_title_margin.value,
       y_axis_title: values.y_axis_title ? values.y_axis_title : undefined,
       y_axis_title_margin: values.y_axis_title_margin.value,
-      y_axis_title_position: values.y_axis_title_position.value,
+      y_axis_title_position:
+        active === 'echarts_timeseries_bar' &&
+        values.orientation.value === 'horizontal'
+          ? values.x_axis_title_position.value
+          : values.y_axis_title_position.value,
       zoomable: values.zoomable ? values.zoomable : undefined,
       header_font_size: 0.4,
       metric: metricsFormation('metric')[0],

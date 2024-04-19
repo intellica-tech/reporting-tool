@@ -544,25 +544,25 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
     chart_name: 'echarts_timeseries_bar',
     collapses: [
       {
-        collapse_label: t('Chart Orientation'),
-        collapse_active: 'chart_orientation',
-        // tabs_name: 'chart_orientation',
-        // tabs_actives: {
-        //   vertical: [
-        //     'x_axis_title',
-        //     'x_axis_title_margin',
-        //     'y_axis_title',
-        //     'y_axis_title_margin',
-        //     'y_axis_title_position',
-        //   ],
-        //   horizontal: [
-        //     'y_axis_title',
-        //     'y_axis_title_margin',
-        //     'y_axis_title_position',
-        //     'x_axis_title',
-        //     'x_axis_title_margin',
-        //   ],
-        // },
+        collapse_label: t('Chart Title'),
+        collapse_active: 'chart_title',
+        tabs_name: 'orientation',
+        tabs_actives: {
+          vertical: [
+            'x_axis_title',
+            'x_axis_title_margin',
+            'y_axis_title',
+            'y_axis_title_margin',
+            'y_axis_title_position',
+          ],
+          horizontal: [
+            'x_axis_title',
+            'x_axis_title_margin',
+            'x_axis_title_position',
+            'y_axis_title',
+            'y_axis_title_margin',
+          ],
+        },
         forms: [
           {
             label: t('BAR ORIENTATION'),
@@ -573,9 +573,26 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               { label: t('HORIZONTAL'), value: 'horizontal' },
             ],
           },
+          xAxisTitle,
+          xAxisTitleMargin,
+          {
+            label: t('X AXIS TITLE POSITION'),
+            name: 'x_axis_title_position',
+            status: 'select',
+            popper: t('Changing this control takes effect instantly'),
+            options: chartFormsOption.y_axis_title_position,
+          },
+          yAxisTitle,
+          yAxisTitleMargin,
+          {
+            label: t('Y AXIS TITLE POSITION'),
+            name: 'y_axis_title_position',
+            status: 'select',
+            popper: t('Changing this control takes effect instantly'),
+            options: chartFormsOption.y_axis_title_position,
+          },
         ],
       },
-      collapseChartTitle,
       {
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
