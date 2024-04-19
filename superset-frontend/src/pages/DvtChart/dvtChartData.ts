@@ -159,6 +159,12 @@ const formTimeGrain: FormsProps = {
   options: chartFormsOption.time_grain_sqla,
 };
 
+const formSortByMetric: FormsProps = {
+  label: t('SORT BY METRIC'),
+  name: 'sort_by_metric',
+  status: 'checkbox',
+};
+
 const lineAndBarChart: CollapsesProps[] = [
   {
     collapse_label: t('Query'),
@@ -508,11 +514,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formMetric,
           formFilters,
           formRowLimit,
-          {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
-            status: 'checkbox',
-          },
+          formSortByMetric,
         ],
       },
     ],
@@ -625,11 +627,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formMetric,
           formFilters,
           formRowLimit,
-          {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
-            status: 'checkbox',
-          },
+          formSortByMetric,
         ],
       },
     ],
@@ -665,11 +663,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formMetric,
           formFilters,
           formRowLimit,
-          {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
-            status: 'checkbox',
-          },
+          formSortByMetric,
         ],
       },
       {
@@ -831,11 +825,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formMetric,
           formFilters,
           formRowLimit,
-          {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
-            status: 'checkbox',
-          },
+          formSortByMetric,
         ],
       },
     ],
@@ -1180,11 +1170,7 @@ const DvtChartData: DvtChartDataProps[] = [
           formMetric,
           formFilters,
           formRowLimit,
-          {
-            label: t('SORT BY METRIC'),
-            name: 'sort_by_metric',
-            status: 'checkbox',
-          },
+          formSortByMetric,
         ],
       },
       {
@@ -1495,6 +1481,416 @@ const DvtChartData: DvtChartDataProps[] = [
             status: 'select',
             options: chartFormsOption.resample_method,
           },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'treemap_v2',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper_error: t('This section contains validation errors'),
+        forms: [
+          formDimensions,
+          formMetric,
+          formRowLimit,
+          formSortByMetric,
+          formFilters,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'box_plot',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper: t('This section contains validation errors'),
+        collapse_popper_error: t('This section contains validation errors'),
+        forms: [
+          {
+            label: t('DISTRIBUTE ACROSS'),
+            name: 'columns',
+            popper: t('Columns to calculate distribution across.'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          formDimensions,
+          formMetrics,
+          formFilters,
+          {
+            label: t('SERIES LIMIT'),
+            name: 'limit',
+            popper: t(
+              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.limit,
+          },
+          formSortBy,
+          {
+            label: t('WHISKER/OUTLIER OPTIONS'),
+            name: 'whiskerOptions',
+            popper: t('Determines how whiskers and outliers are calculated.'),
+            status: 'select',
+            options: chartFormsOption.whiskerOptions,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'graph_chart',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper: t('This section contains validation errors'),
+        forms: [
+          {
+            label: t('SOURCE'),
+            name: 'source',
+            popper: t('Name of the source nodes'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          {
+            label: t('TARGET'),
+            name: 'target',
+            popper: t('Name of the target nodes'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          formMetric,
+          {
+            label: t('SOURCE CATEGORY'),
+            name: 'source_category',
+            popper: t(
+              'The category of source nodes used to assign colors. If a node is associated with more than one category, only the first will be used.',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('TARGET CATEGORY'),
+            name: 'target_category',
+            popper: t('Category of target nodes'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formFilters,
+          formRowLimit,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'radar',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper_error: t('This section contains validation errors'),
+        forms: [
+          formDimensions,
+          formMetric,
+          formSortBy,
+          formFilters,
+          formRowLimit,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'echarts_timeseries_step',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper: t('This section contains validation errors'),
+        forms: [
+          {
+            label: t('X-AXIS'),
+            name: 'x_axis',
+            popper: t('Dimension to use on x-axis.'),
+            popperError: t('cannot be empty'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formMetrics,
+          formDimensions,
+          {
+            label: t('CONTRIBUTION MODE'),
+            name: 'contributionMode',
+            popper: t('Calculate contribution per series or row'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.contributionMode,
+          },
+          formFilters,
+          {
+            label: t('SERIES LIMIT'),
+            name: 'limit',
+            popper: t(
+              'Limits the number of series that get displayed. A joined subquery (or an extra phase where subqueries are not supported) is applied to limit the number of series that get fetched and rendered. This feature is useful when grouping by high cardinality column(s) though does increase the query complexity and cost.',
+            ),
+            placeholder: t('None'),
+            status: 'select',
+            options: chartFormsOption.limit,
+          },
+          formSortBy,
+          formRowLimit,
+          {
+            label: t('TRUNCATE METRIC'),
+            name: 'truncate_metric',
+            status: 'checkbox',
+          },
+          {
+            label: t('SHOW EMPTY COLUMNS'),
+            name: 'show_empty_columns',
+            status: 'checkbox',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Advanced analytics'),
+        collapse_popper: t(
+          'This section contains options that allow for advanced analytical post processing of query results',
+        ),
+        collapse_active: 'advanced_analytics',
+        forms: [
+          {
+            label: t('ROLLING FUNCTION'),
+            name: 'rolling_type',
+            popper: t(
+              'Defines a rolling window function to apply, works along with the [Periods] text box',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.rolling_type,
+          },
+          {
+            label: t('TIME SHIFT'),
+            name: 'time_compare',
+            popper: t(
+              'Overlay one or more timeseries from a relative time period. Expects relative time deltas in natural language (example: 24 hours, 7 days, 52 weeks, 365 days). Free text is supported.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'multiple-select',
+            options: chartFormsOption.time_compare,
+          },
+          {
+            label: t('CALCULATION TYPE'),
+            name: 'comparison_type',
+            popper: t(
+              'How to display time shifts: as individual lines; as the difference between the main time series and each time shift; as the percentage change; or as the ratio between series and time shifts.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.comparison_type,
+          },
+          {
+            label: t('RULE'),
+            name: 'resample_rule',
+            popper: t('Pandas resample rule'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_rule,
+          },
+          {
+            label: t('FILL METHOD'),
+            name: 'resample_method',
+            popper: t('Pandas resample method'),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.resample_method,
+          },
+        ],
+      },
+      {
+        collapse_label: t('Annotations and Layers'),
+        collapse_active: 'annotations_and_layers',
+        forms: [
+          {
+            name: 'annotation_layers',
+            placeholder: t('Add annotation layer'),
+            status: 'annotation-layer',
+          },
+        ],
+      },
+      {
+        collapse_label: t('Predictive Analytics'),
+        collapse_active: 'predictive_analytics',
+        forms: [
+          {
+            label: t('ENABLE FORECAST'),
+            name: 'forecastEnabled',
+            status: 'checkbox',
+          },
+          {
+            label: t('FORECAST PERIODS'),
+            name: 'forecastPeriods',
+            popper: t('How many periods into the future do we want to predict'),
+            status: 'input',
+            number: true,
+          },
+          {
+            label: t('CONFIDENCE INTERVAL'),
+            name: 'forecastInterval',
+            popper: t(
+              'Width of the confidence interval. Should be between 0 and 1',
+            ),
+            status: 'input',
+          },
+          {
+            label: t('YEARLY SEASONALITY'),
+            name: 'forecastSeasonalityYearly',
+            popper: t(
+              'Should yearly seasonality be applied. An integer value will specify Fourier order of seasonality.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.forecastSeasonalityYearly,
+          },
+          {
+            label: t('WEEKLY SEASONALITY'),
+            name: 'forecastSeasonalityWeekly',
+            popper: t(
+              'Should weekly seasonality be applied. An integer value will specify Fourier order of seasonality.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.forecastSeasonalityWeekly,
+          },
+          {
+            label: t('DAILY SEASONALITY'),
+            name: 'forecastSeasonalityDaily',
+            popper: t(
+              'Should daily seasonality be applied. An integer value will specify Fourier order of seasonality.',
+            ),
+            placeholder: t('Select ...'),
+            status: 'select',
+            options: chartFormsOption.forecastSeasonalityDaily,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'tree_chart',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper: t('This section contains validation errors'),
+        forms: [
+          {
+            label: t('ID'),
+            name: 'id',
+            popper: t('Name of the id column'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          {
+            label: t('PARENT'),
+            name: 'parent',
+            popper: t(
+              'Name of the column containing the id of the parent node',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          {
+            label: t('NAME'),
+            name: 'name',
+            popper: t('Optional name of the data column.'),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('ROOT NODE ID'),
+            name: 'root_node_id',
+            popper: t('Id of root node of the tree.'),
+            status: 'input',
+          },
+          formFilters,
+          formRowLimit,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'sunburst_v2',
+    collapses: [
+      {
+        collapse_label: t('Query'),
+        collapse_active: 'query',
+        collapse_popper: t('This section contains validation errors'),
+        collapse_popper_error: t('This section contains validation errors'),
+
+        forms: [
+          {
+            label: t('HIERARCHY'),
+            name: 'groupby',
+            popper: t('This defines the level of the hierarchy'),
+            status: 'input-drop',
+            multiple: true,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          {
+            label: t('PRIMARY METRIC'),
+            name: 'metric',
+            popper: t(
+              'The primary metric is used to define the arc segment sizes',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+            popperError: t('cannot be empty'),
+          },
+          {
+            label: t('SECONDARY METRIC'),
+            name: 'secondary_metric',
+            popper: t(
+              '[optional] this secondary metric is used to define the color as a ratio against the primary metric. When omitted, the color is categorical and based on labels',
+            ),
+            status: 'input-drop',
+            multiple: false,
+            type: 'normal',
+            savedType: 'expressions',
+          },
+          formFilters,
+          formRowLimit,
+          formSortByMetric,
         ],
       },
     ],
