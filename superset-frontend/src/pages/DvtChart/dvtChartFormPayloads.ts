@@ -515,7 +515,14 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
   },
   {
     viz_name: 'echarts_timeseries_scatter',
-    form_data: [...lineChartPayload, 'markerSize'],
+    form_data: [
+      ...lineChartPayload,
+      'area',
+      'opacity',
+      'markerEnabled',
+      'markerSize',
+      'seriesType',
+    ],
     queries: lineChartQueries,
   },
   {
