@@ -287,7 +287,7 @@ const DvtChart = () => {
     only_total: true,
     percentage_threshold: '0',
     area: false,
-    opacity: selectedVizType === 'bubble_v2' ? 0.6 : 0.2,
+    opacity: 0.2,
     markerEnabled: false,
     markerSize: 6,
     zoomable: false,
@@ -342,6 +342,19 @@ const DvtChart = () => {
   });
 
   const onlyExploreJson = ['heatmap', 'dist_bar', 'world_map', 'histogram'];
+
+  useEffect(() => {
+    if (active === 'bubble_v2' && values.opacity === 0.2) {
+      setValues({ ...values, opacity: 0.6 });
+    }
+    if (
+      selectBars.some(f => f.status === 'bubble_v2') &&
+      active !== 'bubble_v2' &&
+      values.opacity === 0.6
+    ) {
+      setValues({ ...values, opacity: 0.2 });
+    }
+  }, [active]);
 
   useEffect(() => {
     if (selectedVizType) {
@@ -1458,7 +1471,10 @@ const DvtChart = () => {
       markerEnabled: values.markerEnabled,
       markerSize: values.markerEnabled ? values.markerSize : 6,
       markerSizeB: 6,
-      orientation: values.orientation.value,
+      orientation:
+        active === 'echarts_timeseries_bar'
+          ? values.orientation.value
+          : 'vertical',
       show_legend: values.show_legend,
       legendMargin: values.show_legend
         ? values.legendMargin
