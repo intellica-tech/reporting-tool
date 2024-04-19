@@ -280,6 +280,19 @@ const DvtChart = () => {
     markerSize: 6,
     zoomable: false,
     minorTicks: false,
+    legendType: {
+      label: t('Scroll'),
+      value: 'scroll',
+    },
+    legendOrientation: {
+      label: t('Top'),
+      value: 'top',
+    },
+    legendMargin: '',
+    x_axis_time_format: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -575,10 +588,10 @@ const DvtChart = () => {
           field: string,
           value: any,
           findNameField = 'value',
-          onB?: boolean,
+          optionField?: string,
         ) =>
           getFormData?.[field]
-            ? chartFormsOption[onB ? field.replace('_b', '') : field].find(
+            ? chartFormsOption[optionField || field].find(
                 (f: any) => f[findNameField] === getFormData[field],
               )
             : value;
@@ -678,7 +691,7 @@ const DvtChart = () => {
               value: 'None',
             },
             'value',
-            true,
+            'rolling_type',
           ),
           time_compare: getFormData?.time_compare
             ? getFormData?.time_compare
@@ -697,21 +710,21 @@ const DvtChart = () => {
               value: 'values',
             },
             'value',
-            true,
+            'comparison_type',
           ),
           resample_rule: chartFormsFindOptions('resample_rule', ''),
           resample_rule_b: chartFormsFindOptions(
             'resample_rule_b',
             '',
             'value',
-            true,
+            'resample_rule',
           ),
           resample_method: chartFormsFindOptions('resample_method', ''),
           resample_method_b: chartFormsFindOptions(
             'resample_method_b',
             '',
             'value',
-            true,
+            'resample_method',
           ),
           annotation_layers: [],
           forecastEnabled: getFormData?.forecastEnabled
@@ -983,6 +996,26 @@ const DvtChart = () => {
           markerSize: getFormData?.markerSize ? getFormData.markerSize : 6,
           zoomable: getFormData?.zoomable ? getFormData.zoomable : false,
           minorTicks: getFormData?.minorTicks ? getFormData.minorTicks : false,
+          legendType: chartFormsFindOptions('legendType', {
+            label: t('Scroll'),
+            value: 'scroll',
+          }),
+          legendOrientation: chartFormsFindOptions('legendOrientation', {
+            label: t('Top'),
+            value: 'top',
+          }),
+          legendMargin: getFormData?.legendMargin
+            ? getFormData.legendMargin
+            : '',
+          x_axis_time_format: chartFormsFindOptions(
+            'x_axis_time_format',
+            {
+              label: t('Adaptive formatting'),
+              value: 'smart_date',
+            },
+            'value',
+            'time_format',
+          ),
         });
 
         setChartStatus('loading');
@@ -1360,12 +1393,19 @@ const DvtChart = () => {
       markerSizeB: 6,
       orientation: 'vertical',
       show_legend: values.show_legend,
-      legendType: 'scroll',
-      legendOrientation: 'top',
+      legendMargin: values.show_legend
+        ? values.legendMargin
+          ? Number(values.legendMargin)
+          : null
+        : null,
+      legendOrientation: values.show_legend
+        ? values.legendOrientation.value
+        : 'top',
+      legendType: values.show_legend ? values.legendType.value : 'scroll',
       max_bubble_size: values.max_bubble_size
         ? values.max_bubble_size.value
         : '25',
-      x_axis_time_format: 'smart_date',
+      x_axis_time_format: values.x_axis_time_format.value,
       rich_tooltip: true,
       tooltipTimeFormat: 'smart_date',
       y_axis_format:
@@ -1401,7 +1441,6 @@ const DvtChart = () => {
       forecastSeasonalityYearly: withoutValueForNull(
         values.forecastSeasonalityYearly,
       ),
-      legendMargin: undefined,
       limit: withoutValueForNull(values.limit),
       logAxis: undefined,
       min_periods: values.min_periods ? Number(values.min_periods) : undefined,

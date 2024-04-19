@@ -20,6 +20,7 @@ const lineChartPayload = [
   'forecastSeasonalityWeekly',
   'forecastSeasonalityYearly',
   'groupby',
+  'legendMargin',
   'legendOrientation',
   'legendType',
   'limit',
