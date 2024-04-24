@@ -651,6 +651,7 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'y_axis_bounds',
       'y_axis_label',
       'y_axis_showminmax',
+      'dist_bar',
     ],
     queries: [],
   },
@@ -789,6 +790,7 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
     form_data: [
       'adhoc_filters',
       'color_scheme',
+      'currency_format',
       'datasource',
       'date_format',
       'extra_form_data',

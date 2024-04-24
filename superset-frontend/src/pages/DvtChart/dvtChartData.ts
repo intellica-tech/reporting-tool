@@ -1574,7 +1574,7 @@ const DvtChartData: DvtChartDataProps[] = [
             savedType: 'expressions',
             popperError: t('cannot be empty'),
           },
-          formMetric,
+          formMetrics,
           {
             label: t('SOURCE CATEGORY'),
             name: 'source_category',
@@ -1858,7 +1858,7 @@ const DvtChartData: DvtChartDataProps[] = [
         forms: [
           {
             label: t('HIERARCHY'),
-            name: 'groupby',
+            name: 'columns',
             popper: t('This defines the level of the hierarchy'),
             status: 'input-drop',
             multiple: true,

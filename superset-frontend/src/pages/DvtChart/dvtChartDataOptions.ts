@@ -1258,6 +1258,38 @@ const chartFormsOption = {
       value: false,
     },
   ],
+  yAxisIndex: [
+    {
+      label: 'Primary',
+      value: 0,
+    },
+    {
+      label: 'Secondary',
+      value: 1,
+    },
+  ],
+  x_ticks_layout: [
+    {
+      label: 'auto',
+      value: 'auto',
+    },
+    {
+      label: 'flat',
+      value: 'flat',
+    },
+    {
+      label: '45°',
+      value: '45°',
+    },
+    {
+      label: '90°',
+      value: '90°',
+    },
+    {
+      label: 'staggered',
+      value: 'staggered',
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
