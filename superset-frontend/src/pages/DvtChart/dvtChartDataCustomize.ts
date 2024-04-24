@@ -331,7 +331,7 @@ const subheaderFontSize: FormsProps = {
   name: 'subheader_font_size',
   popper: t('Changing this control takes effect instantly'),
   status: 'select',
-  options: chartFormsOption.header_font_size,
+  options: chartFormsOption.subheader_font_size,
 };
 
 const truncateXAxis: FormsProps = {
@@ -813,7 +813,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('SHOW TOTAL'),
-            name: 'show_total',
+            name: 'show_totals',
             status: 'checkbox',
             popper: t('Whether to display the aggregate count.'),
           },
@@ -864,14 +864,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'max_bubble_size',
             popper: t('Changing this control takes effect instantly'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.limit,
           },
           {
             label: t('BUBBLE SIZE NUMBER FORMAT'),
-            name: 'max_bubble_size',
+            name: 'tooltipSizeFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.y_axis_format,
           },
           {
             label: t('BUBBLE OPACITY'),
@@ -893,20 +893,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_active: 'x_axis',
         forms: [
           xAxisTitle,
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            status: 'select',
-            options: [],
-          },
+          rotateXAxisLabel,
           { ...xAxisTitleMargin, label: t('X AXIS TITLE MARGIN') },
           {
             label: t('X AXIS FORMAT'),
             name: 'xAxisFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.y_axis_format,
           },
           {
             label: t('LOGARITHMIC X-AXIS'),
@@ -952,7 +946,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'link_length',
             popper: t('Select the number of bins for the histogram'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.link_length,
           },
           xAxisLabel,
           yAxisLabel,
@@ -986,18 +980,18 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           orientation,
           margin,
           {
-            label: t('LABEL CONTENTS'),
+            label: t('LABEL TYPE'),
             name: 'label_type',
             status: 'select',
-            popper: t('What should be shown as the label'),
-            options: [],
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.label_type,
           },
           {
             label: t('TOOLTIP CONTENTS'),
             name: 'tooltip_label_type',
             status: 'select',
             popper: t('What should be shown as the tooltip label'),
-            options: [],
+            options: chartFormsOption.label_type,
           },
           numberFormat,
           currencyFormat,
@@ -1274,15 +1268,15 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('ROWS SUBTOTAL POSITION'),
-            name: '',
+            name: 'rowSubtotalPosition',
             status: 'select',
-            options: [],
+            options: chartFormsOption.rowSubtotalPosition,
           },
           {
             label: t('COLUMNS SUBTOTAL POSITION'),
-            name: '',
+            name: 'colSubtotalPosition',
             status: 'select',
-            options: [],
+            options: chartFormsOption.colSubtotalPosition,
           },
         ],
       },
@@ -1299,7 +1293,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           legend,
           {
             label: t('BAR VALUES'),
-            name: 'show_bar_value',
+            name: 'dist_bar',
             status: 'checkbox',
             popper: t('Show the value on top of the bar'),
           },
@@ -1346,7 +1340,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Bottom margin, in pixels, allowing for more room for axis labels',
             ),
             status: 'select',
-            options: [],
+            options: chartFormsOption.bottom_margin,
           },
           xTickLayout,
           {
@@ -1419,7 +1413,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           margin,
           {
             label: t('GRAPH LAYOUT'),
-            name: 'force',
+            name: 'layout',
             status: 'tabs',
             options: [
               { label: t('FORCE'), value: 'FORCE' },

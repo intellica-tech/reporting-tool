@@ -1204,6 +1204,60 @@ const chartFormsOption = {
       value: 'none',
     },
   ],
+  link_length: [
+    {
+      label: '10',
+      value: '10',
+    },
+    {
+      label: '25',
+      value: '25',
+    },
+    {
+      label: '50',
+      value: '50',
+    },
+    {
+      label: '75',
+      value: '75',
+    },
+    {
+      label: '100',
+      value: '100',
+    },
+    {
+      label: '150',
+      value: '150',
+    },
+    {
+      label: '200',
+      value: '200',
+    },
+    {
+      label: '250',
+      value: '250',
+    },
+  ],
+  rowSubtotalPosition: [
+    {
+      label: 'Top',
+      value: true,
+    },
+    {
+      label: 'Bottom',
+      value: false,
+    },
+  ],
+  colSubtotalPosition: [
+    {
+      label: 'Left',
+      value: true,
+    },
+    {
+      label: 'Right',
+      value: false,
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };
