@@ -487,6 +487,7 @@ const DvtChart = () => {
     },
     source: [],
     target: [],
+    columns: [],
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -2150,7 +2151,7 @@ const DvtChart = () => {
         ? Number(values.series_limit_b.value)
         : 0,
       contribution: values.contribution,
-      columns: values?.columns.map((v: any) => v.label),
+      columns: values?.columns && values.columns.map((v: any) => v.label),
       show_bubbles: values.show_bubbles,
       country_fieldtype: values.country_fieldtype?.value,
       secondary_metric: metricsFormation('secondary_metric')[0],
@@ -2633,7 +2634,10 @@ const DvtChart = () => {
       case 'echarts_timeseries_line':
       case 'echarts_timeseries_bar':
       case 'echarts_area':
+      case 'echarts_timeseries_step':
         return !(values.x_axis.length && values.metrics.length);
+      case 'tree_chart':
+        return !(values.id.length && values.parent.length);
       case 'table':
         return values.query_mode.value === 'aggregate'
           ? !(
@@ -2646,6 +2650,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'sunburst_v2':
         return !values.metric.length;
       case 'histogram':
         return !values.all_columns.length;
@@ -2668,10 +2673,21 @@ const DvtChart = () => {
         return !(values.metric.length && values.x_axis.length);
       case 'pivot_table_v2':
         return !values.metrics.length;
+      case 'treemap_v2':
+      case 'radar':
+        return !values.metric.length;
       case 'dist_bar':
         return !(values.metrics.length && values.groupby.length);
+      case 'graph_chart':
+        return !(
+          values.source.length &&
+          values.target.length &&
+          values.metrics.length
+        );
       case 'world_map':
         return !(values.entity.length && values.metric.length);
+      case 'box_plot':
+        return !(values.columns.length && values.metrics.length);
       case 'mixed_timeseries':
         if (active) {
           if (active === 'sharedQueryFields') {
