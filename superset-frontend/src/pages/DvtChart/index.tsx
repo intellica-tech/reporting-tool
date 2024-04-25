@@ -1719,6 +1719,15 @@ const DvtChart = () => {
     },
   };
 
+  const postProcessingResample = {
+    operation: 'resample',
+    options: {
+      method: values.resample_method?.value,
+      rule: values.resample_rule?.value,
+      fill_value: values.resample_method?.value === 'asfreq' ? 0 : null,
+    },
+  };
+
   const arrayOnlyOneItemFormation = (data: any[]) => {
     const uniqueItems = new Set();
     return data.filter((item: any) => {
@@ -2282,6 +2291,11 @@ const DvtChart = () => {
                 values.rolling_type.value !== 'None'
                   ? [postProcessingRollingType]
                   : []),
+                ...(postProcessingRollingChartActives.includes(active) &&
+                withoutValueForNull(values.resample_method) &&
+                withoutValueForNull(values.resample_rule)
+                  ? [postProcessingResample]
+                  : []),
                 {
                   operation: 'flatten',
                 },
@@ -2844,6 +2858,9 @@ const DvtChart = () => {
                           data={fItem.options || []}
                           typeDesign="form"
                           maxWidth
+                          onShowClear={
+                            fItem?.onShowClear ? fItem.onShowClear : false
+                          }
                         />
                       )}
                       {fItem.status === 'multiple-select' && (

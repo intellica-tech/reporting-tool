@@ -57,6 +57,7 @@ interface FormsProps {
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
+  onShowClear?: boolean;
 }
 
 interface CollapsesProps {
@@ -969,6 +970,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_rule,
+            onShowClear: true,
           },
           {
             label: t('FILL METHOD'),
@@ -977,6 +979,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_method,
+            onShowClear: true,
           },
         ],
       },

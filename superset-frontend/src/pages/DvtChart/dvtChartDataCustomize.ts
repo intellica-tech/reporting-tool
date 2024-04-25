@@ -57,6 +57,7 @@ interface FormsProps {
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
+  onShowClear?: boolean;
 }
 
 interface CollapsesProps {
@@ -1186,13 +1187,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         forms: [
           {
             label: t('FIXED COLOR'),
-            name: 'increase_color',
+            name: 'color_picker',
             status: 'color',
             popper: t('Use this to define a static color for all circles'),
           },
           bigNumberFontSize,
           subheaderFontSize,
-          numberFormat,
+          { ...yAxisFormat, label: t('NUMBER FORMAT') },
           currencyFormat,
           dateFormat,
           forceDateFormat,
