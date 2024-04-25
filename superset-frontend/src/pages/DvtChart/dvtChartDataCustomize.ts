@@ -420,6 +420,13 @@ const showLabels: FormsProps = {
   popper: t('Whether to display the labels.'),
 };
 
+const showTotal: FormsProps = {
+  label: t('SHOW TOTAL'),
+  name: 'show_total',
+  status: 'checkbox',
+  popper: t('Whether to display the aggregate count.'),
+};
+
 const xTickLayout: FormsProps = {
   label: t('X TICK LAYOUT'),
   name: 'x_ticks_layout',
@@ -758,7 +765,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         forms: [
           bigNumberFontSize,
           subheaderFontSize,
-          numberFormat,
+          { ...yAxisFormat, label: t('NUMBER FORMAT') },
           currencyFormat,
           dateFormat,
           forceDateFormat,
@@ -812,12 +819,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             status: 'checkbox',
             popper: t('Draw line from Pie to label when labels outside?'),
           },
-          {
-            label: t('SHOW TOTAL'),
-            name: 'show_totals',
-            status: 'checkbox',
-            popper: t('Whether to display the aggregate count.'),
-          },
+          showTotal,
           {
             label: t('OUTER RADIUS'),
             name: 'outerRadius',
@@ -1708,12 +1710,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             ),
             number: true,
           },
-          {
-            label: t('SHOW TOTAL'),
-            name: 'show_total',
-            popper: t(`Whether to display the aggregate count`),
-            status: 'checkbox',
-          },
+          showTotal,
           labelType,
           numberFormat,
           currencyFormat,
