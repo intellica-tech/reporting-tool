@@ -1690,6 +1690,7 @@ const DvtChart = () => {
     'echarts_area',
     'big_number',
     'echarts_timeseries_scatter',
+    'echarts_timeseries_step',
     'mixed_timeseries',
   ];
 
