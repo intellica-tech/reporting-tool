@@ -1833,6 +1833,7 @@ const DvtChart = () => {
       case 'gauge_chart':
       case 'waterfall':
       case 'big_number':
+      case 'treemap_v2':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [

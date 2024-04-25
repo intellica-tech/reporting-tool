@@ -816,7 +816,7 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'custom_params',
       'extras',
       'filters',
-      'metric',
+      'metrics',
       'order_desc',
       'orderby',
       'row_limit',
