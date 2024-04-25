@@ -488,6 +488,7 @@ const DvtChart = () => {
     source: [],
     target: [],
     columns: [],
+    show_upper_labels: true,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -1551,6 +1552,7 @@ const DvtChart = () => {
           root_node_id: getFormData?.root_node_id
             ? getFormData.root_node_id
             : '',
+          show_upper_labels: getFormData?.show_upper_labels !== false,
         });
 
         setChartStatus('loading');
@@ -1694,7 +1696,7 @@ const DvtChart = () => {
     'mixed_timeseries',
   ];
 
-  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart'];
+  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart', 'treemap_v2'];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
     switch (vl) {
@@ -1767,6 +1769,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'treemap_v2':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -2239,6 +2242,7 @@ const DvtChart = () => {
       target: values.target[0]?.label,
       name: values.name[0]?.label,
       root_node_id: values.root_node_id,
+      show_upper_labels: values.show_upper_labels,
     },
     queries: [
       {
