@@ -1399,7 +1399,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           numberFormat,
           currencyFormat,
-          dateFormat,
+          { ...dateFormat, name: 'date_format' },
         ],
       },
     ],

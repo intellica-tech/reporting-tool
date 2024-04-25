@@ -493,6 +493,10 @@ const DvtChart = () => {
       label: t('Category Name'),
       value: 'key_value',
     },
+    date_format: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -1340,10 +1344,15 @@ const DvtChart = () => {
               value: 'smart_date',
             },
           ),
-          number_format: chartFormsFindOptions(getFormData?.number_format, {
-            label: t('Adaptive formatting'),
-            value: 'smart_date',
-          }),
+          number_format: chartFormsFindOptions(
+            'number_format',
+            {
+              label: t('Adaptive formatting'),
+              value: 'SMART_NUMBER',
+            },
+            'value',
+            'y_axis_format',
+          ),
           tooltipTimeFormat: chartFormsFindOptions(
             'tooltipTimeFormat',
             {
@@ -1393,10 +1402,15 @@ const DvtChart = () => {
             label: t('Category Name'),
             value: 'key',
           }),
-          label_type_treemap: chartFormsFindOptions('label_type', {
-            label: t('Category Name'),
-            value: 'key',
-          }),
+          label_type_treemap: chartFormsFindOptions(
+            'label_type_treemap',
+            {
+              label: t('Category Name'),
+              value: 'key',
+            },
+            'value',
+            'label_type',
+          ),
           xAxisFormat: chartFormsFindOptions('xAxisFormat', {
             label: t('Adaptive formatting'),
             value: 'smart_date',
@@ -1561,6 +1575,15 @@ const DvtChart = () => {
             ? getFormData.root_node_id
             : '',
           show_upper_labels: getFormData?.show_upper_labels !== false,
+          date_format: chartFormsFindOptions(
+            'date_format',
+            {
+              label: t('Adaptive formatting'),
+              value: 'smart_date',
+            },
+            'value',
+            'time_format',
+          ),
         });
 
         setChartStatus('loading');
@@ -2068,7 +2091,7 @@ const DvtChart = () => {
       zoomable: values.zoomable ? values.zoomable : undefined,
       header_font_size: values.header_font_size.value,
       metric: metricsFormation('metric')[0],
-      date_format: 'smart_date',
+      date_format: values.date_format.value,
       innerRadius: 30,
       label_type:
         active === 'treemap_v2'

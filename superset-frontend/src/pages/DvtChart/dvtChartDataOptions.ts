@@ -1034,8 +1034,8 @@ const chartFormsOption = {
       value: 'value',
     },
     {
-      label: t('Category Name'),
-      value: 'key',
+      label: t('Key'),
+      value: 'Key',
     },
     {
       label: t('Category and Value'),
