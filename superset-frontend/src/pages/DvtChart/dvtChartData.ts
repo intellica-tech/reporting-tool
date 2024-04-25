@@ -166,6 +166,26 @@ const formSortByMetric: FormsProps = {
   status: 'checkbox',
 };
 
+const formRule: FormsProps = {
+  label: t('RULE'),
+  name: 'resample_rule',
+  popper: t('Pandas resample rule'),
+  placeholder: t('Select ...'),
+  status: 'select',
+  options: chartFormsOption.resample_rule,
+  onShowClear: true,
+};
+
+const formFillMethod: FormsProps = {
+  label: t('FILL METHOD'),
+  name: 'resample_method',
+  popper: t('Pandas resample method'),
+  placeholder: t('Select ...'),
+  status: 'select',
+  options: chartFormsOption.resample_method,
+  onShowClear: true,
+};
+
 const lineAndBarChart: CollapsesProps[] = [
   {
     collapse_label: t('Query'),
@@ -274,22 +294,8 @@ const lineAndBarChart: CollapsesProps[] = [
         status: 'select',
         options: chartFormsOption.comparison_type,
       },
-      {
-        label: t('RULE'),
-        name: 'resample_rule',
-        popper: t('Pandas resample rule'),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.resample_rule,
-      },
-      {
-        label: t('FILL METHOD'),
-        name: 'resample_method',
-        popper: t('Pandas resample method'),
-        placeholder: t('Select ...'),
-        status: 'select',
-        options: chartFormsOption.resample_method,
-      },
+      formRule,
+      formFillMethod,
     ],
   },
   {
@@ -963,24 +969,8 @@ const DvtChartData: DvtChartDataProps[] = [
             status: 'input',
             number: true,
           },
-          {
-            label: t('RULE'),
-            name: 'resample_rule',
-            popper: t('Pandas resample rule'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_rule,
-            onShowClear: true,
-          },
-          {
-            label: t('FILL METHOD'),
-            name: 'resample_method',
-            popper: t('Pandas resample method'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_method,
-            onShowClear: true,
-          },
+          formRule,
+          formFillMethod,
         ],
       },
     ],
@@ -1318,22 +1308,8 @@ const DvtChartData: DvtChartDataProps[] = [
             status: 'select',
             options: chartFormsOption.comparison_type,
           },
-          {
-            label: t('RULE'),
-            name: 'resample_rule',
-            popper: t('Pandas resample rule'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_rule,
-          },
-          {
-            label: t('FILL METHOD'),
-            name: 'resample_method',
-            popper: t('Pandas resample method'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_method,
-          },
+          formRule,
+          formFillMethod,
         ],
       },
       {
@@ -1475,6 +1451,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_rule,
+            onShowClear: true,
           },
           {
             label: t('FILL METHOD'),
@@ -1483,6 +1460,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_method,
+            onShowClear: true,
           },
         ],
       },
@@ -1711,22 +1689,8 @@ const DvtChartData: DvtChartDataProps[] = [
             status: 'select',
             options: chartFormsOption.comparison_type,
           },
-          {
-            label: t('RULE'),
-            name: 'resample_rule',
-            popper: t('Pandas resample rule'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_rule,
-          },
-          {
-            label: t('FILL METHOD'),
-            name: 'resample_method',
-            popper: t('Pandas resample method'),
-            placeholder: t('Select ...'),
-            status: 'select',
-            options: chartFormsOption.resample_method,
-          },
+          formRule,
+          formFillMethod,
         ],
       },
       {
