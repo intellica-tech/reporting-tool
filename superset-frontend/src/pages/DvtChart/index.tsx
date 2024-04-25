@@ -1690,6 +1690,7 @@ const DvtChart = () => {
     'echarts_area',
     'big_number',
     'echarts_timeseries_scatter',
+    'mixed_timeseries',
   ];
 
   const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart'];
@@ -1724,14 +1725,21 @@ const DvtChart = () => {
     },
   };
 
-  const postProcessingResample = {
+  const postProcessingResample = (onB?: boolean) => ({
     operation: 'resample',
     options: {
-      method: values.resample_method?.value,
-      rule: values.resample_rule?.value,
-      fill_value: values.resample_method?.value === 'asfreq' ? 0 : null,
+      method: onB
+        ? values.resample_method_b?.value
+        : values.resample_method?.value,
+      rule: onB ? values.resample_rule_b?.value : values.resample_rule?.value,
+      fill_value:
+        (onB
+          ? values.resample_method_b?.value
+          : values.resample_method?.value) === 'asfreq'
+          ? 0
+          : null,
     },
-  };
+  });
 
   const arrayOnlyOneItemFormation = (data: any[]) => {
     const uniqueItems = new Set();
@@ -2304,7 +2312,7 @@ const DvtChart = () => {
                 ...(postProcessingRollingChartActives.includes(active) &&
                 withoutValueForNull(values.resample_method) &&
                 withoutValueForNull(values.resample_rule)
-                  ? [postProcessingResample]
+                  ? [postProcessingResample()]
                   : []),
                 {
                   operation: 'flatten',
@@ -2378,6 +2386,10 @@ const DvtChart = () => {
                 ...(postProcessingRollingChartActives.includes(active) &&
                 values.rolling_type.value !== 'None'
                   ? [postProcessingRollingType]
+                  : []),
+                ...(withoutValueForNull(values.resample_method_b) &&
+                withoutValueForNull(values.resample_rule_b)
+                  ? [postProcessingResample(true)]
                   : []),
                 {
                   operation: 'flatten',
