@@ -57,6 +57,7 @@ interface FormsProps {
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
+  onShowClear?: boolean;
 }
 
 interface CollapsesProps {
@@ -969,6 +970,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_rule,
+            onShowClear: true,
           },
           {
             label: t('FILL METHOD'),
@@ -977,6 +979,7 @@ const DvtChartData: DvtChartDataProps[] = [
             placeholder: t('Select ...'),
             status: 'select',
             options: chartFormsOption.resample_method,
+            onShowClear: true,
           },
         ],
       },
@@ -1574,7 +1577,7 @@ const DvtChartData: DvtChartDataProps[] = [
             savedType: 'expressions',
             popperError: t('cannot be empty'),
           },
-          formMetric,
+          formMetrics,
           {
             label: t('SOURCE CATEGORY'),
             name: 'source_category',
@@ -1858,7 +1861,7 @@ const DvtChartData: DvtChartDataProps[] = [
         forms: [
           {
             label: t('HIERARCHY'),
-            name: 'groupby',
+            name: 'columns',
             popper: t('This defines the level of the hierarchy'),
             status: 'input-drop',
             multiple: true,

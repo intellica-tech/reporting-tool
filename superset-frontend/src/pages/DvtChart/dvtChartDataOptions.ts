@@ -1204,6 +1204,92 @@ const chartFormsOption = {
       value: 'none',
     },
   ],
+  link_length: [
+    {
+      label: '10',
+      value: '10',
+    },
+    {
+      label: '25',
+      value: '25',
+    },
+    {
+      label: '50',
+      value: '50',
+    },
+    {
+      label: '75',
+      value: '75',
+    },
+    {
+      label: '100',
+      value: '100',
+    },
+    {
+      label: '150',
+      value: '150',
+    },
+    {
+      label: '200',
+      value: '200',
+    },
+    {
+      label: '250',
+      value: '250',
+    },
+  ],
+  rowSubtotalPosition: [
+    {
+      label: 'Top',
+      value: true,
+    },
+    {
+      label: 'Bottom',
+      value: false,
+    },
+  ],
+  colSubtotalPosition: [
+    {
+      label: 'Left',
+      value: true,
+    },
+    {
+      label: 'Right',
+      value: false,
+    },
+  ],
+  yAxisIndex: [
+    {
+      label: 'Primary',
+      value: 0,
+    },
+    {
+      label: 'Secondary',
+      value: 1,
+    },
+  ],
+  x_ticks_layout: [
+    {
+      label: 'auto',
+      value: 'auto',
+    },
+    {
+      label: 'flat',
+      value: 'flat',
+    },
+    {
+      label: '45°',
+      value: '45°',
+    },
+    {
+      label: '90°',
+      value: '90°',
+    },
+    {
+      label: 'staggered',
+      value: 'staggered',
+    },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };

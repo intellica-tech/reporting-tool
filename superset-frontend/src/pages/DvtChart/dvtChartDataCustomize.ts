@@ -57,6 +57,7 @@ interface FormsProps {
   number?: boolean;
   values?: ValuesProps[];
   rangeConfig?: RangeConfigProps;
+  onShowClear?: boolean;
 }
 
 interface CollapsesProps {
@@ -331,7 +332,7 @@ const subheaderFontSize: FormsProps = {
   name: 'subheader_font_size',
   popper: t('Changing this control takes effect instantly'),
   status: 'select',
-  options: chartFormsOption.header_font_size,
+  options: chartFormsOption.subheader_font_size,
 };
 
 const truncateXAxis: FormsProps = {
@@ -419,12 +420,19 @@ const showLabels: FormsProps = {
   popper: t('Whether to display the labels.'),
 };
 
+const showTotal: FormsProps = {
+  label: t('SHOW TOTAL'),
+  name: 'show_total',
+  status: 'checkbox',
+  popper: t('Whether to display the aggregate count.'),
+};
+
 const xTickLayout: FormsProps = {
   label: t('X TICK LAYOUT'),
   name: 'x_ticks_layout',
   status: 'select',
   popper: t('The way the ticks are laid out on the X-axis'),
-  options: [],
+  options: chartFormsOption.x_ticks_layout,
 };
 
 const legend: FormsProps = {
@@ -757,7 +765,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         forms: [
           bigNumberFontSize,
           subheaderFontSize,
-          numberFormat,
+          { ...yAxisFormat, label: t('NUMBER FORMAT') },
           currencyFormat,
           dateFormat,
           forceDateFormat,
@@ -811,12 +819,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             status: 'checkbox',
             popper: t('Draw line from Pie to label when labels outside?'),
           },
-          {
-            label: t('SHOW TOTAL'),
-            name: 'show_total',
-            status: 'checkbox',
-            popper: t('Whether to display the aggregate count.'),
-          },
+          showTotal,
           {
             label: t('OUTER RADIUS'),
             name: 'outerRadius',
@@ -864,14 +867,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'max_bubble_size',
             popper: t('Changing this control takes effect instantly'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.limit,
           },
           {
             label: t('BUBBLE SIZE NUMBER FORMAT'),
-            name: 'max_bubble_size',
+            name: 'tooltipSizeFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.y_axis_format,
           },
           {
             label: t('BUBBLE OPACITY'),
@@ -893,20 +896,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_active: 'x_axis',
         forms: [
           xAxisTitle,
-          {
-            label: t('ROTATE X AXIS LABEL'),
-            name: 'xAxisLabelRotation',
-            popper: t('Input field supports custom rotation. e.g. 30 for 30°'),
-            status: 'select',
-            options: [],
-          },
+          rotateXAxisLabel,
           { ...xAxisTitleMargin, label: t('X AXIS TITLE MARGIN') },
           {
             label: t('X AXIS FORMAT'),
             name: 'xAxisFormat',
             popper: t('D3 format syntax: https://github.com/d3/d3-format'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.y_axis_format,
           },
           {
             label: t('LOGARITHMIC X-AXIS'),
@@ -952,7 +949,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'link_length',
             popper: t('Select the number of bins for the histogram'),
             status: 'select',
-            options: [],
+            options: chartFormsOption.link_length,
           },
           xAxisLabel,
           yAxisLabel,
@@ -986,18 +983,18 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           orientation,
           margin,
           {
-            label: t('LABEL CONTENTS'),
+            label: t('LABEL TYPE'),
             name: 'label_type',
             status: 'select',
-            popper: t('What should be shown as the label'),
-            options: [],
+            popper: t('What should be shown on the label?'),
+            options: chartFormsOption.label_type,
           },
           {
             label: t('TOOLTIP CONTENTS'),
             name: 'tooltip_label_type',
             status: 'select',
             popper: t('What should be shown as the tooltip label'),
-            options: [],
+            options: chartFormsOption.label_type,
           },
           numberFormat,
           currencyFormat,
@@ -1192,13 +1189,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         forms: [
           {
             label: t('FIXED COLOR'),
-            name: 'increase_color',
+            name: 'color_picker',
             status: 'color',
             popper: t('Use this to define a static color for all circles'),
           },
           bigNumberFontSize,
           subheaderFontSize,
-          numberFormat,
+          { ...yAxisFormat, label: t('NUMBER FORMAT') },
           currencyFormat,
           dateFormat,
           forceDateFormat,
@@ -1274,15 +1271,15 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('ROWS SUBTOTAL POSITION'),
-            name: '',
+            name: 'rowSubtotalPosition',
             status: 'select',
-            options: [],
+            options: chartFormsOption.rowSubtotalPosition,
           },
           {
             label: t('COLUMNS SUBTOTAL POSITION'),
-            name: '',
+            name: 'colSubtotalPosition',
             status: 'select',
-            options: [],
+            options: chartFormsOption.colSubtotalPosition,
           },
         ],
       },
@@ -1299,7 +1296,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           legend,
           {
             label: t('BAR VALUES'),
-            name: 'show_bar_value',
+            name: 'dist_bar',
             status: 'checkbox',
             popper: t('Show the value on top of the bar'),
           },
@@ -1318,7 +1315,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           yAxisFormat,
           yAxisLabel,
-          { ...extraControls, name: 'show_controls' },
+          {
+            label: t('EXTRA CONTROLS'),
+            name: 'show_controls',
+            status: 'checkbox',
+            popper: t(
+              'Whether to show extra controls or not. Extra controls include things like making mulitBar charts stacked or side by side.',
+            ),
+          },
           {
             label: t('Y BOUNDS'),
             name: 'y_axis_showminmax',
@@ -1346,7 +1350,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
               'Bottom margin, in pixels, allowing for more room for axis labels',
             ),
             status: 'select',
-            options: [],
+            options: chartFormsOption.bottom_margin,
           },
           xTickLayout,
           {
@@ -1419,7 +1423,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           margin,
           {
             label: t('GRAPH LAYOUT'),
-            name: 'force',
+            name: 'layout',
             status: 'tabs',
             options: [
               { label: t('FORCE'), value: 'FORCE' },
@@ -1706,16 +1710,184 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             ),
             number: true,
           },
-          {
-            label: t('SHOW TOTAL'),
-            name: 'show_total',
-            popper: t(`Whether to display the aggregate count`),
-            status: 'checkbox',
-          },
+          showTotal,
           labelType,
           numberFormat,
           currencyFormat,
           dateFormat,
+        ],
+      },
+    ],
+  },
+  {
+    chart_name: 'mixed_timeseries',
+    collapses: [
+      collapseChartTitle,
+      {
+        collapse_label: t('Chart Options'),
+        collapse_active: 'chart_options',
+        forms: [
+          colorScheme,
+          seriesStyle,
+          {
+            label: t('STACK SERIES'),
+            name: 'stackA',
+            popper: t(`Stack series on top of each other`),
+            status: 'checkbox',
+          },
+          areaChart,
+          showValue,
+          areaChartOpacity,
+          marker,
+          markerSize,
+          {
+            label: t('Y AXIS'),
+            name: 'yAxisIndex',
+            status: 'select',
+            popper: t('Primary or secondary y-axis)'),
+            options: chartFormsOption.yAxisIndex,
+          },
+          {
+            label: t('SERIES STYLE'),
+            name: 'seriesTypeB',
+            status: 'select',
+            popper: t('Series chart type (line, bar etc)'),
+            options: chartFormsOption.seriesType,
+          },
+          {
+            label: t('STACK SERIES'),
+            name: 'stackB',
+            popper: t(`Stack series on top of each other`),
+            status: 'checkbox',
+          },
+          {
+            label: t('AREA CHART'),
+            name: 'areaB',
+            status: 'checkbox',
+            popper: t(
+              'Draw area under curves. Only applicable for line types.',
+            ),
+          },
+          {
+            label: t('SHOW VALUE'),
+            name: 'show_valueB',
+            status: 'checkbox',
+            popper: t('Show series values on the chart'),
+          },
+          {
+            label: t('AREA CHART OPACITY'),
+            name: 'opacityB',
+            status: 'range',
+            popper: t(
+              'Opacity of Area Chart. Also applies to confidence band.',
+            ),
+            rangeConfig: {
+              min: 0,
+              max: 1,
+              step: 0.1,
+            },
+          },
+          {
+            label: t('MARKER'),
+            name: 'markerEnabledB',
+            status: 'checkbox',
+            popper: t(
+              'Draw a marker on data points. Only applicable for line types.',
+            ),
+          },
+          {
+            label: t('MARKER SIZE'),
+            name: 'markerSizeB',
+            status: 'range',
+            popper: t('Size of marker. Also applies to forecast observations.'),
+            rangeConfig: {
+              min: 0,
+              max: 20,
+              step: 1,
+            },
+          },
+          {
+            label: t('Y AXIS'),
+            name: 'yAxisIndexB',
+            status: 'select',
+            popper: t('Primary or secondary y-axis)'),
+            options: chartFormsOption.yAxisIndex,
+          },
+          dataZoom,
+          minorTicks,
+          showLegend,
+          type,
+          orientation,
+          margin,
+          timeFormat,
+          rotateXAxisLabel,
+          richTooltip,
+          tooltipSortByMetric,
+          tooltipTimeFormat,
+          minorSplitLine,
+          truncateXAxis,
+          xAxisBounds,
+          truncateYAxis,
+          yAxisBounds,
+          yAxisFormat,
+          currencyFormat,
+          logarithmicYAxis,
+          {
+            label: t('SECONDARY Y AXIS BOUNDS'),
+            name: 'y_axis_bounds_secondary',
+            status: 'two-input',
+            popper: t(
+              "Bounds for the Y-axis. When left empty, the bounds are dynamically defined based on the min/max of the data. Note that this feature will only expand the axis range. It won't narrow the data's extent.",
+            ),
+            values: [
+              {
+                placeholder: t('MIN'),
+                number: true,
+                name: 'min',
+              },
+              {
+                placeholder: t('MAX'),
+                number: true,
+                name: 'max',
+              },
+            ],
+          },
+          {
+            label: t('SECONDARY Y AXIS FORMAT'),
+            name: 'y_axis_format_secondary',
+            status: 'select',
+            popper: t('D3 format syntax: https://github.com/d3/d3-format'),
+            options: chartFormsOption.y_axis_format,
+          },
+          {
+            label: t('SECONDARY CURRENCY FORMAT'),
+            name: 'currency_format_secondary',
+            status: 'two-select',
+            values: [
+              {
+                name: 'symbolPosition',
+                placeholder: t('Prefix or suffix'),
+                options: chartFormsOption.currency_format.symbolPosition,
+              },
+              {
+                name: 'symbol',
+                placeholder: t('Currency'),
+                options: chartFormsOption.currency_format.symbol,
+              },
+            ],
+          },
+          {
+            label: t('SECONDARY Y-AXIS TITLE'),
+            name: 'yAxisTitleSecondary',
+            status: 'input',
+            popper: t('Changing this control takes effect instantly'),
+          },
+          {
+            label: t('SECONDARY LOGARITHMIC Y-AXIS'),
+            name: 'logAxisSecondary',
+            status: 'checkbox',
+            popper: t('Logarithmic y-axis'),
+          },
         ],
       },
     ],

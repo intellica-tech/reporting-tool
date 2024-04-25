@@ -204,7 +204,15 @@ const DvtChart = () => {
       min: '',
       max: '',
     },
+    y_axis_bounds_secondary: {
+      min: '',
+      max: '',
+    },
     y_axis_format: {
+      label: t('Adaptive formatting'),
+      value: 'SMART_NUMBER',
+    },
+    y_axis_format_secondary: {
       label: t('Adaptive formatting'),
       value: 'SMART_NUMBER',
     },
@@ -213,6 +221,7 @@ const DvtChart = () => {
       value: 'smart_date',
     },
     currency_format: {},
+    currency_format_secondary: {},
     sort_x_axis: {
       label: t('Axis ascending'),
       value: 'alpha_asc',
@@ -222,8 +231,10 @@ const DvtChart = () => {
       value: 'alpha_asc',
     },
     show_legend: true,
+    show_labels: true,
     show_perc: true,
     show_values: false,
+    show_valueB: false,
     normalized: false,
     min_periods: '',
     min_periods_b: '',
@@ -265,6 +276,7 @@ const DvtChart = () => {
       value: 'Left',
     },
     y_axis_title: '',
+    yAxisTitleSecondary: '',
     y_axis_title_margin: { label: '15', value: 15 },
     y_axis_title_position: {
       label: t('Left'),
@@ -279,17 +291,27 @@ const DvtChart = () => {
       label: t('Line'),
       value: 'line',
     },
+    seriesTypeB: {
+      label: t('Line'),
+      value: 'line',
+    },
     show_value: false,
     stack: {
       label: t('None'),
       value: 'null',
     },
+    stackA: false,
+    stackB: false,
     only_total: true,
     percentage_threshold: '0',
     area: false,
+    areaB: false,
     opacity: 0.2,
+    opacityB: 0.2,
     markerEnabled: false,
+    markerEnabledB: false,
     markerSize: 6,
+    markerSizeB: 6,
     zoomable: false,
     minorTicks: false,
     legendType: {
@@ -309,6 +331,10 @@ const DvtChart = () => {
       label: '0°',
       value: 0,
     },
+    yAxisLabelRotation: {
+      label: '0°',
+      value: 0,
+    },
     rich_tooltip: true,
     tooltipSortByMetric: false,
     tooltipTimeFormat: {
@@ -316,8 +342,152 @@ const DvtChart = () => {
       value: 'smart_date',
     },
     logAxis: false,
+    logAxisSecondary: false,
     minorSplitLine: false,
     orientation: { label: t('VERTICAL'), value: 'vertical' },
+    table_timestamp_format: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    page_length: [],
+    include_search: false,
+    show_cell_bars: true,
+    align_pn: false,
+    color_pn: true,
+    allow_rearrange_columns: false,
+    header_font_size: {
+      label: t('Normal'),
+      value: 0.4,
+    },
+    subheader_font_size: {
+      label: t('Small'),
+      value: 0.15,
+    },
+    number_format: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    force_timestamp_formatting: false,
+    labels_outside: true,
+    label_line: false,
+    outerRadius: 70,
+    donut: false,
+    innerRadius: 30,
+    label_type: {
+      label: t('Category Name'),
+      value: 'key',
+    },
+    show_labels_threshold: 5,
+    xAxisFormat: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    tooltipSizeFormat: {
+      label: t('Adaptive formatting'),
+      value: 'smart_date',
+    },
+    logXAxis: false,
+    logYAxis: false,
+    link_length: { label: '5', value: '5' },
+    x_axis_label: '',
+    y_axis_label: '',
+    cumulative: false,
+    show_tooltip_labels: true,
+    min_val: '',
+    max_val: '',
+    start_angle: '',
+    end_angle: '',
+    font_size: '',
+    value_formatter: '',
+    show_pointer: true,
+    animation: true,
+    show_axis_tick: false,
+    show_split_line: false,
+    split_number: '',
+    show_progress: true,
+    overlap: true,
+    round_cap: false,
+    intervals: '',
+    interval_color_indices: '',
+    increase_color: { r: 90, g: 193, b: 137 },
+    decrease_color: { r: 224, g: 67, b: 85 },
+    total_color: { r: 102, g: 102, b: 102 },
+    valueFormat: {
+      label: t('Adaptive formatting'),
+      value: 'SMART_NUMBER',
+    },
+    rowOrder: {
+      label: t('key a-z'),
+      value: 'key_a_to_z',
+    },
+    colOrder: {
+      label: t('key a-z'),
+      value: 'key_a_to_z',
+    },
+    rowSubtotalPosition: {
+      label: 'Bottom',
+      value: false,
+    },
+    colSubtotalPosition: {
+      label: 'Right',
+      value: false,
+    },
+    dist_bar: false,
+    bar_stacked: false,
+    order_bars: false,
+    show_controls: false,
+    y_axis_showminmax: false,
+    reduce_x_ticks: false,
+    layout: '',
+    edgeSymbol: {
+      label: t('None -> Arrow'),
+      value: 'none,arrow',
+    },
+    draggable: false,
+    selectedMode: {
+      label: t('Single'),
+      value: 'single',
+    },
+    showSymbolThreshold: '',
+    baseNodeSize: '',
+    baseEdgeWidth: '',
+    edgeLength: '',
+    gravity: '',
+    repulsion: '',
+    friction: '',
+    label_position: {
+      label: t('Top'),
+      value: 'top',
+    },
+    orient: { label: t('Left to Right'), value: 'LR' },
+    nodeLabelPosition: { label: t('left'), value: 'left' },
+    childLabelPosition: { label: t('bottom'), value: 'bottom' },
+    emphasis: { label: t('descendant'), value: 'descendant' },
+    symbol: {
+      label: t('Empty circle'),
+      value: 'emptyCircle',
+    },
+    symbolSize: 7,
+    show_total: false,
+    id: [],
+    parent: [],
+    name: [],
+    root_node_id: '',
+    yAxisIndex: {
+      label: 'Primary',
+      value: 0,
+    },
+    yAxisIndexB: {
+      label: 'Primary',
+      value: 0,
+    },
+    x_ticks_layout: {
+      label: 'auto',
+      value: 'auto',
+    },
+    source: [],
+    target: [],
+    columns: [],
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -804,7 +974,6 @@ const DvtChart = () => {
                 label: t('10'),
                 value: 10,
               },
-          show_totals: false,
           all_columns: allColumnsSwitch(getFormData.viz_type),
           order_by_cols: [],
           metric: emptyArrayOrOneFindItem(getFormData.metric),
@@ -877,10 +1046,31 @@ const DvtChart = () => {
                     : getFormData?.y_axis_bounds[1],
               }
             : { min: '', max: '' },
+          y_axis_bounds_secondary: getFormData?.y_axis_bounds_secondary
+            ? {
+                min:
+                  getFormData?.y_axis_bounds_secondary[0] === null
+                    ? ''
+                    : getFormData?.y_axis_bounds_secondary[0],
+                max:
+                  getFormData?.y_axis_bounds_secondary[1] === null
+                    ? ''
+                    : getFormData?.y_axis_bounds_secondary[1],
+              }
+            : { min: '', max: '' },
           y_axis_format: chartFormsFindOptions('y_axis_format', {
             label: t('Adaptive formatting'),
             value: 'SMART_NUMBER',
           }),
+          y_axis_format_secondary: chartFormsFindOptions(
+            'y_axis_format_secondary',
+            {
+              label: t('Adaptive formatting'),
+              value: 'SMART_NUMBER',
+            },
+            'value',
+            'y_axis_format',
+          ),
           time_format: chartFormsFindOptions('time_format', {
             label: t('Adaptive formatting'),
             value: 'smart_date',
@@ -900,6 +1090,25 @@ const DvtChart = () => {
                   : '',
               }
             : {},
+          currency_format_secondary: getFormData?.currency_format_secondary
+            ? {
+                symbolPosition: getFormData?.currency_format_secondary
+                  ?.symbolPosition
+                  ? chartFormsOption.currency_format.symbolPosition.find(
+                      f =>
+                        f.value ===
+                        getFormData.currency_format_secondary.symbolPosition,
+                    )
+                  : '',
+                symbol: getFormData?.currency_format_secondary?.symbol
+                  ? chartFormsOption.currency_format.symbol.find(
+                      f =>
+                        f.value ===
+                        getFormData.currency_format_secondary.symbol,
+                    )
+                  : '',
+              }
+            : {},
           sort_x_axis: chartFormsFindOptions('sort_x_axis', {
             label: t('Axis ascending'),
             value: 'alpha_asc',
@@ -912,6 +1121,9 @@ const DvtChart = () => {
           show_perc: getFormData?.show_perc !== false,
           show_values: getFormData?.show_values
             ? getFormData.show_values
+            : false,
+          show_valueB: getFormData?.show_valueB
+            ? getFormData.show_valueB
             : false,
           normalized: getFormData?.normalized ? getFormData.normalized : false,
           compare_lag: getFormData?.compare_lag ? getFormData.compare_lag : '',
@@ -1016,6 +1228,9 @@ const DvtChart = () => {
           y_axis_title: getFormData?.y_axis_title
             ? getFormData.y_axis_title
             : '',
+          yAxisTitleSecondary: getFormData?.yAxisTitleSecondary
+            ? getFormData.yAxisTitleSecondary
+            : '',
           y_axis_title_margin: chartFormsFindOptions('y_axis_title_margin', {
             label: '15',
             value: 15,
@@ -1042,23 +1257,43 @@ const DvtChart = () => {
             label: t('Line'),
             value: 'line',
           }),
+          seriesTypeB: chartFormsFindOptions(
+            'seriesTypeB',
+            {
+              label: t('Line'),
+              value: 'line',
+            },
+            'value',
+            'seriesType',
+          ),
           show_value: getFormData?.show_value ? getFormData.show_value : false,
-          stack: chartFormsFindOptions('stack', {
-            label: t('None'),
-            value: 'null',
-          }),
+          stack:
+            active === 'mixed_timeseries'
+              ? getFormData?.stack !== false
+              : chartFormsFindOptions('stack', {
+                  label: t('None'),
+                  value: 'null',
+                }),
+          stackA: getFormData?.stack !== false,
+          stackB: getFormData?.stackB !== false,
           only_total: getFormData?.only_total !== false,
           percentage_threshold: getFormData?.percentage_threshold,
           area: getFormData?.area ? getFormData.area : false,
+          areaB: getFormData?.areaB ? getFormData.areaB : false,
           opacity: getFormData?.opacity
             ? getFormData.opacity
             : active === 'bubble_v2'
             ? 0.6
             : 0.2,
+          opacityB: getFormData?.opacity ? getFormData.opacity : '',
           markerEnabled: getFormData?.markerEnabled
             ? getFormData.markerEnabled
             : false,
+          markerEnabledB: getFormData?.markerEnabledB
+            ? getFormData.markerEnabledB
+            : false,
           markerSize: getFormData?.markerSize ? getFormData.markerSize : 6,
+          markerSizeB: getFormData?.markerSizeB ? getFormData.markerSizeB : 6,
           zoomable: getFormData?.zoomable ? getFormData.zoomable : false,
           minorTicks: getFormData?.minorTicks ? getFormData.minorTicks : false,
           legendType: chartFormsFindOptions('legendType', {
@@ -1085,10 +1320,25 @@ const DvtChart = () => {
             label: '0°',
             value: 0,
           }),
+          yAxisLabelRotation: chartFormsFindOptions('yAxisLabelRotation', {
+            label: '0°',
+            value: 0,
+          }),
           rich_tooltip: getFormData?.rich_tooltip !== false,
           tooltipSortByMetric: getFormData?.tooltipSortByMetric
             ? getFormData.tooltipSortByMetric
             : false,
+          table_timestamp_format: chartFormsFindOptions(
+            getFormData?.table_timestamp_format,
+            {
+              label: t('Adaptive formatting'),
+              value: 'smart_date',
+            },
+          ),
+          number_format: chartFormsFindOptions(getFormData?.number_format, {
+            label: t('Adaptive formatting'),
+            value: 'smart_date',
+          }),
           tooltipTimeFormat: chartFormsFindOptions(
             'tooltipTimeFormat',
             {
@@ -1099,6 +1349,9 @@ const DvtChart = () => {
             'time_format',
           ),
           logAxis: getFormData?.logAxis ? getFormData.logAxis : false,
+          logAxisSecondary: getFormData?.logAxisSecondary
+            ? getFormData.logAxisSecondary
+            : false,
           minorSplitLine: getFormData?.minorSplitLine
             ? getFormData.minorSplitLine
             : false,
@@ -1106,6 +1359,195 @@ const DvtChart = () => {
             getFormData?.orientation === 'horizontal'
               ? { label: t('HORIZONTAL'), value: 'horizontal' }
               : { label: t('VERTICAL'), value: 'vertical' },
+          page_length: getFormData?.page_length ? getFormData.page_length : {},
+          include_search: getFormData?.include_search !== false,
+          show_cell_bars: getFormData?.show_cell_bars !== false,
+          align_pn: getFormData?.align_pn !== false,
+          color_pn: getFormData?.color_pn !== false,
+          allow_rearrange_columns:
+            getFormData?.allow_rearrange_columns !== false,
+          subheader_font_size: chartFormsFindOptions('subheader_font_size', {
+            label: t('Small'),
+            value: 0.15,
+          }),
+          header_font_size: chartFormsFindOptions('header_font_size', {
+            label: t('Normal'),
+            value: 0.4,
+          }),
+          force_timestamp_formatting:
+            getFormData?.force_timestamp_formatting !== false,
+          show_labels: getFormData?.show_labels !== false,
+          labels_outside: getFormData?.labels_outside !== false,
+          label_line: getFormData?.label_line !== false,
+          show_totals: getFormData?.show_totals !== false,
+          show_total: getFormData?.show_total !== false,
+          outerRadius: getFormData?.outerRadius,
+          donut: getFormData?.donut !== false,
+          innerRadius: getFormData?.innerRadius !== false,
+          label_type: chartFormsFindOptions('label_type', {
+            label: t('Category Name'),
+            value: 'key',
+          }),
+          xAxisFormat: chartFormsFindOptions('xAxisFormat', {
+            label: t('Adaptive formatting'),
+            value: 'smart_date',
+          }),
+          show_labels_threshold: getFormData?.show_labels_threshold
+            ? getFormData?.show_labels_threshold
+            : '',
+          logXAxis: getFormData?.logXAxis !== false,
+          logYAxis: getFormData?.logYAxis !== false,
+          link_length: getFormData?.link_length
+            ? {
+                value: getFormData?.link_length,
+                label: getFormData?.link_length,
+              }
+            : {},
+          x_axis_label: getFormData?.x_axis_label
+            ? getFormData?.x_axis_label
+            : '',
+          y_axis_label: getFormData?.y_axis_label
+            ? getFormData?.y_axis_label
+            : '',
+          cumulative: getFormData?.cumulative !== false,
+          show_tooltip_labels: getFormData?.show_tooltip_labels !== false,
+          min_val: getFormData?.min_val !== false,
+          max_val: getFormData?.max_val !== false,
+          start_angle: getFormData?.start_angle ? getFormData?.start_angle : '',
+          end_angle: getFormData?.end_angle ? getFormData?.end_angle : '',
+          font_size: getFormData?.font_size ? getFormData?.font_size : '',
+          value_formatter: getFormData?.value_formatter
+            ? getFormData?.value_formatter
+            : '',
+          show_pointer: getFormData?.show_pointer !== false,
+          animation: getFormData?.animation !== false,
+          show_axis_tick: getFormData?.show_axis_tick !== false,
+          show_split_line: getFormData?.show_split_line !== false,
+          split_number: getFormData?.split_number
+            ? getFormData?.split_number
+            : '',
+          show_progress: getFormData?.show_progress !== false,
+          overlap: getFormData?.overlap !== false,
+          round_cap: getFormData?.round_cap !== false,
+          intervals: getFormData?.intervals ? getFormData?.intervals : '',
+          increase_color: getFormData?.increase_color
+            ? getFormData?.increase_color
+            : '',
+          decrease_color: getFormData?.decrease_color
+            ? getFormData?.decrease_color
+            : '',
+          total_color: getFormData?.total_color ? getFormData?.total_color : '',
+          valueFormat: chartFormsFindOptions(
+            'valueFormat',
+            {
+              label: t('Adaptive formatting'),
+              value: 'SMART_NUMBER',
+            },
+            'value',
+            'y_axis_format',
+          ),
+          rowOrder: chartFormsFindOptions('rowOrder', {
+            label: t('key a-z'),
+            value: 'key_a_to_z',
+          }),
+          colOrder: chartFormsFindOptions(
+            'colOrder',
+            {
+              label: t('key a-z'),
+              value: 'key_a_to_z',
+            },
+            'value',
+            'rowOrder',
+          ),
+          colSubtotalPosition: chartFormsFindOptions('colSubtotalPosition', {
+            label: t('key a-z'),
+            value: 'key_a_to_z',
+          }),
+          rowSubtotalPosition: chartFormsFindOptions('rowSubtotalPosition', {
+            label: t('key a-z'),
+            value: 'key_a_to_z',
+          }),
+          dist_bar: getFormData?.dist_bar !== false,
+          bar_stacked: getFormData?.bar_stacked !== false,
+          order_bars: getFormData?.order_bars !== false,
+          show_controls: getFormData?.show_controls !== false,
+          y_axis_showminmax: getFormData?.y_axis_showminmax !== false,
+          reduce_x_ticks: getFormData?.reduce_x_ticks !== false,
+          layout: getFormData?.layout ? getFormData?.layout : '',
+          edgeSymbol: chartFormsFindOptions('edgeSymbol', {
+            label: t('None -> Arrow'),
+            value: 'none,arrow',
+          }),
+          draggable: getFormData?.draggable !== false,
+          selectedMode: chartFormsFindOptions('selectedMode', {
+            label: t('Single'),
+            value: 'single',
+          }),
+          showSymbolThreshold: getFormData?.showSymbolThreshold
+            ? getFormData?.showSymbolThreshold
+            : '',
+          baseNodeSize: getFormData?.baseNodeSize
+            ? getFormData?.baseNodeSize
+            : '',
+          baseEdgeWidth: getFormData?.baseEdgeWidth
+            ? getFormData?.baseEdgeWidth
+            : '',
+          edgeLength: getFormData?.edgeLength ? getFormData?.edgeLength : '',
+          gravity: getFormData?.gravity ? getFormData?.gravity : '',
+          repulsion: getFormData?.repulsion ? getFormData?.repulsion : '',
+          friction: getFormData?.friction ? getFormData?.friction : '',
+          label_position: chartFormsFindOptions('label_position', {
+            label: t('Top'),
+            value: 'top',
+          }),
+          orient: getFormData?.orient ? getFormData?.orient : '',
+          nodeLabelPosition: getFormData?.nodeLabelPosition
+            ? getFormData?.nodeLabelPosition
+            : '',
+          childLabelPosition: getFormData?.childLabelPosition
+            ? getFormData?.childLabelPosition
+            : '',
+          emphasis: getFormData?.emphasis ? getFormData?.emphasis : '',
+          symbol: chartFormsFindOptions('symbol', {
+            label: t('Empty circle'),
+            value: 'emptyCircle',
+          }),
+          symbolSize: getFormData?.symbolSize ? getFormData?.symbolSize : '',
+          id: getFormData?.id
+            ? getFormData.id.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          parent: getFormData?.parent
+            ? getFormData.parent.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          yAxisIndex: chartFormsFindOptions('yAxisIndex', {
+            label: 'Primary',
+            value: 0,
+          }),
+          yAxisIndexB: chartFormsFindOptions(
+            'yAxisIndexB',
+            {
+              label: 'Primary',
+              value: 0,
+            },
+            'value',
+            'yAxisIndex',
+          ),
+          x_ticks_layout: chartFormsFindOptions('x_ticks_layout', {
+            label: 'auto',
+            value: 'auto',
+          }),
+          source: getFormData?.source
+            ? getFormData.source.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          target: getFormData?.target
+            ? getFormData.target.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          name: getFormData?.name
+            ? getFormData.name.map((v: any) => metricsOrColumnsFormation(v))
+            : [],
+          root_node_id: getFormData?.root_node_id
+            ? getFormData.root_node_id
+            : '',
         });
 
         setChartStatus('loading');
@@ -1274,6 +1716,15 @@ const DvtChart = () => {
         true,
       ),
       ...postProcessingRollingTypeOperatorSwitch(values.rolling_type.value),
+    },
+  };
+
+  const postProcessingResample = {
+    operation: 'resample',
+    options: {
+      method: values.resample_method?.value,
+      rule: values.resample_rule?.value,
+      fill_value: values.resample_method?.value === 'asfreq' ? 0 : null,
     },
   };
 
@@ -1463,14 +1914,16 @@ const DvtChart = () => {
         ? values.color_scheme.id
         : 'supersetColors',
       seriesType: values.seriesType.value,
-      seriesTypeB: 'line',
+      seriesTypeB: values.seriesTypeB.value,
       only_total: values.only_total,
       area: values.area,
+      areaB: values.areaB,
       opacity: values.opacity,
-      opacityB: 0.2,
+      opacityB: values.opacityB,
       markerEnabled: values.markerEnabled,
+      markerEnabledB: values.markerEnabledB,
       markerSize: values.markerEnabled ? values.markerSize : 6,
-      markerSizeB: 6,
+      markerSizeB: values.markerEnabledB ? values.markerSizeB : 6,
       orientation:
         active === 'echarts_timeseries_bar'
           ? values.orientation.value
@@ -1504,6 +1957,9 @@ const DvtChart = () => {
           : values.truncateYAxis
           ? checkObjectOrNullArrayFormation(values.y_axis_bounds)
           : [null, null],
+      y_axis_bounds_secondary: checkObjectOrNullArrayFormation(
+        values.y_axis_bounds,
+      ),
       extra_form_data: {},
       force: false,
       result_format: 'json',
@@ -1517,6 +1973,9 @@ const DvtChart = () => {
       cache_timeout: undefined,
       contributionMode: withoutValueForNull(values.contributionMode),
       currency_format: checkObjectFormation(values.currency_format),
+      currency_format_secondary: checkObjectFormation(
+        values.currency_format_secondary,
+      ),
       forecastEnabled: values.forecastEnabled,
       forecastSeasonalityDaily: withoutValueForNull(
         values.forecastSeasonalityDaily,
@@ -1529,6 +1988,7 @@ const DvtChart = () => {
       ),
       limit: withoutValueForNull(values.limit),
       logAxis: values.logAxis,
+      logAxisSecondary: values.logAxisSecondary,
       min_periods: values.min_periods ? Number(values.min_periods) : undefined,
       min_periods_b: values.min_periods_b
         ? Number(values.min_periods_b)
@@ -1552,16 +2012,27 @@ const DvtChart = () => {
       rolling_type: withoutValueForNull(values.rolling_type),
       rolling_type_b: withoutValueForNull(values.rolling_type_b),
       show_value: values.show_value,
+      show_valueB: values.show_valueB,
       slice_id: undefined,
-      stack: values.stack.value === 'null' ? undefined : values.stack.value,
+      stack:
+        active === 'mixed_timeseries'
+          ? values.stackA
+          : values.stack.value === 'null'
+          ? undefined
+          : values.stack.value,
+      stackB: values.stackB,
       time_compare: values.time_compare,
       time_compare_b: values.time_compare_b,
       xAxisForceCategorical: undefined,
       xAxisLabelRotation: values.xAxisLabelRotation.value,
+      yAxisLabelRotation: values.yAxisLabelRotation.value,
       x_axis_sort: undefined,
       x_axis_title: values.x_axis_title ? values.x_axis_title : undefined,
       x_axis_title_margin: values.x_axis_title_margin.value,
       y_axis_title: values.y_axis_title ? values.y_axis_title : undefined,
+      yAxisTitleSecondary: values.yAxisTitleSecondary
+        ? values.yAxisTitleSecondary
+        : undefined,
       y_axis_title_margin: values.y_axis_title_margin.value,
       y_axis_title_position:
         active === 'echarts_timeseries_bar' &&
@@ -1569,28 +2040,27 @@ const DvtChart = () => {
           ? values.x_axis_title_position.value
           : values.y_axis_title_position.value,
       zoomable: values.zoomable ? values.zoomable : undefined,
-      header_font_size: 0.4,
+      header_font_size: values.header_font_size.value,
       metric: metricsFormation('metric')[0],
       date_format: 'smart_date',
       innerRadius: 30,
-      label_type: 'key',
-      labels_outside: true,
-      number_format: 'SMART_NUMBER',
-      outerRadius: 70,
-      show_labels: true,
-      show_labels_threshold: 5,
+      label_type: values.label_type.value,
+      labels_outside: values.labels_outside,
+      number_format: values.number_format.value,
+      outerRadius: values.outerRadius,
+      show_labels: values.show_labels,
+      show_labels_threshold: values.show_labels_threshold,
       sort_by_metric: values.sort_by_metric,
       subheader: values.subheader,
-      subheader_font_size: 0.15,
-      time_format:
-        active === 'heatmap' ? values.time_format.value : 'smart_date',
+      subheader_font_size: values.subheader_font_size.value,
+      time_format: values.time_format.value,
       all_columns: droppedOnlyLabels('all_columns'),
       all_columns_x:
         active === 'heatmap'
           ? droppedOnlyLabels('all_columns_x')[0]
           : droppedOnlyLabels('all_columns'),
       all_columns_y: droppedOnlyLabels('all_columns_y')[0],
-      color_pn: true,
+      color_pn: values.color_pn,
       query_mode: values.query_mode.value,
       include_time:
         active === 'table' && values.query_mode.value === 'aggregate'
@@ -1599,8 +2069,10 @@ const DvtChart = () => {
       order_by_cols: values.order_by_cols,
       percent_metrics: metricsFormation('percent_metrics'),
       server_page_length: values.server_page_length.value,
-      show_cell_bars: true,
-      table_timestamp_format: 'smart_date',
+      show_cell_bars: values.show_cell_bars,
+      table_timestamp_format: values.table_timestamp_format
+        ? values.table_timestamp_format.value
+        : 'smart_date',
       temporal_columns_lookup: selectedChart?.dataset?.columns.length
         ? Object.fromEntries(
             selectedChart?.dataset?.columns
@@ -1622,9 +2094,9 @@ const DvtChart = () => {
       size: metricsFormation('size')[0],
       tooltipSizeFormat: 'SMART_NUMBER',
       x: metricsFormation('x')[0],
-      xAxisFormat: 'SMART_NUMBER',
+      xAxisFormat: values.xAxisFormat.value,
       y: metricsFormation('y')[0],
-      show_tooltip_labels: true,
+      show_tooltip_labels: values.show_tooltip_labels,
       tooltip_label_type: 5,
       linear_color_scheme: values.linear_color_scheme.id,
       xscale_interval: values.xscale_interval.value,
@@ -1638,19 +2110,23 @@ const DvtChart = () => {
       show_perc: values.show_perc,
       show_values: values.show_values,
       normalized: values.normalized,
-      animation: true,
-      end_angle: -45,
-      font_size: 15,
-      overlap: true,
-      show_pointer: true,
-      show_progress: true,
-      split_number: 10,
-      start_angle: 225,
-      value_formatter: '{value}',
-      decrease_color: { r: 224, g: 67, b: 85, a: 1 },
-      increase_color: { r: 90, g: 193, b: 137, a: 1 },
-      total_color: { r: 102, g: 102, b: 102, a: 1 },
-      x_ticks_layout: 'auto',
+      animation: values.animation,
+      end_angle: values.end_angle,
+      overlap: values.overlap,
+      show_pointer: values.show_pointer,
+      show_progress: values.show_progress !== false,
+      split_number: values.split_number,
+      start_angle: values.start_angle,
+      value_formatter: values.value_formatter,
+      decrease_color: values.decrease_color
+        ? values.decrease_color
+        : { r: 224, g: 67, b: 85, a: 1 },
+      increase_color: values.increase_color
+        ? values.increase_color
+        : { r: 90, g: 193, b: 137, a: 1 },
+      total_color: values.total_color
+        ? values.total_color
+        : { r: 102, g: 102, b: 102, a: 1 },
       color_picker: values.color_picker
         ? values.color_picker
         : { r: 0, g: 122, b: 135, a: 1 },
@@ -1660,7 +2136,7 @@ const DvtChart = () => {
       show_trend_line: values.show_trend_line,
       start_y_axis_at_zero: values.start_y_axis_at_zero,
       aggregateFunction: values.aggregateFunction.value,
-      colOrder: 'key_a_to_z',
+      colOrder: values.colOrder.value,
       colSubTotals: values.colSubTotals,
       colTotals: values.colTotals,
       combineMetric: values.combineMetric,
@@ -1671,29 +2147,80 @@ const DvtChart = () => {
         ? values.groupbyRows.map((v: any) => v.label)
         : [],
       metricsLayout: values.metricsLayout.value,
-      rowOrder: 'key_a_to_z',
+      rowOrder: values.rowOrder.value,
       rowSubTotals: values.rowSubTotals,
       rowTotals: values.rowTotals,
       series_limit_metric: values.timeseries_limit_metric.length
         ? metricsFormation('timeseries_limit_metric')[0]
         : undefined,
       transposePivot: values.transposePivot,
-      valueFormat: 'SMART_NUMBER',
+      valueFormat: values.valueFormat.value,
       series_limit: values.series_limit ? Number(values.series_limit.value) : 0,
       series_limit_b: values.series_limit_b
         ? Number(values.series_limit_b.value)
         : 0,
       contribution: values.contribution,
-      columns:
-        active === 'dist_bar' && values?.columns
-          ? values?.columns.map((v: any) => v.label)
-          : [],
+      columns: values?.columns && values.columns.map((v: any) => v.label),
       show_bubbles: values.show_bubbles,
       country_fieldtype: values.country_fieldtype?.value,
       secondary_metric: metricsFormation('secondary_metric')[0],
-      y_axis_bounds_secondary: [null, null],
-      y_axis_format_secondary: 'SMART_NUMBER',
-      link_length: 5,
+      y_axis_format_secondary: values.y_axis_format_secondary.value,
+      link_length: values.link_length.value,
+      include_search: values.include_search,
+      align_pn: values.align_pn,
+      allow_rearrange_columns: values.allow_rearrange_columns,
+      page_length: values.page_length.value,
+      force_timestamp_formatting: values.force_timestamp_formatting,
+      label_line: values.label_line,
+      show_totals: values.show_totals,
+      show_total: values.show_total,
+      donut: values.donut,
+      logXAxis: values.logXAxis,
+      logYAxis: values.logYAxis,
+      x_axis_label: values.x_axis_label,
+      y_axis_label: values.y_axis_label,
+      cumulative: values.cumulative,
+      min_val: values.min_val,
+      max_val: values.max_val,
+      font_size: values.font_size,
+      show_axis_tick: values.show_axis_tick,
+      show_split_line: values.show_split_line,
+      intervals: values.intervals,
+      colSubtotalPosition: values.colSubtotalPosition.value,
+      rowSubtotalPosition: values.rowSubtotalPosition.value,
+      dist_bar: values.dist_bar,
+      bar_stacked: values.bar_stacked,
+      order_bars: values.order_bars,
+      layout: values.layout.value,
+      edgeSymbol: values.edgeSymbol.value,
+      draggable: values.draggable,
+      selectedMode: values.selectedMode.value,
+      showSymbolThreshold: Number(values.showSymbolThreshold),
+      baseNodeSize: Number(values.baseNodeSize),
+      baseEdgeWidth: Number(values.baseEdgeWidth),
+      edgeLength: values.edgeLength,
+      gravity: values.gravity,
+      repulsion: values.repulsion,
+      friction: values.friction,
+      label_position: values.label_position.value,
+      orient: values.orient.value,
+      nodeLabelPosition: values.nodeLabelPosition.value,
+      childLabelPosition: values.childLabelPosition.value,
+      emphasis: values.emphasis.value,
+      symbol: values.symbol.value,
+      symbolSize: values.symbolSize,
+      id: values.id[0]?.label,
+      parent: values.parent[0]?.label,
+      yAxisIndex: values.yAxisIndex.value,
+      yAxisIndexB: values.yAxisIndexB.value,
+      x_ticks_layout: values.x_ticks_layout.value,
+      show_controls: values.show_controls,
+      y_axis_showminmax: values.y_axis_showminmax,
+      reduce_x_ticks: values.reduce_x_ticks,
+      source: values.source[0]?.label,
+      target: values.target[0]?.label,
+      name: values.name[0]?.label,
+      root_node_id: values.root_node_id,
     },
     queries: [
       {
@@ -1763,6 +2290,11 @@ const DvtChart = () => {
                 ...(postProcessingRollingChartActives.includes(active) &&
                 values.rolling_type.value !== 'None'
                   ? [postProcessingRollingType]
+                  : []),
+                ...(postProcessingRollingChartActives.includes(active) &&
+                withoutValueForNull(values.resample_method) &&
+                withoutValueForNull(values.resample_rule)
+                  ? [postProcessingResample]
                   : []),
                 {
                   operation: 'flatten',
@@ -2116,7 +2648,10 @@ const DvtChart = () => {
       case 'echarts_timeseries_line':
       case 'echarts_timeseries_bar':
       case 'echarts_area':
+      case 'echarts_timeseries_step':
         return !(values.x_axis.length && values.metrics.length);
+      case 'tree_chart':
+        return !(values.id.length && values.parent.length);
       case 'table':
         return values.query_mode.value === 'aggregate'
           ? !(
@@ -2129,6 +2664,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'sunburst_v2':
         return !values.metric.length;
       case 'histogram':
         return !values.all_columns.length;
@@ -2151,10 +2687,21 @@ const DvtChart = () => {
         return !(values.metric.length && values.x_axis.length);
       case 'pivot_table_v2':
         return !values.metrics.length;
+      case 'treemap_v2':
+      case 'radar':
+        return !values.metric.length;
       case 'dist_bar':
         return !(values.metrics.length && values.groupby.length);
+      case 'graph_chart':
+        return !(
+          values.source.length &&
+          values.target.length &&
+          values.metrics.length
+        );
       case 'world_map':
         return !(values.entity.length && values.metric.length);
+      case 'box_plot':
+        return !(values.columns.length && values.metrics.length);
       case 'mixed_timeseries':
         if (active) {
           if (active === 'sharedQueryFields') {
@@ -2311,6 +2858,9 @@ const DvtChart = () => {
                           data={fItem.options || []}
                           typeDesign="form"
                           maxWidth
+                          onShowClear={
+                            fItem?.onShowClear ? fItem.onShowClear : false
+                          }
                         />
                       )}
                       {fItem.status === 'multiple-select' && (
