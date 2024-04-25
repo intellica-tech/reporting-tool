@@ -488,6 +488,11 @@ const DvtChart = () => {
     source: [],
     target: [],
     columns: [],
+    show_upper_labels: true,
+    label_type_treemap: {
+      label: t('Category Name'),
+      value: 'key_value',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -1388,6 +1393,10 @@ const DvtChart = () => {
             label: t('Category Name'),
             value: 'key',
           }),
+          label_type_treemap: chartFormsFindOptions('label_type', {
+            label: t('Category Name'),
+            value: 'key',
+          }),
           xAxisFormat: chartFormsFindOptions('xAxisFormat', {
             label: t('Adaptive formatting'),
             value: 'smart_date',
@@ -1551,6 +1560,7 @@ const DvtChart = () => {
           root_node_id: getFormData?.root_node_id
             ? getFormData.root_node_id
             : '',
+          show_upper_labels: getFormData?.show_upper_labels !== false,
         });
 
         setChartStatus('loading');
@@ -1694,7 +1704,7 @@ const DvtChart = () => {
     'mixed_timeseries',
   ];
 
-  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart'];
+  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart', 'treemap_v2'];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
     switch (vl) {
@@ -1767,6 +1777,7 @@ const DvtChart = () => {
       case 'pie':
       case 'funnel':
       case 'gauge_chart':
+      case 'treemap_v2':
         return [[metricsFormation('metric')[0], false]];
       case 'bubble_v2':
         return values.timeseries_limit_metric.length
@@ -1830,6 +1841,7 @@ const DvtChart = () => {
       case 'gauge_chart':
       case 'waterfall':
       case 'big_number':
+      case 'treemap_v2':
         return metricsFormation('metric');
       case 'bubble_v2':
         return [
@@ -2058,7 +2070,10 @@ const DvtChart = () => {
       metric: metricsFormation('metric')[0],
       date_format: 'smart_date',
       innerRadius: 30,
-      label_type: values.label_type.value,
+      label_type:
+        active === 'treemap_v2'
+          ? values.label_type_treemap.value
+          : values.label_type.value,
       labels_outside: values.labels_outside,
       number_format: values.number_format.value,
       outerRadius: values.outerRadius,
@@ -2239,6 +2254,7 @@ const DvtChart = () => {
       target: values.target[0]?.label,
       name: values.name[0]?.label,
       root_node_id: values.root_node_id,
+      show_upper_labels: values.show_upper_labels,
     },
     queries: [
       {

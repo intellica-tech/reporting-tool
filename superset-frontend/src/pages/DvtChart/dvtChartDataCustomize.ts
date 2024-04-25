@@ -1385,8 +1385,14 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           colorScheme,
           showLabels,
           {
+            label: t('SHOW UPPER LABELS'),
+            name: 'show_upper_labels',
+            status: 'checkbox',
+            popper: t('Show labels when the node has children.'),
+          },
+          {
             label: t('LABEL TYPE'),
-            name: 'label_type',
+            name: 'label_type_treemap',
             status: 'select',
             popper: t('What should be shown on the label?'),
             options: chartFormsOption.label_types,
