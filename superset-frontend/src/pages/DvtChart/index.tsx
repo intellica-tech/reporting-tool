@@ -365,7 +365,7 @@ const DvtChart = () => {
     },
     number_format: {
       label: t('Adaptive formatting'),
-      value: 'smart_date',
+      value: 'SMART_NUMBER',
     },
     force_timestamp_formatting: false,
     labels_outside: true,
@@ -395,15 +395,15 @@ const DvtChart = () => {
     show_tooltip_labels: true,
     min_val: '',
     max_val: '',
-    start_angle: '',
-    end_angle: '',
-    font_size: '',
-    value_formatter: '',
+    start_angle: '225',
+    end_angle: '-45',
+    font_size: '15',
+    value_formatter: '{value}',
     show_pointer: true,
     animation: true,
     show_axis_tick: false,
     show_split_line: false,
-    split_number: '',
+    split_number: '10',
     show_progress: true,
     overlap: true,
     round_cap: false,
@@ -1429,6 +1429,9 @@ const DvtChart = () => {
           show_progress: getFormData?.show_progress !== false,
           overlap: getFormData?.overlap !== false,
           round_cap: getFormData?.round_cap !== false,
+          interval_color_indices: getFormData?.interval_color_indices
+            ? getFormData?.interval_color_indices
+            : '',
           intervals: getFormData?.intervals ? getFormData?.intervals : '',
           increase_color: getFormData?.increase_color
             ? getFormData?.increase_color
@@ -1688,6 +1691,8 @@ const DvtChart = () => {
     'big_number',
     'echarts_timeseries_scatter',
   ];
+
+  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart'];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
     switch (vl) {
@@ -2115,7 +2120,7 @@ const DvtChart = () => {
       overlap: values.overlap,
       show_pointer: values.show_pointer,
       show_progress: values.show_progress !== false,
-      split_number: values.split_number,
+      split_number: Number(values.split_number),
       start_angle: values.start_angle,
       value_formatter: values.value_formatter,
       decrease_color: values.decrease_color
@@ -2180,12 +2185,16 @@ const DvtChart = () => {
       x_axis_label: values.x_axis_label,
       y_axis_label: values.y_axis_label,
       cumulative: values.cumulative,
-      min_val: values.min_val,
-      max_val: values.max_val,
-      font_size: values.font_size,
+      min_val: values.min_val ? values.min_val : undefined,
+      max_val: values.max_val ? values.max_val : undefined,
+      font_size: Number(values.font_size),
       show_axis_tick: values.show_axis_tick,
       show_split_line: values.show_split_line,
-      intervals: values.intervals,
+      interval_color_indices: values.interval_color_indices
+        ? values.interval_color_indices
+        : undefined,
+      intervals: values.intervals ? values.intervals : undefined,
+      round_cap: values.round_cap,
       colSubtotalPosition: values.colSubtotalPosition.value,
       rowSubtotalPosition: values.rowSubtotalPosition.value,
       dist_bar: values.dist_bar,
@@ -2232,8 +2241,9 @@ const DvtChart = () => {
             val: v.values.comparator,
           })),
         extras: {
-          time_grain_sqla:
-            active === 'bubble_v2' ? undefined : values.time_grain_sqla?.value,
+          time_grain_sqla: extrasWithoutTimeGrainSqla.includes(active)
+            ? undefined
+            : values.time_grain_sqla?.value,
           having: values.adhoc_filters
             .filter(
               (v: any) =>
