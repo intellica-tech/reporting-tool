@@ -489,6 +489,10 @@ const DvtChart = () => {
     target: [],
     columns: [],
     show_upper_labels: true,
+    label_type_treemap: {
+      label: t('Category Name'),
+      value: 'key_value',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -1389,6 +1393,10 @@ const DvtChart = () => {
             label: t('Category Name'),
             value: 'key',
           }),
+          label_type_treemap: chartFormsFindOptions('label_type', {
+            label: t('Category Name'),
+            value: 'key',
+          }),
           xAxisFormat: chartFormsFindOptions('xAxisFormat', {
             label: t('Adaptive formatting'),
             value: 'smart_date',
@@ -2062,7 +2070,10 @@ const DvtChart = () => {
       metric: metricsFormation('metric')[0],
       date_format: 'smart_date',
       innerRadius: 30,
-      label_type: values.label_type.value,
+      label_type:
+        active === 'treemap_v2'
+          ? values.label_type_treemap.value
+          : values.label_type.value,
       labels_outside: values.labels_outside,
       number_format: values.number_format.value,
       outerRadius: values.outerRadius,

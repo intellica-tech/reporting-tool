@@ -1392,7 +1392,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           {
             label: t('LABEL TYPE'),
-            name: 'label_type',
+            name: 'label_type_treemap',
             status: 'select',
             popper: t('What should be shown on the label?'),
             options: chartFormsOption.label_types,
