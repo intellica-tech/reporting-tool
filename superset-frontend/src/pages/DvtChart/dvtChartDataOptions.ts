@@ -939,15 +939,15 @@ const chartFormsOption = {
       value: 'name',
     },
     {
-      label: 'code International Olympic Committee (cioc)',
+      label: t('code International Olympic Committee (cioc)'),
       value: 'cioc',
     },
     {
-      label: 'code ISO 3166-1 alpha-2 (cca2)',
+      label: t('code ISO 3166-1 alpha-2 (cca2)'),
       value: 'cca2',
     },
     {
-      label: 'code ISO 3166-1 alpha-3 (cca3)',
+      label: t('code ISO 3166-1 alpha-3 (cca3)'),
       value: 'cca3',
     },
   ],
@@ -1240,41 +1240,41 @@ const chartFormsOption = {
   ],
   rowSubtotalPosition: [
     {
-      label: 'Top',
+      label: t('Top'),
       value: true,
     },
     {
-      label: 'Bottom',
+      label: t('Bottom'),
       value: false,
     },
   ],
   colSubtotalPosition: [
     {
-      label: 'Left',
+      label: t('Left'),
       value: true,
     },
     {
-      label: 'Right',
+      label: t('Right'),
       value: false,
     },
   ],
   yAxisIndex: [
     {
-      label: 'Primary',
+      label: t('Primary'),
       value: 0,
     },
     {
-      label: 'Secondary',
+      label: t('Secondary'),
       value: 1,
     },
   ],
   x_ticks_layout: [
     {
-      label: 'auto',
+      label: t('auto'),
       value: 'auto',
     },
     {
-      label: 'flat',
+      label: t('flat'),
       value: 'flat',
     },
     {
@@ -1286,7 +1286,7 @@ const chartFormsOption = {
       value: '90°',
     },
     {
-      label: 'staggered',
+      label: t('staggered'),
       value: 'staggered',
     },
   ],
