@@ -497,6 +497,10 @@ const DvtChart = () => {
       label: t('Adaptive formatting'),
       value: 'smart_date',
     },
+    whiskerOptions: {
+      label: t('Tukey'),
+      value: 'Tukey',
+    },
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -774,6 +778,7 @@ const DvtChart = () => {
             case 'bubble_v2':
               return emptyArrayOrOneFindItem(getFormData.orderby);
             case 'pivot_table_v2':
+            case 'box_plot':
               return emptyArrayOrOneFindItem(getFormData.series_limit_metric);
 
             default:
@@ -1584,6 +1589,10 @@ const DvtChart = () => {
             'value',
             'time_format',
           ),
+          whiskerOptions: chartFormsFindOptions('whiskerOptions', {
+            label: t('Tukey'),
+            value: 'Tukey',
+          }),
         });
 
         setChartStatus('loading');
@@ -1775,6 +1784,20 @@ const DvtChart = () => {
     },
   });
 
+  const postProcessingBoxplotWiskerType = (vl: string) => {
+    switch (vl) {
+      case 'Tukey':
+        return 'tukey';
+      case 'Min/max (no outliers)':
+        return 'min/max';
+      case '2/98 percentiles':
+      case '9/91 percentiles':
+        return 'percentile';
+      default:
+        return '';
+    }
+  };
+
   const arrayOnlyOneItemFormation = (data: any[]) => {
     const uniqueItems = new Set();
     return data.filter((item: any) => {
@@ -1846,6 +1869,11 @@ const DvtChart = () => {
       case 'mixed_timeseries':
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('x_axis', true),
+          ...values.groupby.map((v: any) => v.label),
+        ]);
+      case 'box_plot':
+        return arrayOnlyOneItemFormation([
+          ...droppedOnlyLabelOrYear('columns', true),
           ...values.groupby.map((v: any) => v.label),
         ]);
       default:
@@ -2278,6 +2306,7 @@ const DvtChart = () => {
       name: values.name[0]?.label,
       root_node_id: values.root_node_id,
       show_upper_labels: values.show_upper_labels,
+      whiskerOptions: values.whiskerOptions.value,
     },
     queries: [
       {
@@ -2330,6 +2359,26 @@ const DvtChart = () => {
         post_processing:
           active === 'table'
             ? []
+            : active === 'box_plot'
+            ? [
+                {
+                  operation: 'boxplot',
+                  options: {
+                    whisker_type: postProcessingBoxplotWiskerType(
+                      values.whiskerOptions.value,
+                    ),
+                    percentiles:
+                      values.whiskerOptions.value.indexOf('percentiles') !== -1
+                        ? values.whiskerOptions.value
+                            .replace(' percentiles', '')
+                            .split('/')
+                            .map((s: string) => Number(s))
+                        : undefined,
+                    groupby: values.groupby.map((v: any) => v.label),
+                    metrics: values.metrics.map((v: any) => v.label),
+                  },
+                },
+              ]
             : [
                 {
                   operation: 'pivot',

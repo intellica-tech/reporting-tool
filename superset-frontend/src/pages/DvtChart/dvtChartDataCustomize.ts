@@ -1411,7 +1411,12 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
       {
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
-        forms: [colorScheme, xTickLayout, numberFormat, dateFormat],
+        forms: [
+          colorScheme,
+          xTickLayout,
+          numberFormat,
+          { ...dateFormat, name: 'date_format' },
+        ],
       },
     ],
   },
