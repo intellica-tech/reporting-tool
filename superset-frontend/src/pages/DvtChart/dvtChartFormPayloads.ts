@@ -877,7 +877,6 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'baseEdgeWidth',
       'baseNodeSize',
       'color_scheme',
-      'columns',
       'datasource',
       'draggable',
       'edgeLength',

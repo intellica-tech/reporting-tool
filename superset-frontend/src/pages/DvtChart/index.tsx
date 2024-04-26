@@ -438,7 +438,7 @@ const DvtChart = () => {
     show_controls: false,
     y_axis_showminmax: false,
     reduce_x_ticks: false,
-    layout: '',
+    layout: { label: t('FORCE'), value: 'force' },
     edgeSymbol: {
       label: t('None -> Arrow'),
       value: 'none,arrow',
@@ -449,12 +449,16 @@ const DvtChart = () => {
       value: 'single',
     },
     showSymbolThreshold: '',
-    baseNodeSize: '',
-    baseEdgeWidth: '',
-    edgeLength: '',
-    gravity: '',
-    repulsion: '',
-    friction: '',
+    baseEdgeWidth: '3',
+    baseNodeSize: '20',
+    edgeLength: 400,
+    gravity: 0.3,
+    repulsion: 1000,
+    friction: 0.2,
+    roam: {
+      label: t('Disabled'),
+      value: false,
+    },
     label_position: {
       label: t('Top'),
       value: 'top',
@@ -486,7 +490,9 @@ const DvtChart = () => {
       value: 'auto',
     },
     source: [],
+    source_category: [],
     target: [],
+    target_category: [],
     columns: [],
     show_upper_labels: true,
     label_type_treemap: {
@@ -1504,7 +1510,10 @@ const DvtChart = () => {
           show_controls: getFormData?.show_controls !== false,
           y_axis_showminmax: getFormData?.y_axis_showminmax !== false,
           reduce_x_ticks: getFormData?.reduce_x_ticks !== false,
-          layout: getFormData?.layout ? getFormData?.layout : '',
+          layout:
+            getFormData?.layout === 'force'
+              ? { label: t('FORCE'), value: 'force' }
+              : { label: t('CIRCULAR'), value: 'circular' },
           edgeSymbol: chartFormsFindOptions('edgeSymbol', {
             label: t('None -> Arrow'),
             value: 'none,arrow',
@@ -1527,6 +1536,10 @@ const DvtChart = () => {
           gravity: getFormData?.gravity ? getFormData?.gravity : '',
           repulsion: getFormData?.repulsion ? getFormData?.repulsion : '',
           friction: getFormData?.friction ? getFormData?.friction : '',
+          roam: chartFormsFindOptions('roam', {
+            label: t('Disabled'),
+            value: false,
+          }),
           label_position: chartFormsFindOptions('label_position', {
             label: t('Top'),
             value: 'top',
@@ -1567,12 +1580,10 @@ const DvtChart = () => {
             label: 'auto',
             value: 'auto',
           }),
-          source: getFormData?.source
-            ? getFormData.source.map((v: any) => metricsOrColumnsFormation(v))
-            : [],
-          target: getFormData?.target
-            ? getFormData.target.map((v: any) => metricsOrColumnsFormation(v))
-            : [],
+          source: emptyArrayOrOneFindItem(getFormData.source),
+          source_category: emptyArrayOrOneFindItem(getFormData.source_category),
+          target: emptyArrayOrOneFindItem(getFormData.target),
+          target_category: emptyArrayOrOneFindItem(getFormData.target_category),
           name: getFormData?.name
             ? getFormData.name.map((v: any) => metricsOrColumnsFormation(v))
             : [],
@@ -1736,7 +1747,12 @@ const DvtChart = () => {
     'mixed_timeseries',
   ];
 
-  const extrasWithoutTimeGrainSqla = ['bubble_v2', 'gauge_chart', 'treemap_v2'];
+  const extrasWithoutTimeGrainSqla = [
+    'bubble_v2',
+    'gauge_chart',
+    'treemap_v2',
+    'graph_chart',
+  ];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
     switch (vl) {
@@ -1875,6 +1891,11 @@ const DvtChart = () => {
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('columns', true),
           ...values.groupby.map((v: any) => v.label),
+        ]);
+      case 'graph_chart':
+        return arrayOnlyOneItemFormation([
+          ...values.source.map((v: any) => v.label),
+          ...values.target.map((v: any) => v.label),
         ]);
       default:
         return arrayOnlyOneItemFormation([
@@ -2286,6 +2307,7 @@ const DvtChart = () => {
       gravity: values.gravity,
       repulsion: values.repulsion,
       friction: values.friction,
+      roam: values.roam.value,
       label_position: values.label_position.value,
       orient: values.orient.value,
       nodeLabelPosition: values.nodeLabelPosition.value,
@@ -2302,7 +2324,9 @@ const DvtChart = () => {
       y_axis_showminmax: values.y_axis_showminmax,
       reduce_x_ticks: values.reduce_x_ticks,
       source: values.source[0]?.label,
+      source_category: values.source_category[0]?.label,
       target: values.target[0]?.label,
+      target_category: values.target_category[0]?.label,
       name: values.name[0]?.label,
       root_node_id: values.root_node_id,
       show_upper_labels: values.show_upper_labels,

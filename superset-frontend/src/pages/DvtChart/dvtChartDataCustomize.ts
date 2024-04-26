@@ -1437,8 +1437,8 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'layout',
             status: 'tabs',
             options: [
-              { label: t('FORCE'), value: 'FORCE' },
-              { label: t('CIRCULAR'), value: 'CIRCULAR' },
+              { label: t('FORCE'), value: 'force' },
+              { label: t('CIRCULAR'), value: 'circular' },
             ],
           },
           {
