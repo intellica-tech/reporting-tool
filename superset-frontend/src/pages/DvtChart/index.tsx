@@ -1834,7 +1834,15 @@ const DvtChart = () => {
   const queriesOrderBySwitch = () => {
     switch (active) {
       case 'table':
-        return values.order_by_cols;
+        return values.query_mode.value === 'aggregate'
+          ? values.timeseries_limit_metric.length || values.metrics.length
+            ? values.timeseries_limit_metric.length
+              ? [[metricsFormation('timeseries_limit_metric')[0], false]]
+              : [[metricsFormation('metrics')[0], false]]
+            : []
+          : values.order_by_cols.length
+          ? values.order_by_cols
+          : [];
       case 'big_number_total':
       case 'pie':
       case 'funnel':
@@ -1871,7 +1879,9 @@ const DvtChart = () => {
   const queriesColumnsSwitch = () => {
     switch (active) {
       case 'table':
-        return arrayOnlyOneItemFormation(droppedOnlyLabels('all_columns'));
+        return values.query_mode.value === 'aggregate'
+          ? droppedOnlyLabels('groupby')
+          : arrayOnlyOneItemFormation(droppedOnlyLabels('all_columns'));
       case 'pivot_table_v2':
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('groupbyColumns'),
@@ -1915,6 +1925,11 @@ const DvtChart = () => {
       case 'big_number':
       case 'treemap_v2':
         return metricsFormation('metric');
+      case 'table':
+        return [
+          ...metricsFormation('metrics'),
+          ...metricsFormation('percent_metrics'),
+        ];
       case 'bubble_v2':
         return [
           metricsFormation('x')[0],
@@ -1996,7 +2011,10 @@ const DvtChart = () => {
       })),
       order_desc: values.order_desc,
       order_desc_b: values.order_desc_b,
-      row_limit: Number(values.row_limit.value),
+      row_limit:
+        active === 'table' && values.server_pagination
+          ? 1000
+          : Number(values.row_limit.value),
       row_limit_b: Number(values.row_limit.value),
       truncate_metric: values.truncate_metric,
       truncate_metric_b: values.truncate_metric_b,
@@ -2169,7 +2187,10 @@ const DvtChart = () => {
           : false,
       order_by_cols: values.order_by_cols,
       percent_metrics: metricsFormation('percent_metrics'),
-      server_page_length: values.server_page_length.value,
+      server_page_length:
+        active === 'table' && !values.server_pagination
+          ? 10
+          : values.server_page_length.value,
       show_cell_bars: values.show_cell_bars,
       table_timestamp_format: values.table_timestamp_format
         ? values.table_timestamp_format.value
@@ -2382,7 +2403,19 @@ const DvtChart = () => {
             : [],
         post_processing:
           active === 'table'
-            ? []
+            ? values.percent_metrics.length
+              ? [
+                  {
+                    operation: 'contribution',
+                    options: {
+                      columns: values.percent_metrics.map((v: any) => v.label),
+                      rename_columns: values.percent_metrics.map(
+                        (v: any) => `%${v.label}`,
+                      ),
+                    },
+                  },
+                ]
+              : []
             : active === 'box_plot'
             ? [
                 {
@@ -2956,6 +2989,24 @@ const DvtChart = () => {
                         ].includes(fi.name)
                       : fi,
                   )
+                  .filter(fa => {
+                    const formActiveFinded: any = item?.form_actives?.find(
+                      faf => fa.name === faf.if,
+                    );
+                    const formActiveFindedElse = item?.form_actives?.find(
+                      faf => fa.name === faf.else,
+                    );
+
+                    return formActiveFinded?.if
+                      ? !values[formActiveFinded?.name]
+                        ? fa.name !== formActiveFinded?.if
+                        : fa
+                      : formActiveFindedElse?.else
+                      ? values[formActiveFindedElse?.name]
+                        ? fa.name !== formActiveFindedElse?.else
+                        : fa
+                      : fa;
+                  })
                   .map((fItem, fIndex) => (
                     <div key={fIndex}>
                       {fItem.status === 'tabs' && (

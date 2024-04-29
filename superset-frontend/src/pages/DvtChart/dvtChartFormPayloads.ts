@@ -172,6 +172,7 @@ const DvtChartFormPayloads: DvtChartFormPayloadsProps[] = [
       'post_processing',
       'row_limit',
       'series_limit',
+      'series_limit_metric',
       'url_params',
     ],
   },

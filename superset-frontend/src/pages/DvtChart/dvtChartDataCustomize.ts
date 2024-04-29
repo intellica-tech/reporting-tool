@@ -60,14 +60,21 @@ interface FormsProps {
   onShowClear?: boolean;
 }
 
+interface FormsActivesProps {
+  name: string;
+  if: string;
+  else: string;
+}
+
 interface CollapsesProps {
   collapse_label: string;
   collapse_popper?: string;
   collapse_popper_error?: string;
   collapse_active: string;
-  forms: FormsProps[];
   tabs_name?: string;
   tabs_actives?: ActivesProps;
+  forms: FormsProps[];
+  form_actives?: FormsActivesProps[];
 }
 
 interface DvtChartCustomizeProps {

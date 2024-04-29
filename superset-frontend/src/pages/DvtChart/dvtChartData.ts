@@ -60,14 +60,21 @@ interface FormsProps {
   onShowClear?: boolean;
 }
 
+interface FormsActivesProps {
+  name: string;
+  if: string;
+  else: string;
+}
+
 interface CollapsesProps {
   collapse_label: string;
   collapse_popper?: string;
   collapse_popper_error?: string;
   collapse_active: string;
-  forms: FormsProps[];
   tabs_name?: string;
   tabs_actives?: ActivesProps;
+  forms: FormsProps[];
+  form_actives?: FormsActivesProps[];
 }
 
 interface DvtChartDataProps {
@@ -407,6 +414,7 @@ const DvtChartData: DvtChartDataProps[] = [
             'adhoc_filters',
             'timeseries_limit_metric',
             'server_pagination',
+            'row_limit',
             'server_page_length',
             'order_desc',
             'show_totals',
@@ -416,6 +424,7 @@ const DvtChartData: DvtChartDataProps[] = [
             'adhoc_filters',
             'order_by_cols',
             'server_pagination',
+            'row_limit',
             'server_page_length',
           ],
         },
@@ -480,6 +489,7 @@ const DvtChartData: DvtChartDataProps[] = [
             name: 'server_pagination',
             status: 'checkbox',
           },
+          formRowLimit,
           {
             label: t('SERVER PAGE LENGTH'),
             name: 'server_page_length',
@@ -493,6 +503,13 @@ const DvtChartData: DvtChartDataProps[] = [
             label: t('SHOW TOTALS'),
             name: 'show_totals',
             status: 'checkbox',
+          },
+        ],
+        form_actives: [
+          {
+            name: 'server_pagination',
+            if: 'server_page_length',
+            else: 'row_limit',
           },
         ],
       },
