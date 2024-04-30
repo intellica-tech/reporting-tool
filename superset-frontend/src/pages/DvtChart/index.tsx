@@ -439,6 +439,7 @@ const DvtChart = () => {
     y_axis_showminmax: false,
     reduce_x_ticks: false,
     layout: { label: t('FORCE'), value: 'force' },
+    tree_layout: { label: t('Orthogonal'), value: 'orthogonal' },
     edgeSymbol: {
       label: t('None -> Arrow'),
       value: 'none,arrow',
@@ -464,8 +465,8 @@ const DvtChart = () => {
       value: 'top',
     },
     orient: { label: t('Left to Right'), value: 'LR' },
-    nodeLabelPosition: { label: t('left'), value: 'left' },
-    childLabelPosition: { label: t('bottom'), value: 'bottom' },
+    node_label_position: { label: t('left'), value: 'left' },
+    child_label_position: { label: t('bottom'), value: 'bottom' },
     emphasis: { label: t('descendant'), value: 'descendant' },
     symbol: {
       label: t('Empty circle'),
@@ -507,6 +508,7 @@ const DvtChart = () => {
       label: t('Tukey'),
       value: 'Tukey',
     },
+    is_circle: false,
   });
   const [chartApiUrl, setChartApiUrl] = useState('');
   // const [exploreJsonUrl, setExploreJsonUrl] = useState('');
@@ -1408,7 +1410,7 @@ const DvtChart = () => {
           show_total: getFormData?.show_total !== false,
           outerRadius: getFormData?.outerRadius,
           donut: getFormData?.donut !== false,
-          innerRadius: getFormData?.innerRadius !== false,
+          innerRadius: getFormData?.innerRadius,
           label_type: chartFormsFindOptions('label_type', {
             label: t('Category Name'),
             value: 'key',
@@ -1514,6 +1516,10 @@ const DvtChart = () => {
             getFormData?.layout === 'force'
               ? { label: t('FORCE'), value: 'force' }
               : { label: t('CIRCULAR'), value: 'circular' },
+          tree_layout:
+            getFormData?.layout === 'radial'
+              ? { label: t('Radial'), value: 'radial' }
+              : { label: t('Orthogonal'), value: 'orthogonal' },
           edgeSymbol: chartFormsFindOptions('edgeSymbol', {
             label: t('None -> Arrow'),
             value: 'none,arrow',
@@ -1544,24 +1550,34 @@ const DvtChart = () => {
             label: t('Top'),
             value: 'top',
           }),
-          orient: getFormData?.orient ? getFormData?.orient : '',
-          nodeLabelPosition: getFormData?.nodeLabelPosition
-            ? getFormData?.nodeLabelPosition
-            : '',
-          childLabelPosition: getFormData?.childLabelPosition
-            ? getFormData?.childLabelPosition
-            : '',
-          emphasis: getFormData?.emphasis ? getFormData?.emphasis : '',
+          orient: chartFormsFindOptions('orient', {
+            label: t('Left to Right'),
+            value: 'LR',
+          }),
+          node_label_position: chartFormsFindOptions('node_label_position', {
+            label: t('left'),
+            value: 'left',
+          }),
+          child_label_position: chartFormsFindOptions(
+            'child_label_position',
+            { label: t('bottom'), value: 'bottom' },
+            'value',
+            'node_label_position',
+          ),
+          emphasis:
+            getFormData?.emphasis === 'ancestor'
+              ? { label: t('ancestor'), value: 'ancestor' }
+              : { label: t('descendant'), value: 'descendant' },
           symbol: chartFormsFindOptions('symbol', {
             label: t('Empty circle'),
             value: 'emptyCircle',
           }),
           symbolSize: getFormData?.symbolSize ? getFormData?.symbolSize : '',
           id: getFormData?.id
-            ? getFormData.id.map((v: any) => metricsOrColumnsFormation(v))
+            ? [metricsOrColumnsFormation(getFormData.id)]
             : [],
           parent: getFormData?.parent
-            ? getFormData.parent.map((v: any) => metricsOrColumnsFormation(v))
+            ? [metricsOrColumnsFormation(getFormData.parent)]
             : [],
           yAxisIndex: chartFormsFindOptions('yAxisIndex', {
             label: 'Primary',
@@ -1585,7 +1601,7 @@ const DvtChart = () => {
           target: emptyArrayOrOneFindItem(getFormData.target),
           target_category: emptyArrayOrOneFindItem(getFormData.target_category),
           name: getFormData?.name
-            ? getFormData.name.map((v: any) => metricsOrColumnsFormation(v))
+            ? [metricsOrColumnsFormation(getFormData.name)]
             : [],
           root_node_id: getFormData?.root_node_id
             ? getFormData.root_node_id
@@ -1604,6 +1620,7 @@ const DvtChart = () => {
             label: t('Tukey'),
             value: 'Tukey',
           }),
+          is_circle: getFormData?.is_circle !== false,
         });
 
         setChartStatus('loading');
@@ -1748,10 +1765,14 @@ const DvtChart = () => {
   ];
 
   const extrasWithoutTimeGrainSqla = [
+    'big_number_total',
     'bubble_v2',
     'gauge_chart',
     'treemap_v2',
     'graph_chart',
+    'radar',
+    'tree_chart',
+    'sunburst_v2',
   ];
 
   const postProcessingRollingTypeOperatorSwitch = (vl: string) => {
@@ -1841,7 +1862,7 @@ const DvtChart = () => {
               : [[metricsFormation('metrics')[0], false]]
             : []
           : values.order_by_cols.length
-          ? values.order_by_cols
+          ? values.order_by_cols.map((v: any) => JSON.parse(v))
           : [];
       case 'big_number_total':
       case 'pie':
@@ -1907,6 +1928,16 @@ const DvtChart = () => {
           ...values.source.map((v: any) => v.label),
           ...values.target.map((v: any) => v.label),
         ]);
+      case 'tree_chart':
+        return arrayOnlyOneItemFormation([
+          ...values.id.map((v: any) => v.label),
+          ...values.parent.map((v: any) => v.label),
+          ...values.name.map((v: any) => v.label),
+        ]);
+      case 'sunburst_v2':
+        return arrayOnlyOneItemFormation(
+          values.columns.map((v: any) => v.label),
+        );
       default:
         return arrayOnlyOneItemFormation([
           ...droppedOnlyLabelOrYear('x_axis'),
@@ -1924,12 +1955,15 @@ const DvtChart = () => {
       case 'waterfall':
       case 'big_number':
       case 'treemap_v2':
+      case 'sunburst_v2':
         return metricsFormation('metric');
       case 'table':
-        return [
-          ...metricsFormation('metrics'),
-          ...metricsFormation('percent_metrics'),
-        ];
+        return values.query_mode.value === 'aggregate'
+          ? [
+              ...metricsFormation('metrics'),
+              ...metricsFormation('percent_metrics'),
+            ]
+          : undefined;
       case 'bubble_v2':
         return [
           metricsFormation('x')[0],
@@ -2159,7 +2193,7 @@ const DvtChart = () => {
       header_font_size: values.header_font_size.value,
       metric: metricsFormation('metric')[0],
       date_format: values.date_format.value,
-      innerRadius: 30,
+      innerRadius: values.innerRadius,
       label_type:
         active === 'treemap_v2'
           ? values.label_type_treemap.value
@@ -2317,7 +2351,10 @@ const DvtChart = () => {
       dist_bar: values.dist_bar,
       bar_stacked: values.bar_stacked,
       order_bars: values.order_bars,
-      layout: values.layout.value,
+      layout:
+        active === 'tree_chart'
+          ? values.tree_layout.value
+          : values.layout.value,
       edgeSymbol: values.edgeSymbol.value,
       draggable: values.draggable,
       selectedMode: values.selectedMode.value,
@@ -2331,8 +2368,8 @@ const DvtChart = () => {
       roam: values.roam.value,
       label_position: values.label_position.value,
       orient: values.orient.value,
-      nodeLabelPosition: values.nodeLabelPosition.value,
-      childLabelPosition: values.childLabelPosition.value,
+      node_label_position: values.node_label_position.value,
+      child_label_position: values.child_label_position.value,
       emphasis: values.emphasis.value,
       symbol: values.symbol.value,
       symbolSize: values.symbolSize,
@@ -2352,6 +2389,7 @@ const DvtChart = () => {
       root_node_id: values.root_node_id,
       show_upper_labels: values.show_upper_labels,
       whiskerOptions: values.whiskerOptions.value,
+      is_circle: values.is_circle,
     },
     queries: [
       {
@@ -2388,7 +2426,12 @@ const DvtChart = () => {
         metrics: queriesMetricsSwitch(),
         orderby: queriesOrderBySwitch(),
         annotation_layers: [],
-        row_limit: Number(values.row_limit.value),
+        row_limit:
+          active === 'table' && values.server_pagination
+            ? values.server_page_length.value
+            : Number(values.row_limit.value),
+        row_offset:
+          active === 'table' && values.server_pagination ? 0 : undefined,
         series_columns: droppedOnlyLabels('groupby'),
         series_limit: values.series_limit?.value
           ? Number(values.series_limit.value)
@@ -2403,7 +2446,8 @@ const DvtChart = () => {
             : [],
         post_processing:
           active === 'table'
-            ? values.percent_metrics.length
+            ? values.percent_metrics.length &&
+              values.query_mode.value === 'aggregate'
               ? [
                   {
                     operation: 'contribution',
@@ -2468,6 +2512,57 @@ const DvtChart = () => {
           ? metricsFormation('timeseries_limit_metric')[0]
           : undefined,
       },
+      ...(active === 'table' && values.server_pagination
+        ? [
+            {
+              filters: values.adhoc_filters
+                .filter((v: any) => v.values.expressionType !== 'SQL')
+                .map((v: any) => ({
+                  col: v.values.column.column_name,
+                  op: v.values.operator.value,
+                  val: v.values.comparator,
+                })),
+              extras: {
+                time_grain_sqla: extrasWithoutTimeGrainSqla.includes(active)
+                  ? undefined
+                  : values.time_grain_sqla?.value,
+                having: values.adhoc_filters
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'HAVING',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+                where: values.adhoc_filters
+                  .filter(
+                    (v: any) =>
+                      v.values.expressionType === 'SQL' &&
+                      v.values.clause === 'WHERE',
+                  )
+                  .map((v: any) => `(${v.values.sql})`)
+                  .join(' AND '),
+              },
+              applied_time_extras: {},
+              columns: queriesColumnsSwitch(),
+              metrics: queriesMetricsSwitch(),
+              orderby: queriesOrderBySwitch(),
+              annotation_layers: [],
+              is_rowcount: true,
+              row_limit: 0,
+              row_offset: 0,
+              series_limit: 0,
+              order_desc: true,
+              url_params: selectedChart?.form_data?.url_params,
+              custom_params: {},
+              custom_form_data: {},
+              post_processing: [],
+              series_limit_metric: values.timeseries_limit_metric.length
+                ? metricsFormation('timeseries_limit_metric')[0]
+                : undefined,
+            },
+          ]
+        : []),
       ...(active === 'mixed_timeseries'
         ? [
             {
@@ -2854,9 +2949,9 @@ const DvtChart = () => {
       case 'waterfall':
         return !(values.metric.length && values.x_axis.length);
       case 'pivot_table_v2':
+      case 'radar':
         return !values.metrics.length;
       case 'treemap_v2':
-      case 'radar':
         return !values.metric.length;
       case 'dist_bar':
         return !(values.metrics.length && values.groupby.length);
@@ -2997,14 +3092,30 @@ const DvtChart = () => {
                       faf => fa.name === faf.else,
                     );
 
-                    return formActiveFinded?.if
-                      ? !values[formActiveFinded?.name]
+                    const statusIf =
+                      formActiveFinded?.status === 'tabs'
+                        ? values[formActiveFinded?.name].value !==
+                          formActiveFinded?.if_active
+                          ? fa.name !== formActiveFinded?.if
+                          : fa
+                        : !values[formActiveFinded?.name]
                         ? fa.name !== formActiveFinded?.if
-                        : fa
-                      : formActiveFindedElse?.else
-                      ? values[formActiveFindedElse?.name]
+                        : fa;
+
+                    const statusElse =
+                      formActiveFindedElse?.status === 'tabs'
+                        ? values[formActiveFindedElse?.name].value ===
+                          formActiveFindedElse?.else_active
+                          ? fa.name !== formActiveFindedElse?.else
+                          : fa
+                        : values[formActiveFindedElse?.name]
                         ? fa.name !== formActiveFindedElse?.else
-                        : fa
+                        : fa;
+
+                    return formActiveFinded?.if
+                      ? statusIf
+                      : formActiveFindedElse?.else
+                      ? statusElse
                       : fa;
                   })
                   .map((fItem, fIndex) => (

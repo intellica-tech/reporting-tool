@@ -61,9 +61,12 @@ interface FormsProps {
 }
 
 interface FormsActivesProps {
-  name: string;
+  name: any;
   if: string;
   else: string;
+  status?: 'checkbox' | 'tabs';
+  if_active?: string;
+  else_active?: string;
 }
 
 interface CollapsesProps {
@@ -854,6 +857,13 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             },
           },
         ],
+        form_actives: [
+          {
+            name: 'donut',
+            if: 'innerRadius',
+            else: '',
+          },
+        ],
       },
     ],
   },
@@ -1569,7 +1579,7 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           dateFormat,
           {
             label: t('CIRCLE RADAR SHAPE'),
-            name: 'draggable',
+            name: 'is_circle',
             popper: t(`Radar render type, whether to display 'circle' shape.`),
             status: 'checkbox',
           },
@@ -1632,8 +1642,8 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_active: 'chart_options',
         forms: [
           {
-            label: t('TREE LAYOUT '),
-            name: 'layout',
+            label: t('TREE LAYOUT'),
+            name: 'tree_layout',
             status: 'tabs',
             popper: 'Layout type of tree',
             options: [
@@ -1646,36 +1656,21 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
             name: 'orient',
             status: 'tabs',
             popper: 'Orientation of tree',
-            options: [
-              { label: t('Left to Right'), value: 'LR' },
-              { label: t('Right to Left'), value: 'RL' },
-              { label: t('Top to Bottom'), value: 'TB' },
-              { label: t('Bottom to Top'), value: 'BT' },
-            ],
+            options: chartFormsOption.orient,
           },
           {
             label: t('Node label position'),
-            name: 'nodeLabelPosition',
+            name: 'node_label_position',
             status: 'tabs',
             popper: 'Position of intermediate node label on tree',
-            options: [
-              { label: t('left'), value: 'left' },
-              { label: t('top'), value: 'top' },
-              { label: t('right'), value: 'right' },
-              { label: t('bottom'), value: 'bottom' },
-            ],
+            options: chartFormsOption.node_label_position,
           },
           {
             label: t('Child label position'),
-            name: 'childLabelPosition',
+            name: 'child_label_position',
             status: 'tabs',
             popper: 'Position of child node label on tree',
-            options: [
-              { label: t('left'), value: 'left' },
-              { label: t('top'), value: 'top' },
-              { label: t('right'), value: 'right' },
-              { label: t('bottom'), value: 'bottom' },
-            ],
+            options: chartFormsOption.node_label_position,
           },
           {
             label: t('Emphasis'),
@@ -1707,6 +1702,24 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
           },
           roam,
         ],
+        form_actives: [
+          {
+            name: 'tree_layout',
+            if: 'orient',
+            else: '',
+            status: 'tabs',
+            if_active: 'orthogonal',
+            else_active: '',
+          },
+          {
+            name: 'tree_layout',
+            if: 'emphasis',
+            else: '',
+            status: 'tabs',
+            if_active: 'orthogonal',
+            else_active: '',
+          },
+        ],
       },
     ],
   },
@@ -1717,7 +1730,15 @@ const DvtChartCustomize: DvtChartCustomizeProps[] = [
         collapse_label: t('Chart Options'),
         collapse_active: 'chart_options',
         forms: [
-          colorScheme,
+          {
+            label: t('LINEAR COLOR SCHEME'),
+            popper: t(
+              'When a secondary metric is provided, a linear color scale is used.',
+            ),
+            name: 'linear_color_scheme',
+            status: 'color-select',
+            optionsColor: chartFormsOption.linear_color_scheme,
+          },
           showLabels,
           {
             label: t('PERCENTAGE THRESHOLD'),

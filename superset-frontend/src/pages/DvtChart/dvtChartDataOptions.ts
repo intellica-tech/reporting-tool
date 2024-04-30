@@ -1290,6 +1290,18 @@ const chartFormsOption = {
       value: 'staggered',
     },
   ],
+  orient: [
+    { label: t('Left to Right'), value: 'LR' },
+    { label: t('Right to Left'), value: 'RL' },
+    { label: t('Top to Bottom'), value: 'TB' },
+    { label: t('Bottom to Top'), value: 'BT' },
+  ],
+  node_label_position: [
+    { label: t('left'), value: 'left' },
+    { label: t('top'), value: 'top' },
+    { label: t('right'), value: 'right' },
+    { label: t('bottom'), value: 'bottom' },
+  ],
 };
 
 export { forecastSeasonality, chartFormsOption };

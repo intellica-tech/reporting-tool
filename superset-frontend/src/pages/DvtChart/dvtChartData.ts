@@ -61,9 +61,12 @@ interface FormsProps {
 }
 
 interface FormsActivesProps {
-  name: string;
+  name: any;
   if: string;
   else: string;
+  status?: 'checkbox' | 'tabs';
+  if_active?: string;
+  else_active?: string;
 }
 
 interface CollapsesProps {
@@ -1592,7 +1595,7 @@ const DvtChartData: DvtChartDataProps[] = [
         collapse_popper_error: t('This section contains validation errors'),
         forms: [
           formDimensions,
-          formMetric,
+          formMetrics,
           formSortBy,
           formFilters,
           formRowLimit,
@@ -1834,16 +1837,11 @@ const DvtChartData: DvtChartDataProps[] = [
             savedType: 'expressions',
           },
           {
+            ...formMetric,
             label: t('PRIMARY METRIC'),
-            name: 'metric',
             popper: t(
               'The primary metric is used to define the arc segment sizes',
             ),
-            status: 'input-drop',
-            multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
-            popperError: t('cannot be empty'),
           },
           {
             label: t('SECONDARY METRIC'),
@@ -1853,8 +1851,8 @@ const DvtChartData: DvtChartDataProps[] = [
             ),
             status: 'input-drop',
             multiple: false,
-            type: 'normal',
-            savedType: 'expressions',
+            type: 'aggregates',
+            savedType: 'metric',
           },
           formFilters,
           formRowLimit,
