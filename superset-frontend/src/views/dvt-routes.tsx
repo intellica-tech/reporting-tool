@@ -158,6 +158,10 @@ const UsersList = lazy(
   () => import(/* webpackChunkName: "UsersList" */ 'src/pages/DvtUsersList'),
 );
 
+const DataProcess = lazy(
+  () => import(/* webpackChunkName: "Tags" */ 'src/pages/DvtDataProcess'),
+);
+
 type Routes = {
   path: string;
   Component: React.ComponentType;
@@ -283,6 +287,10 @@ export const routes: Routes = [
   {
     path: '/role/list/',
     Component: DvtRolesList,
+  },
+  {
+    path: '/data-process/',
+    Component: DataProcess,
   },
 ];
 

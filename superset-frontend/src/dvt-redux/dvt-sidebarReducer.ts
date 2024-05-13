@@ -124,6 +124,12 @@ interface DvtSidebarState {
     name: any;
     user: any;
   };
+  dataProcess: {
+    database: any;
+    schema: any;
+    table: any;
+    kolon: any;
+  };
   data: {
     fetched: {
       alerts: {
@@ -172,6 +178,9 @@ interface DvtSidebarState {
         modifiedBy: boolean;
         database: boolean;
         schema: boolean;
+      };
+      dataProcess: {
+        database: boolean;
       };
     };
     alerts: {
@@ -239,6 +248,12 @@ interface DvtSidebarState {
       modifiedBy: any[];
       database: any[];
       schema: any[];
+    };
+    dataProcess: {
+      database: any[];
+      schema: any[];
+      table: any[];
+      kolon: any[];
     };
   };
 }
@@ -348,6 +363,12 @@ const INITIAL_STATE = {
     name: '',
     user: '',
   },
+  dataProcess: {
+    database: '',
+    schema: '',
+    table: '',
+    kolon: [],
+  },
 };
 
 const initialState: DvtSidebarState = {
@@ -400,6 +421,9 @@ const initialState: DvtSidebarState = {
         modifiedBy: false,
         database: false,
         schema: false,
+      },
+      dataProcess: {
+        database: false,
       },
     },
     alerts: {
@@ -467,6 +491,12 @@ const initialState: DvtSidebarState = {
       modifiedBy: [],
       database: [],
       schema: [],
+    },
+    dataProcess: {
+      database: [],
+      schema: [],
+      table: [],
+      kolon: [],
     },
   },
 };

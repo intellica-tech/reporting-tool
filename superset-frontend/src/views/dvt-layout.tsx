@@ -85,6 +85,7 @@ const DvtLayout = () => {
       case '/dataset/add/':
         return 380;
       case '/sqlhub/':
+      case '/data-process/':
         return 480;
       case '/explore/':
         return 350;

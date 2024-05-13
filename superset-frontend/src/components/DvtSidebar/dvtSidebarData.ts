@@ -61,6 +61,11 @@ const DvtSidebarData: SidebarDataProps[] = [
             url: '/traindata/',
             fileName: 'cards',
           },
+          {
+            title: t('Data Process'),
+            url: '/data-process/',
+            fileName: 'cards',
+          },
         ],
       },
       {
@@ -833,6 +838,40 @@ const DvtSidebarData: SidebarDataProps[] = [
       {
         name: 'schema',
         url: 'saved_query/distinct/schema?q=(filter:%27%27,page:0,page_size:100)',
+      },
+    ],
+  },
+  {
+    pathname: '/data-process/',
+    key: 'dataProcess',
+    data: [
+      {
+        placeholder: t('DATABASE'),
+        name: 'database',
+        label: t('DATABASE'),
+      },
+      {
+        placeholder: t('SCHEMA'),
+        name: 'schema',
+        label: t('SCHEMA'),
+      },
+      {
+        placeholder: t('TABLE'),
+        name: 'table',
+        label: t('TABLE'),
+      },
+      {
+        placeholder: t('KOLON'),
+        name: 'kolon',
+        label: t('KOLON'),
+        status: 'select-input',
+        values: [],
+      },
+    ],
+    apiUrls: [
+      {
+        name: 'database',
+        url: 'database/?q=(filters:!((col:database_name,opr:ct,value:%27%27)),order_columns:database_name,order_direction:asc,page:0,page_size:100)',
       },
     ],
   },

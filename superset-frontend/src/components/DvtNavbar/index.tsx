@@ -141,6 +141,8 @@ const DvtNavbar: React.FC<DvtNavbarProps> = ({ pathName, data, leftMove }) => {
         return t('Roles List');
       case '/user/list/':
         return t('List Users');
+      case '/data-process/':
+        return t('Data Process');
       default:
         return '';
     }

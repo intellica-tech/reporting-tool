@@ -87,18 +87,22 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
   );
   const sqlhubSelector = useAppSelector(state => state.dvtSidebar.sqlhub);
   const profileSelector = useAppSelector(state => state.dvtSidebar.profile);
-  const dataSelector = useAppSelector(state => state.dvtSidebar.data);
-  const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
-  const fetchedSelector = useAppSelector(
-    state => state.dvtSidebar.data.fetched,
-  );
   const rowLevelSecuritySelector = useAppSelector(
     state => state.dvtSidebar.rowLevelSecurity,
   );
   const queryHistorySelector = useAppSelector(
     state => state.dvtSidebar.queryHistory,
   );
+  const dataProcessSelector = useAppSelector(
+    state => state.dvtSidebar.dataProcess,
+  );
+  const dataSelector = useAppSelector(state => state.dvtSidebar.data);
+  const fetchedSelector = useAppSelector(
+    state => state.dvtSidebar.data.fetched,
+  );
   const chartSelector = useAppSelector(state => state.dvtChart.selectedChart);
+  const pageSqlhubSelector = useAppSelector(state => state.dvtSqlhub);
+
   // const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -147,6 +151,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         return 'usersList';
       case '/role/list/':
         return 'rolesList';
+      case '/data-process/':
+        return 'dataProcess';
       default:
         return '';
     }
@@ -299,6 +305,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           key: 'queryHistory',
           keyNames: ['database', 'state', 'user'],
         },
+        {
+          key: 'dataProcess',
+          keyNames: ['database'],
+        },
       ];
       dataObjectKeys.forEach(item => {
         const getDataApiUrlKeys = getDataApiUrl.name.split('-');
@@ -314,6 +324,9 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       label: item.table_name,
                     };
                   case 'sqlhub-database':
+                  case 'datasetAdd-database':
+                  case 'newTrainedTable-database':
+                  case 'dataProcess-database':
                     return {
                       value: item.explore_database_id,
                       label: item.database_name,
@@ -328,20 +341,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                       value: item.id,
                       label: item.dashboard_title,
                     };
-                  case 'datasetAdd-database':
-                    return {
-                      value: item.explore_database_id,
-                      label: item.database_name,
-                    };
                   case 'rowLevelSecurity-modifiedBy':
                     return {
                       value: item.value,
                       label: item.text,
-                    };
-                  case 'newTrainedTable-database':
-                    return {
-                      value: item.explore_database_id,
-                      label: item.database_name,
                     };
                   default:
                     return {
@@ -506,6 +509,10 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
         key: 'queryHistory',
         keyNames: ['database', 'state', 'user'],
       },
+      {
+        key: 'dataProcess',
+        keyNames: ['database', 'schema', 'table', 'kolon'],
+      },
     ];
     const findPathTitle = selectionObjectKeys.find(
       item => item.key === pathTitles(pathName),
@@ -547,6 +554,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
     'rowLevelSecurity',
     'savedQuery',
     'queryHistory',
+    'dataProcess',
   ];
 
   const columnOrMetricFormatData = (data: any[], objectLabel: string) => {
@@ -758,6 +766,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                             ? rolesListSelector[data.name]
                             : pathTitles(pathName) === 'queryHistory'
                             ? queryHistorySelector[data.name]
+                            : pathTitles(pathName) === 'dataProcess'
+                            ? dataProcessSelector[data.name]
                             : undefined
                         }
                         setSelectedValue={value => {
@@ -879,6 +889,8 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
                         selectedValues={
                           pathTitles(pathName) === 'sqlhub'
                             ? sqlhubSelector[data.name]
+                            : pathTitles(pathName) === 'dataProcess'
+                            ? dataProcessSelector[data.name]
                             : undefined
                         }
                         setSelectedValues={selected => {
