@@ -43,6 +43,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.dvt_explore.explore import DVTExplorePermalinkView
         from superset.dvt_tags.tags import DVTTagModelView
         from superset.dvt_traindata.api import TrainDataRestApi, TrainDataLSTMRestApi, TrainDataSegmentationRestApi
+        from superset.dvt_dataprocess.api import DataProcessRestApi
         from superset.embedded.api import EmbeddedDashboardRestApi
         from superset.embedded.view import EmbeddedView
         from superset.explore.api import ExploreRestApi
@@ -81,6 +82,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         from superset.views.datasource.views import DatasetEditor, Datasource
         from superset.views.dvt_sqllab import DVTSqlHubView
         from superset.views.dvt_traindata import TrainDataView
+        from superset.views.dvt_dataprocess import DataProcessView
         from superset.views.dynamic_plugins import DynamicPluginsView
         from superset.views.explore import ExploreView
         from superset.views.key_value import KV
@@ -135,6 +137,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_api(TrainDataRestApi)
         appbuilder.add_api(TrainDataLSTMRestApi)
         appbuilder.add_api(TrainDataSegmentationRestApi)
+        appbuilder.add_api(DataProcessRestApi)
         #
         # Setup regular views
         #
@@ -219,6 +222,7 @@ class DVTAppInitializer(SupersetAppInitializer):
         appbuilder.add_view_no_menu(ProfileView)
         appbuilder.add_view_no_menu(SavedQueryView)
         appbuilder.add_view_no_menu(TrainDataView)
+        appbuilder.add_view_no_menu(DataProcessView)
         appbuilder.add_view_no_menu(DVTUserView)
         appbuilder.add_view_no_menu(DVTRoleView)
         appbuilder.add_view_no_menu(SavedQueryViewApi)
@@ -287,6 +291,15 @@ class DVTAppInitializer(SupersetAppInitializer):
             icon="fa-flask",
             category="Train Data",
             category_label=__("Train Data"),
+        )
+        appbuilder.add_link(
+            "Data Process",
+            label=__("Data Process"),
+            href="/data-process/",
+            category_icon="fa-flask",
+            icon="fa-flask",
+            category="Data Process",
+            category_label=__("Data Process"),
         )
         appbuilder.add_link(
             "User",
