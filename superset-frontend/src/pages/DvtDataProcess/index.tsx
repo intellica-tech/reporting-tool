@@ -12,10 +12,12 @@ import {
 import useFetch from 'src/dvt-hooks/useFetch';
 import DvtTable from 'src/components/DvtTable';
 import DvtIconDataLabel from 'src/components/DvtIconDataLabel';
-import {
-  StyledDvtDataProcess,
-  StyledDvtDataProcessIconLabel,
-} from './dvt-data-process.module';
+import { StyledDvtDataProcessIconLabel } from './dvt-data-process.module';
+
+interface SelectedColumnsProps {
+  url: string;
+  selected: string;
+}
 
 const header = [
   {
@@ -38,10 +40,23 @@ function DvtDataProcess() {
   });
   const [getTableDataApiUrl, setGetTableDataApiUrl] = useState('');
   const [data, setData] = useState([]);
+  const [dataInSelected, setDataInSelected] = useState<string[]>([]);
+  const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsProps>({
+    url: '',
+    selected: '',
+  });
 
   const getSchemaData = useFetch({ url: getSchemaDataApiUrl.url });
   const getTableData = useFetch({
     url: getTableDataApiUrl,
+  });
+  const postOutlierAnalysis = useFetch({
+    url: selectedColumns.url,
+    method: 'POST',
+    body: {
+      selected_columns: selectedColumns.selected,
+      table_name: selectedColumns.selected,
+    },
   });
 
   useEffect(() => {
@@ -117,17 +132,41 @@ function DvtDataProcess() {
         dvtSidebarSetProperty({
           pageKey: 'dataProcess',
           key: 'kolon',
-          value: getTableData.data.columns.map((t: { name: string }) => t.name),
+          value: getTableData.data.columns
+            .slice(0, 1)
+            .map((t: { name: string }) => t.name),
         }),
       );
     }
   }, [getTableData.data]);
 
   useEffect(() => {
+    if (data.length) {
+      setDataInSelected(dataProcessSelector.kolon);
+      const onlyPostSelected = dataProcessSelector.kolon.filter(
+        (v: string) => !dataInSelected.includes(v),
+      );
+      setSelectedColumns({
+        url: 'data/outlier-analysis',
+        selected: onlyPostSelected[0],
+      });
+    }
+  }, [data, dataProcessSelector.kolon]);
+
+  useEffect(() => {
     if (!getTableData.loading) {
       setGetTableDataApiUrl('');
     }
   }, [getTableData.loading]);
+
+  useEffect(() => {
+    if (!postOutlierAnalysis.loading) {
+      setSelectedColumns({
+        url: '',
+        selected: '',
+      });
+    }
+  }, [postOutlierAnalysis.loading]);
 
   useEffect(
     () => () => {
@@ -136,14 +175,6 @@ function DvtDataProcess() {
     [],
   );
 
-  // useFetch({
-  //   url: 'data/outlier-analysis',
-  //   method: 'POST',
-  //   body: {
-  //     selecteeed_columns: '',
-  //     table_name: '',
-  //   },
-  // });
   // useFetch({
   //   url: 'data/normalization',
   //   method: 'POST',
@@ -166,7 +197,7 @@ function DvtDataProcess() {
   );
 
   return (
-    <StyledDvtDataProcess>
+    <>
       {data.length > 0 ? (
         <DvtTable header={header} data={filteredData} />
       ) : (
@@ -180,7 +211,7 @@ function DvtDataProcess() {
           />
         </StyledDvtDataProcessIconLabel>
       )}
-    </StyledDvtDataProcess>
+    </>
   );
 }
 
