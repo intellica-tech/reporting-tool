@@ -846,6 +846,19 @@ const DvtSidebarData: SidebarDataProps[] = [
     key: 'dataProcess',
     data: [
       {
+        placeholder: t('Data Process Type'),
+        name: 'dataProcessType',
+        label: t('Data Process Type'),
+        values: [
+          { label: t('Outlier Analysis'), value: 'data/outlier-analysis' },
+          { label: t('Normalization'), value: 'data/normalization' },
+          {
+            label: t('Missing Data Imputation'),
+            value: 'data/missing-data-imputation',
+          },
+        ],
+      },
+      {
         placeholder: t('DATABASE'),
         name: 'database',
         label: t('DATABASE'),
@@ -859,13 +872,6 @@ const DvtSidebarData: SidebarDataProps[] = [
         placeholder: t('TABLE'),
         name: 'table',
         label: t('TABLE'),
-      },
-      {
-        placeholder: t('KOLON'),
-        name: 'kolon',
-        label: t('KOLON'),
-        status: 'select-input',
-        values: [],
       },
     ],
     apiUrls: [

@@ -511,7 +511,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
       },
       {
         key: 'dataProcess',
-        keyNames: ['database', 'schema', 'table', 'kolon'],
+        keyNames: ['database', 'schema', 'table'],
       },
     ];
     const findPathTitle = selectionObjectKeys.find(
