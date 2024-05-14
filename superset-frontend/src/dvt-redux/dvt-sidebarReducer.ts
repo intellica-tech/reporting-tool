@@ -128,7 +128,7 @@ interface DvtSidebarState {
     database: any;
     schema: any;
     table: any;
-    kolon: any;
+    dataProcessType: any;
   };
   data: {
     fetched: {
@@ -253,7 +253,7 @@ interface DvtSidebarState {
       database: any[];
       schema: any[];
       table: any[];
-      kolon: any[];
+      dataProcessType: any[];
     };
   };
 }
@@ -367,7 +367,7 @@ const INITIAL_STATE = {
     database: '',
     schema: '',
     table: '',
-    kolon: [],
+    dataProcessType: '',
   },
 };
 
@@ -496,7 +496,7 @@ const initialState: DvtSidebarState = {
       database: [],
       schema: [],
       table: [],
-      kolon: [],
+      dataProcessType: [],
     },
   },
 };

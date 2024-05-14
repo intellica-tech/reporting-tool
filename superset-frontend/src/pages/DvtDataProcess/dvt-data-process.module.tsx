@@ -6,4 +6,14 @@ const StyledDvtDataProcessIconLabel = styled.div`
   height: 100%;
 `;
 
-export { StyledDvtDataProcessIconLabel };
+const StyledDvtDataProcessIconButton = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding-right: 20px;
+  margin-top: auto;
+`;
+
+export { StyledDvtDataProcessIconLabel, StyledDvtDataProcessIconButton };
