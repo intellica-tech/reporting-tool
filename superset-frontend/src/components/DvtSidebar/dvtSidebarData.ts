@@ -64,7 +64,7 @@ const DvtSidebarData: SidebarDataProps[] = [
           {
             title: t('Data Process'),
             url: '/data-process/',
-            fileName: 'cards',
+            fileName: 'card_view',
           },
         ],
       },
