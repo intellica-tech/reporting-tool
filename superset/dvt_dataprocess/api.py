@@ -19,7 +19,6 @@ import logging
 from flask import jsonify, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import permission_name
-from sklearn.preprocessing import MinMaxScaler
 from sqlalchemy.orm import sessionmaker
 
 from superset.extensions import event_logger
@@ -41,7 +40,7 @@ logger = logging.getLogger(__name__)
 from flask import request, jsonify, Response
 from .helpers import get_engine, create_session, read_table_to_dataframe, \
     write_dataframe_to_table, detect_outliers_boxplot
-from sklearn.preprocessing import MinMaxScaler
+
 
 class DataProcessRestApi(BaseSupersetApi):
     resource_name = "data"
@@ -92,6 +91,7 @@ class DataProcessRestApi(BaseSupersetApi):
         return self.handle_request(self.normalization_impl)
 
     def normalization_impl(self, payload, engine, session):
+        from sklearn.preprocessing import MinMaxScaler
         table_name = payload["table_name"]
         selected_columns = payload["selected_columns"].split(",")
         df = read_table_to_dataframe(session, engine, table_name, selected_columns)
