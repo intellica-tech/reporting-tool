@@ -19,82 +19,102 @@ import logging
 from flask import jsonify, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import permission_name
+from sklearn.preprocessing import MinMaxScaler
+from sqlalchemy.orm import sessionmaker
 
 from superset.extensions import event_logger
 from superset.views.base_api import BaseSupersetApi
 
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, \
+    String, Float
+from sqlalchemy.orm import sessionmaker
+import pandas as pd
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+
 logger = logging.getLogger(__name__)
 
+
+
+
+# api.py
+from flask import request, jsonify, Response
+from .helpers import get_engine, create_session, read_table_to_dataframe, \
+    write_dataframe_to_table, detect_outliers_boxplot
+from sklearn.preprocessing import MinMaxScaler
 
 class DataProcessRestApi(BaseSupersetApi):
     resource_name = "data"
     allow_browser_login = True
 
+    def __init__(self):
+        super().__init__()
+        self.connection_string = 'postgresql://examples:examples@db:5432/examples'
+
+    def handle_request(self, func):
+        try:
+            payload = request.json
+            if "selected_columns" not in payload or "table_name" not in payload:
+                return jsonify({"error": "Missing required fields in the payload"}), 400
+            engine = get_engine(self.connection_string)
+            session = create_session(engine)
+            result = func(payload, engine, session)
+            session.commit()
+            return result
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
     @expose("/outlier-analysis", methods=("POST",))
     @event_logger.log_this
     @permission_name("list")
     def outlier_analysis(self) -> Response:
-        try:
-            payload = request.json
+        return self.handle_request(self.outlier_analysis_impl)
 
-            if "selected_columns" not in payload or "table_name" not in payload:
-                return jsonify({"error": "Missing required fields in the payload"}), 400
-
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": f"Received payload: {payload}"
-                    }
-                ),
-                200,
-            )
-
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    def outlier_analysis_impl(self, payload, engine, session):
+        table_name = payload["table_name"]
+        selected_columns = payload["selected_columns"].split(",")
+        df = read_table_to_dataframe(session, engine, table_name, selected_columns)
+        outliers_dict = {}
+        for column in selected_columns:
+            outliers = detect_outliers_boxplot(df[column])
+            outliers_dict[column] = outliers.tolist()
+        outliers_table_name = f"{table_name}_outliers"
+        outliers_table = Table(outliers_table_name, MetaData(bind=engine), autoload=True, autoload_with=engine)
+        for column, outliers in outliers_dict.items():
+            for outlier in outliers:
+                session.execute(outliers_table.insert().values({column: outlier}))
+        return jsonify({"success": True, "message": f"Outliers written to table '{outliers_table_name}'"}), 200
 
     @expose("/normalization", methods=("POST",))
     @event_logger.log_this
     @permission_name("list")
     def normalization(self) -> Response:
-        try:
-            payload = request.json
+        return self.handle_request(self.normalization_impl)
 
-            if "selected_columns" not in payload or "table_name" not in payload:
-                return jsonify({"error": "Missing required fields in the payload"}), 400
-
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": f"Received payload: {payload}"
-                    }
-                ),
-                200,
-            )
-
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    def normalization_impl(self, payload, engine, session):
+        table_name = payload["table_name"]
+        selected_columns = payload["selected_columns"].split(",")
+        df = read_table_to_dataframe(session, engine, table_name, selected_columns)
+        scaler = MinMaxScaler()
+        normalized_data = scaler.fit_transform(df[selected_columns])
+        normalized_df = pd.DataFrame(normalized_data, columns=selected_columns)
+        normalized_table_name = f"{table_name}_normalized"
+        write_dataframe_to_table(normalized_df, engine, normalized_table_name)
+        return jsonify({"success": True, "message": f"Normalized data written to table '{normalized_table_name}' (values are scaled between 0 and 1)"}), 200
 
     @expose("/missing-data-imputation", methods=("POST",))
     @event_logger.log_this
     @permission_name("list")
     def missing_data_imputation(self) -> Response:
-        try:
-            payload = request.json
+        return self.handle_request(self.missing_data_imputation_impl)
 
-            if "selected_columns" not in payload or "table_name" not in payload:
-                return jsonify({"error": "Missing required fields in the payload"}), 400
-
-            return (
-                jsonify(
-                    {
-                        "success": True,
-                        "message": f"Received payload: {payload}"
-                    }
-                ),
-                200,
-            )
-
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    def missing_data_imputation_impl(self, payload, engine, session):
+        table_name = payload["table_name"]
+        selected_columns = payload["selected_columns"].split(",")
+        df = read_table_to_dataframe(session, engine, table_name, selected_columns)
+        selected_df_imputed = df.fillna(df.mean())
+        for col in selected_columns:
+            df[col] = selected_df_imputed[col]
+        imputed_table_name = f"{table_name}_imputed"
+        write_dataframe_to_table(df, engine, imputed_table_name)
+        return jsonify({"success": True, "message": f"Missing data imputed for selected columns and written to table '{imputed_table_name}'"}), 200
