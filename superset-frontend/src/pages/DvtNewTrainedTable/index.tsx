@@ -254,7 +254,7 @@ function DvtNewTainedTable() {
     } else if (newTainedTableAddSelector.algorithm?.value === 'lstm') {
       setPostDataSetUrl('lstm');
     } else if (newTainedTableAddSelector.algorithm?.value === 'lstm_forecast') {
-      setPostDataSetUrl('lstm-forecast');
+      setPostDataSetUrl('lstm_forecast');
     } else {
       setPostDataSetUrl('ml_and_insert/');
     }
