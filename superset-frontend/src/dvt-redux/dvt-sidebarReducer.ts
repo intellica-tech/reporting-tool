@@ -67,6 +67,7 @@ interface DvtSidebarState {
     algorithm: any;
     targetColumnName: any;
     timeColumnName: any;
+    predictionNumber: any;
     featureColumn: any;
     groupColumn: any;
     labelColumn: any;
@@ -217,6 +218,7 @@ interface DvtSidebarState {
       algorithm: any[];
       targetColumnName: any[];
       timeColumnName: any[];
+      predictionNumber: any[];
       featureColumn: any[];
       groupColumn: any[];
       labelColumn: any[];
@@ -300,6 +302,7 @@ const INITIAL_STATE = {
     algorithm: '',
     targetColumnName: '',
     timeColumnName: '',
+    predictionNumber: '',
     featureColumn: '',
     groupColumn: '',
     labelColumn: '',
@@ -460,6 +463,7 @@ const initialState: DvtSidebarState = {
       algorithm: [],
       targetColumnName: [],
       timeColumnName: [],
+      predictionNumber: [],
       featureColumn: [],
       groupColumn: [],
       labelColumn: [],
@@ -574,6 +578,7 @@ const dvtSidebarSlice = createSlice({
                   algorithm: [],
                   targetColumnName: [],
                   timeColumnName: [],
+                  predictionNumber: [],
                   featureColumn: [],
                   groupColumn: [],
                   labelColumn: [],

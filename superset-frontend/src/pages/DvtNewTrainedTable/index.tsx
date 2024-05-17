@@ -67,6 +67,16 @@ function DvtNewTainedTable() {
               newTainedTableAddSelector.targetColumnName?.value,
             time_column_name: newTainedTableAddSelector.timeColumnName?.value,
           }
+        : newTainedTableAddSelector.algorithm?.value === 'lstm_forecast'
+        ? {
+            source_table_name: newTainedTableAddSelector.selectDatabase?.value,
+            target_column_name:
+              newTainedTableAddSelector.targetColumnName?.value,
+            time_column_name: newTainedTableAddSelector.timeColumnName?.value,
+            predictionNumber: newTainedTableAddSelector.predictionNumber
+              ? newTainedTableAddSelector.predictionNumber
+              : undefined,
+          }
         : newTainedTableAddSelector.category?.value === 'statistical'
         ? {
             algorithm_name: newTainedTableAddSelector.algorithm?.value,
@@ -243,6 +253,8 @@ function DvtNewTainedTable() {
       setPostSegmentationDataSetUrl('algorithms/run-ml-algorithm');
     } else if (newTainedTableAddSelector.algorithm?.value === 'lstm') {
       setPostDataSetUrl('lstm');
+    } else if (newTainedTableAddSelector.algorithm?.value === 'lstm_forecast') {
+      setPostDataSetUrl('lstm-forecast');
     } else {
       setPostDataSetUrl('ml_and_insert/');
     }
@@ -261,7 +273,10 @@ function DvtNewTainedTable() {
         dvtSidebarSetDataProperty({
           pageKey: 'newTrainedTable',
           key: 'algorithm',
-          value: [{ value: 'lstm', label: 'LSTM' }],
+          value: [
+            { value: 'lstm', label: 'LSTM' },
+            { value: 'lstm_forecast', label: 'LSTM Forecast' },
+          ],
         }),
       );
     } else if (newTainedTableAddSelector.category?.value === 'statistical') {

@@ -475,6 +475,7 @@ const DvtSidebar: React.FC<DvtSidebarProps> = ({ pathName, minWidth }) => {
           'algorithm',
           'targetColumnName',
           'timeColumnName',
+          'predictionNumber',
           'featureColumn',
           'groupColumn',
           'labelColumn',
