@@ -73,7 +73,7 @@ function DvtNewTainedTable() {
             target_column_name:
               newTainedTableAddSelector.targetColumnName?.value,
             time_column_name: newTainedTableAddSelector.timeColumnName?.value,
-            predictionNumber: newTainedTableAddSelector.predictionNumber
+            prediction_number: newTainedTableAddSelector.predictionNumber
               ? newTainedTableAddSelector.predictionNumber
               : undefined,
           }
