@@ -856,6 +856,10 @@ const DvtSidebarData: SidebarDataProps[] = [
             label: t('Missing Data Imputation'),
             value: 'data/missing-data-imputation',
           },
+          {
+            label: t('Information Gain'),
+            value: 'data/information-gain',
+          },
         ],
       },
       {
