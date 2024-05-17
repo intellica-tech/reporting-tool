@@ -321,6 +321,25 @@ const DvtSidebarData: SidebarDataProps[] = [
         active: 'lstm',
       },
       {
+        placeholder: t('TARGET COLUMN'),
+        name: 'targetColumnName',
+        label: t('TARGET COLUMN NAME'),
+        active: 'lstm_forecast',
+      },
+      {
+        placeholder: t('TİME COLUMN'),
+        name: 'timeColumnName',
+        label: t('TİME COLUMN NAME'),
+        active: 'lstm_forecast',
+      },
+      {
+        placeholder: t('Prediction Number'),
+        name: 'predictionNumber',
+        label: t('Prediction Number'),
+        active: 'lstm_forecast',
+        status: 'input',
+      },
+      {
         placeholder: t('PERCENTILE'),
         name: 'percentile',
         label: t('PERCENTILE'),
