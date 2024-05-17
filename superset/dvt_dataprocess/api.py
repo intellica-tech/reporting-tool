@@ -141,11 +141,11 @@ class DataProcessRestApi(BaseSupersetApi):
 
         mi_dict = mi_matrix.to_dict()
 
-        gain_info_table_name = f"{table_name}_gain_information"
+        gain_info_table_name = f"{table_name}_information_gain"
         gain_info_table = Table(gain_info_table_name, MetaData(bind=engine),
                                 Column('column_1', String),
                                 Column('column_2', String),
-                                Column('gain_information', Float),
+                                Column('information_gain', Float),
                                 extend_existing=True)
         gain_info_table.create(engine, checkfirst=True)
 
@@ -158,5 +158,5 @@ class DataProcessRestApi(BaseSupersetApi):
                                                             col2]))
 
         return jsonify({"success": True,
-                        "message": f"Gain information calculated and written to table '{gain_info_table_name}'",
-                        "gain_information": mi_dict}), 200
+                        "message": f"Information gain calculated and written to table '{gain_info_table_name}'",
+                        "information_gain": mi_dict}), 200
