@@ -103,6 +103,43 @@ class TrainDataLSTMRestApi(BaseSupersetApi):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+
+class TrainDataLSTMForecastRestApi(BaseSupersetApi):
+    resource_name = "lstm-forecast"
+    allow_browser_login = True
+
+    @expose("/", methods=("POST",))
+    @event_logger.log_this
+    @permission_name("list")
+    def traindata(self) -> Response:
+        try:
+            payload = request.json
+
+            if ("source_table_name" not in payload
+                or "target_column_name" not in payload
+                or "time_column_name" not in payload):
+                return jsonify({"error": "Missing required fields in the payload"}), 400
+
+            external_api_url = "http://172.16.11.14:5000/lstm-forecast"
+
+            response = requests.post(external_api_url, json=payload)
+
+            if response.ok:
+                return (
+                    jsonify(
+                        {
+                            "success": True,
+                            "message": f"Received payload: {payload}",
+                            "response": response.json(),
+                        }
+                    ),
+                    200,
+                )
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+
 class TrainDataSegmentationRestApi(BaseSupersetApi):
     resource_name = "algorithms/run-ml-algorithm"
     allow_browser_login = True
