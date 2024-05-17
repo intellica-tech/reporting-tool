@@ -117,7 +117,7 @@ class DataProcessRestApi(BaseSupersetApi):
         write_dataframe_to_table(df, engine, imputed_table_name)
         return jsonify({"success": True, "message": f"Missing data imputed for selected columns and written to table '{imputed_table_name}'"}), 200
 
-    @expose("/gain-information", methods=("POST",))
+    @expose("/information-gain", methods=("POST",))
     @event_logger.log_this
     @permission_name("list")
     def gain_information(self) -> Response:
