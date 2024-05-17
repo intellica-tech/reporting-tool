@@ -35,8 +35,6 @@ logger = logging.getLogger(__name__)
 
 
 
-
-# api.py
 from flask import request, jsonify, Response
 from .helpers import get_engine, create_session, read_table_to_dataframe, \
     write_dataframe_to_table, detect_outliers_boxplot
@@ -118,3 +116,47 @@ class DataProcessRestApi(BaseSupersetApi):
         imputed_table_name = f"{table_name}_imputed"
         write_dataframe_to_table(df, engine, imputed_table_name)
         return jsonify({"success": True, "message": f"Missing data imputed for selected columns and written to table '{imputed_table_name}'"}), 200
+
+    @expose("/gain-information", methods=("POST",))
+    @event_logger.log_this
+    @permission_name("list")
+    def gain_information(self) -> Response:
+        return self.handle_request(self.gain_information_impl)
+
+    def gain_information_impl(self, payload, engine, session):
+        from sklearn.feature_selection import mutual_info_regression
+        table_name = payload["table_name"]
+        selected_columns = payload["selected_columns"].split(",")
+
+        df = read_table_to_dataframe(session, engine, table_name, selected_columns)
+        mi_matrix = pd.DataFrame(index=selected_columns, columns=selected_columns)
+
+        for col1 in selected_columns:
+            for col2 in selected_columns:
+                if col1 != col2:
+                    mi = mutual_info_regression(df[[col1]], df[col2])[0]
+                    mi_matrix.at[col1, col2] = mi
+                else:
+                    mi_matrix.at[col1, col2] = 0
+
+        mi_dict = mi_matrix.to_dict()
+
+        gain_info_table_name = f"{table_name}_gain_information"
+        gain_info_table = Table(gain_info_table_name, MetaData(bind=engine),
+                                Column('column_1', String),
+                                Column('column_2', String),
+                                Column('gain_information', Float),
+                                extend_existing=True)
+        gain_info_table.create(engine, checkfirst=True)
+
+        for col1 in selected_columns:
+            for col2 in selected_columns:
+                if col1 != col2:
+                    session.execute(
+                        gain_info_table.insert().values(column_1=col1, column_2=col2,
+                                                        gain_information=mi_dict[col1][
+                                                            col2]))
+
+        return jsonify({"success": True,
+                        "message": f"Gain information calculated and written to table '{gain_info_table_name}'",
+                        "gain_information": mi_dict}), 200
