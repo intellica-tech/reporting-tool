@@ -50,19 +50,19 @@ class DataProcessRestApi(BaseSupersetApi):
         self.connection_string = 'postgresql://examples:examples@db:5432/examples'
 
     def handle_request(self, func):
-        # try:
-        payload = request.json
-        if "selected_columns" not in payload or "table_name" not in payload:
-            return jsonify({"error": "Missing required fields in the payload"}), 400
-        engine = get_engine(self.connection_string)
-        session = create_session(engine)
-        result = func(payload, engine, session)
-        session.commit()
-        return result
-        # except Exception as e:
-        #     return jsonify({"error": str(e)}), 500
-        # finally:
-        #     session.close()
+        try:
+            payload = request.json
+            if "selected_columns" not in payload or "table_name" not in payload:
+                return jsonify({"error": "Missing required fields in the payload"}), 400
+            engine = get_engine(self.connection_string)
+            session = create_session(engine)
+            result = func(payload, engine, session)
+            session.commit()
+            return result
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            session.close()
 
     @expose("/outlier-analysis", methods=("POST",))
     @event_logger.log_this
@@ -83,14 +83,12 @@ class DataProcessRestApi(BaseSupersetApi):
         try:
             outliers_table = Table(outliers_table_name, metadata, autoload=True, autoload_with=engine)
         except NoSuchTableError:
-            # Define the table structure
             outliers_table = Table(
                 outliers_table_name,
                 metadata,
                 Column('id', Integer, primary_key=True, autoincrement=True),
                 *(Column(column, Float) for column in selected_columns)
             )
-            # Create the table in the database
             metadata.create_all(engine)
             outliers_table = Table(outliers_table_name, metadata, autoload=True, autoload_with=engine)
 
