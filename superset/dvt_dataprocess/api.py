@@ -19,6 +19,7 @@ import logging
 from flask import jsonify, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import permission_name
+from sqlalchemy.exc import NoSuchTableError
 from sqlalchemy.orm import sessionmaker
 
 from superset.extensions import event_logger
@@ -60,6 +61,8 @@ class DataProcessRestApi(BaseSupersetApi):
             return result
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        finally:
+            session.close()
 
     @expose("/outlier-analysis", methods=("POST",))
     @event_logger.log_this
@@ -76,7 +79,19 @@ class DataProcessRestApi(BaseSupersetApi):
             outliers = detect_outliers_boxplot(df[column])
             outliers_dict[column] = outliers.tolist()
         outliers_table_name = f"{table_name}_outliers"
-        outliers_table = Table(outliers_table_name, MetaData(bind=engine), autoload=True, autoload_with=engine)
+        metadata = MetaData(bind=engine)
+        try:
+            outliers_table = Table(outliers_table_name, metadata, autoload=True, autoload_with=engine)
+        except NoSuchTableError:
+            outliers_table = Table(
+                outliers_table_name,
+                metadata,
+                Column('id', Integer, primary_key=True, autoincrement=True),
+                *(Column(column, Float) for column in selected_columns)
+            )
+            metadata.create_all(engine)
+            outliers_table = Table(outliers_table_name, metadata, autoload=True, autoload_with=engine)
+
         for column, outliers in outliers_dict.items():
             for outlier in outliers:
                 session.execute(outliers_table.insert().values({column: outlier}))
@@ -154,9 +169,9 @@ class DataProcessRestApi(BaseSupersetApi):
                 if col1 != col2:
                     session.execute(
                         gain_info_table.insert().values(column_1=col1, column_2=col2,
-                                                        gain_information=mi_dict[col1][
-                                                            col2]))
+                                                        information_gain=mi_dict[col1][col2]))
 
         return jsonify({"success": True,
                         "message": f"Information gain calculated and written to table '{gain_info_table_name}'",
                         "information_gain": mi_dict}), 200
+
