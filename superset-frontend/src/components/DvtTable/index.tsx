@@ -130,19 +130,6 @@ const DvtTable: React.FC<DvtTableProps> = ({
   const [openRow, setOpenRow] = useState<number | null>(null);
   const [collapseRowId, setCollapseRowId] = useState<string>('');
 
-  const formatDateTime = (dateTimeString: string) => {
-    const [datePart, timePart] = dateTimeString.split(' ');
-    const [day, month, year] = datePart.split('.');
-    const [hour, minute, second] = timePart.split(':');
-
-    const formattedDate = `${day}.${month}.${year}`;
-    const formattedTime = `${hour}:${minute}:${second}`;
-
-    return {
-      date: formattedDate,
-      time: formattedTime,
-    };
-  };
   const totalFlex = header.reduce(
     (total, header) => total + (header.flex || 1),
     0,
@@ -437,80 +424,70 @@ const DvtTable: React.FC<DvtTableProps> = ({
                           {row[column.field]}
                         </StyledTableUrl>
                       )}
-                      {column.field === 'date' ? (
-                        <>
-                          {formatDateTime(row[column.field]).date}
-                          <br />
-                          {formatDateTime(row[column.field]).time}
-                        </>
-                      ) : (
-                        <>
-                          {column.clicks?.map(
-                            (
-                              clicks: {
-                                icon: string;
-                                click: (row: any) => void;
-                                colour: string;
-                                popperLabel?: string;
-                              },
-                              index,
-                            ) => (
-                              <React.Fragment key={index}>
-                                {clicks.popperLabel && (
-                                  <DvtPopper label={clicks.popperLabel}>
-                                    <Icon
-                                      onClick={() => clicks.click(row)}
-                                      fileName={clicks.icon}
-                                      iconColor={
-                                        clicks.colour ||
-                                        supersetTheme.colors.grayscale.dark2
-                                      }
-                                      iconSize="xl"
-                                      style={{
-                                        marginRight: 3.6,
-                                        visibility: column.showHover
-                                          ? openRow === rowIndex
-                                            ? 'visible'
-                                            : 'hidden'
-                                          : 'visible',
-                                        height: '56px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                      }}
-                                    />
-                                  </DvtPopper>
-                                )}
-                                {!clicks.popperLabel && (
-                                  <Icon
-                                    onClick={() => clicks.click(row)}
-                                    fileName={clicks.icon}
-                                    iconColor={
-                                      clicks.colour ||
-                                      supersetTheme.colors.grayscale.dark2
-                                    }
-                                    iconSize="xl"
-                                    style={{
-                                      marginRight: 3.6,
-                                      visibility: column.showHover
-                                        ? openRow === rowIndex
-                                          ? 'visible'
-                                          : 'hidden'
-                                        : 'visible',
-                                    }}
-                                  />
-                                )}
-                              </React.Fragment>
-                            ),
-                          )}
-
-                          {column.field !== 'action' &&
-                            !column.input &&
-                            !column.editor &&
-                            !column.radio &&
-                            column.field &&
-                            !column.urlField && <>{row[column.field]}</>}
-                        </>
+                      {column.clicks?.map(
+                        (
+                          clicks: {
+                            icon: string;
+                            click: (row: any) => void;
+                            colour: string;
+                            popperLabel?: string;
+                          },
+                          index,
+                        ) => (
+                          <React.Fragment key={index}>
+                            {clicks.popperLabel && (
+                              <DvtPopper label={clicks.popperLabel}>
+                                <Icon
+                                  onClick={() => clicks.click(row)}
+                                  fileName={clicks.icon}
+                                  iconColor={
+                                    clicks.colour ||
+                                    supersetTheme.colors.grayscale.dark2
+                                  }
+                                  iconSize="xl"
+                                  style={{
+                                    marginRight: 3.6,
+                                    visibility: column.showHover
+                                      ? openRow === rowIndex
+                                        ? 'visible'
+                                        : 'hidden'
+                                      : 'visible',
+                                    height: '56px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                  }}
+                                />
+                              </DvtPopper>
+                            )}
+                            {!clicks.popperLabel && (
+                              <Icon
+                                onClick={() => clicks.click(row)}
+                                fileName={clicks.icon}
+                                iconColor={
+                                  clicks.colour ||
+                                  supersetTheme.colors.grayscale.dark2
+                                }
+                                iconSize="xl"
+                                style={{
+                                  marginRight: 3.6,
+                                  visibility: column.showHover
+                                    ? openRow === rowIndex
+                                      ? 'visible'
+                                      : 'hidden'
+                                    : 'visible',
+                                }}
+                              />
+                            )}
+                          </React.Fragment>
+                        ),
                       )}
+
+                      {column.field !== 'action' &&
+                        !column.input &&
+                        !column.editor &&
+                        !column.radio &&
+                        column.field &&
+                        !column.urlField && <>{row[column.field]}</>}
                     </StyledTableIcon>
                   </StyledTableTd>
                 ))}

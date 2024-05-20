@@ -244,7 +244,7 @@ const TableData = {
   ],
   iconExampleData: [
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -254,7 +254,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -264,7 +264,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -274,7 +274,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -284,7 +284,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -294,7 +294,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -304,7 +304,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -314,7 +314,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
@@ -324,7 +324,7 @@ const TableData = {
       sql: 'Select',
     },
     {
-      date: '2023.05.29 15:53:47 * 03:00',
+      date: '2023.05.29 15:53:47',
       tabName: 'Pysical',
       database: 'PostgreSQL',
       schema: 'Public',
