@@ -1,6 +1,7 @@
 import { t } from '@superset-ui/core';
 
 interface ConnectionDataProps {
+  databaseMetaType: string;
   databaseType: string;
   driver: string;
   engine: string;
@@ -9,8 +10,14 @@ interface ConnectionDataProps {
   extra?: string;
 }
 
+export interface OtherConnectionDataOptionProps {
+  label: string;
+  value: string;
+}
+
 const DvtConnectionData: ConnectionDataProps[] = [
   {
+    databaseMetaType: 'PostgreSQL',
     databaseType: 'PostgreSQL',
     driver: 'psycopg2',
     engine: 'postgresql',
@@ -101,6 +108,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
     ],
   },
   {
+    databaseMetaType: 'MySQL',
     databaseType: 'MySQL',
     driver: 'mysqldb',
     engine: 'mysql',
@@ -182,7 +190,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
       },
     ],
   },
-  {
+  /* {
     databaseType: 'Presto',
     driver: '',
     engine: '',
@@ -190,6 +198,7 @@ const DvtConnectionData: ConnectionDataProps[] = [
       supports_file_upload: true,
       disable_ssh_tunneling: false,
     },
+    extra: '{"allows_virtual_table_explore":true}',
     data: [],
   },
   {
@@ -201,21 +210,52 @@ const DvtConnectionData: ConnectionDataProps[] = [
       disable_ssh_tunneling: false,
     },
     data: [],
+  }, */
+  {
+    databaseMetaType: 'Trino',
+    databaseType: 'sqlalchemy_form',
+    driver: '',
+    engine: 'trino',
+    engine_information: {
+      supports_file_upload: true,
+      disable_ssh_tunneling: false,
+    },
+    data: [
+      {
+        title: t('DISPLAY NAME'),
+        value: 'display_name',
+        type: 'text',
+        importantLabel: t(
+          'Pick a nickname for how the database will display in Superset.',
+        ),
+        popoverLabel: t('Cannot be empty'),
+      },
+      {
+        title: t('SQLALCHEMY URI'),
+        value: 'sqlalchemy_uri',
+        type: 'text',
+        importantLabel: t(
+          'Refer to the for more information on how to structure your URI.',
+        ),
+        placeholder: t('trino://username:password@host:port/database'),
+        popoverLabel: t('Cannot be empty'),
+      },
+    ],
   },
 ];
 
-const OtherOptions = [
-  { label: 'Apache Druid', value: '' },
+const OtherOptions: OtherConnectionDataOptionProps[] = [
+  /* { label: 'Apache Druid', value: '' },
   { label: 'Apache Hive', value: '' },
   { label: 'Apache Spark SQL', value: '' },
   { label: 'Aurora MySQL (Data API)', value: '' },
-  { label: 'Aurora PostgreSQL (Data API)', value: '' },
+  { label: 'Aurora PostgreSQL (Data API)', value: '' }, */
   { label: 'MySQL', value: '' },
   { label: 'PostgreSQL', value: '' },
-  { label: 'Presto', value: '' },
-  { label: 'SQLite', value: '' },
+  /* { label: 'Presto', value: '' },
+  { label: 'SQLite', value: '' }, */
   { label: 'Trino', value: '' },
-  { label: 'Other', value: '' },
+  /* { label: 'Other', value: '' }, */
 ];
 
 const advancedData = [

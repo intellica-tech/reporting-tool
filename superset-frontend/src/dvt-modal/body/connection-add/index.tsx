@@ -5,6 +5,7 @@ import { dvtConnectionEditSuccessStatus } from 'src/dvt-redux/dvt-connectionRedu
 import useFetch from 'src/dvt-hooks/useFetch';
 import {
   DvtConnectionData,
+  OtherConnectionDataOptionProps,
   OtherOptions,
   advancedData,
 } from 'src/dvt-modal/dvtConnectionData';
@@ -19,8 +20,6 @@ import DvtPopper from 'src/components/DvtPopper';
 import DvtCollapse from 'src/components/DvtCollapse';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
-import useFormValidation from 'src/dvt-hooks/useFormValidation';
-import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
 import {
   StyledConnectionAdd,
   StyledConnectionAddBody,
@@ -43,11 +42,16 @@ import {
   StyledConnectionAddCheckboxGroup,
   StyledConnectionAddGroupStep3,
 } from './connection-add.module';
+import useFormValidation from 'src/dvt-hooks/useFormValidation';
+import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
+import useFormValidationForSQLAlchemyURI from 'src/dvt-hooks/useFormValidationForSQLAlchemyURI';
+import connectionCreateValidationForSQLAlchemyURI from 'src/dvt-validation/dvt-sqlalchemy-connection-create-validation';
 
 const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState<number>(1);
-  const [supporedDatabase, setSupporedDatabase] = useState<string>();
+  const [supporedDatabase, setSupporedDatabase] =
+    useState<OtherConnectionDataOptionProps>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [apiUrl, setApiUrl] = useState<string>('');
@@ -120,9 +124,26 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     switch: meta?.isEdit ? meta.result.parameters.encryption : false,
   };
 
+  const initialValuesForSQLAlchemyURI = {
+    display_name: meta?.isEdit
+      ? meta.result.database_name
+      : selectedConnectionType,
+    sqlalchemy_uri: meta?.isEdit ? meta.result.sqlalchemy_uri : '',
+  };
+
   const { values, errors, handleChange, validateForm } = useFormValidation(
     initialValues,
     connectionCreateValidation,
+  );
+
+  const {
+    sqlAlchemyValues,
+    sqlAlchemyErrors,
+    sqlAlchemyHandleChange,
+    sqlAlchemyValidateForm,
+  } = useFormValidationForSQLAlchemyURI(
+    initialValuesForSQLAlchemyURI,
+    connectionCreateValidationForSQLAlchemyURI,
   );
 
   const [checkbox, setcheckbox] = useState<{
@@ -173,9 +194,12 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     }
   };
 
-  const handleSupportedDatabaseSelect = (selectedValue: string) => {
+  const handleSupportedDatabaseSelect = (
+    selectedValue: OtherConnectionDataOptionProps,
+  ) => {
     if (selectedValue) {
       setSupporedDatabase(selectedValue);
+      setSelectedConnectionType(selectedValue?.label);
       setTimeout(() => {
         setStep(2);
       }, 800);
@@ -192,30 +216,41 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
     if (meta?.isEdit) {
       DvtConnectionData.find(
         connection =>
-          connection.driver === meta.result.driver &&
-          setSelectedConnectionType(connection.databaseType),
+          (connection.engine === meta.result.engine ||
+            connection.driver === meta.result.driver ||
+            connection.engine === meta.result.backend) &&
+          setSelectedConnectionType(connection.databaseMetaType),
       );
     }
   }, []);
 
   const ConnectionDataFindType = DvtConnectionData.find(
-    connection => connection.databaseType === selectedConnectionType,
+    connection => connection.databaseMetaType === selectedConnectionType,
   );
 
   const connectionAddData = useFetch({
     url: apiUrl,
-    method: step === 3 && meta?.isEdit ? 'PUT' : 'POST',
+    method:
+      (step === 3 || (step === 2 && selectedConnectionType === 'Trino')) &&
+      meta?.isEdit
+        ? 'PUT'
+        : 'POST',
     body: {
       configuration_method:
         selectedConnectionType === 'PostgreSQL' ||
         selectedConnectionType === 'MySQL'
           ? 'dynamic_form'
           : 'sqlalchemy_form',
-      database_name: values.display_name,
+      database_name:
+        selectedConnectionType === 'Trino'
+          ? sqlAlchemyValues.display_name
+          : values.display_name,
       driver: ConnectionDataFindType?.driver,
       engine: ConnectionDataFindType?.engine,
       engine_information: ConnectionDataFindType?.engine_information,
       expose_in_sqllab: true,
+      extra: ConnectionDataFindType?.extra,
+      sqlalchemy_uri: sqlAlchemyValues.sqlalchemy_uri,
       parameters: {
         database: values.database_name,
         host: values.host,
@@ -230,7 +265,7 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   useEffect(() => {
     if (step === 2 && connectionAddData.data?.message === 'OK') {
       setStep(3);
-    } else if (step === 3 && connectionAddData.data?.id) {
+    } else if ((step === 3 || step === 2) && connectionAddData.data?.id) {
       onClose();
       dispatch(dvtConnectionEditSuccessStatus('connection'));
     }
@@ -269,9 +304,20 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   }, [connectionAddData.loading]);
 
   const handleSubmit = () => {
-    const isValid = validateForm();
-    if (isValid) {
-      setApiUrl('database/validate_parameters/');
+    if (
+      selectedConnectionType === 'PostgreSQL' ||
+      selectedConnectionType === 'MySQL'
+    ) {
+      const isValid = validateForm();
+      if (isValid) {
+        setApiUrl('database/validate_parameters/');
+      }
+    } else if (selectedConnectionType === 'Trino') {
+      const isValid = sqlAlchemyValidateForm();
+      if (isValid) {
+        if (meta?.isEdit) setApiUrl(`database/${meta.id}`);
+        else setApiUrl('database/');
+      }
     }
   };
 
@@ -285,19 +331,27 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
               Select a database to connect
             </StyledConnectionAddLabel>
             <StyledConnectionAddDatabaseIcons>
-              {DvtConnectionData.map((connection, index) => (
-                <StyledConnectionAddDatabaseIcon
-                  key={index}
-                  onClick={() =>
-                    handleConnectionTypeClick(connection.databaseType)
-                  }
-                >
-                  <Icon fileName="nav_data" style={{ fontSize: '80px' }} />
-                  <StyledConnectionAddDatabaseType>
-                    {connection.databaseType}
-                  </StyledConnectionAddDatabaseType>
-                </StyledConnectionAddDatabaseIcon>
-              ))}
+              {DvtConnectionData.map((connection, index) => {
+                if (
+                  connection.databaseType === 'PostgreSQL' ||
+                  connection.databaseType === 'MySQL'
+                ) {
+                  return (
+                    <StyledConnectionAddDatabaseIcon
+                      key={index}
+                      onClick={() =>
+                        handleConnectionTypeClick(connection.databaseType)
+                      }
+                    >
+                      <Icon fileName="nav_data" style={{ fontSize: '80px' }} />
+                      <StyledConnectionAddDatabaseType>
+                        {connection.databaseType}
+                      </StyledConnectionAddDatabaseType>
+                    </StyledConnectionAddDatabaseIcon>
+                  );
+                }
+                return null;
+              })}
             </StyledConnectionAddDatabaseIcons>
             <StyledConnectionAddLabel>
               {t('Or choose from a list of other databases we support: ')}
@@ -306,7 +360,9 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
               label={t('SUPPORTED DATABASES')}
               placeholder="Choose a database..."
               selectedValue={supporedDatabase}
-              setSelectedValue={handleSupportedDatabaseSelect}
+              setSelectedValue={database =>
+                handleSupportedDatabaseSelect(database)
+              }
               data={OtherOptions}
               typeDesign="form"
             />
@@ -427,33 +483,33 @@ const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
                   </StyledConnectionAddLabel>
                   Enter Primary Credentials Need help? Learn how to connect your
                   database here.
-                  <DvtInput
-                    value={input.display_name}
-                    onChange={text =>
-                      setInput({ ...input, display_name: text })
-                    }
-                    label={t('DISPLAY NAME')}
-                    popoverLabel={t('Cannot be empty')}
-                    popoverDirection="right"
-                    importantLabel={t(
-                      'Pick a name to help you identify this database.',
-                    )}
-                  />
-                  <DvtInput
-                    value={input.Sqlalchemy_Uri}
-                    onChange={text =>
-                      setInput({ ...input, Sqlalchemy_Uri: text })
-                    }
-                    label={t('SQLALCHEMY URI')}
-                    importantLabel={t(
-                      'Refer to the for more information on how to structure your URI.',
-                    )}
-                    placeholder={t(
-                      'dialect+driver://username:password@host:port/database',
-                    )}
-                    popoverLabel={t('Cannot be empty')}
-                    popoverDirection="right"
-                  />
+                  {ConnectionDataFindType?.data.map(
+                    (
+                      data: {
+                        title: string;
+                        value: any;
+                        type: string;
+                        importantLabel: string;
+                        placeholder: string;
+                        popoverLabel: string;
+                      },
+                      index,
+                    ) => (
+                      <DvtInput
+                        key={index}
+                        value={sqlAlchemyValues[data.value]}
+                        onChange={text =>
+                          sqlAlchemyHandleChange(data.value, text)
+                        }
+                        label={data.title}
+                        importantLabel={data.importantLabel}
+                        placeholder={data.placeholder}
+                        popoverLabel={data.popoverLabel}
+                        popoverDirection="right"
+                        error={sqlAlchemyErrors[data.value]}
+                      />
+                    ),
+                  )}
                   <DvtButton
                     bold
                     label={t('TEST CONNECTION')}
