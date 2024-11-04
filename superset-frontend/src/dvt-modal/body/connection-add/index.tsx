@@ -20,6 +20,10 @@ import DvtPopper from 'src/components/DvtPopper';
 import DvtCollapse from 'src/components/DvtCollapse';
 import DvtCheckbox from 'src/components/DvtCheckbox';
 import DvtJsonEditor from 'src/components/DvtJsonEditor';
+import useFormValidation from 'src/dvt-hooks/useFormValidation';
+import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
+import useFormValidationForSQLAlchemyURI from 'src/dvt-hooks/useFormValidationForSQLAlchemyURI';
+import connectionCreateValidationForSQLAlchemyURI from 'src/dvt-validation/dvt-sqlalchemy-connection-create-validation';
 import {
   StyledConnectionAdd,
   StyledConnectionAddBody,
@@ -42,16 +46,13 @@ import {
   StyledConnectionAddCheckboxGroup,
   StyledConnectionAddGroupStep3,
 } from './connection-add.module';
-import useFormValidation from 'src/dvt-hooks/useFormValidation';
-import connectionCreateValidation from 'src/dvt-validation/dvt-connection-create-validation';
-import useFormValidationForSQLAlchemyURI from 'src/dvt-hooks/useFormValidationForSQLAlchemyURI';
-import connectionCreateValidationForSQLAlchemyURI from 'src/dvt-validation/dvt-sqlalchemy-connection-create-validation';
 
 const DvtConnectionAdd = ({ meta, onClose }: ModalProps) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState<number>(1);
-  const [supporedDatabase, setSupporedDatabase] =
-    useState<OtherConnectionDataOptionProps>();
+  const [supporedDatabase, setSupporedDatabase] = useState<
+    OtherConnectionDataOptionProps | string
+  >();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [apiUrl, setApiUrl] = useState<string>('');
