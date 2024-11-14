@@ -323,6 +323,9 @@ sqlalchemy==1.4.36
     #   marshmallow-sqlalchemy
     #   shillelagh
     #   sqlalchemy-utils
+sqlalchemy-trino==0.5.0
+    # via
+    #   trino
 sqlalchemy-utils==0.38.3
     # via
     #   apache-superset
