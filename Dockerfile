@@ -82,8 +82,10 @@ COPY --chown=superset:superset superset-frontend/package.json superset-frontend/
 RUN --mount=type=bind,target=./requirements/local.txt,src=./requirements/local.txt \
     --mount=type=bind,target=./requirements/development.txt,src=./requirements/development.txt \
     --mount=type=bind,target=./requirements/base.txt,src=./requirements/base.txt \
+    --mount=type=bind,target=./docker/requirements-local.txt,src=./docker/requirements-local.txt \
     --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements/local.txt
+    pip install -r requirements/local.txt && \
+    pip install -r docker/requirements-local.txt
 
 COPY --chown=superset:superset --from=superset-node /app/superset/static/assets superset/static/assets
 ## Lastly, let's install superset itself

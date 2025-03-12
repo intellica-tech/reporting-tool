@@ -17,3 +17,5 @@
 
 cherrytree
 jinja2
+Flask-OAuthlib
+Authlib

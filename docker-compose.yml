@@ -47,6 +47,8 @@ services:
       - "127.0.0.1:6379:6379"
     volumes:
       - redis:/data
+    networks:
+      - dvt_network
 
   db:
     env_file: docker/.env
@@ -58,6 +60,22 @@ services:
     volumes:
       - db_home:/var/lib/postgresql/data
       - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - dvt_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_PORT=8080
+    ports:
+      - "8180:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - dvt_network
 
   superset:
     env_file: docker/.env
@@ -69,6 +87,8 @@ services:
       - 8088:8088
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - dvt_network
     user: *superset-user
     depends_on: *superset-depends-on
     volumes: *superset-volumes
@@ -104,6 +124,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_SSL=false
+    networks:
+      - dvt_network
 
   superset-init:
     image: *superset-image
@@ -117,6 +139,8 @@ services:
       CYPRESS_CONFIG: "${CYPRESS_CONFIG}"
     healthcheck:
       disable: true
+    networks:
+      - dvt_network
 
   superset-node:
     image: node:16
@@ -127,6 +151,8 @@ services:
     environment:
       SCARF_ANALYTICS: "${SCARF_ANALYTICS}"
     volumes: *superset-volumes
+    networks:
+      - dvt_network
 
   superset-worker:
     image: *superset-image
@@ -144,6 +170,8 @@ services:
     # Bump memory limit if processing selenium / thumbnails on superset-worker
     # mem_limit: 2038m
     # mem_reservation: 128M
+    networks:
+      - dvt_network
 
   superset-worker-beat:
     image: *superset-image
@@ -182,3 +210,6 @@ volumes:
     external: false
   redis:
     external: false
+networks:
+  dvt_network:
+    driver: bridge
