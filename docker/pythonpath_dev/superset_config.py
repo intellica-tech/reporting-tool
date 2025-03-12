@@ -25,6 +25,8 @@ import os
 
 from celery.schedules import crontab
 from flask_caching.backends.filesystemcache import FileSystemCache
+from flask_appbuilder.security.manager import AUTH_OAUTH
+from werkzeug.local import LocalProxy
 
 logger = logging.getLogger()
 
@@ -100,6 +102,33 @@ WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 
 SQLLAB_CTAS_NO_LIMIT = True
 
+KEY_CLOAK_URL=os.getenv("KEY_CLOAK_URL", "http://192.168.0.11:8180")
+KEY_CLOAK_REALM=os.getenv("KEY_CLOAK_REALM", "dnext")
+KEY_CLOAK_CLIENT_ID=os.getenv("KEY_CLOAK_CLIENT_ID", "reporting-tool-ui")
+KEY_CLOAK_CLIENT_SECRET=os.getenv("KEY_CLOAK_CLIENT_SECRET", "0Z0GFFx1AOZKBLadFWGRsxw6ou2ihPgV")
+
+SECRET_KEY='ROkthutxIEP9LLV9TpW+h/V8A4fgqR2F15rIK52FBHO2akoWmJTaEWxj'
+
+AUTH_TYPE = AUTH_OAUTH
+LOGOUT_REDIRECT_URL=f"{KEY_CLOAK_URL}/realms/{KEY_CLOAK_REALM}/protocol/openid-connect/logout"
+AUTH_USER_REGISTRATION = True
+AUTH_USER_REGISTRATION_ROLE = 'Gamma'
+OAUTH_PROVIDERS = [
+    {
+        'name': 'keycloak',
+        'icon': 'fa-key',
+        'token_key': 'access_token',  # Keycloak uses 'access_token' for the access token
+        'remote_app': {
+            'client_id': KEY_CLOAK_CLIENT_ID,
+            'client_secret': KEY_CLOAK_CLIENT_SECRET,
+            'client_kwargs': {
+                'scope': 'openid profile email',
+            },
+            'server_metadata_url': f"{KEY_CLOAK_URL}/realms/{KEY_CLOAK_REALM}/.well-known/openid-configuration",
+            'api_base_url': f"{KEY_CLOAK_URL}/realms/{KEY_CLOAK_REALM}/protocol/",
+        },
+    }
+    ]
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden

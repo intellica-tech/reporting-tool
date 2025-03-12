@@ -13,3 +13,7 @@
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
+Authlib==1.5.1
+    # via keycloak
+Flask-OAuthlib==0.9.6
+    # via keycloak
