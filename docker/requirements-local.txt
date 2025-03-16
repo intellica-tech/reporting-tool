@@ -1,0 +1,2 @@
+Authlib==1.5.1
+Flask-OAuthlib==0.9.6 
