@@ -31,6 +31,8 @@ services:
     restart: unless-stopped
     volumes:
       - redis:/data
+    networks:
+      - dvt_network
 
   db:
     env_file: docker/.env-non-dev
@@ -40,6 +42,22 @@ services:
     volumes:
       - db_home:/var/lib/postgresql/data
       - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - dvt_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_PORT=8080
+    ports:
+      - "8180:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - dvt_network
 
   superset:
     env_file: docker/.env-non-dev
@@ -52,6 +70,10 @@ services:
       - 8088:8088
     depends_on: *superset-depends-on
     volumes: *superset-volumes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - dvt_network
 
   superset-init:
     image: *superset-image
@@ -63,6 +85,8 @@ services:
     volumes: *superset-volumes
     healthcheck:
       disable: true
+    networks:
+      - dvt_network
 
   superset-worker:
     image: *superset-image
@@ -79,6 +103,8 @@ services:
           "CMD-SHELL",
           "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME",
         ]
+    networks:
+    - dvt_network
 
   superset-worker-beat:
     image: *superset-image
@@ -91,6 +117,8 @@ services:
     volumes: *superset-volumes
     healthcheck:
       disable: true
+    networks:
+      - dvt_network
 
 volumes:
   superset_home:
@@ -99,3 +127,6 @@ volumes:
     external: false
   redis:
     external: false
+networks:
+  dvt_network:
+    driver: bridge
