@@ -57,7 +57,7 @@ ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     SUPERSET_ENV=production \
     FLASK_APP="superset.app:create_app()" \
-    PYTHONPATH="/app/pythonpath" \
+    PYTHONPATH="/app/dvt/pythonpath" \
     SUPERSET_HOME="/app/superset_home" \
     SUPERSET_PORT=8088
 
@@ -96,6 +96,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     && chown -R superset:superset superset/translations
 
 COPY --chmod=755 ./docker/run-server.sh /usr/bin/
+RUN mkdir -p /app/dvt/pythonpath
+COPY --chown superset:superset ./docker/pythonpath_dev/superset_config.py /app/dvt/pythonpath
 USER superset
 
 HEALTHCHECK CMD curl -f "http://localhost:${SUPERSET_PORT}/health"
