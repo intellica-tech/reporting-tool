@@ -97,7 +97,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY --chmod=755 ./docker/run-server.sh /usr/bin/
 RUN mkdir -p /app/dvt/pythonpath
-COPY --chown superset:superset ./docker/pythonpath_dev/superset_config.py /app/dvt/pythonpath
+COPY --chown=superset:superset ./docker/pythonpath_dev/superset_config.py /app/dvt/pythonpath
 USER superset
 
 HEALTHCHECK CMD curl -f "http://localhost:${SUPERSET_PORT}/health"
