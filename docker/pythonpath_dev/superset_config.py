@@ -30,12 +30,12 @@ from werkzeug.local import LocalProxy
 
 logger = logging.getLogger()
 
-DATABASE_DIALECT = os.getenv("DATABASE_DIALECT")
-DATABASE_USER = os.getenv("DATABASE_USER")
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
-DATABASE_HOST = os.getenv("DATABASE_HOST")
-DATABASE_PORT = os.getenv("DATABASE_PORT")
-DATABASE_DB = os.getenv("DATABASE_DB")
+DATABASE_DIALECT = os.getenv("DATABASE_DIALECT", "postgresql")
+DATABASE_USER = os.getenv("DATABASE_USER", os.getenv("DB_USER", "postgres"))
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", os.getenv("DB_PASSWORD", "postgres"))
+DATABASE_HOST = os.getenv("DATABASE_HOST", os.getenv("DB_HOST", "postgres"))
+DATABASE_PORT = os.getenv("DATABASE_PORT", os.getenv("DB_PORT", "5432"))
+DATABASE_DB = os.getenv("DATABASE_DB", os.getenv("DB_NAME", "superset"))
 
 EXAMPLES_USER = os.getenv("EXAMPLES_USER")
 EXAMPLES_PASSWORD = os.getenv("EXAMPLES_PASSWORD")
@@ -59,7 +59,7 @@ SQLALCHEMY_EXAMPLES_URI = (
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 REDIS_CELERY_DB = os.getenv("REDIS_CELERY_DB", "0")
-REDIS_RESULTS_DB = os.getenv("REDIS_RESULTS_DB", "1")
+REDIS_RESULTS_DB = os.getenv("REDIS_RESULTS_DB", os.getenv("REDIS_DB", "1"))
 
 RESULTS_BACKEND = FileSystemCache("/app/superset_home/sqllab")
 
